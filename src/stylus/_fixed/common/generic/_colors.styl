@@ -1,0 +1,26 @@
+/*
+Color Class
+
+.{$color-name}--bg - 背景色(background-color)を指定の色に設定します
+.{$color-name}--text - 文字色(color)を指定の色に設定します
+.{$color-name}--fill - 塗りつぶし(fill)を指定の色に設定します
+
+Styleguide 2.2
+*/
+
+global-color($color_name, $color_value)
+  .{$color_name}--bg
+    background-color: $color_value !important
+
+  .{$color_name}--text
+    color: $color_value !important
+    caret-color: $color_value !important
+
+  .{$color_name}--fill
+    fill: $color_value !important
+
+create-global-colors()
+  for $color_name, $color_value in $colors
+    global-color($color_name, $color_value)
+
+create-global-colors()

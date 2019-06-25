@@ -1,0 +1,13 @@
+{
+  "source": "../src/stylus",
+  "mask": "*.styl",
+  "destination": "./dist",
+
+  "title": "ErniePjm Style Guide",
+  "homepage": "../../kss/kss-homepage.md",
+  "builder": "./template/michelangelo",
+
+  "css": [
+    "./style.css"
+  ]
+}

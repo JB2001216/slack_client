@@ -1,0 +1,264 @@
+.edit{
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 10px;
+}
+
+.dashboardWrap{
+  padding: 8px 19px 0 19px;
+  *{
+    box-sizing: border-box;
+  }
+  &_list{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    &_user{
+      zoom: 1;
+      &:after {
+        content: "";
+        clear: both;
+        display: block;
+      }
+      dd{
+        float: left;
+        margin-right: 8px;
+        position: relative;
+        &.active{
+          &:before{
+            content: "";
+            display: block;
+            width: 36px;
+            height: 36px;
+            border: 2px solid #2F80ED;
+            border-radius: 50%;
+            position: absolute;
+            top: -4px;
+            left: -4px;
+          }
+        }
+        &.dots{
+          padding: 4px 0;
+        }
+      }
+    }
+    &_menu{
+      zoom: 1;
+      &:after {
+        content: "";
+        clear: both;
+        display: block;
+      }
+      dd{
+        float: left;
+        margin-left: 22px;
+        cursor: pointer;
+        &:first-child{
+          margin-left: 0;
+        }
+      }
+    }
+  }
+  &_status{
+    margin-top: 28px;
+    zoom: 1;
+    &:after {
+      content: "";
+      clear: both;
+      display: block;
+    }
+    dd{
+      float: left;
+      width: 82px;
+      height: 32px;
+      padding: 9px 20px;
+      margin: 0 -2px;
+      background: #C4C4C4;
+      border-radius: 18px;
+      font-family: Noto Sans CJK JP;
+      color: #FFF;
+      font-size: 14px;
+      line-height: 1;
+      text-align: center;
+      &:first-child{
+        margin-left: 0;
+      }
+      &:last-child{
+        width: 89px;
+        padding: 9px 24px 9px 16px;
+        margin-left: 10px;
+        //background: url(../images/mainColumn/icn_status-arrow.svg) no-repeat center right 10px, rgba(51, 51, 51, 0.72);
+        cursor: pointer;
+        text-align: left;
+        svg{
+          display: inline-block;
+        }
+      }
+    }
+    svg {
+      float: left;
+      margin-top: 8.5px;
+    }
+  }
+  &_tag{
+    margin-top: 24px;
+    zoom: 1;
+    &:after {
+      content: "";
+      clear: both;
+      display: block;
+    }
+    dd{
+      float: left;
+      padding: 8px 28px 8px 12px;
+      margin-right: 8px;
+      //background: url(../images/mainColumn/icn_tag-close.svg) no-repeat center right 10px, #FAECC3;
+      font-family: Noto Sans CJK JP;
+      color: #333;
+      font-size: 12px;
+      line-height: 1;
+      cursor: pointer;
+      &.button{
+        padding: 6px 2px;
+        background: #FFF;
+        color: rgba(51, 51, 51, 0.72);
+        font-size: 14px;
+        opacity: 0.5;
+      }
+    }
+  }
+  &_task{
+    textarea{
+      width: 100%;
+      min-height: 158px;
+      padding: 0;
+      margin: 24px 0;
+      border: none;
+      resize: none;
+      font-family: Noto Sans CJK JP;
+      color: #333;
+      font-size: 14px;
+      line-height: 1.57;
+      &::placeholder{
+        color:#C4C4C4;
+      }
+    }
+  }
+  &_post{
+    width: calc(100% + 38px);
+    margin-left: -19px;
+    padding: 31px 19px 0 19px;
+    //background: url(../images/mainColumn/icn_post-handle.svg) no-repeat top 8px center, #FFF;
+    border-top: 2px solid #EDEDED;
+    small{
+      display: block;
+      text-align: center;
+      font-family: Noto Sans CJK JP;
+      color: rgba(51, 51, 51, 0.72);
+      font-size: 12px;
+      line-height: 1;
+      text-align: center;
+      opacity: 0.5;
+    }
+    &_board{
+      height: 350px;
+      max-height: calc(100vh - 588px);
+      margin: 25px 0 52px 0;
+      overflow-y: auto;
+      &::-webkit-scrollbar{
+        width: 10px;
+      }
+      &::-webkit-scrollbar-track{
+        background: #fff;
+      }
+      &::-webkit-scrollbar-thumb{
+        background: #ccc;
+        border-radius: 10px;
+        box-shadow: inset 0 0 0 2px #fff;
+      }
+      table{
+        width: 100%;
+        padding-right: 10px;
+        tr{
+          table-layout: fixed;
+          th,td{
+            vertical-align: top;
+            font-family: Noto Sans CJK JP;
+            font-size: 14px;
+            line-height: 1.57;
+          }
+        }
+      }
+      &_user{
+        width: 52px;
+        padding-right: 12px;
+      }
+      &_text{
+        width: calc(100% - 52px - 108px);
+        padding-bottom: 40px;
+        h3{
+          margin-bottom: 15px;
+        }
+      }
+      &_log{
+        width: 108px;
+        svg{
+          cursor: pointer;
+        }
+        p{
+          display: inline-block;
+          margin-left: 10px;
+          color: rgba(51, 51, 51, 0.72);
+          opacity: 0.5;
+          position: relative;
+          top: -2px;
+          left: 0;
+        }
+      }
+    }
+  }
+  &_comment{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: flex-start;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 100%;
+    min-height: 60px;
+    padding: 17px 19px 17px 39px;
+    background: #fff;
+    border-top: 2px solid #EDEDED;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    svg{
+      cursor: pointer;
+    }
+    input[type=text]{
+      width: 100%;
+      height: 24px;
+      margin-left: 24px;
+      border: none;
+      resize: none;
+      outline: none;
+      font-family: Noto Sans CJK JP;
+      color: #333;
+      font-size: 14px;
+      line-height: 1.57;
+      &::placeholder{
+        color: #C4C4C4;
+      }
+    }
+  }
+}

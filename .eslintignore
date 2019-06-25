@@ -1,0 +1,5 @@
+node_modules
+kss
+src/lib/api/openapi
+dist_electron
+dist
