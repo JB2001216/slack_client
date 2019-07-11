@@ -4,10 +4,10 @@
   "destination": "./dist",
 
   "title": "ErniePjm Style Guide",
-  "homepage": "../../kss/kss-homepage.md",
+  "homepage": "./overview.md",
   "builder": "./template/michelangelo",
 
   "css": [
-    "./style.css"
+    "./full.css"
   ]
 }

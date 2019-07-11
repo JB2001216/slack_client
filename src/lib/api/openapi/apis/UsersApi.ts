@@ -14,60 +14,60 @@
 import { Observable } from 'rxjs';
 import { BaseAPI, RequiredError, HttpHeaders, HttpQuery, COLLECTION_FORMATS } from '../runtime';
 import {
-    InlineObject10,
-    InlineObject11,
-    InlineObject12,
-    InlineObject13,
-    InlineObject4,
-    InlineObject5,
-    InlineObject6,
-    InlineObject7,
-    InlineObject8,
-    InlineObject9,
-    InlineResponse2002,
-    InlineResponse2003,
     MyUser,
     SelectLoginUser,
+    UsersEmailLoginConfirmPostRequestBody,
+    UsersEmailLoginPostRequestBody,
+    UsersLoginPostRequestBody,
+    UsersMeEmailConfirmPostRequestBody,
+    UsersMeEmailGetResponse,
+    UsersMeEmailPutRequestBody,
+    UsersMePutRequestBody,
+    UsersMeSmsConfirmPostRequestBody,
+    UsersMeSmsGetResponse,
+    UsersMeSmsPutRequestBody,
+    UsersSmsLoginConfirmPostRequestBody,
+    UsersSmsLoginPostRequestBody,
 } from '../models';
 
 export interface UsersEmailLoginConfirmPostRequest {
-    inlineObject4: InlineObject4;
+    usersEmailLoginConfirmPostRequestBody: UsersEmailLoginConfirmPostRequestBody;
 }
 
 export interface UsersEmailLoginPostRequest {
-    inlineObject5: InlineObject5;
+    usersEmailLoginPostRequestBody: UsersEmailLoginPostRequestBody;
 }
 
 export interface UsersLoginPostRequest {
-    inlineObject8: InlineObject8;
+    usersLoginPostRequestBody: UsersLoginPostRequestBody;
 }
 
 export interface UsersMeEmailConfirmPostRequest {
-    inlineObject10: InlineObject10;
+    usersMeEmailConfirmPostRequestBody: UsersMeEmailConfirmPostRequestBody;
 }
 
 export interface UsersMeEmailPutRequest {
-    inlineObject11: InlineObject11;
+    usersMeEmailPutRequestBody: UsersMeEmailPutRequestBody;
 }
 
 export interface UsersMePutRequest {
-    inlineObject9: InlineObject9;
+    usersMePutRequestBody: UsersMePutRequestBody;
 }
 
 export interface UsersMeSmsConfirmPostRequest {
-    inlineObject12: InlineObject12;
+    usersMeSmsConfirmPostRequestBody: UsersMeSmsConfirmPostRequestBody;
 }
 
 export interface UsersMeSmsPutRequest {
-    inlineObject13: InlineObject13;
+    usersMeSmsPutRequestBody: UsersMeSmsPutRequestBody;
 }
 
 export interface UsersSmsLoginConfirmPostRequest {
-    inlineObject6: InlineObject6;
+    usersSmsLoginConfirmPostRequestBody: UsersSmsLoginConfirmPostRequestBody;
 }
 
 export interface UsersSmsLoginPostRequest {
-    inlineObject7: InlineObject7;
+    usersSmsLoginPostRequestBody: UsersSmsLoginPostRequestBody;
 }
 
 /**
@@ -79,8 +79,8 @@ export class UsersApi extends BaseAPI {
      * ログイン用メール認証メッセージ送信
      */
     usersEmailLoginConfirmPost(requestParameters: UsersEmailLoginConfirmPostRequest): Observable<void> {
-        if (requestParameters.inlineObject4 === null || requestParameters.inlineObject4 === undefined) {
-            throw new RequiredError('inlineObject4','Required parameter requestParameters.inlineObject4 was null or undefined when calling usersEmailLoginConfirmPost.');
+        if (requestParameters.usersEmailLoginConfirmPostRequestBody === null || requestParameters.usersEmailLoginConfirmPostRequestBody === undefined) {
+            throw new RequiredError('usersEmailLoginConfirmPostRequestBody','Required parameter requestParameters.usersEmailLoginConfirmPostRequestBody was null or undefined when calling usersEmailLoginConfirmPost.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -94,7 +94,7 @@ export class UsersApi extends BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject4,
+            body: requestParameters.usersEmailLoginConfirmPostRequestBody,
         });
     }
 
@@ -102,8 +102,8 @@ export class UsersApi extends BaseAPI {
      * メール認証通過後、ログイン可能なユーザーの一覧を取得
      */
     usersEmailLoginPost(requestParameters: UsersEmailLoginPostRequest): Observable<Array<SelectLoginUser>> {
-        if (requestParameters.inlineObject5 === null || requestParameters.inlineObject5 === undefined) {
-            throw new RequiredError('inlineObject5','Required parameter requestParameters.inlineObject5 was null or undefined when calling usersEmailLoginPost.');
+        if (requestParameters.usersEmailLoginPostRequestBody === null || requestParameters.usersEmailLoginPostRequestBody === undefined) {
+            throw new RequiredError('usersEmailLoginPostRequestBody','Required parameter requestParameters.usersEmailLoginPostRequestBody was null or undefined when calling usersEmailLoginPost.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -117,7 +117,7 @@ export class UsersApi extends BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject5,
+            body: requestParameters.usersEmailLoginPostRequestBody,
         });
     }
 
@@ -125,8 +125,8 @@ export class UsersApi extends BaseAPI {
      * メール or SMS認証で得たログイン用トークンを使ってログイン
      */
     usersLoginPost(requestParameters: UsersLoginPostRequest): Observable<MyUser> {
-        if (requestParameters.inlineObject8 === null || requestParameters.inlineObject8 === undefined) {
-            throw new RequiredError('inlineObject8','Required parameter requestParameters.inlineObject8 was null or undefined when calling usersLoginPost.');
+        if (requestParameters.usersLoginPostRequestBody === null || requestParameters.usersLoginPostRequestBody === undefined) {
+            throw new RequiredError('usersLoginPostRequestBody','Required parameter requestParameters.usersLoginPostRequestBody was null or undefined when calling usersLoginPost.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -140,7 +140,7 @@ export class UsersApi extends BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject8,
+            body: requestParameters.usersLoginPostRequestBody,
         });
     }
 
@@ -148,8 +148,8 @@ export class UsersApi extends BaseAPI {
      * メール変更用メール認証メッセージ送信
      */
     usersMeEmailConfirmPost(requestParameters: UsersMeEmailConfirmPostRequest): Observable<void> {
-        if (requestParameters.inlineObject10 === null || requestParameters.inlineObject10 === undefined) {
-            throw new RequiredError('inlineObject10','Required parameter requestParameters.inlineObject10 was null or undefined when calling usersMeEmailConfirmPost.');
+        if (requestParameters.usersMeEmailConfirmPostRequestBody === null || requestParameters.usersMeEmailConfirmPostRequestBody === undefined) {
+            throw new RequiredError('usersMeEmailConfirmPostRequestBody','Required parameter requestParameters.usersMeEmailConfirmPostRequestBody was null or undefined when calling usersMeEmailConfirmPost.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -167,14 +167,14 @@ export class UsersApi extends BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject10,
+            body: requestParameters.usersMeEmailConfirmPostRequestBody,
         });
     }
 
     /**
      * 自身のメール取得
      */
-    usersMeEmailGet(): Observable<InlineResponse2002> {
+    usersMeEmailGet(): Observable<UsersMeEmailGetResponse> {
         const queryParameters: HttpQuery = {};
 
         const headerParameters: HttpHeaders = {};
@@ -183,7 +183,7 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<InlineResponse2002>({
+        return this.request<UsersMeEmailGetResponse>({
             path: `/users/me/email/`,
             method: 'GET',
             headers: headerParameters,
@@ -194,9 +194,9 @@ export class UsersApi extends BaseAPI {
     /**
      * メール認証通過後、メール変更
      */
-    usersMeEmailPut(requestParameters: UsersMeEmailPutRequest): Observable<InlineResponse2002> {
-        if (requestParameters.inlineObject11 === null || requestParameters.inlineObject11 === undefined) {
-            throw new RequiredError('inlineObject11','Required parameter requestParameters.inlineObject11 was null or undefined when calling usersMeEmailPut.');
+    usersMeEmailPut(requestParameters: UsersMeEmailPutRequest): Observable<UsersMeEmailGetResponse> {
+        if (requestParameters.usersMeEmailPutRequestBody === null || requestParameters.usersMeEmailPutRequestBody === undefined) {
+            throw new RequiredError('usersMeEmailPutRequestBody','Required parameter requestParameters.usersMeEmailPutRequestBody was null or undefined when calling usersMeEmailPut.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -209,12 +209,12 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<InlineResponse2002>({
+        return this.request<UsersMeEmailGetResponse>({
             path: `/users/me/email/`,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject11,
+            body: requestParameters.usersMeEmailPutRequestBody,
         });
     }
 
@@ -242,8 +242,8 @@ export class UsersApi extends BaseAPI {
      * 自身のユーザー情報を更新
      */
     usersMePut(requestParameters: UsersMePutRequest): Observable<MyUser> {
-        if (requestParameters.inlineObject9 === null || requestParameters.inlineObject9 === undefined) {
-            throw new RequiredError('inlineObject9','Required parameter requestParameters.inlineObject9 was null or undefined when calling usersMePut.');
+        if (requestParameters.usersMePutRequestBody === null || requestParameters.usersMePutRequestBody === undefined) {
+            throw new RequiredError('usersMePutRequestBody','Required parameter requestParameters.usersMePutRequestBody was null or undefined when calling usersMePut.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -261,7 +261,7 @@ export class UsersApi extends BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject9,
+            body: requestParameters.usersMePutRequestBody,
         });
     }
 
@@ -269,8 +269,8 @@ export class UsersApi extends BaseAPI {
      * SMS変更用SMS認証メッセージ送信
      */
     usersMeSmsConfirmPost(requestParameters: UsersMeSmsConfirmPostRequest): Observable<void> {
-        if (requestParameters.inlineObject12 === null || requestParameters.inlineObject12 === undefined) {
-            throw new RequiredError('inlineObject12','Required parameter requestParameters.inlineObject12 was null or undefined when calling usersMeSmsConfirmPost.');
+        if (requestParameters.usersMeSmsConfirmPostRequestBody === null || requestParameters.usersMeSmsConfirmPostRequestBody === undefined) {
+            throw new RequiredError('usersMeSmsConfirmPostRequestBody','Required parameter requestParameters.usersMeSmsConfirmPostRequestBody was null or undefined when calling usersMeSmsConfirmPost.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -288,14 +288,14 @@ export class UsersApi extends BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject12,
+            body: requestParameters.usersMeSmsConfirmPostRequestBody,
         });
     }
 
     /**
      * 自身のSMS取得
      */
-    usersMeSmsGet(): Observable<InlineResponse2003> {
+    usersMeSmsGet(): Observable<UsersMeSmsGetResponse> {
         const queryParameters: HttpQuery = {};
 
         const headerParameters: HttpHeaders = {};
@@ -304,7 +304,7 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<InlineResponse2003>({
+        return this.request<UsersMeSmsGetResponse>({
             path: `/users/me/sms/`,
             method: 'GET',
             headers: headerParameters,
@@ -315,9 +315,9 @@ export class UsersApi extends BaseAPI {
     /**
      * SMS認証通過後、SMS変更
      */
-    usersMeSmsPut(requestParameters: UsersMeSmsPutRequest): Observable<InlineResponse2003> {
-        if (requestParameters.inlineObject13 === null || requestParameters.inlineObject13 === undefined) {
-            throw new RequiredError('inlineObject13','Required parameter requestParameters.inlineObject13 was null or undefined when calling usersMeSmsPut.');
+    usersMeSmsPut(requestParameters: UsersMeSmsPutRequest): Observable<UsersMeSmsGetResponse> {
+        if (requestParameters.usersMeSmsPutRequestBody === null || requestParameters.usersMeSmsPutRequestBody === undefined) {
+            throw new RequiredError('usersMeSmsPutRequestBody','Required parameter requestParameters.usersMeSmsPutRequestBody was null or undefined when calling usersMeSmsPut.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -330,12 +330,12 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<InlineResponse2003>({
+        return this.request<UsersMeSmsGetResponse>({
             path: `/users/me/sms/`,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject13,
+            body: requestParameters.usersMeSmsPutRequestBody,
         });
     }
 
@@ -343,8 +343,8 @@ export class UsersApi extends BaseAPI {
      * ログイン用SMS認証メッセージ送信
      */
     usersSmsLoginConfirmPost(requestParameters: UsersSmsLoginConfirmPostRequest): Observable<void> {
-        if (requestParameters.inlineObject6 === null || requestParameters.inlineObject6 === undefined) {
-            throw new RequiredError('inlineObject6','Required parameter requestParameters.inlineObject6 was null or undefined when calling usersSmsLoginConfirmPost.');
+        if (requestParameters.usersSmsLoginConfirmPostRequestBody === null || requestParameters.usersSmsLoginConfirmPostRequestBody === undefined) {
+            throw new RequiredError('usersSmsLoginConfirmPostRequestBody','Required parameter requestParameters.usersSmsLoginConfirmPostRequestBody was null or undefined when calling usersSmsLoginConfirmPost.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -358,7 +358,7 @@ export class UsersApi extends BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject6,
+            body: requestParameters.usersSmsLoginConfirmPostRequestBody,
         });
     }
 
@@ -366,8 +366,8 @@ export class UsersApi extends BaseAPI {
      * SMS認証通過後、ログイン可能なユーザーの一覧を取得
      */
     usersSmsLoginPost(requestParameters: UsersSmsLoginPostRequest): Observable<Array<SelectLoginUser>> {
-        if (requestParameters.inlineObject7 === null || requestParameters.inlineObject7 === undefined) {
-            throw new RequiredError('inlineObject7','Required parameter requestParameters.inlineObject7 was null or undefined when calling usersSmsLoginPost.');
+        if (requestParameters.usersSmsLoginPostRequestBody === null || requestParameters.usersSmsLoginPostRequestBody === undefined) {
+            throw new RequiredError('usersSmsLoginPostRequestBody','Required parameter requestParameters.usersSmsLoginPostRequestBody was null or undefined when calling usersSmsLoginPost.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -381,7 +381,7 @@ export class UsersApi extends BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject7,
+            body: requestParameters.usersSmsLoginPostRequestBody,
         });
     }
 

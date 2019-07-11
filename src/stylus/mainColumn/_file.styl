@@ -1,0 +1,130 @@
+.mainColumn{
+  &_file{
+    width: 100%;
+    height: calc(100vh - 24px);
+    padding-top: 24px;
+    background: #F9F9F9;
+    position: relative;
+    *{
+      box-sizing: border-box;
+    }
+    &_nav{
+      width: 197px;
+      padding: 0 10px;
+      background: #FFF;
+      border: 1px solid #EDEDED;
+      border-top-left-radius: 30px;
+      border-bottom-left-radius: 30px;
+      position: absolute;
+      top: 92px;
+      right: -140px;
+      z-index: 2;
+      dl{
+        display: table;
+        width: 100%;
+        height: 48px;
+        dd{
+          display: table-cell;
+          width: 44px;
+          height: 24px;
+          padding: 0 10px;
+          cursor: pointer;
+          vertical-align: middle;
+          text-align: center;
+          &:first-child{
+            background: url('~@/assets/images/mainColumn/icn_file-nav-arrow.svg') no-repeat center center / 11.31px 19.8px;
+          }
+        }
+      }
+      &.open{
+        right: 0;
+        dl{
+          dd{
+            &:first-child{
+              background: url('~@/assets/images/mainColumn/icn_file-nav-arrow-close.svg') no-repeat center center / 11.31px 19.8px;
+            }
+          }
+        }
+      }
+    }
+    &_preview{
+      width: calc(100% - 48px);
+      height: calc(100vh - 104px);
+      margin: 0 auto;
+      background: #fff;
+      &_noImage{
+        display: table;
+        width: calc(100% - 48px);
+        height: calc(100vh - 104px);
+        &_tableCell{
+          display: table-cell;
+          vertical-align: middle;
+          text-align: center;
+        }
+        &_img{
+
+        }
+        &_text{
+          margin-top: 32px;
+          p{
+            font-family: Noto Sans JP;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            line-height: 35px;
+            text-align: center;
+            color: #000000;
+          }
+        }
+        &_button{
+          margin-top: 36px;
+          a{
+            display: block;
+            width: 243px;
+            height: 48px;
+            padding: 13px;
+            margin: 0 auto;
+            background: #C4C4C4;
+            border-radius: 8px;
+            font-family: Noto Sans CJK JP;
+            font-weight: 700;
+            color: #fff;
+            font-size: 14px;
+            line-height: 21px;
+            text-align: center;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+    &_bottom{
+      height: 80px;
+      background: #fff;
+      border-top: 2px solid #EDEDED;
+      position: relative;
+      &_download{
+        width: 189px;
+        height: 32px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        a{
+          display: block;
+          padding: 6px;
+          background: #2F80ED;
+          border-radius: 90px;
+          font-family: Noto Sans CJK JP;
+          font-weight: 700;
+          color: #fff;
+          font-size: 14px;
+          line-height: 22px;
+          text-align: center;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}

@@ -1,25 +1,31 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <my-debug-tool v-if="enableDebugTool" />
     <router-view/>
   </div>
 </template>
-<style lang="stylus">
-#app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
 
-#nav
-  padding 30px
-  a
-    font-weight bold
-    color #2c3e50
-    &.router-link-exact-active
-      color #42b983
+<style lang="stylus">
+@import './stylus/_fixed/full'
 </style>
+
+<script lang="ts">
+import { Component as SyncComponent, AsyncComponent } from 'vue';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
+const components: { [key: string]: SyncComponent<any, any, any, any> | AsyncComponent<any, any, any, any> } = {};
+
+const enableDebugTool = process.env.NODE_ENV !== 'production';
+if (enableDebugTool) {
+  components['MyDebugTool'] = () => import(/* webpackChunkName: "debug/MyDebugTool" */ './debug/MyDebugTool.vue');
+}
+
+@Component({
+  components,
+})
+export default class App extends Vue {
+  get enableDebugTool() {
+    return enableDebugTool;
+  }
+}
+</script>

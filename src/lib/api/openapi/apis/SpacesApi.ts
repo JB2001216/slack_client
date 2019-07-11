@@ -14,18 +14,18 @@
 import { Observable } from 'rxjs';
 import { BaseAPI, RequiredError, HttpHeaders, HttpQuery, COLLECTION_FORMATS } from '../runtime';
 import {
-    InlineObject,
-    InlineObject1,
-    InlineObject2,
-    InlineObject3,
-    InlineResponse200,
-    InlineResponse2001,
     Space,
     SpaceUser,
+    SpacesConfirmPostRequestBody,
+    SpacesGetResponse,
+    SpacesPostRequestBody,
+    SpacesSpaceIdPutRequestBody,
+    SpacesSpaceIdUsersGetResponse,
+    SpacesSpaceIdUsersUserIdPutRequestBody,
 } from '../models';
 
 export interface SpacesConfirmPostRequest {
-    inlineObject: InlineObject;
+    spacesConfirmPostRequestBody: SpacesConfirmPostRequestBody;
 }
 
 export interface SpacesGetRequest {
@@ -35,7 +35,7 @@ export interface SpacesGetRequest {
 }
 
 export interface SpacesPostRequest {
-    inlineObject1: InlineObject1;
+    spacesPostRequestBody: SpacesPostRequestBody;
 }
 
 export interface SpacesSpaceIdDeleteRequest {
@@ -48,7 +48,7 @@ export interface SpacesSpaceIdGetRequest {
 
 export interface SpacesSpaceIdPutRequest {
     spaceId: number;
-    inlineObject2: InlineObject2;
+    spacesSpaceIdPutRequestBody: SpacesSpaceIdPutRequestBody;
 }
 
 export interface SpacesSpaceIdUsersGetRequest {
@@ -72,7 +72,7 @@ export interface SpacesSpaceIdUsersUserIdGetRequest {
 export interface SpacesSpaceIdUsersUserIdPutRequest {
     spaceId: number;
     userId: number;
-    inlineObject3: InlineObject3;
+    spacesSpaceIdUsersUserIdPutRequestBody: SpacesSpaceIdUsersUserIdPutRequestBody;
 }
 
 /**
@@ -84,8 +84,8 @@ export class SpacesApi extends BaseAPI {
      * スペース登録用メール認証メッセージ送信
      */
     spacesConfirmPost(requestParameters: SpacesConfirmPostRequest): Observable<void> {
-        if (requestParameters.inlineObject === null || requestParameters.inlineObject === undefined) {
-            throw new RequiredError('inlineObject','Required parameter requestParameters.inlineObject was null or undefined when calling spacesConfirmPost.');
+        if (requestParameters.spacesConfirmPostRequestBody === null || requestParameters.spacesConfirmPostRequestBody === undefined) {
+            throw new RequiredError('spacesConfirmPostRequestBody','Required parameter requestParameters.spacesConfirmPostRequestBody was null or undefined when calling spacesConfirmPost.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -99,13 +99,13 @@ export class SpacesApi extends BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject,
+            body: requestParameters.spacesConfirmPostRequestBody,
         });
     }
 
     /**
      */
-    spacesGet(requestParameters: SpacesGetRequest): Observable<InlineResponse200> {
+    spacesGet(requestParameters: SpacesGetRequest): Observable<SpacesGetResponse> {
         const queryParameters: HttpQuery = {};
 
         if (requestParameters.page !== undefined && requestParameters.page !== null) {
@@ -122,7 +122,7 @@ export class SpacesApi extends BaseAPI {
 
         const headerParameters: HttpHeaders = {};
 
-        return this.request<InlineResponse200>({
+        return this.request<SpacesGetResponse>({
             path: `/spaces/`,
             method: 'GET',
             headers: headerParameters,
@@ -134,8 +134,8 @@ export class SpacesApi extends BaseAPI {
      * メール認証通過後、スペース登録
      */
     spacesPost(requestParameters: SpacesPostRequest): Observable<Space> {
-        if (requestParameters.inlineObject1 === null || requestParameters.inlineObject1 === undefined) {
-            throw new RequiredError('inlineObject1','Required parameter requestParameters.inlineObject1 was null or undefined when calling spacesPost.');
+        if (requestParameters.spacesPostRequestBody === null || requestParameters.spacesPostRequestBody === undefined) {
+            throw new RequiredError('spacesPostRequestBody','Required parameter requestParameters.spacesPostRequestBody was null or undefined when calling spacesPost.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -149,7 +149,7 @@ export class SpacesApi extends BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject1,
+            body: requestParameters.spacesPostRequestBody,
         });
     }
 
@@ -202,8 +202,8 @@ export class SpacesApi extends BaseAPI {
             throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling spacesSpaceIdPut.');
         }
 
-        if (requestParameters.inlineObject2 === null || requestParameters.inlineObject2 === undefined) {
-            throw new RequiredError('inlineObject2','Required parameter requestParameters.inlineObject2 was null or undefined when calling spacesSpaceIdPut.');
+        if (requestParameters.spacesSpaceIdPutRequestBody === null || requestParameters.spacesSpaceIdPutRequestBody === undefined) {
+            throw new RequiredError('spacesSpaceIdPutRequestBody','Required parameter requestParameters.spacesSpaceIdPutRequestBody was null or undefined when calling spacesSpaceIdPut.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -221,13 +221,13 @@ export class SpacesApi extends BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject2,
+            body: requestParameters.spacesSpaceIdPutRequestBody,
         });
     }
 
     /**
      */
-    spacesSpaceIdUsersGet(requestParameters: SpacesSpaceIdUsersGetRequest): Observable<InlineResponse2001> {
+    spacesSpaceIdUsersGet(requestParameters: SpacesSpaceIdUsersGetRequest): Observable<SpacesSpaceIdUsersGetResponse> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
             throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling spacesSpaceIdUsersGet.');
         }
@@ -256,7 +256,7 @@ export class SpacesApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<InlineResponse2001>({
+        return this.request<SpacesSpaceIdUsersGetResponse>({
             path: `/spaces/{spaceId}/users/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))),
             method: 'GET',
             headers: headerParameters,
@@ -329,8 +329,8 @@ export class SpacesApi extends BaseAPI {
             throw new RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling spacesSpaceIdUsersUserIdPut.');
         }
 
-        if (requestParameters.inlineObject3 === null || requestParameters.inlineObject3 === undefined) {
-            throw new RequiredError('inlineObject3','Required parameter requestParameters.inlineObject3 was null or undefined when calling spacesSpaceIdUsersUserIdPut.');
+        if (requestParameters.spacesSpaceIdUsersUserIdPutRequestBody === null || requestParameters.spacesSpaceIdUsersUserIdPutRequestBody === undefined) {
+            throw new RequiredError('spacesSpaceIdUsersUserIdPutRequestBody','Required parameter requestParameters.spacesSpaceIdUsersUserIdPutRequestBody was null or undefined when calling spacesSpaceIdUsersUserIdPut.');
         }
 
         const queryParameters: HttpQuery = {};
@@ -348,7 +348,7 @@ export class SpacesApi extends BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.inlineObject3,
+            body: requestParameters.spacesSpaceIdUsersUserIdPutRequestBody,
         });
     }
 

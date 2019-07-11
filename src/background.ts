@@ -1,4 +1,4 @@
-import { app, protocol, shell, BrowserWindow, Tray, Menu } from 'electron';
+import { app, protocol, shell, BrowserWindow, Tray, Menu, ipcMain } from 'electron';
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const urlScheme = process.env.VUE_APP_URL_SCHEME;
@@ -70,10 +70,19 @@ function createWindow() {
 
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    ...(process.env.WEBPACK_DEV_SERVER_URL ? {
+      width: 1524,
+      height: 768,
+    } : {
+      width: 1024,
+      height: 768,
+    }),
+    minWidth: 1024,
+    minHeight: 768,
     webPreferences: {
       nodeIntegration: true,
+      webSecurity: false,
+      allowRunningInsecureContent: false,
     },
   });
 
@@ -184,4 +193,9 @@ if (isDevelopment) {
       app.quit();
     });
   }
+
+  // デバッグメニューからのopen-url
+  ipcMain.on('open-url', (ev: Event, url: string) => {
+    emitOpenURL(url);
+  });
 }

@@ -1,0 +1,248 @@
+.edit{
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 10px;
+}
+
+.noteEditWrap{
+  padding: 8px 19px 0 19px;
+  *{
+    box-sizing: border-box;
+  }
+  &_list{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    &_user{
+      zoom: 1;
+      &:after {
+        content: "";
+        clear: both;
+        display: block;
+      }
+      dd{
+        float: left;
+        margin-right: 8px;
+        position: relative;
+        &.active{
+          &:before{
+            content: "";
+            display: block;
+            width: 36px;
+            height: 36px;
+            border: 2px solid #2F80ED;
+            border-radius: 50%;
+            position: absolute;
+            top: -4px;
+            left: -4px;
+          }
+        }
+        &.dots{
+          padding: 4px 0;
+        }
+      }
+    }
+    &_menu{
+      zoom: 1;
+      &:after {
+        content: "";
+        clear: both;
+        display: block;
+      }
+      dd{
+        float: left;
+        margin-left: 22px;
+        cursor: pointer;
+        &:first-child{
+          margin-left: 0;
+        }
+      }
+    }
+  }
+  &_status{
+    margin-top: 28px;
+    zoom: 1;
+    &:after {
+      content: "";
+      clear: both;
+      display: block;
+    }
+    dd{
+      float: left;
+      height: 32px;
+      padding: 9px 20px;
+      margin: 0 -2px;
+      background: #C4C4C4;
+      border-radius: 18px;
+      font-family: Noto Sans CJK JP;
+      color: #FFF;
+      font-size: 14px;
+      line-height: 1;
+      text-align: center;
+      &:first-child{
+        margin-left: 0;
+      }
+      &:last-child{
+        width: 89px;
+        padding: 9px 24px 9px 16px;
+        margin-left: 10px;
+        background: url('~@/assets/images/mainColumn/icn_status-arrow.svg') no-repeat center right 10px, rgba(51, 51, 51, 0.72);
+        cursor: pointer;
+        text-align: left;
+        svg{
+          display: inline-block;
+        }
+      }
+    }
+    svg {
+      float: left;
+      margin-top: 8.5px;
+    }
+  }
+  &_post{
+    width: calc(100% + 38px);
+    margin-top: 30px;
+    margin-left: -19px;
+    border-top: 2px solid #EDEDED;
+    zoom: 1;
+    &:after {
+      content: "";
+      clear: both;
+      display: block;
+    }
+    &_view, &_edit{
+      float: right;
+      width: 50%;
+      height: calc(100vh - 280px);
+      padding: 28px 28px 50px 28px;
+      overflow-y: auto;
+      p, li{
+        font-size: 14px;
+        line-height: 22px;
+        margin-top: 15px;
+      }
+      p{
+        &:first-child{
+          margin-top: 0;
+        }
+      }
+      h3{
+        margin-top: 20px;
+        font-weight: 700;
+        font-size: 18px;
+        &:first-child{
+          margin-top: 0;
+        }
+      }
+    }
+    &_edit{
+      background: #FAFAFC;
+      border-right: 2px solid #EDEDED;
+      box-shadow: inset 0px 0px 8px rgba(51, 51, 51, 0.05);
+    }
+    &.noEdit{
+      .noteEditWrap_post_view{
+        width: 100%;
+      }
+      .noteEditWrap_post_edit{
+        display: none;
+      }
+    }
+  }
+  &_submit{
+    display: block;
+    width: 100%;
+    min-height: 60px;
+    padding: 9px 20px 24px 20px;
+    background: #fff;
+    border-top: 2px solid #EDEDED;
+    text-align: center;
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    button{
+      display: inline-block;
+      width: 220px;
+      padding: 10px;
+      margin: 15px 1.5% 0 1.5%;
+      border: none;
+      border-radius: 90px;
+      cursor: pointer;
+      font-family: Noto Sans CJK JP;
+      font-size: 14px;
+      line-height: 1;
+      text-align: center;
+      &:first-child{
+        background: #2F80ED;
+        color: #fff;
+      }
+      &:nth-child(2){
+        background: #E6F0FF;
+        color: #2F80ED;
+      }
+      &:last-child{
+        width: 180px;
+        background: #fff;
+        border: 1px solid #C4C4C4;
+        box-sizing: border-box;
+        color: #C4C4C4;
+        svg{
+          margin-right: 5px;
+        }
+      }
+    }
+    &.noEdit{
+      button{
+        &:last-child{
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.home{
+  .mainColumn{
+    &.noSubColumn{
+      grid-column: 3 / 9;
+      .noteEditWrap{
+        &_list{
+          display: block;
+          &:nth-of-type(1){
+            float: left;
+            width: calc(100% - 162px);
+          }
+          &:nth-of-type(2){
+            float: right;
+            width: 162px;
+            margin-top: 4px;
+          }
+          &_user{
+            float: left;
+            margin-right: 40px;
+            margin-bottom: 10px;
+          }
+        }
+        &_status{
+          float: left;
+          width: 401px;
+          margin-top: 0;
+        }
+        &_post{
+          margin-top: 58px;
+          @media screen and (max-width: 1132px){
+            margin-top: 100px;
+          }
+        }
+      }
+    }
+  }
+}

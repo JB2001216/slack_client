@@ -11,7 +11,7 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     "test:unit": "vue-cli-service test:unit",
-    "kss": "mkdir -p ./kss/dist & stylus ./src/stylus/style.styl -o ./kss/dist & kss -c ./kss/kss-config.json"
+    "kss": "mkdir -p ./kss/dist & stylus ./src/stylus/_fixed/full.styl -o ./kss/dist & kss -c ./kss/kss-config.json"
   },
   "main": "background.js",
   "dependencies": {

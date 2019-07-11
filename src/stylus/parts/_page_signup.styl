@@ -14,6 +14,26 @@
     vertical-align: top;
     padding: 40px;
     background: #C4C4C4;
+    &.signup{
+      background: url('~@/assets/images/parts/login-bg-signup.png') no-repeat center center / cover;
+    }
+    &.login{
+      background: url('~@/assets/images/parts/login-bg-login.png') no-repeat center center / cover;
+    }
+    &.invitation{
+      background: url('~@/assets/images/parts/login-bg-invitation.png') no-repeat center center / cover;
+    }
+    &.error{
+      background: url('~@/assets/images/parts/login-bg-error.png') no-repeat center center / cover;
+    }
+    &.success{
+      background: url('~@/assets/images/parts/login-bg-success.png') no-repeat center center / cover;
+    }
+    &.login,&.success{
+      h2{
+        color: #333333;
+      }
+    }
     h2{
       font-family: Noto Sans CJK JP;
       font-weight: 700;
@@ -54,23 +74,40 @@
       }
     }
     &_inputText{
-      margin-top: 19px;
-      input{
-        width: 100%;
-        padding: 18px 15px;
-        margin-top: 16px;
-        background: #fff;
-        border: 1px solid rgba(51, 51, 51, 0.72);
-        border-radius: 4px;
-        font-family: Noto Sans CJK JP;
-        font-size: 14px;
-        line-height: 1;
-        color: #333333;
-        &:first-child{
-          margin-top: 0;
+      &_container{
+        margin-top: 19px;
+        position: relative;
+        input{
+          width: 100%;
+          padding: 18px 15px;
+          margin-top: 16px;
+          background: #fff;
+          border: 1px solid #c4c4c4;
+          border-radius: 4px;
+          font-family: Noto Sans CJK JP;
+          font-size: 14px;
+          line-height: 1;
+          color: #333333;
+          &:first-child{
+            margin-top: 0;
+          }
+          &::placeholder{
+            color: rgba(51, 51, 51, 0.72);
+          }
         }
-        &::placeholder{
-          color: rgba(51, 51, 51, 0.72);
+        p{
+          font-family: Noto Sans CJK JP;
+          font-weight: 700;
+          font-size: 14px;
+          position: absolute;
+          top: 18px;
+          right: 15px;
+        }
+        &_blue{
+          color: #2F80ED;
+        }
+        &_red{
+          color: #DE6868;
         }
       }
     }

@@ -3,11 +3,19 @@ import router from './router';
 import store from './store';
 import i18n, { defaultLocale } from './i18n';
 import localStorage from '@/lib/local-storage';
+import * as components from './components';
 
 import App from './App.vue';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 Vue.config.devtools = process.env.NODE_ENV !== 'production';
+
+// コンポーネント登録
+type ComponentsKey = keyof typeof components;
+(<ComponentsKey[]>Object.keys(components)).forEach((k) => {
+  const c = components[k];
+  Vue.component(k, c);
+});
 
 (async() => {
   // 初期言語設定

@@ -94,7 +94,7 @@
         width: 89px;
         padding: 9px 24px 9px 16px;
         margin-left: 10px;
-        //background: url(../images/mainColumn/icn_status-arrow.svg) no-repeat center right 10px, rgba(51, 51, 51, 0.72);
+        background: url('~@/assets/images/mainColumn/icn_status-arrow.svg') no-repeat center right 10px, rgba(51, 51, 51, 0.72);
         cursor: pointer;
         text-align: left;
         svg{
@@ -119,7 +119,8 @@
       float: left;
       padding: 8px 28px 8px 12px;
       margin-right: 8px;
-      //background: url(../images/mainColumn/icn_tag-close.svg) no-repeat center right 10px, #FAECC3;
+      background: url('~@/assets/images/mainColumn/icn_tag-close.svg') no-repeat center right 10px, #FAECC3;
+      border-radius: 4px;
       font-family: Noto Sans CJK JP;
       color: #333;
       font-size: 12px;
@@ -128,7 +129,7 @@
       &.button{
         padding: 6px 2px;
         background: #FFF;
-        color: rgba(51, 51, 51, 0.72);
+        color: #333;
         font-size: 14px;
         opacity: 0.5;
       }
@@ -155,8 +156,9 @@
     width: calc(100% + 38px);
     margin-left: -19px;
     padding: 31px 19px 0 19px;
-    //background: url(../images/mainColumn/icn_post-handle.svg) no-repeat top 8px center, #FFF;
+    background: url('~@/assets/images/mainColumn/icn_post-handle.svg') no-repeat top 8px center, #FFF;
     border-top: 2px solid #EDEDED;
+    overflow: hidden;
     small{
       display: block;
       text-align: center;
@@ -168,9 +170,8 @@
       opacity: 0.5;
     }
     &_board{
-      height: 350px;
-      max-height: calc(100vh - 588px);
-      margin: 25px 0 52px 0;
+      height: calc(50vh - 160px);
+      margin: 25px 0 0 0;
       overflow-y: auto;
       &::-webkit-scrollbar{
         width: 10px;
@@ -225,39 +226,71 @@
     }
   }
   &_comment{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: flex-start;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    width: 100%;
-    min-height: 60px;
-    padding: 17px 19px 17px 39px;
+    padding: 0 20px;
     background: #fff;
-    border-top: 2px solid #EDEDED;
     position: absolute;
-    bottom: 0;
     left: 0;
-    svg{
-      cursor: pointer;
-    }
-    input[type=text]{
+    right: 0;
+    bottom: 0;
+    &_box{
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+      justify-content: start;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
       width: 100%;
-      height: 24px;
-      margin-left: 24px;
-      border: none;
-      resize: none;
-      outline: none;
-      font-family: Noto Sans CJK JP;
-      color: #333;
-      font-size: 14px;
-      line-height: 1.57;
-      &::placeholder{
-        color: #C4C4C4;
+      min-height: 44px;
+      padding: 10px 10px 10px 20px;
+      background: #fff;
+      border: 1px solid #C4C4C4;
+      border-radius: 8px;
+      margin: auto;
+      &_upload{
+        width: 24px;
+        height: 24px;
+        background: url('~@/assets/images/mainColumn/icn_file-add.svg') no-repeat top left, #FFF;
+        cursor: pointer;
+        opacity: 0.2;
+        overflow: hidden;
+        input[type=file],
+        input[type=text] {
+          display: none;
+        }
+      }
+      &_content{
+        width: 100%;
+        height: 24px;
+        margin-left: 24px;
+        border: none;
+        resize: none;
+        outline: none;
+        font-family: Noto Sans CJK JP;
+        color: #333;
+        font-size: 14px;
+        line-height: 1.57;
+        &::placeholder{
+          color: #C4C4C4;
+        }
+      }
+    }
+    &_text{
+      min-height: 42px;
+      padding: 12px 0;
+      p{
+        font-family: Noto Sans CJK JP;
+        color: #999;
+        font-size: 12px;
+        line-height: 18px;
+        opacity: 0;
+      }
+      &.show{
+        p{
+          opacity: 1;
+        }
       }
     }
   }
