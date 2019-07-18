@@ -42,6 +42,7 @@ export interface FilesGetRequest {
     spaceId: number;
     projectId: number;
     page?: number;
+    limit?: number;
     name?: string;
     userId?: number;
 }
@@ -173,6 +174,10 @@ export class FilesApi extends BaseAPI {
 
         if (requestParameters.page !== undefined && requestParameters.page !== null) {
             queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.limit !== undefined && requestParameters.limit !== null) {
+            queryParameters['limit'] = requestParameters.limit;
         }
 
         if (requestParameters.name !== undefined && requestParameters.name !== null) {

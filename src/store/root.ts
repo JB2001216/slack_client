@@ -1,11 +1,18 @@
-import { store as createStore, Getters, Mutations, Actions, module } from 'sinai';
+import { Getters, Mutations, Actions, module } from 'sinai';
 import i18n, { Locale, loadLocale, defaultLocale } from '@/i18n';
 import localStorage from '@/lib/local-storage';
-import api from './modules/api';
+import { apiRegistry, UsersApi, MyUser } from '@/lib/api';
+import activeUser from './modules/active-user';
+import { first } from 'rxjs/operators';
+
+interface LoggedInUser extends MyUser{
+  token: string;
+}
 
 class RootState {
   locale: Locale = defaultLocale;
   titleKey?: string = undefined;
+  loggedInUsers: LoggedInUser[] = [];
 }
 
 class RootGetters extends Getters<RootState>() {
@@ -15,6 +22,7 @@ class RootGetters extends Getters<RootState>() {
     }
     return i18n.t(this.state.titleKey).toString();
   }
+
   get documentTitle() {
     const title = this.title;
     return (title === '' ? '' : `${title} - `) + process.env.VUE_APP_TITLE;
@@ -26,14 +34,56 @@ class RootMutations extends Mutations<RootState>() {
     this.state.locale = locale;
     localStorage.locale = locale;
   }
+
   setTitleKey(titleKey: string) {
     this.state.titleKey = titleKey;
+  }
+
+  addLoggedInUser(user: MyUser, token: string, saveToken = true) {
+    if (!this.state.loggedInUsers.find((u) => u.id === user.id)) {
+      const loggedInUser: LoggedInUser = Object.assign(user, { token });
+      this.state.loggedInUsers.push(loggedInUser);
+    }
+    if (saveToken) {
+      const tokens = localStorage.tokens;
+      if (!tokens.includes(token)) {
+        tokens.push(token);
+        localStorage.tokens = tokens;
+      }
+    }
+  }
+
+  removeLoggedInUser(userId: number, saveToken = true) {
+    const index = this.state.loggedInUsers.findIndex((u) => u.id === userId);
+    if (index >= 0) {
+      const user = this.state.loggedInUsers[index];
+      this.state.loggedInUsers.splice(index, 1);
+      if (saveToken) {
+        const tokens = localStorage.tokens;
+        const tokenIndex = tokens.indexOf(user.token);
+        if (tokenIndex >= 0) {
+          tokens.splice(tokenIndex, 1);
+          localStorage.tokens = tokens;
+        }
+      }
+      apiRegistry.release(user.token);
+    }
   }
 }
 
 class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
-  async loadLocale(locale: Locale) {
-    this.mutations.setLocale(await loadLocale(locale));
+  async initLocale() {
+    this.mutations.setLocale(await loadLocale(localStorage.locale || defaultLocale));
+  }
+
+  async initLoggedInUsers() {
+    const results = await Promise.all(localStorage.tokens.map((t) => this.addLoggedInUsers(t, false)));
+  }
+
+  async addLoggedInUsers(token: string, saveToken = true) {
+    const user = await apiRegistry.load(UsersApi, token).usersMeGet().pipe(first()).toPromise();
+    this.mutations.addLoggedInUser(user, token, saveToken);
+    return user;
   }
 }
 
@@ -42,6 +92,6 @@ const root = module({
   getters: RootGetters,
   mutations: RootMutations,
   actions: RootActions,
-}).child('api', api);
+}).child('activeUser', activeUser);
 
 export default root;

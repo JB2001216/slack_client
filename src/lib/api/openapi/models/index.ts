@@ -24,6 +24,7 @@ export * from './SpacesConfirmPostRequestBody';
 export * from './SpacesGetResponse';
 export * from './SpacesPostRequestBody';
 export * from './SpacesPostRequestBodyOwner';
+export * from './SpacesPostResponse';
 export * from './SpacesSpaceIdProjectsProjectIdTasksTags';
 export * from './SpacesSpaceIdPutRequestBody';
 export * from './SpacesSpaceIdUsersGetResponse';

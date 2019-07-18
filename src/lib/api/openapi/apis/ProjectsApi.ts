@@ -27,6 +27,7 @@ import {
 export interface ProjectsGetRequest {
     spaceId: number;
     page?: number;
+    limit?: number;
     displayName?: string;
     userId?: number;
 }
@@ -56,6 +57,7 @@ export interface ProjectsProjectIdUsersGetRequest {
     spaceId: number;
     projectId: number;
     page?: number;
+    limit?: number;
     account?: string;
     displayName?: string;
 }
@@ -101,6 +103,10 @@ export class ProjectsApi extends BaseAPI {
 
         if (requestParameters.page !== undefined && requestParameters.page !== null) {
             queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.limit !== undefined && requestParameters.limit !== null) {
+            queryParameters['limit'] = requestParameters.limit;
         }
 
         if (requestParameters.displayName !== undefined && requestParameters.displayName !== null) {
@@ -258,6 +264,10 @@ export class ProjectsApi extends BaseAPI {
 
         if (requestParameters.page !== undefined && requestParameters.page !== null) {
             queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.limit !== undefined && requestParameters.limit !== null) {
+            queryParameters['limit'] = requestParameters.limit;
         }
 
         if (requestParameters.account !== undefined && requestParameters.account !== null) {

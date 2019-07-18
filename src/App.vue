@@ -1,19 +1,24 @@
 <template>
   <div id="app">
     <my-debug-tool v-if="enableDebugTool" />
+    <my-flash-message/>
     <router-view/>
   </div>
 </template>
 
 <style lang="stylus">
+@import '../node_modules/vue-flash-message/dist/vue-flash-message.min.css'
 @import './stylus/_fixed/full'
 </style>
 
 <script lang="ts">
 import { Component as SyncComponent, AsyncComponent } from 'vue';
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import MyFlashMessage from '@/components/MyFlashMessage.vue';
 
-const components: { [key: string]: SyncComponent<any, any, any, any> | AsyncComponent<any, any, any, any> } = {};
+const components: { [key: string]: SyncComponent<any, any, any, any> | AsyncComponent<any, any, any, any> } = {
+  MyFlashMessage,
+};
 
 const enableDebugTool = process.env.NODE_ENV !== 'production';
 if (enableDebugTool) {

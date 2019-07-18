@@ -1,4 +1,4 @@
 export type MyTextInputMessage = {
   type: 'success' | 'error';
-  text: string;
+  text: string | string[];
 } | null;

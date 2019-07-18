@@ -19,6 +19,7 @@ import {
     SpacesConfirmPostRequestBody,
     SpacesGetResponse,
     SpacesPostRequestBody,
+    SpacesPostResponse,
     SpacesSpaceIdPutRequestBody,
     SpacesSpaceIdUsersGetResponse,
     SpacesSpaceIdUsersUserIdPutRequestBody,
@@ -30,6 +31,7 @@ export interface SpacesConfirmPostRequest {
 
 export interface SpacesGetRequest {
     page?: number;
+    limit?: number;
     account?: string;
     displayName?: string;
 }
@@ -54,6 +56,7 @@ export interface SpacesSpaceIdPutRequest {
 export interface SpacesSpaceIdUsersGetRequest {
     spaceId: number;
     page?: number;
+    limit?: number;
     account?: string;
     displayName?: string;
     spaceRoleId?: number;
@@ -112,6 +115,10 @@ export class SpacesApi extends BaseAPI {
             queryParameters['page'] = requestParameters.page;
         }
 
+        if (requestParameters.limit !== undefined && requestParameters.limit !== null) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
         if (requestParameters.account !== undefined && requestParameters.account !== null) {
             queryParameters['account'] = requestParameters.account;
         }
@@ -133,7 +140,7 @@ export class SpacesApi extends BaseAPI {
     /**
      * メール認証通過後、スペース登録
      */
-    spacesPost(requestParameters: SpacesPostRequest): Observable<Space> {
+    spacesPost(requestParameters: SpacesPostRequest): Observable<SpacesPostResponse> {
         if (requestParameters.spacesPostRequestBody === null || requestParameters.spacesPostRequestBody === undefined) {
             throw new RequiredError('spacesPostRequestBody','Required parameter requestParameters.spacesPostRequestBody was null or undefined when calling spacesPost.');
         }
@@ -144,7 +151,7 @@ export class SpacesApi extends BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        return this.request<Space>({
+        return this.request<SpacesPostResponse>({
             path: `/spaces/`,
             method: 'POST',
             headers: headerParameters,
@@ -236,6 +243,10 @@ export class SpacesApi extends BaseAPI {
 
         if (requestParameters.page !== undefined && requestParameters.page !== null) {
             queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.limit !== undefined && requestParameters.limit !== null) {
+            queryParameters['limit'] = requestParameters.limit;
         }
 
         if (requestParameters.account !== undefined && requestParameters.account !== null) {

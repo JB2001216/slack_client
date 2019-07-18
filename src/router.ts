@@ -1,16 +1,28 @@
 import electron from 'electron';
 import Vue from 'vue';
-import Router from 'vue-router';
+import Router, { Route, NavigationGuard } from 'vue-router';
+import store from './store';
 import SpaceAdd1 from './views/single/space-add/SpaceAdd1.vue';
 import SpaceAdd2 from './views/single/space-add/SpaceAdd2.vue';
 import Login from './views/single/login/Login.vue';
 import LoginSms from './views/single/login/LoginSms.vue';
 import LoginInvitation from './views/single/login/LoginInvitation.vue';
+import MainContainer from './views/main/MainContainer.vue';
+import ProjectColumn from './views/main/columns/project/ProjectColumn.vue';
+import SubColumnPass from './views/main/columns/sub/SubColumnPass.vue';
+import FilesColumn from './views/main/columns/sub/FilesColumn.vue';
+import NotesColumn from './views/main/columns/sub/NotesColumn.vue';
+import TasksColumn from './views/main/columns/sub/TasksColumn.vue';
+import MainColumnPass from './views/main/columns/main/MainColumnPass.vue';
+import FileColumn from './views/main/columns/main/FileColumn.vue';
+import NoteColumn from './views/main/columns/main/NoteColumn.vue';
+import TaskColumn from './views/main/columns/main/TaskColumn.vue';
 
 Vue.use(Router);
 
 const router = new Router({
   routes: [
+    // single
     {
       path: '/space-add1',
       name: 'space-add1',
@@ -36,14 +48,138 @@ const router = new Router({
       name: 'login-invitation',
       component: LoginInvitation,
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
-    // },
-    { path: '*', redirect: (to) => ({ name: 'space-add1' }) },
+
+    // main
+    {
+      path: '/main/users',
+      name: 'users',
+      component: MainContainer,
+      children: [
+        {
+          path: ':userId',
+          name: 'user',
+          beforeEnter: beforeUserRouteEnter, // projects取得
+          components: {
+            projectColumn: ProjectColumn,
+            subColumn: SubColumnPass,
+            mainColumn: MainColumnPass,
+          },
+          children: [
+            {
+              path: 'projects/:projectId',
+              name: 'project',
+              beforeEnter: beforeProjectRouteEnter, // project選択
+              components: {
+                subColumn: SubColumnPass,
+                mainColumn: MainColumnPass,
+              },
+              children: [
+                {
+                  path: 'files',
+                  name: 'files',
+                  components: {
+                    subColumn: FilesColumn,
+                    mainColumn: MainColumnPass,
+                  },
+                  children: [
+                    {
+                      path: ':fileId',
+                      name: 'file',
+                      components: {
+                        mainColumn: FileColumn,
+                      },
+                    },
+                  ],
+                },
+                {
+                  path: 'notes',
+                  name: 'notes',
+                  components: {
+                    subColumn: NotesColumn,
+                    mainColumn: MainColumnPass,
+                  },
+                  children: [
+                    {
+                      path: ':noteId',
+                      name: 'note',
+                      components: {
+                        mainColumn: NoteColumn,
+                      },
+                    },
+                  ],
+                },
+                {
+                  path: 'tasks',
+                  name: 'tasks',
+                  components: {
+                    subColumn: TasksColumn,
+                    mainColumn: MainColumnPass,
+                  },
+                  children: [
+                    {
+                      path: ':taskId',
+                      name: 'task',
+                      components: {
+                        mainColumn: TaskColumn,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      path: '*',
+      redirect: (to) => {
+        if (store.state.loggedInUsers.length) {
+          return {
+            name: 'user',
+            params: { userId: store.state.loggedInUsers[0].id.toString() },
+          };
+        } else {
+          return {
+            name: 'space-add1',
+          };
+        }
+      },
+    },
   ],
 });
+
+/** /main/user/:userId */
+async function beforeUserRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+  const userId = parseInt(to.params.userId);
+  const user = store.state.loggedInUsers.find((u) => u.id === userId);
+  if (!user) {
+    return next({ name: 'users' });
+  }
+  try {
+    if (!store.state.activeUser.loggedInUser || user.id !== store.state.activeUser.loggedInUser.id) {
+      await store.actions.activeUser.init(user);
+    }
+    return next();
+  } catch (err) {
+    return next((vm) => {
+      vm.$showApiError(vm, err);
+      vm.$router.replace({ name: 'users' });
+    });
+  }
+}
+
+/** /main/user/:userId/projects/:projectId */
+async function beforeProjectRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+  const projectId = parseInt(to.params.projectId);
+  const project = store.state.activeUser.projects!.find((p) => p.id === projectId);
+  if (!project) {
+    return next({ name: 'user', params: { userId: to.params.userId } });
+  }
+  store.mutations.activeUser.setActiveProjectId(project.id);
+  return next();
+}
 
 // ブラウザ経由
 electron.ipcRenderer.on('open-url', (ev: any, urlraw: string) => {

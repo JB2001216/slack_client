@@ -34,6 +34,7 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     'unicode-bom': ['error', 'never'],
     'indent': ['error', 2, { 'SwitchCase': 1 }],
+    'padded-blocks': 'off',
 
     // vue
     'vue/html-indent': ['error', 2],

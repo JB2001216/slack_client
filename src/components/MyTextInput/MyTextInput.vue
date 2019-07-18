@@ -8,6 +8,7 @@
       :maxlength="maxlength"
       :minlength="minlength"
       :required="required"
+      :readonly="readonly"
       @focus="onFocus($event)"
       @blur="onBlur($event)"
       @input="onInput($event)"
@@ -19,12 +20,14 @@
         columnWrap_right_inputText_container_blue: message.type === 'success',
         columnWrap_right_inputText_container_red: message.type === 'error',
       }"
-    >{{message.text}}</p>
+    >{{typeof message.text === 'string' ? message.text : message.text[0]}}</p>
   </div>
 </template>
 
 <style lang="stylus" scoped>
 .columnWrap_right_inputText_container
+  input[readonly]
+    background: #ddd
   p
     z-index 1
     background: #fff

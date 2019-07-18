@@ -1,17 +1,29 @@
 import { Locale } from '@/i18n/types';
 
 enum LocalStorageKeys {
-  locale = 'locale',
+  Locale = 'locale',
+  Tokens = 'tokens',
 }
 
 class LocalStorage {
   constructor(private _keyPrefix: string) {}
 
   get locale(): Locale | null {
-    return <Locale | null> this._get(LocalStorageKeys.locale);
+    return <Locale | null> this._get(LocalStorageKeys.Locale);
   }
   set locale(v: Locale | null) {
-    this._set(LocalStorageKeys.locale, v);
+    this._set(LocalStorageKeys.Locale, v);
+  }
+
+  get tokens(): string[] {
+    const tokenJson = this._get(LocalStorageKeys.Tokens);
+    if (!tokenJson) {
+      return [];
+    }
+    return JSON.parse(tokenJson);
+  }
+  set tokens(v: string[]) {
+    this._set(LocalStorageKeys.Tokens, JSON.stringify(v));
   }
 
   private _fullKey(key: LocalStorageKeys) {
