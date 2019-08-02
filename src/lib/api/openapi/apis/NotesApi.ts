@@ -17,11 +17,11 @@ import {
     Note,
     NoteStatus,
     NotesGetResponse,
-    NotesNoteIdFavoriteGetResponse,
     NotesNoteIdFavoritePostRequestBody,
     NotesNoteIdPutRequestBody,
     NotesPostRequestBody,
     TasksStatusPostRequestBodyItem,
+    TasksTaskIdFavoriteGetResponse,
 } from '../models';
 
 export interface NotesGetRequest {
@@ -213,7 +213,7 @@ export class NotesApi extends BaseAPI {
 
     /**
      */
-    notesNoteIdFavoriteGet(requestParameters: NotesNoteIdFavoriteGetRequest): Observable<NotesNoteIdFavoriteGetResponse> {
+    notesNoteIdFavoriteGet(requestParameters: NotesNoteIdFavoriteGetRequest): Observable<TasksTaskIdFavoriteGetResponse> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
             throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling notesNoteIdFavoriteGet.');
         }
@@ -234,7 +234,7 @@ export class NotesApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<NotesNoteIdFavoriteGetResponse>({
+        return this.request<TasksTaskIdFavoriteGetResponse>({
             path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/favorite/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))),
             method: 'GET',
             headers: headerParameters,
@@ -244,7 +244,7 @@ export class NotesApi extends BaseAPI {
 
     /**
      */
-    notesNoteIdFavoritePost(requestParameters: NotesNoteIdFavoritePostRequest): Observable<NotesNoteIdFavoriteGetResponse> {
+    notesNoteIdFavoritePost(requestParameters: NotesNoteIdFavoritePostRequest): Observable<TasksTaskIdFavoriteGetResponse> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
             throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling notesNoteIdFavoritePost.');
         }
@@ -271,7 +271,7 @@ export class NotesApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<NotesNoteIdFavoriteGetResponse>({
+        return this.request<TasksTaskIdFavoriteGetResponse>({
             path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/favorite/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))),
             method: 'POST',
             headers: headerParameters,

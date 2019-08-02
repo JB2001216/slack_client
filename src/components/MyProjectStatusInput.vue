@@ -3,13 +3,13 @@
     <template v-for="(o,i) in progressOptions">
       <dd
         :key="`dd-${o.id}`"
-        :style="{'background-color': isActive(o) ? (o.color || defaultColor) : inactiveColor}"
+        :style="{
+          '--task-startColor': getColor(o),
+          '--task-endColor': i + 1 < progressOptions.length ? getColor(progressOptions[i+1]) : ' ',
+        }"
         class="item"
         @click="select(o)"
       >{{o.name}}</dd>
-      <svg :key="`svg1-${o.id}`" v-if="i < progressOptions.length - 1" width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 0.5 C0 0.5 4.5 5.69231 10 5.69231 C15.5 5.69231 20 0.5 20 0.5 V15.5 C20 15.5 15.5 10.3077 10 10.3077C4.5 10.3077 0 15.5 0 15.5 V0.5Z" :fill="inactiveColor"/>
-      </svg>
     </template>
     <dd
       v-if="etcOptions.length"
@@ -22,7 +22,7 @@
         <div
           v-for="o in etcOptions"
           :key="o.id"
-          :style="{'background-color': isActive(o) ? (o.color || defaultColor) : inactiveColor}"
+          :style="{'background-color': o.color || defaultColor}"
           class="other_dialog_item item"
           @click="select(o)"
         >{{o.name}}</div>
@@ -37,7 +37,8 @@
     cursor: pointer
   .other
     position: relative
-    width: auto;
+    width: auto
+    background-color: #C4C4C4
     &_dialog
       position: absolute
       top: 34px
@@ -65,7 +66,7 @@ enum ProjectStatusCategory {
   etc = 90,
 }
 
-interface ProjectStatus {
+interface ProjectStatusOption {
   id: number;
   category: ProjectStatusCategory;
   name: string;
@@ -76,7 +77,7 @@ interface ProjectStatus {
 @Component
 export default class MyProjectStatusInput extends Vue {
   @Prop({ type: Array, required: true })
-  options!: ProjectStatus[];
+  options!: ProjectStatusOption[];
 
   @Prop({ type: Boolean, default: false })
   disabled!: boolean;
@@ -108,7 +109,7 @@ export default class MyProjectStatusInput extends Vue {
     return null;
   }
 
-  select(o: ProjectStatus) {
+  select(o: ProjectStatusOption) {
     if (this.disabled) return;
     this.$emit('input', o.id);
   }
@@ -118,7 +119,7 @@ export default class MyProjectStatusInput extends Vue {
     this.selectingEtc = !this.selectingEtc;
   }
 
-  isActive(o: ProjectStatus) {
+  isActive(o: ProjectStatusOption) {
     const selectedOption = this.selectedOption;
     if (!selectedOption) {
       return false;
@@ -135,11 +136,15 @@ export default class MyProjectStatusInput extends Vue {
     return false;
   }
 
-  isProgress(o: ProjectStatus | null) {
+  getColor(o: ProjectStatusOption) {
+    return this.isActive(o) ? (o.color || this.defaultColor) : this.inactiveColor;
+  }
+
+  isProgress(o: ProjectStatusOption | null) {
     return o && o.category === ProjectStatusCategory.progress;
   }
 
-  isEtc(o: ProjectStatus | null) {
+  isEtc(o: ProjectStatusOption | null) {
     return o && o.category === ProjectStatusCategory.etc;
   }
 

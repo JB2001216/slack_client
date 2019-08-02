@@ -74,7 +74,6 @@ async function fetchNotes(query: Route['query']) {
 Component.registerHooks([
   'beforeRouteEnter',
 ]);
-
 @Component({
   components: {
     SubColumnLayout,

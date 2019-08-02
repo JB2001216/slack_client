@@ -5,12 +5,12 @@
     </div>
     <div class="projectColumn_body">
       <ul>
-        <li><a class="projectColumn_add" href="#">プロジェクト
+        <li><router-link class="projectColumn_add" :to="{name: 'project-add', params: { userId: loggedInUser.id }}">プロジェクト
           <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="m22 13h-19.99999v-2h19.99999z" />
             <path d="m11 22v-20.00003h2v20.00003z" />
           </svg>
-        </a></li>
+        </router-link></li>
         <li v-for="p in projects" :key="p.id">
           <router-link
             :class="{active: p.id === activeProjectId}"

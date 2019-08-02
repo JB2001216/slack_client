@@ -13,13 +13,13 @@
 
 /**
  * @export
- * @interface ProjectsPostRequestBody
+ * @interface TasksTaskIdFavoritePostRequestBody
  */
-export interface ProjectsPostRequestBody {
+export interface TasksTaskIdFavoritePostRequestBody {
     /**
      * 
-     * @type {string}
-     * @memberof ProjectsPostRequestBody
+     * @type {boolean}
+     * @memberof TasksTaskIdFavoritePostRequestBody
      */
-    displayName: string;
+    value: boolean;
 }

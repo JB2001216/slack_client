@@ -1,6 +1,6 @@
 import electron from 'electron';
 import Vue from 'vue';
-import Router, { Route, NavigationGuard } from 'vue-router';
+import Router from 'vue-router';
 import store from './store';
 import SpaceAdd1 from './views/single/space-add/SpaceAdd1.vue';
 import SpaceAdd2 from './views/single/space-add/SpaceAdd2.vue';
@@ -14,6 +14,7 @@ import FilesColumn from './views/main/columns/sub/FilesColumn.vue';
 import NotesColumn from './views/main/columns/sub/NotesColumn.vue';
 import TasksColumn from './views/main/columns/sub/TasksColumn.vue';
 import MainColumnPass from './views/main/columns/main/MainColumnPass.vue';
+import ProjectAddColumn from './views/main/columns/main/ProjectAddColumn.vue';
 import FileColumn from './views/main/columns/main/FileColumn.vue';
 import NoteColumn from './views/main/columns/main/NoteColumn.vue';
 import TaskColumn from './views/main/columns/main/TaskColumn.vue';
@@ -64,6 +65,14 @@ const router = new Router({
             mainColumn: MainColumnPass,
           },
           children: [
+            {
+              path: 'projects/add',
+              name: 'project-add',
+              components: {
+                subColumn: SubColumnPass,
+                mainColumn: ProjectAddColumn,
+              },
+            },
             {
               path: 'projects/:projectId',
               name: 'project',
@@ -121,6 +130,13 @@ const router = new Router({
                     mainColumn: MainColumnPass,
                   },
                   children: [
+                    {
+                      path: 'add',
+                      name: 'task-add',
+                      components: {
+                        mainColumn: TaskColumn,
+                      },
+                    },
                     {
                       path: ':taskId',
                       name: 'task',

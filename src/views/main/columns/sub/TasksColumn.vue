@@ -3,7 +3,7 @@
     <div class="tab_task">
       <div class="task_menu">
         <div class="task_menu_left">
-          <a class="task_menu_favorite" href="#">
+          <a class="task_menu_favorite" href="#" :class="{active: isFavorite}" @click.prevent="favorite(!isFavorite)">
             <svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="m12 1.5 2.3574 7.25532h7.6287l-6.1718 4.48408 2.3574 7.2553-6.1717-4.4841-6.17175 4.4841 2.3574-7.2553-6.17174-4.48408h7.62869z" />
             </svg>
@@ -25,103 +25,23 @@
         </div>
       </div>
       <div class="task_list">
-        <a class="task_add" href="#">
+        <router-link class="task_add" :to="getTaskAddTo()">
           <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="m22 13h-19.99999v-2h19.99999z" />
             <path d="m11 22v-20.00003h2v20.00003z" />
           </svg>
           新規タスク
-        </a>
+        </router-link>
         <ul>
-          <li class="task_item">
+          <li class="task_item" v-for="t in tasks" :key="t.id" @click="$router.push(getTaskTo(t.id))">
             <div class="task_item_bar"/>
             <div class="task_item_image">
               <img src="@/assets/images/user/user_1.png" alt="">
             </div>
-            <div class="task_item_name">ダッシュボード</div>
+            <div class="task_item_name">{{t.subject}}</div>
             <a class="task_item_add" href="#"/>
-            <div class="task_item_date">2/28</div>
-            <div class="task_item_status status status_1">未着手</div>
-          </li>
-          <li class="task_item">
-            <div class="task_item_bar"/>
-            <div class="task_item_image">
-              <img src="@/assets/images/user/user_1.png" alt="">
-            </div>
-            <div class="task_item_name">ダッシュボードの名前が長いバージョン</div>
-            <a class="task_item_add" href="#"/>
-            <div class="task_item_date">2/28</div>
-            <div class="task_item_status status status_1">未着手</div>
-          </li>
-          <li class="task_item">
-            <div class="task_item_bar"/>
-            <div class="task_item_image">
-              <img src="@/assets/images/user/user_1.png" alt="">
-            </div>
-            <div class="task_item_name">ダッシュボード</div>
-            <a class="task_item_add" href="#"/>
-            <div class="task_item_date">2/28</div>
-            <div class="task_item_status status status_1">未着手</div>
-          </li>
-          <li class="task_item">
-            <div class="task_item_bar"/>
-            <div class="task_item_image">
-              <img src="@/assets/images/user/user_1.png" alt="">
-            </div>
-            <div class="task_item_name">ダッシュボード</div>
-            <a class="task_item_add" href="#"/>
-            <div class="task_item_date">2/28</div>
-            <div class="task_item_status status status_1">未着手</div>
-          </li>
-          <li class="task_item">
-            <div class="task_item_bar"/>
-            <div class="task_item_image">
-              <img src="@/assets/images/user/user_1.png" alt="">
-            </div>
-            <div class="task_item_name">ダッシュボード</div>
-            <a class="task_item_add" href="#"/>
-            <div class="task_item_date">2/28</div>
-            <div class="task_item_status status status_1">未着手</div>
-          </li>
-          <li class="task_item">
-            <div class="task_item_bar"/>
-            <div class="task_item_image">
-              <img src="@/assets/images/user/user_1.png" alt="">
-            </div>
-            <div class="task_item_name">ダッシュボード</div>
-            <a class="task_item_add" href="#"/>
-            <div class="task_item_date">2/28</div>
-            <div class="task_item_status status status_1">未着手</div>
-          </li>
-          <li class="task_item">
-            <div class="task_item_bar"/>
-            <div class="task_item_image">
-              <img src="@/assets/images/user/user_1.png" alt="">
-            </div>
-            <div class="task_item_name">ダッシュボード</div>
-            <a class="task_item_add" href="#"/>
-            <div class="task_item_date">2/28</div>
-            <div class="task_item_status status status_1">未着手</div>
-          </li>
-          <li class="task_item">
-            <div class="task_item_bar"/>
-            <div class="task_item_image">
-              <img src="@/assets/images/user/user_1.png" alt="">
-            </div>
-            <div class="task_item_name">ダッシュボード</div>
-            <a class="task_item_add" href="#"/>
-            <div class="task_item_date">2/28</div>
-            <div class="task_item_status status status_1">未着手</div>
-          </li>
-          <li class="task_item">
-            <div class="task_item_bar"/>
-            <div class="task_item_image">
-              <img src="@/assets/images/user/user_1.png" alt="">
-            </div>
-            <div class="task_item_name">ダッシュボード</div>
-            <a class="task_item_add" href="#"/>
-            <div class="task_item_date">2/28</div>
-            <div class="task_item_status status status_1">未着手</div>
+            <div class="task_item_date">{{t.limitedAt ? t.limitedAt.format('m/d') : ''}}</div>
+            <my-project-status class="task_item_status" :option="getStatusOption(t.status)" />
           </li>
         </ul>
       </div>
@@ -129,15 +49,110 @@
   </sub-column-layout>
 </template>
 
+<style lang="stylus" scoped>
+.tab_task
+  .task_item
+    cursor: pointer
+</style>
+
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Location, Route, NavigationGuard } from 'vue-router';
 import SubColumnLayout from './SubColumnLayout.vue';
+import store from '@/store';
+import { first } from 'rxjs/operators';
 
+async function fetchTasks(query: Route['query']) {
+  await Promise.all([
+    store.actions.activeUser.fetchTasks({
+      filter: {
+        favorite: query['favorite'] === 'true',
+      },
+    }),
+    store.actions.activeUser.fetchTaskStatusOptions(),
+  ]);
+}
+
+Component.registerHooks([
+  'beforeRouteEnter',
+]);
 @Component({
   components: {
     SubColumnLayout,
   },
 })
 export default class TasksColumn extends Vue {
+  get tasks() {
+    return this.$store.state.activeUser.tasks;
+  }
+
+  get statusOptions() {
+    return store.state.activeUser.taskStatusOptions;
+  }
+
+  get isFavorite() {
+    return this.$store.state.activeUser.tasksGetConditions &&
+      this.$store.state.activeUser.tasksGetConditions.filter &&
+      this.$store.state.activeUser.tasksGetConditions.filter.favorite;
+  }
+
+  getStatusOption(optionId: number | null) {
+    if (!optionId || !this.statusOptions) {
+      return null;
+    }
+    return this.statusOptions.find((o) => o.id === optionId) || null;
+  }
+
+  getTaskAddTo(): Location {
+    return {
+      name: 'task-add',
+      params: {
+        userId: this.$route.params.userId,
+        projectId: this.$route.params.projectId,
+      },
+    };
+  }
+
+  getTaskTo(taskId: number): Location {
+    return {
+      name: 'task',
+      params: {
+        userId: this.$route.params.userId,
+        projectId: this.$route.params.projectId,
+        taskId: taskId.toString(),
+      },
+    };
+  }
+
+  async favorite(value: boolean) {
+    const query: Route['query'] = {};
+    if (value) {
+      Object.assign(query, { favorite: value.toString() });
+    }
+    this.$router.push({
+      name: 'tasks',
+      query,
+      params: {
+        userId: this.$route.params.userId,
+        projectId: this.$route.params.projectId,
+      },
+    }, () => {
+      fetchTasks(query);
+    });
+  }
+
+  async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    if (to.name === 'tasks' || !store.state.activeUser.tasks) {
+      await fetchTasks(to.name === 'tasks' ? to.query : {});
+    }
+    next();
+  }
+
+  async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    if (to.name === 'tasks' || !store.state.activeUser.tasks) {
+      await fetchTasks(to.name === 'tasks' ? to.query : {});
+    }
+    next();
+  }
 }
 </script>

@@ -1,13 +1,16 @@
 <template>
-  <div class="mainColumn">
+  <div class="mainColumn" :class="{editMode}" v-if="task">
     <div class="mainColumn_head columnTitle">
-      <h2>ダッシュボード
-        <a href="" class="edit">
+      <h2>
+        <input v-if="editMode" v-model="task.subject" type="text" style="background:none;">
+        <span v-else>{{task.subject}}</span>
+        <a v-if="!isAdd && !editMode" href="" class="edit" @click.prevent="editMode = true">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M11.1501 0.333313C10.9705 0.333313 10.7908 0.401712 10.6539 0.538905L9.45605 1.73682L12.263 4.54384L13.4609 3.34592C13.7353 3.07154 13.7353 2.62728 13.4609 2.3536L11.6463 0.538905C11.5091 0.401712 11.3297 0.333313 11.1501 0.333313ZM8.40343 2.78945L0.333374 10.8596V13.6666H3.14035L11.2104 5.59647L8.40343 2.78945Z" fill="#333333" />
+            <path d="M11.1501 0.333313C10.9705 0.333313 10.7908 0.401712 10.6539 0.538905L9.45605 1.73682L12.263 4.54384L13.4609 3.34592C13.7353 3.07154 13.7353 2.62728 13.4609 2.3536L11.6463 0.538905C11.5091 0.401712 11.3297 0.333313 11.1501 0.333313ZM8.40343 2.78945L0.333374 10.8596V13.6666H3.14035L11.2104 5.59647L8.40343 2.78945Z" fill="#333333"/>
           </svg>
         </a>
       </h2>
+
       <div class="search">
         <input type="search" placeholder="キーワードで絞り込む">
         <button class="search_button">
@@ -87,14 +90,14 @@
               </svg>
             </dd>
           </dl>
-          <dl class="dashboardWrap_list_menu">
+          <dl v-if="!editMode" class="dashboardWrap_list_menu">
             <dd>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.16667 2V5.33333H7.83333V2H6.16667ZM16.1667 2V5.33333H17.8333V2H16.1667ZM2.83333 4.5C2.37435 4.5 2 4.87435 2 5.33333V7.83333C2 8.29232 2.37435 8.66667 2.83333 8.66667V22H21.1667V8.66667C21.6257 8.66667 22 8.29232 22 7.83333V5.33333C22 4.87435 21.6257 4.5 21.1667 4.5H18.6667V6.16667H15.3333V4.5H8.66667V6.16667H5.33333V4.5H2.83333ZM4.5 8.66667H19.5V20.3333H4.5V8.66667ZM6.16667 10.3333V12H7.83333V10.3333H6.16667ZM9.5 10.3333V12H11.1667V10.3333H9.5ZM12.8333 10.3333V12H14.5V10.3333H12.8333ZM16.1667 10.3333V12H17.8333V10.3333H16.1667ZM6.16667 13.6667V15.3333H7.83333V13.6667H6.16667ZM9.5 13.6667V15.3333H11.1667V13.6667H9.5ZM12.8333 13.6667V15.3333H14.5V13.6667H12.8333ZM16.1667 13.6667V15.3333H17.8333V13.6667H16.1667ZM6.16667 17V18.6667H7.83333V17H6.16667ZM9.5 17V18.6667H11.1667V17H9.5ZM12.8333 17V18.6667H14.5V17H12.8333ZM16.1667 17V18.6667H17.8333V17H16.1667Z" fill="#333333" fill-opacity="0.72"/>
               </svg>
             </dd>
             <dd>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg @click="favorite(!isFavorite)" class="favoriteIcon" :class="{active: isFavorite}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 1.5L14.3574 8.75532H21.9861L15.8143 13.2394L18.1717 20.4947L12 16.0106L5.82825 20.4947L8.18565 13.2394L2.01391 8.75532H9.6426L12 1.5Z" fill="#333333" fill-opacity="0.72"/>
               </svg>
             </dd>
@@ -109,36 +112,29 @@
               </svg>
             </dd>
             <dd>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg @click="destroy()" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.9375 1.5L8.90625 2.55H3.75V4.65H20.25V2.55H15.0938L14.0625 1.5H9.9375ZM4.78125 6.75V20.4C4.78125 21.555 5.70938 22.5 6.84375 22.5H17.1562C18.2906 22.5 19.2188 21.555 19.2188 20.4V6.75H4.78125ZM7.875 8.85H9.9375V20.4H7.875V8.85ZM14.0625 8.85H16.125V20.4H14.0625V8.85Z" fill="#333333" fill-opacity="0.72"/>
               </svg>
             </dd>
           </dl>
         </div>
-        <dl class="dashboardWrap_status">
-          <dd>未着手</dd>
-          <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0.5C0 0.5 4.5 5.69231 10 5.69231C15.5 5.69231 20 0.5 20 0.5V15.5C20 15.5 15.5 10.3077 10 10.3077C4.5 10.3077 0 15.5 0 15.5V0.5Z" fill="#C4C4C4"/>
-          </svg>
-          <dd>進行中</dd>
-          <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0.5C0 0.5 4.5 5.69231 10 5.69231C15.5 5.69231 20 0.5 20 0.5V15.5C20 15.5 15.5 10.3077 10 10.3077C4.5 10.3077 0 15.5 0 15.5V0.5Z" fill="#C4C4C4"/>
-          </svg>
-          <dd>待機中</dd>
-          <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0.5C0 0.5 4.5 5.69231 10 5.69231C15.5 5.69231 20 0.5 20 0.5V15.5C20 15.5 15.5 10.3077 10 10.3077C4.5 10.3077 0 15.5 0 15.5V0.5Z" fill="#C4C4C4"/>
-          </svg>
-          <dd>完了</dd>
-          <dd class="other">その他</dd>
-        </dl>
+        <my-project-status-input
+          v-model="task.status"
+          :options="statusOptions"
+          :disabled="!editMode"
+          class="dashboardWrap_status"
+        />
         <dl class="dashboardWrap_tag">
           <dd>優先度高</dd>
           <dd class="button">タグを追加</dd>
         </dl>
         <div class="dashboardWrap_task">
-          <textarea placeholder="タスクの詳細を追加"/>
+          <textarea v-model="task.body" :disabled="!editMode" placeholder="タスクの詳細を追加"/>
         </div>
-        <div class="dashboardWrap_post">
+        <div class="dashboardWrap_submit" v-if="editMode">
+          <button v-if="editMode" @click="save()">編集を終了</button>
+        </div>
+        <div class="dashboardWrap_post" v-if="!editMode">
           <small>2019/3/12 Satoshi Hashimoto が課題を作成しました。</small>
           <div class="dashboardWrap_post_board">
             <table>
@@ -192,7 +188,7 @@
             </table>
           </div>
         </div>
-        <div class="dashboardWrap_comment">
+        <div class="dashboardWrap_comment" v-if="!editMode">
           <div class="dashboardWrap_comment_box">
             <label class="dashboardWrap_comment_box_upload" for="file_upload">
               <input type="file" id="file">
@@ -208,3 +204,256 @@
     </div>
   </div>
 </template>
+
+<style lang="stylus" scoped>
+.mainColumn
+  .favoriteIcon
+    &.active path
+      fill: #EDA62A !important
+  &.editMode
+    .dashboardWrap_task
+      textarea
+        margin: 24px 0 0
+        height: calc(100vh - 380px)
+    .dashboardWrap_submit
+      display: block
+      width: 100%
+      min-height: 60px
+      padding: 9px 20px 24px 20px
+      background: #fff
+      border-top: 2px solid #ededed
+      text-align: center
+      display: inline-block
+      position: absolute
+      bottom: 0
+      left: 0
+      button
+        display: inline-block
+        width: 220px
+        padding: 10px
+        margin: 15px 1.5% 0 1.5%
+        border: none
+        border-radius: 90px
+        cursor: pointer
+        font-family: 'Noto Sans CJK JP'
+        font-size: 14px
+        line-height: 1
+        text-align: center
+        &:first-child
+          background: #2f80ed
+          color: #fff
+</style>
+
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Location, Route, NavigationGuard } from 'vue-router';
+import { first } from 'rxjs/operators';
+import {
+  Task, TaskStatus, TasksPostRequestBody, TasksTaskIdPutRequestBody,
+  apiRegistry, TasksApi,
+} from '@/lib/api';
+import store from '@/store';
+import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
+
+async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isAdd' | 'isFavorite' | 'editMode' | 'statusOptions' | 'task'>>> {
+  const loginUser = store.state.activeUser.loggedInUser!;
+  const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+  const spaceId = loginUser.space.id;
+  const projectId = store.state.activeUser.activeProjectId;
+  const statusOptionsPromise = tasksApi.tasksStatusGet({
+    spaceId: store.state.activeUser.loggedInUser!.space.id,
+    projectId: store.state.activeUser.activeProjectId!,
+  }).pipe(first()).toPromise();
+
+  if (to.name === 'task-add') {
+    // 新規
+    return {
+      isAdd: true,
+      isFavorite: false,
+      editMode: true,
+      statusOptions: await statusOptionsPromise,
+      task: {
+        subject: '新規タスク',
+        chargeUsers: [],
+        tags: [],
+      },
+    };
+  } else {
+    // 既存
+    const [statusOptions, task, resFavorite] = await Promise.all([
+      statusOptionsPromise,
+      tasksApi.tasksTaskIdGet({
+        spaceId: store.state.activeUser.loggedInUser!.space.id,
+        projectId: store.state.activeUser.activeProjectId!,
+        taskId: parseInt(to.params.taskId),
+      }).pipe(first()).toPromise(),
+      tasksApi.tasksTaskIdFavoriteGet({
+        spaceId: store.state.activeUser.loggedInUser!.space.id,
+        projectId: store.state.activeUser.activeProjectId!,
+        taskId: parseInt(to.params.taskId),
+      }).pipe(first()).toPromise(),
+    ]);
+    return {
+      isAdd: false,
+      isFavorite: resFavorite.value,
+      editMode: false,
+      statusOptions,
+      task,
+    };
+  }
+}
+
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteUpdate',
+  'beforeRouteLeave',
+]);
+@Component({
+  components: {
+    MyProjectStatusInput,
+  },
+})
+export default class TaskColumn extends Vue {
+  task: TasksPostRequestBody | TasksTaskIdPutRequestBody = null as any;
+  statusOptions: TaskStatus[] = null as any;
+  isFavorite = false;
+  isAdd = false;
+  editMode = false;
+  saving = false;
+
+  get fullMainColumn() {
+    return this.$store.state.fullMainColumn;
+  }
+
+  setFullMainColumn(v: boolean) {
+    this.$store.mutations.setFullMainColumn(v);
+  }
+
+  async save() {
+    if (this.saving) {
+      return;
+    }
+    const loginUser = store.state.activeUser.loggedInUser!;
+    const projectId = store.state.activeUser.activeProjectId!;
+    const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+    try {
+      this.saving = true;
+
+      if (this.isAdd) {
+        const task = await tasksApi.tasksPost({
+          spaceId: loginUser.space.id,
+          projectId,
+          tasksPostRequestBody: this.task as TasksPostRequestBody,
+        }).pipe(first()).toPromise();
+
+        this.$store.actions.activeUser.replaceTask(task);
+        this.$router.replace({
+          name: 'task',
+          params: {
+            userId: loginUser.id.toString(),
+            projectId: projectId.toString(),
+            taskId: task.id.toString(),
+          },
+        });
+
+      } else {
+        const task = await tasksApi.tasksTaskIdPut({
+          spaceId: loginUser.space.id,
+          projectId,
+          taskId: parseInt(this.$route.params.taskId),
+          tasksTaskIdPutRequestBody: this.task as TasksTaskIdPutRequestBody,
+        }).pipe(first()).toPromise();
+        this.$store.actions.activeUser.replaceTask(task);
+        this.editMode = false;
+      }
+
+    } catch (err) {
+      this.$showApiError(this, err);
+    }
+
+    this.saving = false;
+  }
+
+  async destroy() {
+    if (this.saving) {
+      return;
+    }
+    const loginUser = store.state.activeUser.loggedInUser!;
+    const projectId = store.state.activeUser.activeProjectId!;
+    const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+
+    try {
+      this.saving = true;
+      await tasksApi.tasksTaskIdDelete({
+        spaceId: loginUser.space.id,
+        projectId,
+        taskId: parseInt(this.$route.params.taskId),
+      }).pipe(first()).toPromise();
+      this.$store.mutations.activeUser.deleteTask(parseInt(this.$route.params.taskId));
+      this.$flash('削除しました', 'error');
+      this.$router.replace({
+        name: 'tasks',
+        params: {
+          userId: loginUser.id.toString(),
+          projectId: projectId.toString(),
+        },
+      });
+
+    } catch (err) {
+      this.$showApiError(this, err);
+    }
+
+    this.saving = false;
+  }
+
+  async favorite(value: boolean) {
+    if (this.saving) {
+      return;
+    }
+
+    const loginUser = store.state.activeUser.loggedInUser!;
+    const projectId = store.state.activeUser.activeProjectId!;
+    const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+    try {
+      this.saving = true;
+      const res = await tasksApi.tasksTaskIdFavoritePost({
+        spaceId: loginUser.space.id,
+        projectId: projectId,
+        taskId: parseInt(this.$route.params.taskId),
+        tasksTaskIdFavoritePostRequestBody: { value },
+      }).pipe(first()).toPromise();
+      this.isFavorite = res.value;
+
+    } catch (err) {
+      this.$showApiError(this, err);
+    }
+
+    this.saving = false;
+  }
+
+  async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    const options = await initData(to);
+    store.mutations.setFullMainColumn(false);
+    next((vm) => {
+      (Object.keys(options) as (keyof typeof options)[]).forEach((k) => {
+        (vm as any)[k] = options[k]!;
+      });
+    });
+  }
+
+  async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    const options = await initData(to);
+    store.mutations.setFullMainColumn(false);
+    (Object.keys(options) as (keyof typeof options)[]).forEach((k) => {
+      (this as any)[k] = options[k]!;
+    });
+    this.saving = false;
+    next();
+  }
+
+  beforeRouteLeave(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    store.mutations.setFullMainColumn(false);
+    next();
+  }
+}
+</script>

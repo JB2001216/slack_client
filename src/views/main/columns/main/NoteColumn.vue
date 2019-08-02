@@ -90,7 +90,7 @@
               </svg>
             </dd>
           </dl>
-          <dl v-if="!isAdd" class="noteEditWrap_list_menu">
+          <dl v-if="!editMode" class="noteEditWrap_list_menu">
             <dd>
               <svg @click="favorite(!isFavorite)" class="favoriteIcon" :class="{active: isFavorite}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 1.5L14.3574 8.75532H21.9861L15.8143 13.2394L18.1717 20.4947L12 16.0106L5.82825 20.4947L8.18565 13.2394L2.01391 8.75532H9.6426L12 1.5Z" fill="#333333" fill-opacity="0.72"/>
@@ -128,8 +128,8 @@
         />
         <div class="noteEditWrap_submit">
           <button v-if="editMode" @click="save()">編集を終了</button>
-          <button v-if="fullMainColumn" @click="setFullMainColumn(false)">デフォルト表示</button>
-          <button v-else @click="setFullMainColumn(true)">全画面表示</button>
+          <button v-if="fullMainColumn" @click="setFullMainColumn(false)" class="noteEditWrap_submit_changePreview">デフォルト表示</button>
+          <button v-else @click="setFullMainColumn(true)" class="noteEditWrap_submit_changePreview">全画面表示</button>
           <button v-if="editMode"><svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2.87825 8.65579V7.77579C2.87825 7.54112 2.88892 7.34379 2.91026 7.18379C2.94226 7.01312 2.99026 6.86379 3.05426 6.73579C3.12892 6.59712 3.21959 6.46912 3.32625 6.35179C3.44359 6.22379 3.58226 6.07446 3.74225 5.90379L4.97426 4.65579C5.24092 4.38912 5.37426 4.04246 5.37426 3.61579C5.37426 3.19979 5.23559 2.86379 4.95825 2.60779C4.69159 2.34112 4.35026 2.20779 3.93426 2.20779C3.48626 2.20779 3.11826 2.36246 2.83026 2.67179C2.54226 2.97046 2.37692 3.33846 2.33426 3.77579L0.286255 3.61579C0.350255 3.10379 0.483588 2.65046 0.686255 2.25579C0.888922 1.85046 1.15026 1.50912 1.47026 1.23179C1.80092 0.954455 2.17959 0.746455 2.60626 0.607789C3.03292 0.458456 3.50226 0.383789 4.01426 0.383789C4.49426 0.383789 4.93692 0.453122 5.34226 0.591788C5.75826 0.730455 6.11559 0.933122 6.41426 1.19979C6.72359 1.45579 6.96359 1.78112 7.13425 2.17579C7.30492 2.55979 7.39025 3.00246 7.39025 3.50379C7.39025 3.85579 7.34226 4.16512 7.24626 4.43179C7.15026 4.69846 7.02226 4.94379 6.86226 5.16779C6.70226 5.39179 6.51559 5.60512 6.30226 5.80779C6.09959 6.01046 5.88092 6.22379 5.64626 6.44779C5.49692 6.58646 5.36892 6.70912 5.26226 6.81579C5.15559 6.92246 5.06492 7.03446 4.99026 7.15179C4.92626 7.25846 4.87826 7.38646 4.84626 7.53579C4.81426 7.67446 4.79825 7.84512 4.79825 8.04779V8.65579H2.87825ZM2.55826 10.8798C2.55826 10.5385 2.68092 10.2451 2.92626 9.99979C3.18226 9.75445 3.48626 9.63179 3.83826 9.63179C4.17959 9.63179 4.47826 9.74912 4.73426 9.98379C4.99026 10.2185 5.11826 10.5065 5.11826 10.8478C5.11826 11.1891 4.99026 11.4825 4.73426 11.7278C4.48892 11.9731 4.19026 12.0958 3.83826 12.0958C3.66759 12.0958 3.50225 12.0638 3.34226 11.9998C3.19292 11.9358 3.05959 11.8505 2.94226 11.7438C2.82492 11.6371 2.72892 11.5091 2.65426 11.3598C2.59026 11.2105 2.55826 11.0505 2.55826 10.8798Z" fill="#C4C4C4"/>
           </svg>Markdownヘルプ</button>
@@ -154,6 +154,10 @@
   .favoriteIcon
     &.active path
       fill: #EDA62A !important
+  .noteEditWrap_submit_changePreview
+    background: #e6f0ff !important
+    color: #2f80ed !important
+    border: none !important
 </style>
 
 <script lang="ts">
@@ -219,7 +223,6 @@ Component.registerHooks([
   'beforeRouteUpdate',
   'beforeRouteLeave',
 ]);
-
 @Component({
   components: {
     MyProjectStatusInput,
