@@ -42,6 +42,12 @@ export interface NotesNoteIdPutRequestBody {
     batonUser?: number;
     /**
      * 
+     * @type {number}
+     * @memberof NotesNoteIdPutRequestBody
+     */
+    writeUser?: number;
+    /**
+     * 
      * @type {Array<number>}
      * @memberof NotesNoteIdPutRequestBody
      */

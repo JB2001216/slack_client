@@ -17,6 +17,8 @@ import {
     Note,
     NoteStatus,
     NotesGetResponse,
+    NotesNoteIdFavoriteGetResponse,
+    NotesNoteIdFavoritePostRequestBody,
     NotesNoteIdPutRequestBody,
     NotesPostRequestBody,
     TasksStatusPostRequestBodyItem,
@@ -27,14 +29,37 @@ export interface NotesGetRequest {
     projectId: number;
     page?: number;
     limit?: number;
-    name?: string;
-    userId?: number;
+    id?: number;
+    idGt?: number;
+    idLt?: number;
+    subject?: string;
+    status?: number;
+    batonUser?: number;
+    writeUser?: number;
+    updatedAt?: Date;
+    updatedAtGt?: Date;
+    updatedAtLt?: Date;
+    favorite?: boolean;
+    ordering?: string;
 }
 
 export interface NotesNoteIdDeleteRequest {
     spaceId: number;
     projectId: number;
     noteId: number;
+}
+
+export interface NotesNoteIdFavoriteGetRequest {
+    spaceId: number;
+    projectId: number;
+    noteId: number;
+}
+
+export interface NotesNoteIdFavoritePostRequest {
+    spaceId: number;
+    projectId: number;
+    noteId: number;
+    notesNoteIdFavoritePostRequestBody: NotesNoteIdFavoritePostRequestBody;
 }
 
 export interface NotesNoteIdGetRequest {
@@ -93,12 +118,52 @@ export class NotesApi extends BaseAPI {
             queryParameters['limit'] = requestParameters.limit;
         }
 
-        if (requestParameters.name !== undefined && requestParameters.name !== null) {
-            queryParameters['name'] = requestParameters.name;
+        if (requestParameters.id !== undefined && requestParameters.id !== null) {
+            queryParameters['id'] = requestParameters.id;
         }
 
-        if (requestParameters.userId !== undefined && requestParameters.userId !== null) {
-            queryParameters['user_id'] = requestParameters.userId;
+        if (requestParameters.idGt !== undefined && requestParameters.idGt !== null) {
+            queryParameters['id__gt'] = requestParameters.idGt;
+        }
+
+        if (requestParameters.idLt !== undefined && requestParameters.idLt !== null) {
+            queryParameters['id__lt'] = requestParameters.idLt;
+        }
+
+        if (requestParameters.subject !== undefined && requestParameters.subject !== null) {
+            queryParameters['subject'] = requestParameters.subject;
+        }
+
+        if (requestParameters.status !== undefined && requestParameters.status !== null) {
+            queryParameters['status'] = requestParameters.status;
+        }
+
+        if (requestParameters.batonUser !== undefined && requestParameters.batonUser !== null) {
+            queryParameters['baton_user'] = requestParameters.batonUser;
+        }
+
+        if (requestParameters.writeUser !== undefined && requestParameters.writeUser !== null) {
+            queryParameters['write_user'] = requestParameters.writeUser;
+        }
+
+        if (requestParameters.updatedAt !== undefined && requestParameters.updatedAt !== null) {
+            queryParameters['updated_at'] = (requestParameters.updatedAt as any).toISOString();
+        }
+
+        if (requestParameters.updatedAtGt !== undefined && requestParameters.updatedAtGt !== null) {
+            queryParameters['updated_at__gt'] = (requestParameters.updatedAtGt as any).toISOString();
+        }
+
+        if (requestParameters.updatedAtLt !== undefined && requestParameters.updatedAtLt !== null) {
+            queryParameters['updated_at__lt'] = (requestParameters.updatedAtLt as any).toISOString();
+        }
+
+        if (requestParameters.favorite !== undefined && requestParameters.favorite !== null) {
+            queryParameters['favorite'] = requestParameters.favorite;
+        }
+
+        if (requestParameters.ordering !== undefined && requestParameters.ordering !== null) {
+            queryParameters['ordering'] = requestParameters.ordering;
         }
 
         const headerParameters: HttpHeaders = {};
@@ -143,6 +208,75 @@ export class NotesApi extends BaseAPI {
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
+        });
+    }
+
+    /**
+     */
+    notesNoteIdFavoriteGet(requestParameters: NotesNoteIdFavoriteGetRequest): Observable<NotesNoteIdFavoriteGetResponse> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling notesNoteIdFavoriteGet.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling notesNoteIdFavoriteGet.');
+        }
+
+        if (requestParameters.noteId === null || requestParameters.noteId === undefined) {
+            throw new RequiredError('noteId','Required parameter requestParameters.noteId was null or undefined when calling notesNoteIdFavoriteGet.');
+        }
+
+        const queryParameters: HttpQuery = {};
+
+        const headerParameters: HttpHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        return this.request<NotesNoteIdFavoriteGetResponse>({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/favorite/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+    }
+
+    /**
+     */
+    notesNoteIdFavoritePost(requestParameters: NotesNoteIdFavoritePostRequest): Observable<NotesNoteIdFavoriteGetResponse> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling notesNoteIdFavoritePost.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling notesNoteIdFavoritePost.');
+        }
+
+        if (requestParameters.noteId === null || requestParameters.noteId === undefined) {
+            throw new RequiredError('noteId','Required parameter requestParameters.noteId was null or undefined when calling notesNoteIdFavoritePost.');
+        }
+
+        if (requestParameters.notesNoteIdFavoritePostRequestBody === null || requestParameters.notesNoteIdFavoritePostRequestBody === undefined) {
+            throw new RequiredError('notesNoteIdFavoritePostRequestBody','Required parameter requestParameters.notesNoteIdFavoritePostRequestBody was null or undefined when calling notesNoteIdFavoritePost.');
+        }
+
+        const queryParameters: HttpQuery = {};
+
+        const headerParameters: HttpHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        return this.request<NotesNoteIdFavoriteGetResponse>({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/favorite/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.notesNoteIdFavoritePostRequestBody,
         });
     }
 

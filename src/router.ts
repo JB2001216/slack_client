@@ -6,7 +6,7 @@ import SpaceAdd1 from './views/single/space-add/SpaceAdd1.vue';
 import SpaceAdd2 from './views/single/space-add/SpaceAdd2.vue';
 import Login from './views/single/login/Login.vue';
 import LoginSms from './views/single/login/LoginSms.vue';
-import LoginInvitation from './views/single/login/LoginInvitation.vue';
+import LoginSpaceSelect from './views/single/login/LoginSpaceSelect.vue';
 import MainContainer from './views/main/MainContainer.vue';
 import ProjectColumn from './views/main/columns/project/ProjectColumn.vue';
 import SubColumnPass from './views/main/columns/sub/SubColumnPass.vue';
@@ -44,9 +44,9 @@ const router = new Router({
       component: LoginSms,
     },
     {
-      path: '/login-invitation',
-      name: 'login-invitation',
-      component: LoginInvitation,
+      path: '/login-space-select',
+      name: 'login-space-select',
+      component: LoginSpaceSelect,
     },
 
     // main
@@ -58,7 +58,6 @@ const router = new Router({
         {
           path: ':userId',
           name: 'user',
-          beforeEnter: beforeUserRouteEnter, // projects取得
           components: {
             projectColumn: ProjectColumn,
             subColumn: SubColumnPass,
@@ -68,7 +67,6 @@ const router = new Router({
             {
               path: 'projects/:projectId',
               name: 'project',
-              beforeEnter: beforeProjectRouteEnter, // project選択
               components: {
                 subColumn: SubColumnPass,
                 mainColumn: MainColumnPass,
@@ -99,6 +97,13 @@ const router = new Router({
                     mainColumn: MainColumnPass,
                   },
                   children: [
+                    {
+                      path: 'add',
+                      name: 'note-add',
+                      components: {
+                        mainColumn: NoteColumn,
+                      },
+                    },
                     {
                       path: ':noteId',
                       name: 'note',
@@ -150,37 +155,6 @@ const router = new Router({
   ],
 });
 
-/** /main/user/:userId */
-async function beforeUserRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
-  const userId = parseInt(to.params.userId);
-  const user = store.state.loggedInUsers.find((u) => u.id === userId);
-  if (!user) {
-    return next({ name: 'users' });
-  }
-  try {
-    if (!store.state.activeUser.loggedInUser || user.id !== store.state.activeUser.loggedInUser.id) {
-      await store.actions.activeUser.init(user);
-    }
-    return next();
-  } catch (err) {
-    return next((vm) => {
-      vm.$showApiError(vm, err);
-      vm.$router.replace({ name: 'users' });
-    });
-  }
-}
-
-/** /main/user/:userId/projects/:projectId */
-async function beforeProjectRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
-  const projectId = parseInt(to.params.projectId);
-  const project = store.state.activeUser.projects!.find((p) => p.id === projectId);
-  if (!project) {
-    return next({ name: 'user', params: { userId: to.params.userId } });
-  }
-  store.mutations.activeUser.setActiveProjectId(project.id);
-  return next();
-}
-
 // ブラウザ経由
 electron.ipcRenderer.on('open-url', (ev: any, urlraw: string) => {
   const match = urlraw.match(new RegExp(`^${process.env.VUE_APP_URL_SCHEME}://([a-zA-Z0-9_-]+)`));
@@ -189,11 +163,20 @@ electron.ipcRenderer.on('open-url', (ev: any, urlraw: string) => {
     const url = new URL(urlraw);
     const sparams = url.searchParams;
     if (method === 'create_space') {
-      router.push({
+      return router.push({
         name: 'space-add2',
         params: {
           email: sparams.get('email') || '',
           token: sparams.get('token') || '',
+        },
+      });
+    }
+    if (method === 'email_login') {
+      return router.push({
+        name: 'login-space-select',
+        query: {
+          token: sparams.get('token') || '',
+          type: 'email',
         },
       });
     }

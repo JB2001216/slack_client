@@ -238,6 +238,15 @@
               padding-left: 0;
             }
           }
+          &:last-child{
+            td{
+              &:last-child{
+                input[type=text]{
+                  width: 100%;
+                }
+              }
+            }
+          }
         }
       }
       &_email,&_name,&_select,&_search,&_tag{
@@ -279,10 +288,15 @@
               margin: auto;
             }
           }
-          p{
+          input[type=text]{
             float: left;
-            padding: 6px;
-            float: left;
+            width: calc(100% - 195px);
+            padding: 5px;
+            background: #fff;
+            border: none;
+            outline: none;
+            font-family: Noto Sans CJK JP;
+            font-size: 14px;
             color: rgba(51, 51, 51, 0.72);
           }
         }

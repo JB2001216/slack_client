@@ -13,19 +13,13 @@
 
 /**
  * @export
- * @interface UsersEmailLoginPostRequestBody
+ * @interface NotesNoteIdFavoritePostRequestBody
  */
-export interface UsersEmailLoginPostRequestBody {
+export interface NotesNoteIdFavoritePostRequestBody {
     /**
      * 
-     * @type {string}
-     * @memberof UsersEmailLoginPostRequestBody
+     * @type {boolean}
+     * @memberof NotesNoteIdFavoritePostRequestBody
      */
-    token: string;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof UsersEmailLoginPostRequestBody
-     */
-    idNotIn?: Array<number>;
+    value: boolean;
 }

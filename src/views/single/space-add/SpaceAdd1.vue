@@ -17,9 +17,22 @@
             placeholder="メールアドレスを入力"
             @input="emailMessage = null"
           />
-          <button type="submit" style="display: none;"/>
         </div>
+        <button type="submit" v-show="false" />
       </form>
+      <div class="columnWrap_right_login">
+        <p>すでにアカウントをお持ちですか？</p>
+        <router-link :to="{name: 'login'}">ログインする</router-link>
+      </div>
+      <div class="columnWrap_right_back" v-if="backTo">
+        <router-link :to="backTo">
+          <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6.66675 13.5997L7.60956 12.6569L1.00989 6.0572L0.0670837 7.00001L6.66675 13.5997Z" fill="#333333"/>
+            <path d="M7.60962 1.34314L6.66681 0.40033L0.0670837 7.00001L1.00995 7.9428L7.60962 1.34314Z" fill="#333333"/>
+          </svg>
+          <span>Back</span>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -33,12 +46,27 @@ import { apiRegistry, SpacesApi, ApiErrors } from '@/lib/api';
 
 @Component
 export default class SpaceAdd1 extends Vue {
-  // data
   email = '';
   emailMessage: MyTextInputMessage = null;
   saving = false;
 
-  // methods
+  get backTo() {
+    let userId: number | null = null;
+    if (this.$store.state.activeUser.loggedInUser) {
+      userId = this.$store.state.activeUser.loggedInUser.id;
+    } else if (this.$store.state.loggedInUsers.length) {
+      userId = this.$store.state.loggedInUsers[0].id;
+    }
+
+    if (userId) {
+      return {
+        path: 'user',
+        params: { userId: userId.toString() },
+      };
+    }
+    return null;
+  }
+
   async save() {
     if (this.saving) {
       return;
@@ -65,14 +93,15 @@ export default class SpaceAdd1 extends Vue {
         if (err.response && err.response.error === ApiErrors.ValidationError) {
           this.emailMessage = {
             type: 'error',
-            text: err.response.fields[Object.keys(err.response.fields)[0]],
+            text: err.response.data[Object.keys(err.response.data)[0]],
           };
         }
       }
 
       this.$showApiError(this, err);
-      this.saving = false;
     }
+
+    this.saving = false;
   }
 }
 </script>

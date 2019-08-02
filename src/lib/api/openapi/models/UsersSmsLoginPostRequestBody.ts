@@ -28,4 +28,10 @@ export interface UsersSmsLoginPostRequestBody {
      * @memberof UsersSmsLoginPostRequestBody
      */
     pin: string;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof UsersSmsLoginPostRequestBody
+     */
+    idNotIn?: Array<number>;
 }

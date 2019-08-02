@@ -1,13 +1,16 @@
 <template>
-  <div class="mainColumn">
+  <div class="mainColumn noteColumn" :class="{fullMainColumn}" v-if="note">
     <div class="mainColumn_head columnTitle">
-      <h2>ダッシュボード
-        <a href="" class="edit">
+      <h2>
+        <input v-if="editMode" v-model="note.subject" type="text" style="background:none;">
+        <span v-else>{{note.subject}}</span>
+        <a v-if="!isAdd && !editMode" href="" class="edit" @click.prevent="editMode = true">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M11.1501 0.333313C10.9705 0.333313 10.7908 0.401712 10.6539 0.538905L9.45605 1.73682L12.263 4.54384L13.4609 3.34592C13.7353 3.07154 13.7353 2.62728 13.4609 2.3536L11.6463 0.538905C11.5091 0.401712 11.3297 0.333313 11.1501 0.333313ZM8.40343 2.78945L0.333374 10.8596V13.6666H3.14035L11.2104 5.59647L8.40343 2.78945Z" fill="#333333"/>
           </svg>
         </a>
       </h2>
+
       <div class="search">
         <input type="search" placeholder="キーワードで絞り込む">
         <button class="search_button">
@@ -87,9 +90,9 @@
               </svg>
             </dd>
           </dl>
-          <dl class="noteEditWrap_list_menu">
+          <dl v-if="!isAdd" class="noteEditWrap_list_menu">
             <dd>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg @click="favorite(!isFavorite)" class="favoriteIcon" :class="{active: isFavorite}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 1.5L14.3574 8.75532H21.9861L15.8143 13.2394L18.1717 20.4947L12 16.0106L5.82825 20.4947L8.18565 13.2394L2.01391 8.75532H9.6426L12 1.5Z" fill="#333333" fill-opacity="0.72"/>
               </svg>
             </dd>
@@ -104,59 +107,265 @@
               </svg>
             </dd>
             <dd>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg @click="destroy()" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.9375 1.5L8.90625 2.55H3.75V4.65H20.25V2.55H15.0938L14.0625 1.5H9.9375ZM4.78125 6.75V20.4C4.78125 21.555 5.70938 22.5 6.84375 22.5H17.1562C18.2906 22.5 19.2188 21.555 19.2188 20.4V6.75H4.78125ZM7.875 8.85H9.9375V20.4H7.875V8.85ZM14.0625 8.85H16.125V20.4H14.0625V8.85Z" fill="#333333" fill-opacity="0.72"/>
               </svg>
             </dd>
           </dl>
         </div>
-        <dl class="noteEditWrap_status">
-          <dd>未着手</dd>
-          <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0.5C0 0.5 4.5 5.69231 10 5.69231C15.5 5.69231 20 0.5 20 0.5V15.5C20 15.5 15.5 10.3077 10 10.3077C4.5 10.3077 0 15.5 0 15.5V0.5Z" fill="#C4C4C4"/>
-          </svg>
-          <dd>新規作成中</dd>
-          <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0.5C0 0.5 4.5 5.69231 10 5.69231C15.5 5.69231 20 0.5 20 0.5V15.5C20 15.5 15.5 10.3077 10 10.3077C4.5 10.3077 0 15.5 0 15.5V0.5Z" fill="#C4C4C4"/>
-          </svg>
-          <dd>運用中</dd>
-          <dd class="other">その他</dd>
-        </dl>
-        <div class="noteEditWrap_post">
-          <div class="noteEditWrap_post_view">
-            <h3>内部リンク記法に関する変更点</h3>
-            <ul>
-              <li>これまで、内部リンクで&lt;/xxx/xxxにしていたのですが、これを今後[/xxx/xxx]にしていこうと考えており）記入中のページサジェスト等も含めて対応していく予定）、そのための下準備として、[/xxx/xxx]で内部リンクが生成されるようになりました。</li>
-              <li>引き続き&lt;/xxx/xxx>の形式でもリンクは可能です（広報互換を維持するため）</li>
-              <li>この変更のために[/xxx/xxx]という記載が他に存在した場合、意図せずリンクが生成されることがある</li>
-            </ul>
-            <h3>バグ修正</h3>
-            <ul>
-              <li>PortalページBookmarkができなくなっていたバグを修正しました</li>
-              <li>Bask認証をかけると正常に動作しなくなるバグを修正しました）Thank you for reportinhg Charo-ID</li>
-              <li>検索結果ページにおいてcode記法内などの検索結果のハイライトがおかしくなる問題を修正しました</li>
-            </ul>
-          </div>
-          <div class="noteEditWrap_post_edit">
-            <p># 内部リンク記法に関する変更点</p>
-            <p>- これまで、内部リンクで&lt;/xxx/xxxにしていたのですが、これを今後[/xxx/xxx]にしていこうと考えており）記入中のページサジェスト等も含めて対応していく予定）、そのための下準備として、[/xxx/xxx]で内部リンクが生成されるようになりました。</p>
-            <p>- 引き続き&lt;/xxx/xxx>の形式でもリンクは可能です（広報互換を維持するため）</p>
-            <p>- この変更のために[/xxx/xxx]という記載が他に存在した場合、意図せずリンクが生成されることがある</p>
-            <p># バグ修正</p>
-            <p>- PortalページBookmarkができなくなっていたバグを修正しました</p>
-            <p>- Bask認証をかけると正常に動作しなくなるバグを修正しました）Thank you for reportinhg Charo-ID</p>
-            <p>- 検索結果ページにおいてcode記法内などの検索結果のハイライトがおかしくなる問題を修正しました</p>
-          </div>
-        </div>
+        <my-project-status-input
+          v-model="note.status"
+          :options="statusOptions"
+          :disabled="!editMode"
+          class="noteEditWrap_status"
+        />
+        <my-markdown-editor
+          v-model="note.body"
+          class="noteEditWrap_post"
+          editor-class="noteEditWrap_post_edit"
+          preview-class="noteEditWrap_post_view"
+          :hide-editor="!editMode"
+        />
         <div class="noteEditWrap_submit">
-          <button>編集を終了</button>
-          <button>全画面で編集</button>
-          <button><svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <button v-if="editMode" @click="save()">編集を終了</button>
+          <button v-if="fullMainColumn" @click="setFullMainColumn(false)">デフォルト表示</button>
+          <button v-else @click="setFullMainColumn(true)">全画面表示</button>
+          <button v-if="editMode"><svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2.87825 8.65579V7.77579C2.87825 7.54112 2.88892 7.34379 2.91026 7.18379C2.94226 7.01312 2.99026 6.86379 3.05426 6.73579C3.12892 6.59712 3.21959 6.46912 3.32625 6.35179C3.44359 6.22379 3.58226 6.07446 3.74225 5.90379L4.97426 4.65579C5.24092 4.38912 5.37426 4.04246 5.37426 3.61579C5.37426 3.19979 5.23559 2.86379 4.95825 2.60779C4.69159 2.34112 4.35026 2.20779 3.93426 2.20779C3.48626 2.20779 3.11826 2.36246 2.83026 2.67179C2.54226 2.97046 2.37692 3.33846 2.33426 3.77579L0.286255 3.61579C0.350255 3.10379 0.483588 2.65046 0.686255 2.25579C0.888922 1.85046 1.15026 1.50912 1.47026 1.23179C1.80092 0.954455 2.17959 0.746455 2.60626 0.607789C3.03292 0.458456 3.50226 0.383789 4.01426 0.383789C4.49426 0.383789 4.93692 0.453122 5.34226 0.591788C5.75826 0.730455 6.11559 0.933122 6.41426 1.19979C6.72359 1.45579 6.96359 1.78112 7.13425 2.17579C7.30492 2.55979 7.39025 3.00246 7.39025 3.50379C7.39025 3.85579 7.34226 4.16512 7.24626 4.43179C7.15026 4.69846 7.02226 4.94379 6.86226 5.16779C6.70226 5.39179 6.51559 5.60512 6.30226 5.80779C6.09959 6.01046 5.88092 6.22379 5.64626 6.44779C5.49692 6.58646 5.36892 6.70912 5.26226 6.81579C5.15559 6.92246 5.06492 7.03446 4.99026 7.15179C4.92626 7.25846 4.87826 7.38646 4.84626 7.53579C4.81426 7.67446 4.79825 7.84512 4.79825 8.04779V8.65579H2.87825ZM2.55826 10.8798C2.55826 10.5385 2.68092 10.2451 2.92626 9.99979C3.18226 9.75445 3.48626 9.63179 3.83826 9.63179C4.17959 9.63179 4.47826 9.74912 4.73426 9.98379C4.99026 10.2185 5.11826 10.5065 5.11826 10.8478C5.11826 11.1891 4.99026 11.4825 4.73426 11.7278C4.48892 11.9731 4.19026 12.0958 3.83826 12.0958C3.66759 12.0958 3.50225 12.0638 3.34226 11.9998C3.19292 11.9358 3.05959 11.8505 2.94226 11.7438C2.82492 11.6371 2.72892 11.5091 2.65426 11.3598C2.59026 11.2105 2.55826 11.0505 2.55826 10.8798Z" fill="#C4C4C4"/>
-          </svg>
-            Markdownヘルプ</button>
+          </svg>Markdownヘルプ</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style lang="stylus">
+.noteColumn
+  .noteEditWrap_post
+    .noteEditWrap_post_view
+      float: left
+    .noteEditWrap_post_edit
+      float: left
+      textarea
+        background: transparent
+        border: none
+        outline: none
+        font-size: 14px
+  .favoriteIcon
+    &.active path
+      fill: #EDA62A !important
+</style>
+
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Location, Route, NavigationGuard } from 'vue-router';
+import { first } from 'rxjs/operators';
+import {
+  Note, NoteStatus, NotesPostRequestBody, NotesNoteIdPutRequestBody,
+  apiRegistry, NotesApi,
+} from '@/lib/api';
+import store from '@/store';
+import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
+
+async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isAdd' | 'isFavorite' | 'editMode' | 'statusOptions' | 'note'>>> {
+  const loginUser = store.state.activeUser.loggedInUser!;
+  const notesApi = apiRegistry.load(NotesApi, loginUser.token);
+  const spaceId = loginUser.space.id;
+  const projectId = store.state.activeUser.activeProjectId;
+  const statusOptionsPromise = notesApi.notesStatusGet({
+    spaceId: store.state.activeUser.loggedInUser!.space.id,
+    projectId: store.state.activeUser.activeProjectId!,
+  }).pipe(first()).toPromise();
+
+  if (to.name === 'note-add') {
+    // 新規
+    return {
+      isAdd: true,
+      isFavorite: false,
+      editMode: true,
+      statusOptions: await statusOptionsPromise,
+      note: {
+        subject: '新規ノート',
+        chargeUsers: [],
+      },
+    };
+  } else {
+    // 既存
+    const [statusOptions, note, resFavorite] = await Promise.all([
+      statusOptionsPromise,
+      notesApi.notesNoteIdGet({
+        spaceId: store.state.activeUser.loggedInUser!.space.id,
+        projectId: store.state.activeUser.activeProjectId!,
+        noteId: parseInt(to.params.noteId),
+      }).pipe(first()).toPromise(),
+      notesApi.notesNoteIdFavoriteGet({
+        spaceId: store.state.activeUser.loggedInUser!.space.id,
+        projectId: store.state.activeUser.activeProjectId!,
+        noteId: parseInt(to.params.noteId),
+      }).pipe(first()).toPromise(),
+    ]);
+    return {
+      isAdd: false,
+      isFavorite: resFavorite.value,
+      editMode: false,
+      statusOptions,
+      note,
+    };
+  }
+}
+
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteUpdate',
+  'beforeRouteLeave',
+]);
+
+@Component({
+  components: {
+    MyProjectStatusInput,
+  },
+})
+export default class NoteColumn extends Vue {
+  note: NotesPostRequestBody | NotesNoteIdPutRequestBody = null as any;
+  statusOptions: NoteStatus[] = null as any;
+  isFavorite = false;
+  isAdd = false;
+  editMode = false;
+  saving = false;
+
+  get fullMainColumn() {
+    return this.$store.state.fullMainColumn;
+  }
+
+  setFullMainColumn(v: boolean) {
+    this.$store.mutations.setFullMainColumn(v);
+  }
+
+  async save() {
+    if (this.saving) {
+      return;
+    }
+    const loginUser = store.state.activeUser.loggedInUser!;
+    const projectId = store.state.activeUser.activeProjectId!;
+    const notesApi = apiRegistry.load(NotesApi, loginUser.token);
+    try {
+      this.saving = true;
+
+      if (this.isAdd) {
+        const note = await notesApi.notesPost({
+          spaceId: loginUser.space.id,
+          projectId,
+          notesPostRequestBody: this.note as NotesPostRequestBody,
+        }).pipe(first()).toPromise();
+
+        this.$store.actions.activeUser.replaceNote(note);
+        this.$router.replace({
+          name: 'note',
+          params: {
+            userId: loginUser.id.toString(),
+            projectId: projectId.toString(),
+            noteId: note.id.toString(),
+          },
+        });
+
+      } else {
+        const note = await notesApi.notesNoteIdPut({
+          spaceId: loginUser.space.id,
+          projectId,
+          noteId: parseInt(this.$route.params.noteId),
+          notesNoteIdPutRequestBody: this.note as NotesNoteIdPutRequestBody,
+        }).pipe(first()).toPromise();
+        this.$store.actions.activeUser.replaceNote(note);
+        this.editMode = false;
+      }
+
+    } catch (err) {
+      this.$showApiError(this, err);
+    }
+
+    this.saving = false;
+  }
+
+  async destroy() {
+    if (this.saving) {
+      return;
+    }
+    const loginUser = store.state.activeUser.loggedInUser!;
+    const projectId = store.state.activeUser.activeProjectId!;
+    const notesApi = apiRegistry.load(NotesApi, loginUser.token);
+
+    try {
+      this.saving = true;
+      await notesApi.notesNoteIdDelete({
+        spaceId: loginUser.space.id,
+        projectId,
+        noteId: parseInt(this.$route.params.noteId),
+      }).pipe(first()).toPromise();
+      this.$store.mutations.activeUser.deleteNote(parseInt(this.$route.params.noteId));
+      this.$flash('削除しました', 'error');
+      this.$router.replace({
+        name: 'notes',
+        params: {
+          userId: loginUser.id.toString(),
+          projectId: projectId.toString(),
+        },
+      });
+
+    } catch (err) {
+      this.$showApiError(this, err);
+    }
+
+    this.saving = false;
+  }
+
+  async favorite(value: boolean) {
+    if (this.saving) {
+      return;
+    }
+
+    const loginUser = store.state.activeUser.loggedInUser!;
+    const projectId = store.state.activeUser.activeProjectId!;
+    const notesApi = apiRegistry.load(NotesApi, loginUser.token);
+    try {
+      this.saving = true;
+      const res = await notesApi.notesNoteIdFavoritePost({
+        spaceId: loginUser.space.id,
+        projectId: projectId,
+        noteId: parseInt(this.$route.params.noteId),
+        notesNoteIdFavoritePostRequestBody: { value },
+      }).pipe(first()).toPromise();
+      this.isFavorite = res.value;
+
+    } catch (err) {
+      this.$showApiError(this, err);
+    }
+
+    this.saving = false;
+  }
+
+  async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    const options = await initData(to);
+    store.mutations.setFullMainColumn(false);
+    next((vm) => {
+      (Object.keys(options) as (keyof typeof options)[]).forEach((k) => {
+        (vm as any)[k] = options[k]!;
+      });
+    });
+  }
+
+  async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    const options = await initData(to);
+    store.mutations.setFullMainColumn(false);
+    (Object.keys(options) as (keyof typeof options)[]).forEach((k) => {
+      (this as any)[k] = options[k]!;
+    });
+    this.saving = false;
+    next();
+  }
+
+  beforeRouteLeave(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    store.mutations.setFullMainColumn(false);
+    next();
+  }
+}
+</script>

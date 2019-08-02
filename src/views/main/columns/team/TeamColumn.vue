@@ -1,7 +1,7 @@
 <template>
   <div class="teamColumn">
     <ul class="teamColumn_nav">
-      <li v-for="(u, i) in loggedInUsers" :key="i">
+      <li v-for="u in loggedInUsers" :key="u.id">
         <router-link
           :class="{active: activeUserId === u.id}"
           :to="{ name: 'user', params: { userId: u.id }}"
@@ -27,6 +27,7 @@ export default class UserColumn extends Vue {
   get loggedInUsers() {
     return this.$store.state.loggedInUsers;
   }
+
   get activeUserId() {
     const userId = this.$route.params.userId;
     return userId ? parseInt(userId) : null;

@@ -7,6 +7,8 @@ const timeout = 60000; // msec
 export enum ApiErrors {
   ValidationError = 'ValidationError',
   ExpiredTokenError = 'ExpiredTokenError',
+  LoginUserNotFound = 'LoginUserNotFound',
+  AuthenticationFailed = 'AuthenticationFailed',
 }
 
 class AppMiddleWare implements Middleware {

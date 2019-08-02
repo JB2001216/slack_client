@@ -13,19 +13,13 @@
 
 /**
  * @export
- * @interface UsersEmailLoginConfirmPostRequestBody
+ * @interface UsersSmsLoginConfirmPostResponse
  */
-export interface UsersEmailLoginConfirmPostRequestBody {
+export interface UsersSmsLoginConfirmPostResponse {
     /**
      * 
      * @type {string}
-     * @memberof UsersEmailLoginConfirmPostRequestBody
+     * @memberof UsersSmsLoginConfirmPostResponse
      */
-    email: string;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof UsersEmailLoginConfirmPostRequestBody
-     */
-    idNotIn?: Array<number>;
+    token: string;
 }

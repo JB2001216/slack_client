@@ -42,6 +42,12 @@ export interface TaskStatus {
     name: string;
     /**
      * 
+     * @type {string}
+     * @memberof TaskStatus
+     */
+    color: string;
+    /**
+     * 
      * @type {number}
      * @memberof TaskStatus
      */

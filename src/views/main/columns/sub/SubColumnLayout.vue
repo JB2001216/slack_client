@@ -1,7 +1,7 @@
 <template>
   <div class="subColumn">
     <div class="subColumn_head columnTitle">
-      <h2>{{project.displayName}}</h2>
+      <h2>{{project ? project.displayName : ''}}</h2>
       <a class="subColumn_head_menu" href="#">
         <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
           <path clip-rule="evenodd"
@@ -11,7 +11,7 @@
       </a>
     </div>
     <ul class="subColumn_tab">
-      <li v-for="(t, i) in tabs" :key="i">
+      <li v-for="t in tabs" :key="t.name">
         <router-link
           :class="{[`open_tab_${t.name}`]: true, active: activeTab === t.name}"
           :to="{name: t.toName, params: tabToParams }">{{t.text}}</router-link>
@@ -42,7 +42,7 @@ export default class SubColumnLayout extends Vue {
     { name: SubColumnTabNames.task, text: 'タスク', toName: 'tasks' },
     { name: SubColumnTabNames.file, text: 'ファイル', toName: 'files' },
     { name: SubColumnTabNames.note, text: 'ノート', toName: 'notes' },
-    { name: SubColumnTabNames.chart, text: 'ガントチャート', toName: 'charts' },
+    { name: SubColumnTabNames.chart, text: 'ガントチャート', toName: 'notes' },
   ];
 
   get tabToParams() {

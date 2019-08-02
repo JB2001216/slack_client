@@ -22,4 +22,10 @@ export interface UsersSmsLoginConfirmPostRequestBody {
      * @memberof UsersSmsLoginConfirmPostRequestBody
      */
     sms: string;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof UsersSmsLoginConfirmPostRequestBody
+     */
+    idNotIn?: Array<number>;
 }

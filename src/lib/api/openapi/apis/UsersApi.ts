@@ -19,6 +19,7 @@ import {
     UsersEmailLoginConfirmPostRequestBody,
     UsersEmailLoginPostRequestBody,
     UsersLoginPostRequestBody,
+    UsersLoginPostResponse,
     UsersMeEmailConfirmPostRequestBody,
     UsersMeEmailGetResponse,
     UsersMeEmailPutRequestBody,
@@ -27,6 +28,7 @@ import {
     UsersMeSmsGetResponse,
     UsersMeSmsPutRequestBody,
     UsersSmsLoginConfirmPostRequestBody,
+    UsersSmsLoginConfirmPostResponse,
     UsersSmsLoginPostRequestBody,
 } from '../models';
 
@@ -124,7 +126,7 @@ export class UsersApi extends BaseAPI {
     /**
      * メール or SMS認証で得たログイン用トークンを使ってログイン
      */
-    usersLoginPost(requestParameters: UsersLoginPostRequest): Observable<MyUser> {
+    usersLoginPost(requestParameters: UsersLoginPostRequest): Observable<UsersLoginPostResponse> {
         if (requestParameters.usersLoginPostRequestBody === null || requestParameters.usersLoginPostRequestBody === undefined) {
             throw new RequiredError('usersLoginPostRequestBody','Required parameter requestParameters.usersLoginPostRequestBody was null or undefined when calling usersLoginPost.');
         }
@@ -135,7 +137,7 @@ export class UsersApi extends BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        return this.request<MyUser>({
+        return this.request<UsersLoginPostResponse>({
             path: `/users/login/`,
             method: 'POST',
             headers: headerParameters,
@@ -268,7 +270,7 @@ export class UsersApi extends BaseAPI {
     /**
      * SMS変更用SMS認証メッセージ送信
      */
-    usersMeSmsConfirmPost(requestParameters: UsersMeSmsConfirmPostRequest): Observable<void> {
+    usersMeSmsConfirmPost(requestParameters: UsersMeSmsConfirmPostRequest): Observable<UsersSmsLoginConfirmPostResponse> {
         if (requestParameters.usersMeSmsConfirmPostRequestBody === null || requestParameters.usersMeSmsConfirmPostRequestBody === undefined) {
             throw new RequiredError('usersMeSmsConfirmPostRequestBody','Required parameter requestParameters.usersMeSmsConfirmPostRequestBody was null or undefined when calling usersMeSmsConfirmPost.');
         }
@@ -283,7 +285,7 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<void>({
+        return this.request<UsersSmsLoginConfirmPostResponse>({
             path: `/users/me/sms/confirm/`,
             method: 'POST',
             headers: headerParameters,
@@ -342,7 +344,7 @@ export class UsersApi extends BaseAPI {
     /**
      * ログイン用SMS認証メッセージ送信
      */
-    usersSmsLoginConfirmPost(requestParameters: UsersSmsLoginConfirmPostRequest): Observable<void> {
+    usersSmsLoginConfirmPost(requestParameters: UsersSmsLoginConfirmPostRequest): Observable<UsersSmsLoginConfirmPostResponse> {
         if (requestParameters.usersSmsLoginConfirmPostRequestBody === null || requestParameters.usersSmsLoginConfirmPostRequestBody === undefined) {
             throw new RequiredError('usersSmsLoginConfirmPostRequestBody','Required parameter requestParameters.usersSmsLoginConfirmPostRequestBody was null or undefined when calling usersSmsLoginConfirmPost.');
         }
@@ -353,7 +355,7 @@ export class UsersApi extends BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        return this.request<void>({
+        return this.request<UsersSmsLoginConfirmPostResponse>({
             path: `/users/sms_login/confirm/`,
             method: 'POST',
             headers: headerParameters,

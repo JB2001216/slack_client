@@ -13,6 +13,7 @@ class RootState {
   locale: Locale = defaultLocale;
   titleKey?: string = undefined;
   loggedInUsers: LoggedInUser[] = [];
+  fullMainColumn = false;
 }
 
 class RootGetters extends Getters<RootState>() {
@@ -69,6 +70,10 @@ class RootMutations extends Mutations<RootState>() {
       apiRegistry.release(user.token);
     }
   }
+
+  setFullMainColumn(v: boolean) {
+    this.state.fullMainColumn = v;
+  }
 }
 
 class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
@@ -77,7 +82,7 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
   }
 
   async initLoggedInUsers() {
-    const results = await Promise.all(localStorage.tokens.map((t) => this.addLoggedInUsers(t, false)));
+    await Promise.all(localStorage.tokens.map((t) => this.addLoggedInUsers(t, false)));
   }
 
   async addLoggedInUsers(token: string, saveToken = true) {

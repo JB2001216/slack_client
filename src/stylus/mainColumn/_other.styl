@@ -1,0 +1,65 @@
+.other{
+  padding 0 15px;
+  zoom: 1;
+  &:after {
+    content: "";
+    clear: both;
+    display: block;
+  }
+  *{
+    box-sizing: border-box;
+  }
+
+  &_balloon{
+    display: inline-block;
+    padding: 8px 15px 10px 12px;
+    background: #333333;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+    text-align: center;
+    position: relative;
+    &:before{
+      content: "";
+      margin-left: -11px;
+      border: 9px solid transparent;
+      border-top: 11px solid #333333;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+    }
+  }
+
+  &_status{
+    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.05);
+    max-width 150px;
+    ul{
+      display: inline-block;
+      padding: 8px 12px;
+      background: #fff;
+      border-radius: 4px;
+      box-sizing: border-box;
+      overflow: hidden;
+      width: 100%;
+      a{
+        display block;
+        text-decoration none;
+        color: inherit;
+        padding: 7px 3px;
+        transition 0.5s;
+      }
+      li{
+        min-width: 110px;
+        font-size: 12px;
+        cursor: pointer;
+        &.border{
+          border-top: 1px solid #FAFAFC;
+        }
+        &.archive{
+          color: #DE6868;
+        }
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@
     <div class="tab_note">
       <div class="note_menu">
         <div class="note_menu_left">
-          <a class="note_menu_favorite" href="#">
+          <a class="note_menu_favorite" href="#" :class="{active: isFavorite}" @click.prevent="favorite(!isFavorite)">
             <svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="m12 1.5 2.3574 7.25532h7.6287l-6.1718 4.48408 2.3574 7.2553-6.1717-4.4841-6.17175 4.4841 2.3574-7.2553-6.17174-4.48408h7.62869z" />
             </svg>
@@ -25,123 +25,22 @@
         </div>
       </div>
       <div class="note_list">
-        <a class="note_add" href="#">
+        <router-link class="note_add" :to="getNoteAddTo()">
           <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="m22 13h-19.99999v-2h19.99999z" />
             <path d="m11 22v-20.00003h2v20.00003z" />
           </svg>
           新規ノート
-        </a>
+        </router-link>
         <ul>
-          <li class="note_item">
+          <li class="note_item" v-for="n in notes" :key="n.id" @click="$router.push(getNoteTo(n.id))">
             <div class="note_item_bar"/>
             <div class="note_item_image">
               <img src="@/assets/images/subColumn/note_user.svg" alt="">
             </div>
-            <div class="note_item_name">ダッシュボード</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">プロジェクト一覧</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">ノート機能</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">ガントチャート機能</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">フェーズ2</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">プロジェクト一覧</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">ノート機能</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">ガントチャート機能</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item indent">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">ダッシュボード</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item indent">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">ノート機能</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
-          </li>
-          <li class="note_item indent">
-            <div class="note_item_bar"/>
-            <div class="note_item_image">
-              <img src="@/assets/images/subColumn/note_user.svg" alt="">
-            </div>
-            <div class="note_item_name">プロジェクト一覧</div>
-            <a class="note_item_add" href="#"/>
-            <div class="note_item_date"/>
-            <div class="note_item_status status status_1">未着手</div>
+            <div class="note_item_name">{{n.subject}}</div>
+            <!-- a class="note_item_add" href="#" /-->
+            <my-project-status class="note_item_status" :option="getStatusOption(n.status)" />
           </li>
         </ul>
       </div>
@@ -149,9 +48,32 @@
   </sub-column-layout>
 </template>
 
+<style lang="stylus" scoped>
+.note_item
+  cursor: pointer
+</style>
+
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Location, Route, NavigationGuard } from 'vue-router';
 import SubColumnLayout from './SubColumnLayout.vue';
+import store from '@/store';
+import { first } from 'rxjs/operators';
+
+async function fetchNotes(query: Route['query']) {
+  await Promise.all([
+    store.actions.activeUser.fetchNotes({
+      filter: {
+        favorite: query['favorite'] === 'true',
+      },
+    }),
+    store.actions.activeUser.fetchNoteStatusOptions(),
+  ]);
+}
+
+Component.registerHooks([
+  'beforeRouteEnter',
+]);
 
 @Component({
   components: {
@@ -159,5 +81,77 @@ import SubColumnLayout from './SubColumnLayout.vue';
   },
 })
 export default class NoteColumn extends Vue {
+  get notes() {
+    return this.$store.state.activeUser.notes;
+  }
+
+  get statusOptions() {
+    return store.state.activeUser.noteStatusOptions;
+  }
+
+  get isFavorite() {
+    return this.$store.state.activeUser.notesGetConditions &&
+      this.$store.state.activeUser.notesGetConditions.filter &&
+      this.$store.state.activeUser.notesGetConditions.filter.favorite;
+  }
+
+  getStatusOption(optionId: number | null) {
+    if (!optionId || !this.statusOptions) {
+      return null;
+    }
+    return this.statusOptions.find((o) => o.id === optionId) || null;
+  }
+
+  getNoteAddTo(): Location {
+    return {
+      name: 'note-add',
+      params: {
+        userId: this.$route.params.userId,
+        projectId: this.$route.params.projectId,
+      },
+    };
+  }
+
+  getNoteTo(noteId: number): Location {
+    return {
+      name: 'note',
+      params: {
+        userId: this.$route.params.userId,
+        projectId: this.$route.params.projectId,
+        noteId: noteId.toString(),
+      },
+    };
+  }
+
+  async favorite(value: boolean) {
+    const query: Route['query'] = {};
+    if (value) {
+      Object.assign(query, { favorite: value.toString() });
+    }
+    this.$router.push({
+      name: 'notes',
+      query,
+      params: {
+        userId: this.$route.params.userId,
+        projectId: this.$route.params.projectId,
+      },
+    }, () => {
+      fetchNotes(query);
+    });
+  }
+
+  async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    if (to.name === 'notes' || !store.state.activeUser.notes) {
+      await fetchNotes(to.name === 'notes' ? to.query : {});
+    }
+    next();
+  }
+
+  async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    if (to.name === 'notes' || !store.state.activeUser.notes) {
+      await fetchNotes(to.name === 'notes' ? to.query : {});
+    }
+    next();
+  }
 }
 </script>

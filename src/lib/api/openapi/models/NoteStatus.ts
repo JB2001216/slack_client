@@ -42,6 +42,12 @@ export interface NoteStatus {
     name: string;
     /**
      * 
+     * @type {string}
+     * @memberof NoteStatus
+     */
+    color: string;
+    /**
+     * 
      * @type {number}
      * @memberof NoteStatus
      */

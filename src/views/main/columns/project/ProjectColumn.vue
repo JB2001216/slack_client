@@ -11,7 +11,7 @@
             <path d="m11 22v-20.00003h2v20.00003z" />
           </svg>
         </a></li>
-        <li v-for="(p, i) in projects" :key="i">
+        <li v-for="p in projects" :key="p.id">
           <router-link
             :class="{active: p.id === activeProjectId}"
             :to="{
@@ -38,7 +38,39 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Route, NavigationGuard } from 'vue-router';
+import store from '@/store';
 
+async function beforeRouteChange(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+  if (to.params.projectId) {
+    const projectId = parseInt(to.params.projectId);
+    const project = store.state.activeUser.projects!.find((p) => p.id === projectId);
+    if (!project) {
+      return next({ name: 'user', params: { userId: to.params.userId } });
+    }
+
+    if (project.id !== store.state.activeUser.activeProjectId) {
+      store.mutations.activeUser.setActiveProjectId(project.id);
+    }
+  }
+
+  // タブ未選択の場合タスクを選択
+  if (to.name === 'project') {
+    return next({
+      name: 'tasks',
+      params: {
+        userId: to.params.userId,
+        projectId: to.params.projectId,
+      },
+    });
+  }
+  return next();
+}
+
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteUpdate',
+]);
 @Component
 export default class ProjectColumn extends Vue {
   get loggedInUser() {
@@ -49,6 +81,14 @@ export default class ProjectColumn extends Vue {
   }
   get activeProjectId() {
     return this.$store.state.activeUser.activeProjectId;
+  }
+
+  async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    await beforeRouteChange(to, from, next);
+  }
+
+  async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    await beforeRouteChange(to, from, next);
   }
 }
 </script>

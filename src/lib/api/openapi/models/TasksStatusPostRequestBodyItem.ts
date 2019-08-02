@@ -30,6 +30,12 @@ export interface TasksStatusPostRequestBodyItem {
     name: string;
     /**
      * 
+     * @type {string}
+     * @memberof TasksStatusPostRequestBodyItem
+     */
+    color?: string;
+    /**
+     * 
      * @type {number}
      * @memberof TasksStatusPostRequestBodyItem
      */

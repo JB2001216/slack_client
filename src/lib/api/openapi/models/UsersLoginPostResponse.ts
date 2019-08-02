@@ -11,21 +11,25 @@
  * Do not edit the class manually.
  */
 
+import {
+    MyUser,
+} from './';
+
 /**
  * @export
- * @interface UsersEmailLoginConfirmPostRequestBody
+ * @interface UsersLoginPostResponse
  */
-export interface UsersEmailLoginConfirmPostRequestBody {
+export interface UsersLoginPostResponse {
     /**
      * 
      * @type {string}
-     * @memberof UsersEmailLoginConfirmPostRequestBody
+     * @memberof UsersLoginPostResponse
      */
-    email: string;
+    token: string;
     /**
      * 
-     * @type {Array<number>}
-     * @memberof UsersEmailLoginConfirmPostRequestBody
+     * @type {MyUser}
+     * @memberof UsersLoginPostResponse
      */
-    idNotIn?: Array<number>;
+    user: MyUser;
 }
