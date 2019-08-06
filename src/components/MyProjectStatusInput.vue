@@ -43,6 +43,7 @@
       position: absolute
       top: 34px
       left: 0
+      z-index: 4;
       &_item
         white-space: nowrap
         height: 32px

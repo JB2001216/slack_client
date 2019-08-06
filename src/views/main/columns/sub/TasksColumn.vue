@@ -39,8 +39,8 @@
               <img src="@/assets/images/user/user_1.png" alt="">
             </div>
             <div class="task_item_name">{{t.subject}}</div>
-            <a class="task_item_add" href="#"/>
-            <div class="task_item_date">{{t.limitedAt ? t.limitedAt.format('m/d') : ''}}</div>
+            <!-- <a class="task_item_add" href="#"/> -->
+            <div class="task_item_date">{{t.limitedAt | dateFormat('M/D')}}</div>
             <my-project-status class="task_item_status" :option="getStatusOption(t.status)" />
           </li>
         </ul>

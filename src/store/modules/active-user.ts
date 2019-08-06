@@ -56,10 +56,13 @@ class ActiveUserState {
   projects: api.Project[] | null = null;
   activeProjectId: number | null = null;
 
+  spaceUsers: api.SpaceUser[] = [];
+
   // notes
   notes: api.Note[] | null = null;
   notesGetConditions: Required<NotesGetConditions> | null = null;
   noteStatusOptions: api.NoteStatus[] | null = null;
+
   // tasks
   tasks: api.Task[] | null = null;
   tasksGetConditions: Required<TasksGetConditions> | null = null;
@@ -78,6 +81,7 @@ class ActiveUserGetters extends Getters<ActiveUserState>() {
 class ActiveUserMutations extends Mutations<ActiveUserState>() {
   clear() {
     this.state.loggedInUser = null;
+    this.state.spaceUsers = [];
     this.state.projects = null;
     this.state.activeProjectId = null;
     this.setActiveProjectId(null);
@@ -89,6 +93,15 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     this.state.projects = projects;
     if (projects.length) {
       this.state.activeProjectId = projects[0].id;
+    }
+  }
+
+  addSpaceUser(spaceUser: api.SpaceUser) {
+    const index = this.state.spaceUsers.findIndex((u) => u.id === spaceUser.id);
+    if (index >= 0) {
+      this.state.spaceUsers.splice(index, 1, spaceUser);
+    } else {
+      this.state.spaceUsers.push(spaceUser);
     }
   }
 
@@ -202,6 +215,41 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     }
     const projects = await _fetchProjects(user);
     this.mutations.init(user, projects);
+  }
+
+  async getSpaceUser(userId: number) {
+    const loggedInUser = this.state.loggedInUser;
+    if (!loggedInUser) {
+      return null;
+    }
+    const user = this.state.spaceUsers.find((u) => u.id === userId);
+    if (user && user.spaceId === loggedInUser.space.id) {
+      return user;
+    }
+
+    // すでに取得中の場合重複しないようにする
+    const attr = '_fetchingSpaceUserPromises';
+    if (!(this as any)[attr]) {
+      (this as any)[attr] = {};
+    }
+    const promises: {[userId: number]: Promise<api.SpaceUser>} = (this as any)[attr];
+    let promise = promises[userId];
+    if (!promise) {
+      const spacesApi = api.apiRegistry.load(api.SpacesApi, loggedInUser.token);
+      promise = spacesApi.spacesSpaceIdUsersUserIdGet({
+        spaceId: loggedInUser.space.id,
+        userId,
+      }).pipe(first()).toPromise();
+      promises[userId] = promise;
+    }
+
+    try {
+      const fetchedUser = await promise;
+      this.mutations.addSpaceUser(fetchedUser);
+      return fetchedUser;
+    } finally {
+      delete promises[userId];
+    }
   }
 
   async fetchNotes(conditions: NotesGetConditions = {}) {

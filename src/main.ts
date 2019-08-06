@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 import i18n from './i18n';
 import * as components from './components';
+import * as filters from './filters';
 import ApiErrorAction from './plugins/api-error-action';
 import App from './App.vue';
 
@@ -24,6 +25,13 @@ declare module 'vue/types/vue' {
     $flash: VueFlashMessage.MessageMethod;
   }
 }
+
+// フィルタ登録
+type FiltersKey = keyof typeof filters;
+(<FiltersKey[]>Object.keys(filters)).forEach((k) => {
+  const f = filters[k];
+  Vue.filter(k, f);
+});
 
 // api-error-action
 Vue.use(ApiErrorAction);
