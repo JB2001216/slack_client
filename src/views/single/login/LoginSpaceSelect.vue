@@ -46,9 +46,8 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Route, NavigationGuard } from 'vue-router';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { first } from 'rxjs/operators';
-import { apiRegistry, UsersApi, SpacesPostRequestBody, SelectLoginUser, ApiErrors } from '@/lib/api';
-import { RouteError } from '@/errors';
+import { apiRegistry, UsersApi, SpacesPostRequestBody, SelectLoginUser, ApiErrors, FetchError } from '@/lib/api';
+import { RouteError } from '@/lib/errors';
 import store from '@/store';
 
 Component.registerHooks([
@@ -95,7 +94,7 @@ export default class LoginSpaceSelect extends Vue {
             spaceId: u.space.id,
             userId: u.id,
           },
-        }).pipe(first()).toPromise());
+        }));
 
       const responses = await Promise.all(requests);
       for (let res of responses) {
@@ -127,7 +126,7 @@ export default class LoginSpaceSelect extends Vue {
             token: this.$route.query.token as string,
             idNotIn: this.$store.state.loggedInUsers.map((u) => u.id),
           },
-        }).pipe(first()).toPromise();
+        });
       } catch (err) {
         this.$showApiError(this, err);
         this.$router.replace({ name: 'login' });
@@ -145,13 +144,16 @@ export default class LoginSpaceSelect extends Vue {
             pin: to.query.pin as string,
             idNotIn: store.state.loggedInUsers.map((u) => u.id),
           },
-        }).pipe(first()).toPromise();
+        });
         return next((vm) => {
           (vm as this).users = users;
         });
       } catch (err) {
-        if (err.response && err.response.error === ApiErrors.ExpiredTokenError) {
-          return next({ name: 'login-sms' });
+        if (err instanceof FetchError) {
+          const res = await err.data!.json();
+          if (res.error === ApiErrors.ExpiredTokenError) {
+            return next({ name: 'login-sms' });
+          }
         }
         return next(new RouteError(err));
       }

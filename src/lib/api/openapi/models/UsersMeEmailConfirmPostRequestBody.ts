@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface UsersMeEmailConfirmPostRequestBody
  */
@@ -23,3 +25,20 @@ export interface UsersMeEmailConfirmPostRequestBody {
      */
     email: string;
 }
+
+export function UsersMeEmailConfirmPostRequestBodyFromJSON(json: any): UsersMeEmailConfirmPostRequestBody {
+    return {
+        'email': json['email'],
+    };
+}
+
+export function UsersMeEmailConfirmPostRequestBodyToJSON(value?: UsersMeEmailConfirmPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'email': value.email,
+    };
+}
+
+

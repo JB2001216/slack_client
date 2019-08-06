@@ -163,7 +163,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
-import { first } from 'rxjs/operators';
 import {
   Note, NoteStatus, NotesPostRequestBody, NotesNoteIdPutRequestBody,
   apiRegistry, NotesApi,
@@ -179,7 +178,7 @@ async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isAdd' | '
   const statusOptionsPromise = notesApi.notesStatusGet({
     spaceId: store.state.activeUser.loggedInUser!.space.id,
     projectId: store.state.activeUser.activeProjectId!,
-  }).pipe(first()).toPromise();
+  });
 
   if (to.name === 'note-add') {
     // 新規
@@ -201,12 +200,12 @@ async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isAdd' | '
         spaceId: store.state.activeUser.loggedInUser!.space.id,
         projectId: store.state.activeUser.activeProjectId!,
         noteId: parseInt(to.params.noteId),
-      }).pipe(first()).toPromise(),
+      }),
       notesApi.notesNoteIdFavoriteGet({
         spaceId: store.state.activeUser.loggedInUser!.space.id,
         projectId: store.state.activeUser.activeProjectId!,
         noteId: parseInt(to.params.noteId),
-      }).pipe(first()).toPromise(),
+      }),
     ]);
     return {
       isAdd: false,
@@ -259,7 +258,7 @@ export default class NoteColumn extends Vue {
           spaceId: loginUser.space.id,
           projectId,
           notesPostRequestBody: this.note as NotesPostRequestBody,
-        }).pipe(first()).toPromise();
+        });
 
         this.$store.actions.activeUser.replaceNote(note);
         this.$router.replace({
@@ -277,7 +276,7 @@ export default class NoteColumn extends Vue {
           projectId,
           noteId: parseInt(this.$route.params.noteId),
           notesNoteIdPutRequestBody: this.note as NotesNoteIdPutRequestBody,
-        }).pipe(first()).toPromise();
+        });
         this.$store.actions.activeUser.replaceNote(note);
         this.editMode = false;
       }
@@ -303,7 +302,7 @@ export default class NoteColumn extends Vue {
         spaceId: loginUser.space.id,
         projectId,
         noteId: parseInt(this.$route.params.noteId),
-      }).pipe(first()).toPromise();
+      });
       this.$store.mutations.activeUser.deleteNote(parseInt(this.$route.params.noteId));
       this.$flash('削除しました', 'error');
       this.$router.replace({
@@ -336,7 +335,7 @@ export default class NoteColumn extends Vue {
         projectId: projectId,
         noteId: parseInt(this.$route.params.noteId),
         notesNoteIdFavoritePostRequestBody: { value },
-      }).pipe(first()).toPromise();
+      });
       this.isFavorite = res.value;
 
     } catch (err) {

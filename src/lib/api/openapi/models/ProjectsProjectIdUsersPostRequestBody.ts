@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface ProjectsProjectIdUsersPostRequestBody
  */
@@ -29,3 +31,22 @@ export interface ProjectsProjectIdUsersPostRequestBody {
      */
     userId: number;
 }
+
+export function ProjectsProjectIdUsersPostRequestBodyFromJSON(json: any): ProjectsProjectIdUsersPostRequestBody {
+    return {
+        'projectRoleId': json['projectRoleId'],
+        'userId': json['userId'],
+    };
+}
+
+export function ProjectsProjectIdUsersPostRequestBodyToJSON(value?: ProjectsProjectIdUsersPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'projectRoleId': value.projectRoleId,
+        'userId': value.userId,
+    };
+}
+
+

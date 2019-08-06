@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     TaskCommentFile,
+    TaskCommentFileFromJSON,
+    TaskCommentFileToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface TaskComment
  */
@@ -63,3 +67,32 @@ export interface TaskComment {
      */
     updatedAt: Date;
 }
+
+export function TaskCommentFromJSON(json: any): TaskComment {
+    return {
+        'id': json['id'],
+        'task': json['task'],
+        'writeUser': json['writeUser'],
+        'body': json['body'],
+        'files': (json['files'] as Array<any>).map(TaskCommentFileFromJSON),
+        'createdAt': new Date(json['createdAt']),
+        'updatedAt': new Date(json['updatedAt']),
+    };
+}
+
+export function TaskCommentToJSON(value?: TaskComment): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'task': value.task,
+        'writeUser': value.writeUser,
+        'body': value.body,
+        'files': (value.files as Array<any>).map(TaskCommentFileToJSON),
+        'createdAt': value.createdAt.toISOString(),
+        'updatedAt': value.updatedAt.toISOString(),
+    };
+}
+
+

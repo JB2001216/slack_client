@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     MyUser,
+    MyUserFromJSON,
+    MyUserToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface UsersLoginPostResponse
  */
@@ -33,3 +37,22 @@ export interface UsersLoginPostResponse {
      */
     user: MyUser;
 }
+
+export function UsersLoginPostResponseFromJSON(json: any): UsersLoginPostResponse {
+    return {
+        'token': json['token'],
+        'user': MyUserFromJSON(json['user']),
+    };
+}
+
+export function UsersLoginPostResponseToJSON(value?: UsersLoginPostResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'token': value.token,
+        'user': MyUserToJSON(value.user),
+    };
+}
+
+

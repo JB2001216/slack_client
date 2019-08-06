@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     SpacesSpaceIdProjectsProjectIdTasksTags,
+    SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON,
+    SpacesSpaceIdProjectsProjectIdTasksTagsToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface TasksPostRequestBody
  */
@@ -69,3 +73,34 @@ export interface TasksPostRequestBody {
      */
     tags: Array<SpacesSpaceIdProjectsProjectIdTasksTags>;
 }
+
+export function TasksPostRequestBodyFromJSON(json: any): TasksPostRequestBody {
+    return {
+        'subject': json['subject'],
+        'body': json['body'],
+        'startedAt': new Date(json['startedAt']),
+        'limitedAt': new Date(json['limitedAt']),
+        'status': json['status'],
+        'batonUser': json['batonUser'],
+        'chargeUsers': json['chargeUsers'],
+        'tags': (json['tags'] as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON),
+    };
+}
+
+export function TasksPostRequestBodyToJSON(value?: TasksPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'subject': value.subject,
+        'body': value.body,
+        'startedAt': value.startedAt.toISOString().substr(0,10),
+        'limitedAt': value.limitedAt.toISOString().substr(0,10),
+        'status': value.status,
+        'batonUser': value.batonUser,
+        'chargeUsers': value.chargeUsers,
+        'tags': (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),
+    };
+}
+
+

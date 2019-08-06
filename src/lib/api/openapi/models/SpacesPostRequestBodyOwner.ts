@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface SpacesPostRequestBodyOwner
  */
@@ -35,3 +37,24 @@ export interface SpacesPostRequestBodyOwner {
      */
     displayName?: string;
 }
+
+export function SpacesPostRequestBodyOwnerFromJSON(json: any): SpacesPostRequestBodyOwner {
+    return {
+        'email': json['email'],
+        'account': json['account'],
+        'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
+    };
+}
+
+export function SpacesPostRequestBodyOwnerToJSON(value?: SpacesPostRequestBodyOwner): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'email': value.email,
+        'account': value.account,
+        'displayName': value.displayName,
+    };
+}
+
+

@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface ProjectsPostRequestBody
  */
@@ -23,3 +25,20 @@ export interface ProjectsPostRequestBody {
      */
     displayName: string;
 }
+
+export function ProjectsPostRequestBodyFromJSON(json: any): ProjectsPostRequestBody {
+    return {
+        'displayName': json['displayName'],
+    };
+}
+
+export function ProjectsPostRequestBodyToJSON(value?: ProjectsPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'displayName': value.displayName,
+    };
+}
+
+

@@ -23,9 +23,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { first } from 'rxjs/operators';
-import { AjaxError } from 'rxjs/ajax';
-import { apiRegistry, ProjectsApi, ApiErrors } from '@/lib/api';
+import { apiRegistry, ProjectsApi, ApiErrors, FetchError } from '@/lib/api';
 
 @Component
 export default class ProjectAddColumn extends Vue {
@@ -47,7 +45,7 @@ export default class ProjectAddColumn extends Vue {
         projectsPostRequestBody: {
           displayName: this.displayName,
         },
-      }).pipe(first()).toPromise();
+      });
       this.$store.mutations.activeUser.addProject(project);
       this.$router.push({
         name: 'project',
@@ -58,11 +56,12 @@ export default class ProjectAddColumn extends Vue {
       });
 
     } catch (err) {
-      if (err instanceof AjaxError) {
-        if (err.response && err.response.error === ApiErrors.ValidationError) {
+      if (err instanceof FetchError) {
+        const res = await err.data!.json();
+        if (res.error === ApiErrors.ValidationError) {
           this.displayNameMessage = {
             type: 'error',
-            text: err.response.data[Object.keys(err.response.data)[0]],
+            text: res.data[Object.keys(res.data)[0]],
           };
         }
       }

@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface ProjectUser
  */
@@ -35,3 +37,24 @@ export interface ProjectUser {
      */
     projectRoleId: number;
 }
+
+export function ProjectUserFromJSON(json: any): ProjectUser {
+    return {
+        'userId': json['userId'],
+        'spaceRoleId': json['spaceRoleId'],
+        'projectRoleId': json['projectRoleId'],
+    };
+}
+
+export function ProjectUserToJSON(value?: ProjectUser): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'userId': value.userId,
+        'spaceRoleId': value.spaceRoleId,
+        'projectRoleId': value.projectRoleId,
+    };
+}
+
+

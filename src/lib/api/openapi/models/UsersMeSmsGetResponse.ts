@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface UsersMeSmsGetResponse
  */
@@ -23,3 +25,20 @@ export interface UsersMeSmsGetResponse {
      */
     sms: string;
 }
+
+export function UsersMeSmsGetResponseFromJSON(json: any): UsersMeSmsGetResponse {
+    return {
+        'sms': json['sms'],
+    };
+}
+
+export function UsersMeSmsGetResponseToJSON(value?: UsersMeSmsGetResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'sms': value.sms,
+    };
+}
+
+

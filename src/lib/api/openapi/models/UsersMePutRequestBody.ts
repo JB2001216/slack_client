@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     Locale,
+    LocaleFromJSON,
+    LocaleToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface UsersMePutRequestBody
  */
@@ -45,3 +49,26 @@ export interface UsersMePutRequestBody {
      */
     timezone?: string;
 }
+
+export function UsersMePutRequestBodyFromJSON(json: any): UsersMePutRequestBody {
+    return {
+        'account': !exists(json, 'account') ? undefined : json['account'],
+        'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
+        'locale': !exists(json, 'locale') ? undefined : LocaleFromJSON(json['locale']),
+        'timezone': !exists(json, 'timezone') ? undefined : json['timezone'],
+    };
+}
+
+export function UsersMePutRequestBodyToJSON(value?: UsersMePutRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'account': value.account,
+        'displayName': value.displayName,
+        'locale': LocaleToJSON(value.locale),
+        'timezone': value.timezone,
+    };
+}
+
+

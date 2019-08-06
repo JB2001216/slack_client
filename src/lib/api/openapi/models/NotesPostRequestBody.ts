@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface NotesPostRequestBody
  */
@@ -59,3 +61,32 @@ export interface NotesPostRequestBody {
      */
     parentNote: number;
 }
+
+export function NotesPostRequestBodyFromJSON(json: any): NotesPostRequestBody {
+    return {
+        'subject': json['subject'],
+        'body': json['body'],
+        'status': json['status'],
+        'batonUser': json['batonUser'],
+        'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
+        'chargeUsers': json['chargeUsers'],
+        'parentNote': json['parentNote'],
+    };
+}
+
+export function NotesPostRequestBodyToJSON(value?: NotesPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'subject': value.subject,
+        'body': value.body,
+        'status': value.status,
+        'batonUser': value.batonUser,
+        'writeUser': value.writeUser,
+        'chargeUsers': value.chargeUsers,
+        'parentNote': value.parentNote,
+    };
+}
+
+

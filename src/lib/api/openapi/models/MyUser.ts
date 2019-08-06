@@ -11,12 +11,18 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     Locale,
+    LocaleFromJSON,
+    LocaleToJSON,
     Space,
+    SpaceFromJSON,
+    SpaceToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface MyUser
  */
@@ -70,3 +76,34 @@ export interface MyUser {
      */
     space: Space;
 }
+
+export function MyUserFromJSON(json: any): MyUser {
+    return {
+        'id': json['id'],
+        'account': json['account'],
+        'displayName': json['displayName'],
+        'email': json['email'],
+        'spaceRoleId': json['spaceRoleId'],
+        'locale': LocaleFromJSON(json['locale']),
+        'timezone': json['timezone'],
+        'space': SpaceFromJSON(json['space']),
+    };
+}
+
+export function MyUserToJSON(value?: MyUser): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'account': value.account,
+        'displayName': value.displayName,
+        'email': value.email,
+        'spaceRoleId': value.spaceRoleId,
+        'locale': LocaleToJSON(value.locale),
+        'timezone': value.timezone,
+        'space': SpaceToJSON(value.space),
+    };
+}
+
+

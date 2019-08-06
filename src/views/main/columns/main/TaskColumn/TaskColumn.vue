@@ -217,7 +217,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
-import { first } from 'rxjs/operators';
 import * as api from '@/lib/api';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
@@ -231,7 +230,7 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isAdd' | '
   const statusOptionsPromise = tasksApi.tasksStatusGet({
     spaceId: store.state.activeUser.loggedInUser!.space.id,
     projectId: store.state.activeUser.activeProjectId!,
-  }).pipe(first()).toPromise();
+  });
 
   if (to.name === 'task-add') {
     // 新規
@@ -254,12 +253,12 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isAdd' | '
         spaceId: store.state.activeUser.loggedInUser!.space.id,
         projectId: store.state.activeUser.activeProjectId!,
         taskId: parseInt(to.params.taskId),
-      }).pipe(first()).toPromise(),
+      }),
       tasksApi.tasksTaskIdFavoriteGet({
         spaceId: store.state.activeUser.loggedInUser!.space.id,
         projectId: store.state.activeUser.activeProjectId!,
         taskId: parseInt(to.params.taskId),
-      }).pipe(first()).toPromise(),
+      }),
     ]);
     task.tags = task.tags || [];
     return {
@@ -322,7 +321,7 @@ export default class TaskColumn extends Vue {
           spaceId: loginUser.space.id,
           projectId,
           tasksPostRequestBody: this.task as api.TasksPostRequestBody,
-        }).pipe(first()).toPromise();
+        });
 
         this.$store.actions.activeUser.replaceTask(task);
         this.$router.replace({
@@ -340,7 +339,7 @@ export default class TaskColumn extends Vue {
           projectId,
           taskId: parseInt(this.$route.params.taskId),
           tasksTaskIdPutRequestBody: this.task as api.TasksTaskIdPutRequestBody,
-        }).pipe(first()).toPromise();
+        });
         this.$store.actions.activeUser.replaceTask(task);
         this.editMode = false;
       }
@@ -366,7 +365,7 @@ export default class TaskColumn extends Vue {
         spaceId: loginUser.space.id,
         projectId,
         taskId: parseInt(this.$route.params.taskId),
-      }).pipe(first()).toPromise();
+      });
       this.$store.mutations.activeUser.deleteTask(parseInt(this.$route.params.taskId));
       this.$flash('削除しました', 'error');
       this.$router.replace({
@@ -399,7 +398,7 @@ export default class TaskColumn extends Vue {
         projectId: projectId,
         taskId: parseInt(this.$route.params.taskId),
         tasksTaskIdFavoritePostRequestBody: { value },
-      }).pipe(first()).toPromise();
+      });
       this.isFavorite = res.value;
 
     } catch (err) {

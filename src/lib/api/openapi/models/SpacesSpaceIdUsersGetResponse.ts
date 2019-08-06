@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     SelectLoginUser,
+    SelectLoginUserFromJSON,
+    SelectLoginUserToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface SpacesSpaceIdUsersGetResponse
  */
@@ -45,3 +49,26 @@ export interface SpacesSpaceIdUsersGetResponse {
      */
     results: Array<SelectLoginUser>;
 }
+
+export function SpacesSpaceIdUsersGetResponseFromJSON(json: any): SpacesSpaceIdUsersGetResponse {
+    return {
+        'count': json['count'],
+        'next': json['next'],
+        'previous': json['previous'],
+        'results': (json['results'] as Array<any>).map(SelectLoginUserFromJSON),
+    };
+}
+
+export function SpacesSpaceIdUsersGetResponseToJSON(value?: SpacesSpaceIdUsersGetResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'count': value.count,
+        'next': value.next,
+        'previous': value.previous,
+        'results': (value.results as Array<any>).map(SelectLoginUserToJSON),
+    };
+}
+
+

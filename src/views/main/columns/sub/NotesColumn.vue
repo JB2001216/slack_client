@@ -58,7 +58,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
 import SubColumnLayout from './SubColumnLayout.vue';
 import store from '@/store';
-import { first } from 'rxjs/operators';
 
 async function fetchNotes(query: Route['query']) {
   await Promise.all([

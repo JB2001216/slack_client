@@ -1,35 +1,30 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { AjaxError, AjaxTimeoutError } from 'rxjs/ajax';
-import { ApiErrors } from '@/lib/api';
-import { RouteError } from '@/errors';
+import { ApiErrors, FetchError } from '@/lib/api';
+import { RouteError } from '@/lib/errors';
 
 @Component
 export default class ApiErrorActionBus extends Vue {
-  show(vm: Vue, err: any) {
+  async show(vm: Vue, err: any) {
     if (err instanceof RouteError) {
       err = err.data;
     }
-    if (err instanceof AjaxError) {
-      if (err.response && err.response.error) {
-        if (ApiErrors.ValidationError === err.response.error) {
+    if (err instanceof FetchError) {
+      const res = await err.data!.json();
+      if (res.error) {
+        if (ApiErrors.ValidationError === res.error) {
           vm.$flash('入力内容に問題があります', 'error');
           return;
         }
-        if (err.response.data && err.response.data.detail) {
-          vm.$flash(err.response.data.detail, 'error');
+        if (res.data && res.data.detail) {
+          vm.$flash(res.data.detail, 'error');
           return;
         }
       }
-      if (!err.status) {
+      if (!err.data!.status) {
         vm.$flash('ネットワーク接続に問題があります', 'error');
         return;
       }
-    }
-
-    if (err instanceof AjaxTimeoutError) {
-      vm.$flash('サーバーの応答がありません', 'error');
-      return;
     }
 
     vm.$flash('エラーが発生しました', 'error');

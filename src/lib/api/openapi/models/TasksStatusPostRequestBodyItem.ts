@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface TasksStatusPostRequestBodyItem
  */
@@ -41,3 +43,26 @@ export interface TasksStatusPostRequestBodyItem {
      */
     sort: number;
 }
+
+export function TasksStatusPostRequestBodyItemFromJSON(json: any): TasksStatusPostRequestBodyItem {
+    return {
+        'category': json['category'],
+        'name': json['name'],
+        'color': !exists(json, 'color') ? undefined : json['color'],
+        'sort': json['sort'],
+    };
+}
+
+export function TasksStatusPostRequestBodyItemToJSON(value?: TasksStatusPostRequestBodyItem): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'category': value.category,
+        'name': value.name,
+        'color': value.color,
+        'sort': value.sort,
+    };
+}
+
+

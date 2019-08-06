@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface UsersEmailLoginConfirmPostRequestBody
  */
@@ -29,3 +31,22 @@ export interface UsersEmailLoginConfirmPostRequestBody {
      */
     idNotIn?: Array<number>;
 }
+
+export function UsersEmailLoginConfirmPostRequestBodyFromJSON(json: any): UsersEmailLoginConfirmPostRequestBody {
+    return {
+        'email': json['email'],
+        'idNotIn': !exists(json, 'idNotIn') ? undefined : json['idNotIn'],
+    };
+}
+
+export function UsersEmailLoginConfirmPostRequestBodyToJSON(value?: UsersEmailLoginConfirmPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'email': value.email,
+        'idNotIn': value.idNotIn,
+    };
+}
+
+

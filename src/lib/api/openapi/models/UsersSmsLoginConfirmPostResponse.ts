@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface UsersSmsLoginConfirmPostResponse
  */
@@ -23,3 +25,20 @@ export interface UsersSmsLoginConfirmPostResponse {
      */
     token: string;
 }
+
+export function UsersSmsLoginConfirmPostResponseFromJSON(json: any): UsersSmsLoginConfirmPostResponse {
+    return {
+        'token': json['token'],
+    };
+}
+
+export function UsersSmsLoginConfirmPostResponseToJSON(value?: UsersSmsLoginConfirmPostResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'token': value.token,
+    };
+}
+
+

@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     Space,
+    SpaceFromJSON,
+    SpaceToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface SpacesPostResponse
  */
@@ -33,3 +37,22 @@ export interface SpacesPostResponse {
      */
     token: string;
 }
+
+export function SpacesPostResponseFromJSON(json: any): SpacesPostResponse {
+    return {
+        'space': SpaceFromJSON(json['space']),
+        'token': json['token'],
+    };
+}
+
+export function SpacesPostResponseToJSON(value?: SpacesPostResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'space': SpaceToJSON(value.space),
+        'token': value.token,
+    };
+}
+
+

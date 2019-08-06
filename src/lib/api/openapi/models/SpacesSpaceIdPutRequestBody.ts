@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface SpacesSpaceIdPutRequestBody
  */
@@ -23,3 +25,20 @@ export interface SpacesSpaceIdPutRequestBody {
      */
     displayName?: string;
 }
+
+export function SpacesSpaceIdPutRequestBodyFromJSON(json: any): SpacesSpaceIdPutRequestBody {
+    return {
+        'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
+    };
+}
+
+export function SpacesSpaceIdPutRequestBodyToJSON(value?: SpacesSpaceIdPutRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'displayName': value.displayName,
+    };
+}
+
+

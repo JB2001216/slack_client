@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface Project
  */
@@ -35,3 +37,24 @@ export interface Project {
      */
     displayName: string;
 }
+
+export function ProjectFromJSON(json: any): Project {
+    return {
+        'id': json['id'],
+        'spaceId': json['spaceId'],
+        'displayName': json['displayName'],
+    };
+}
+
+export function ProjectToJSON(value?: Project): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'spaceId': value.spaceId,
+        'displayName': value.displayName,
+    };
+}
+
+

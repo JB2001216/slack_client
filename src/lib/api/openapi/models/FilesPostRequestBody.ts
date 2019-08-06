@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface FilesPostRequestBody
  */
@@ -29,3 +31,22 @@ export interface FilesPostRequestBody {
      */
     file: Blob;
 }
+
+export function FilesPostRequestBodyFromJSON(json: any): FilesPostRequestBody {
+    return {
+        'name': json['name'],
+        'file': json['file'],
+    };
+}
+
+export function FilesPostRequestBodyToJSON(value?: FilesPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'name': value.name,
+        'file': value.file,
+    };
+}
+
+

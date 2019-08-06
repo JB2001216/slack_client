@@ -20,7 +20,6 @@
     "highlight.js": "^9.15.9",
     "marked": "^0.7.0",
     "moment": "^2.24.0",
-    "rxjs": "^6.5.2",
     "sinai": "^0.2.6",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",

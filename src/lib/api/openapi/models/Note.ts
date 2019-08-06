@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface Note
  */
@@ -83,3 +85,40 @@ export interface Note {
      */
     updatedAt: Date;
 }
+
+export function NoteFromJSON(json: any): Note {
+    return {
+        'id': json['id'],
+        'project': json['project'],
+        'writeUser': json['writeUser'],
+        'subject': json['subject'],
+        'body': json['body'],
+        'status': json['status'],
+        'batonUser': json['batonUser'],
+        'chargeUsers': json['chargeUsers'],
+        'parentNote': json['parentNote'],
+        'createdAt': new Date(json['createdAt']),
+        'updatedAt': new Date(json['updatedAt']),
+    };
+}
+
+export function NoteToJSON(value?: Note): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'project': value.project,
+        'writeUser': value.writeUser,
+        'subject': value.subject,
+        'body': value.body,
+        'status': value.status,
+        'batonUser': value.batonUser,
+        'chargeUsers': value.chargeUsers,
+        'parentNote': value.parentNote,
+        'createdAt': value.createdAt.toISOString(),
+        'updatedAt': value.updatedAt.toISOString(),
+    };
+}
+
+

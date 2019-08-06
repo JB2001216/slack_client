@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface SpacesConfirmPostRequestBody
  */
@@ -23,3 +25,20 @@ export interface SpacesConfirmPostRequestBody {
      */
     email: string;
 }
+
+export function SpacesConfirmPostRequestBodyFromJSON(json: any): SpacesConfirmPostRequestBody {
+    return {
+        'email': json['email'],
+    };
+}
+
+export function SpacesConfirmPostRequestBodyToJSON(value?: SpacesConfirmPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'email': value.email,
+    };
+}
+
+

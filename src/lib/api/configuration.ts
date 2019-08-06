@@ -1,8 +1,7 @@
-import { AjaxRequest } from 'rxjs/ajax';
-import { Middleware, RequestContext, RequestArgs, HttpHeaders, Configuration } from './openapi';
+import { Middleware, RequestContext, ResponseContext, FetchParams, HTTPHeaders, Configuration } from './openapi';
+import { BaseError } from '@/lib/errors';
 
 const xApiVersion = '0.0.1';
-const timeout = 60000; // msec
 
 export enum ApiErrors {
   ValidationError = 'ValidationError',
@@ -11,17 +10,35 @@ export enum ApiErrors {
   AuthenticationFailed = 'AuthenticationFailed',
 }
 
+export class FetchError extends BaseError<Response> {
+  constructor(data: Response) {
+    super({
+      message: 'FetchError',
+      data,
+    });
+  }
+}
+
 class AppMiddleWare implements Middleware {
-  pre(context: RequestContext): RequestArgs {
+  async pre(context: RequestContext): Promise<FetchParams | void> {
     // version
-    const headers: HttpHeaders = <any>context.options.headers || {};
+    const headers: HTTPHeaders = <any>context.init.headers || {};
     headers['X-API-Version'] = xApiVersion;
-    context.options.headers = headers;
-
-    // timeout
-    (<AjaxRequest>context.options).timeout = timeout;
-
+    context.init.headers = headers;
     return context;
+  }
+
+  async post(context: ResponseContext): Promise<Response | void> {
+    const res = context.response;
+    // error
+    if (res.status < 200 || res.status >= 300) {
+      try {
+        const json = await res.json();
+        res.json = () => Promise.resolve(json);
+      } catch { }
+      throw new FetchError(res);
+    }
+    return res;
   }
 }
 

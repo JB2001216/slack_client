@@ -7,8 +7,8 @@ export default {
   install(Vue: VueConstructor) {
     Vue.mixin({
       methods: {
-        $showApiError(vm: Vue, err: any) {
-          (<any>bus).show(vm, err);
+        async $showApiError(vm: Vue, err: any) {
+          await (<any>bus).show(vm, err);
         },
       },
     });
@@ -17,6 +17,6 @@ export default {
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $showApiError: (vm: Vue, err: any) => void;
+    $showApiError: (vm: Vue, err: any) => Promise<void>;
   }
 }

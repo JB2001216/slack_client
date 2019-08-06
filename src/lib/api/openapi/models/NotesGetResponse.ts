@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     Note,
+    NoteFromJSON,
+    NoteToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface NotesGetResponse
  */
@@ -45,3 +49,26 @@ export interface NotesGetResponse {
      */
     results: Array<Note>;
 }
+
+export function NotesGetResponseFromJSON(json: any): NotesGetResponse {
+    return {
+        'count': json['count'],
+        'next': json['next'],
+        'previous': json['previous'],
+        'results': (json['results'] as Array<any>).map(NoteFromJSON),
+    };
+}
+
+export function NotesGetResponseToJSON(value?: NotesGetResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'count': value.count,
+        'next': value.next,
+        'previous': value.previous,
+        'results': (value.results as Array<any>).map(NoteToJSON),
+    };
+}
+
+

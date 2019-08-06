@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface TaskCommmentsPostRequestBody
  */
@@ -23,3 +25,20 @@ export interface TaskCommmentsPostRequestBody {
      */
     body: string;
 }
+
+export function TaskCommmentsPostRequestBodyFromJSON(json: any): TaskCommmentsPostRequestBody {
+    return {
+        'body': json['body'],
+    };
+}
+
+export function TaskCommmentsPostRequestBodyToJSON(value?: TaskCommmentsPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'body': value.body,
+    };
+}
+
+

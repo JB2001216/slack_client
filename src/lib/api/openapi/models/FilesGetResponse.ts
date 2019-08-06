@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     FileRecord,
+    FileRecordFromJSON,
+    FileRecordToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface FilesGetResponse
  */
@@ -45,3 +49,26 @@ export interface FilesGetResponse {
      */
     results: Array<FileRecord>;
 }
+
+export function FilesGetResponseFromJSON(json: any): FilesGetResponse {
+    return {
+        'count': json['count'],
+        'next': json['next'],
+        'previous': json['previous'],
+        'results': (json['results'] as Array<any>).map(FileRecordFromJSON),
+    };
+}
+
+export function FilesGetResponseToJSON(value?: FilesGetResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'count': value.count,
+        'next': value.next,
+        'previous': value.previous,
+        'results': (value.results as Array<any>).map(FileRecordToJSON),
+    };
+}
+
+

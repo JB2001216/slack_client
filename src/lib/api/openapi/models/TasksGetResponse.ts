@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     Task,
+    TaskFromJSON,
+    TaskToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface TasksGetResponse
  */
@@ -45,3 +49,26 @@ export interface TasksGetResponse {
      */
     results: Array<Task>;
 }
+
+export function TasksGetResponseFromJSON(json: any): TasksGetResponse {
+    return {
+        'count': json['count'],
+        'next': json['next'],
+        'previous': json['previous'],
+        'results': (json['results'] as Array<any>).map(TaskFromJSON),
+    };
+}
+
+export function TasksGetResponseToJSON(value?: TasksGetResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'count': value.count,
+        'next': value.next,
+        'previous': value.previous,
+        'results': (value.results as Array<any>).map(TaskToJSON),
+    };
+}
+
+

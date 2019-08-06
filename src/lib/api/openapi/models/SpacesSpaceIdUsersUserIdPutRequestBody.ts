@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface SpacesSpaceIdUsersUserIdPutRequestBody
  */
@@ -23,3 +25,20 @@ export interface SpacesSpaceIdUsersUserIdPutRequestBody {
      */
     spaceRoleId?: number;
 }
+
+export function SpacesSpaceIdUsersUserIdPutRequestBodyFromJSON(json: any): SpacesSpaceIdUsersUserIdPutRequestBody {
+    return {
+        'spaceRoleId': !exists(json, 'spaceRoleId') ? undefined : json['spaceRoleId'],
+    };
+}
+
+export function SpacesSpaceIdUsersUserIdPutRequestBodyToJSON(value?: SpacesSpaceIdUsersUserIdPutRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'spaceRoleId': value.spaceRoleId,
+    };
+}
+
+

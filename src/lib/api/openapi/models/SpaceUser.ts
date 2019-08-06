@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface SpaceUser
  */
@@ -53,3 +55,30 @@ export interface SpaceUser {
      */
     spaceRoleId: number;
 }
+
+export function SpaceUserFromJSON(json: any): SpaceUser {
+    return {
+        'id': json['id'],
+        'account': json['account'],
+        'displayName': json['displayName'],
+        'email': json['email'],
+        'spaceId': json['spaceId'],
+        'spaceRoleId': json['spaceRoleId'],
+    };
+}
+
+export function SpaceUserToJSON(value?: SpaceUser): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'account': value.account,
+        'displayName': value.displayName,
+        'email': value.email,
+        'spaceId': value.spaceId,
+        'spaceRoleId': value.spaceRoleId,
+    };
+}
+
+

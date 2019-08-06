@@ -58,7 +58,6 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
-import { first } from 'rxjs/operators';
 import * as api from '@/lib/api';
 
 Component.registerHooks([
@@ -96,7 +95,7 @@ export default class TaskCommment extends Vue {
         projectId,
         taskId: this.task.id,
         taskCommmentsPostRequestBody: this.newComment,
-      }).pipe(first()).toPromise();
+      });
       this.resetNewComment();
       await this.scrollComments('next', true);
 
@@ -121,7 +120,7 @@ export default class TaskCommment extends Vue {
         spaceId: loginUser.space.id,
         projectId,
         taskId: parseInt(this.$route.params.taskId),
-      }).pipe(first()).toPromise();
+      });
       this.$store.mutations.activeUser.deleteTask(parseInt(this.$route.params.taskId));
       this.$flash('削除しました', 'error');
       this.$router.replace({
@@ -153,7 +152,7 @@ export default class TaskCommment extends Vue {
         spaceId: loginUser.space.id,
         projectId: projectId,
         taskId: this.task.id,
-      }).pipe(first()).toPromise();
+      });
       this.comments = res.results.reverse();
     } catch (err) {
       this.$flash('コメントの取得に失敗しました', 'error');
@@ -186,7 +185,7 @@ export default class TaskCommment extends Vue {
       spaceId: loginUser.space.id,
       projectId: projectId,
       taskId: this.task.id,
-    }).pipe(first()).toPromise();
+    });
 
     const req: api.TaskCommmentsGetRequest = {
       spaceId: loginUser.space.id,
@@ -197,20 +196,19 @@ export default class TaskCommment extends Vue {
     try {
       const addComments: api.TaskComment[] = [];
       while (true) {
-        console.log(current);
         const res1 = await taskApi.taskCommmentsGet(Object.assign({
           [idGtLt]: current.id,
           [field]: current[field],
           limit,
           ordering,
-        }, req)).pipe(first()).toPromise();
+        }, req));
         const tempComments = res1.results;
         if (tempComments.length < limit) {
           const res2 = await taskApi.taskCommmentsGet(Object.assign({
             [fieldGtLt]: current[field],
             limit: limit - tempComments.length,
             ordering,
-          }, req)).pipe(first()).toPromise();
+          }, req));
           tempComments.push(...res2.results);
         }
         addComments.push(...tempComments);

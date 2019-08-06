@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface UsersMeEmailPutRequestBody
  */
@@ -23,3 +25,20 @@ export interface UsersMeEmailPutRequestBody {
      */
     token: string;
 }
+
+export function UsersMeEmailPutRequestBodyFromJSON(json: any): UsersMeEmailPutRequestBody {
+    return {
+        'token': json['token'],
+    };
+}
+
+export function UsersMeEmailPutRequestBodyToJSON(value?: UsersMeEmailPutRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'token': value.token,
+    };
+}
+
+

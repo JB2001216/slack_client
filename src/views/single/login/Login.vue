@@ -32,9 +32,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { first } from 'rxjs/operators';
-import { AjaxError } from 'rxjs/ajax';
-import { apiRegistry, UsersApi, ApiErrors } from '@/lib/api';
+import { apiRegistry, UsersApi, ApiErrors, FetchError } from '@/lib/api';
 
 @Component
 export default class Login extends Vue {
@@ -75,7 +73,7 @@ export default class Login extends Vue {
           email: this.email,
           idNotIn: this.$store.state.loggedInUsers.map((u) => u.id),
         },
-      }).pipe(first()).toPromise();
+      });
 
       this.emailMessage = {
         type: 'success',
@@ -83,18 +81,17 @@ export default class Login extends Vue {
       };
 
     } catch (err) {
-      if (err instanceof AjaxError) {
-        if (err.response) {
-          if (err.response.error === ApiErrors.ValidationError) {
-            this.emailMessage = {
-              type: 'error',
-              text: err.response.data[Object.keys(err.response.data)[0]],
-            };
-          }
-          if (err.response.error === ApiErrors.LoginUserNotFound) {
-            this.$flash('ログイン可能なユーザーが見つかりませんでした', 'error');
-            return;
-          }
+      if (err instanceof FetchError) {
+        const res = await err.data!.json();
+        if (res.error === ApiErrors.ValidationError) {
+          this.emailMessage = {
+            type: 'error',
+            text: res.data[Object.keys(res.data)[0]],
+          };
+        }
+        if (res.error === ApiErrors.LoginUserNotFound) {
+          this.$flash('ログイン可能なユーザーが見つかりませんでした', 'error');
+          return;
         }
       }
 

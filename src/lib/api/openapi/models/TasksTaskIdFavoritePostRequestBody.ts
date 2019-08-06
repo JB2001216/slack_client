@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface TasksTaskIdFavoritePostRequestBody
  */
@@ -23,3 +25,20 @@ export interface TasksTaskIdFavoritePostRequestBody {
      */
     value: boolean;
 }
+
+export function TasksTaskIdFavoritePostRequestBodyFromJSON(json: any): TasksTaskIdFavoritePostRequestBody {
+    return {
+        'value': json['value'],
+    };
+}
+
+export function TasksTaskIdFavoritePostRequestBodyToJSON(value?: TasksTaskIdFavoritePostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'value': value.value,
+    };
+}
+
+

@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface Space
  */
@@ -35,3 +37,24 @@ export interface Space {
      */
     displayName: string;
 }
+
+export function SpaceFromJSON(json: any): Space {
+    return {
+        'id': json['id'],
+        'account': json['account'],
+        'displayName': json['displayName'],
+    };
+}
+
+export function SpaceToJSON(value?: Space): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'account': value.account,
+        'displayName': value.displayName,
+    };
+}
+
+

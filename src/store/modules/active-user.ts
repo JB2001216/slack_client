@@ -1,5 +1,4 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
-import { first } from 'rxjs/operators';
 import * as api from '@/lib/api';
 
 interface LoggedInUser extends api.MyUser {
@@ -47,7 +46,7 @@ function _createTasksGetRequest(user: api.MyUser, project: api.Project, cond: Re
 
 async function _fetchProjects(user: LoggedInUser) {
   const projectsApi = api.apiRegistry.load(api.ProjectsApi, user.token);
-  const res = await projectsApi.projectsGet({ spaceId: user.space.id, limit: 500 }).pipe(first()).toPromise();
+  const res = await projectsApi.projectsGet({ spaceId: user.space.id, limit: 500 });
   return res.results;
 }
 
@@ -239,7 +238,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
       promise = spacesApi.spacesSpaceIdUsersUserIdGet({
         spaceId: loggedInUser.space.id,
         userId,
-      }).pipe(first()).toPromise();
+      });
       promises[userId] = promise;
     }
 
@@ -264,7 +263,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     }
     const notesApi = api.apiRegistry.load(api.NotesApi, user.token);
     const req = _createNotesGetRequest(user, project, cond);
-    const notes = await notesApi.notesGet(req).pipe(first()).toPromise();
+    const notes = await notesApi.notesGet(req);
     this.mutations.fetchedNotes(notes.results, cond);
   }
 
@@ -278,7 +277,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     const noteStatusOptions = await notesApi.notesStatusGet({
       spaceId: user.space.id,
       projectId: project.id,
-    }).pipe(first()).toPromise();
+    });
     this.mutations.fetchedNoteStatusOptions(noteStatusOptions);
   }
 
@@ -312,14 +311,14 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
       [field]: current[field],
       limit,
       ordering,
-    }, req)).pipe(first()).toPromise();
+    }, req));
     const addNotes = res1.results;
     if (addNotes.length < limit) {
       const res2 = await notesApi.notesGet(Object.assign({
         [fieldGtLt]: current[field],
         limit: limit - addNotes.length,
         ordering,
-      }, req)).pipe(first()).toPromise();
+      }, req));
       addNotes.push(...res2.results);
     }
 
@@ -350,7 +349,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     }
     const tasksApi = api.apiRegistry.load(api.TasksApi, user.token);
     const req = _createTasksGetRequest(user, project, cond);
-    const tasks = await tasksApi.tasksGet(req).pipe(first()).toPromise();
+    const tasks = await tasksApi.tasksGet(req);
     this.mutations.fetchedTasks(tasks.results, cond);
   }
 
@@ -364,7 +363,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     const taskStatusOptions = await tasksApi.tasksStatusGet({
       spaceId: user.space.id,
       projectId: project.id,
-    }).pipe(first()).toPromise();
+    });
     this.mutations.fetchedTaskStatusOptions(taskStatusOptions);
   }
 
@@ -398,14 +397,14 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
       [field]: current[field],
       limit,
       ordering,
-    }, req)).pipe(first()).toPromise();
+    }, req));
     const addTasks = res1.results;
     if (addTasks.length < limit) {
       const res2 = await tasksApi.tasksGet(Object.assign({
         [fieldGtLt]: current[field],
         limit: limit - addTasks.length,
         ordering,
-      }, req)).pipe(first()).toPromise();
+      }, req));
       addTasks.push(...res2.results);
     }
 

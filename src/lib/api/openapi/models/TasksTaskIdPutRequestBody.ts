@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     SpacesSpaceIdProjectsProjectIdTasksTags,
+    SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON,
+    SpacesSpaceIdProjectsProjectIdTasksTagsToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface TasksTaskIdPutRequestBody
  */
@@ -69,3 +73,34 @@ export interface TasksTaskIdPutRequestBody {
      */
     tags?: Array<SpacesSpaceIdProjectsProjectIdTasksTags>;
 }
+
+export function TasksTaskIdPutRequestBodyFromJSON(json: any): TasksTaskIdPutRequestBody {
+    return {
+        'subject': !exists(json, 'subject') ? undefined : json['subject'],
+        'body': !exists(json, 'body') ? undefined : json['body'],
+        'startedAt': !exists(json, 'startedAt') ? undefined : new Date(json['startedAt']),
+        'limitedAt': !exists(json, 'limitedAt') ? undefined : new Date(json['limitedAt']),
+        'status': !exists(json, 'status') ? undefined : json['status'],
+        'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
+        'chargeUsers': !exists(json, 'chargeUsers') ? undefined : json['chargeUsers'],
+        'tags': !exists(json, 'tags') ? undefined : (json['tags'] as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON),
+    };
+}
+
+export function TasksTaskIdPutRequestBodyToJSON(value?: TasksTaskIdPutRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'subject': value.subject,
+        'body': value.body,
+        'startedAt': value.startedAt === undefined ? undefined : value.startedAt.toISOString().substr(0,10),
+        'limitedAt': value.limitedAt === undefined ? undefined : value.limitedAt.toISOString().substr(0,10),
+        'status': value.status,
+        'batonUser': value.batonUser,
+        'chargeUsers': value.chargeUsers,
+        'tags': value.tags === undefined ? undefined : (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),
+    };
+}
+
+

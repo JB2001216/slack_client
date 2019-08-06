@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBody
  */
@@ -23,3 +25,20 @@ export interface TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBody 
      */
     name?: string;
 }
+
+export function TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBodyFromJSON(json: any): TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBody {
+    return {
+        'name': !exists(json, 'name') ? undefined : json['name'],
+    };
+}
+
+export function TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBodyToJSON(value?: TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'name': value.name,
+    };
+}
+
+

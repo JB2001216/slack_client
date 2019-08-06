@@ -34,9 +34,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { first } from 'rxjs/operators';
-import { AjaxError } from 'rxjs/ajax';
-import { apiRegistry, UsersApi, ApiErrors } from '@/lib/api';
+import { apiRegistry, UsersApi, ApiErrors, FetchError } from '@/lib/api';
 
 @Component
 export default class LoginSms extends Vue {
@@ -54,16 +52,19 @@ export default class LoginSms extends Vue {
           sms: this.sms,
           idNotIn: this.$store.state.loggedInUsers.map((u) => u.id),
         },
-      }).pipe(first()).toPromise();
+      });
       this.token = res.token;
       this.smsMessage = { type: 'success', text: 'ワンタイムパスワードを送信しました。' };
 
     } catch (err) {
-      if (err.response && err.response.error === ApiErrors.ValidationError) {
-        this.smsMessage = {
-          type: 'error',
-          text: err.response.data[Object.keys(err.response.data)[0]],
-        };
+      if (err instanceof FetchError) {
+        const res = await err.data!.json();
+        if (res.error === ApiErrors.ValidationError) {
+          this.smsMessage = {
+            type: 'error',
+            text: res.data[Object.keys(res.data)[0]],
+          };
+        }
       }
       this.$showApiError(this, err);
     }

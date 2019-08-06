@@ -50,9 +50,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { first } from 'rxjs/operators';
-import { AjaxError } from 'rxjs/ajax';
-import { apiRegistry, SpacesApi, SpacesPostRequestBody, ApiErrors } from '@/lib/api';
+import { apiRegistry, SpacesApi, SpacesPostRequestBody, ApiErrors, FetchError } from '@/lib/api';
 
 @Component
 export default class SpaceAdd2 extends Vue {
@@ -99,7 +97,7 @@ export default class SpaceAdd2 extends Vue {
       this.saving = true;
       const res = await spacesApi.spacesPost({
         spacesPostRequestBody: this.data,
-      }).pipe(first()).toPromise();
+      });
 
       const user = await this.$store.actions.addLoggedInUsers(res.token);
       this.$router.push({
@@ -110,31 +108,32 @@ export default class SpaceAdd2 extends Vue {
       });
 
     } catch (err) {
-      if (err instanceof AjaxError) {
-        if (err.response && err.response.error) {
-          if (ApiErrors.ValidationError === err.response.error) {
+      if (err instanceof FetchError) {
+        const res = await err.data!.json();
+        if (res.error) {
+          if (ApiErrors.ValidationError === res.error) {
             const messages: {[field: string]: MyTextInputMessage} = {};
             const ownerMessages: {[field: string]: MyTextInputMessage} = {};
-            Object.keys(err.response.data).forEach((k) => {
+            Object.keys(res.data).forEach((k) => {
               if (k === 'owner') {
-                Object.keys(err.response.data.owner).forEach((k) => {
+                Object.keys(res.data.owner).forEach((k) => {
                   ownerMessages[k] = {
                     type: 'error',
-                    text: err.response.data.owner[k],
+                    text: res.data.owner[k],
                   };
                 });
               } else {
                 messages[k] = {
                   type: 'error',
-                  text: err.response.data[k],
+                  text: res.data[k],
                 };
               }
             });
             this.messages = messages;
             this.ownerMessages = ownerMessages;
 
-          } else if (ApiErrors.ExpiredTokenError === err.response.error) {
-            this.$flash(err.response.detail, 'error');
+          } else if (ApiErrors.ExpiredTokenError === res.error) {
+            this.$flash(res.data.detail, 'error');
             this.$router.replace({ name: 'space-add1' });
             return;
           }

@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     TaskComment,
+    TaskCommentFromJSON,
+    TaskCommentToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface TaskCommmentsGetResponse
  */
@@ -45,3 +49,26 @@ export interface TaskCommmentsGetResponse {
      */
     results: Array<TaskComment>;
 }
+
+export function TaskCommmentsGetResponseFromJSON(json: any): TaskCommmentsGetResponse {
+    return {
+        'count': json['count'],
+        'next': json['next'],
+        'previous': json['previous'],
+        'results': (json['results'] as Array<any>).map(TaskCommentFromJSON),
+    };
+}
+
+export function TaskCommmentsGetResponseToJSON(value?: TaskCommmentsGetResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'count': value.count,
+        'next': value.next,
+        'previous': value.previous,
+        'results': (value.results as Array<any>).map(TaskCommentToJSON),
+    };
+}
+
+

@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface ProjectsProjectIdPutRequestBody
  */
@@ -23,3 +25,20 @@ export interface ProjectsProjectIdPutRequestBody {
      */
     displayName?: string;
 }
+
+export function ProjectsProjectIdPutRequestBodyFromJSON(json: any): ProjectsProjectIdPutRequestBody {
+    return {
+        'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
+    };
+}
+
+export function ProjectsProjectIdPutRequestBodyToJSON(value?: ProjectsProjectIdPutRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'displayName': value.displayName,
+    };
+}
+
+

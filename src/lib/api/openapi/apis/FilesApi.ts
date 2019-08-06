@@ -11,12 +11,18 @@
  * Do not edit the class manually.
  */
 
-import { Observable } from 'rxjs';
-import { BaseAPI, RequiredError, HttpHeaders, HttpQuery, COLLECTION_FORMATS } from '../runtime';
+
+import * as runtime from '../runtime';
 import {
     FileRecord,
+    FileRecordFromJSON,
+    FileRecordToJSON,
     FilesFileIdPutRequestBody,
+    FilesFileIdPutRequestBodyFromJSON,
+    FilesFileIdPutRequestBodyToJSON,
     FilesGetResponse,
+    FilesGetResponseFromJSON,
+    FilesGetResponseToJSON,
 } from '../models';
 
 export interface FilesFileIdDeleteRequest {
@@ -57,92 +63,109 @@ export interface FilesPostRequest {
 /**
  * no description
  */
-export class FilesApi extends BaseAPI {
+export class FilesApi extends runtime.BaseAPI {
 
     /**
      */
-    filesFileIdDelete(requestParameters: FilesFileIdDeleteRequest): Observable<void> {
+    async filesFileIdDeleteRaw(requestParameters: FilesFileIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesFileIdDelete.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesFileIdDelete.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesFileIdDelete.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesFileIdDelete.');
         }
 
         if (requestParameters.fileId === null || requestParameters.fileId === undefined) {
-            throw new RequiredError('fileId','Required parameter requestParameters.fileId was null or undefined when calling filesFileIdDelete.');
+            throw new runtime.RequiredError('fileId','Required parameter requestParameters.fileId was null or undefined when calling filesFileIdDelete.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<void>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/files/{fileId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters.fileId))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    filesFileIdGet(requestParameters: FilesFileIdGetRequest): Observable<FileRecord> {
+    async filesFileIdDelete(requestParameters: FilesFileIdDeleteRequest): Promise<void> {
+        await this.filesFileIdDeleteRaw(requestParameters);
+    }
+
+    /**
+     */
+    async filesFileIdGetRaw(requestParameters: FilesFileIdGetRequest): Promise<runtime.ApiResponse<FileRecord>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesFileIdGet.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesFileIdGet.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesFileIdGet.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesFileIdGet.');
         }
 
         if (requestParameters.fileId === null || requestParameters.fileId === undefined) {
-            throw new RequiredError('fileId','Required parameter requestParameters.fileId was null or undefined when calling filesFileIdGet.');
+            throw new runtime.RequiredError('fileId','Required parameter requestParameters.fileId was null or undefined when calling filesFileIdGet.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<FileRecord>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/files/{fileId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters.fileId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FileRecordFromJSON(jsonValue));
     }
 
     /**
      */
-    filesFileIdPut(requestParameters: FilesFileIdPutRequest): Observable<FileRecord> {
+    async filesFileIdGet(requestParameters: FilesFileIdGetRequest): Promise<FileRecord> {
+        const response = await this.filesFileIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async filesFileIdPutRaw(requestParameters: FilesFileIdPutRequest): Promise<runtime.ApiResponse<FileRecord>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesFileIdPut.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesFileIdPut.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesFileIdPut.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesFileIdPut.');
         }
 
         if (requestParameters.fileId === null || requestParameters.fileId === undefined) {
-            throw new RequiredError('fileId','Required parameter requestParameters.fileId was null or undefined when calling filesFileIdPut.');
+            throw new runtime.RequiredError('fileId','Required parameter requestParameters.fileId was null or undefined when calling filesFileIdPut.');
         }
 
         if (requestParameters.filesFileIdPutRequestBody === null || requestParameters.filesFileIdPutRequestBody === undefined) {
-            throw new RequiredError('filesFileIdPutRequestBody','Required parameter requestParameters.filesFileIdPutRequestBody was null or undefined when calling filesFileIdPut.');
+            throw new runtime.RequiredError('filesFileIdPutRequestBody','Required parameter requestParameters.filesFileIdPutRequestBody was null or undefined when calling filesFileIdPut.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -150,80 +173,98 @@ export class FilesApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<FileRecord>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/files/{fileId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters.fileId))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.filesFileIdPutRequestBody,
+            body: FilesFileIdPutRequestBodyToJSON(requestParameters.filesFileIdPutRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FileRecordFromJSON(jsonValue));
     }
 
     /**
      */
-    filesGet(requestParameters: FilesGetRequest): Observable<FilesGetResponse> {
+    async filesFileIdPut(requestParameters: FilesFileIdPutRequest): Promise<FileRecord> {
+        const response = await this.filesFileIdPutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async filesGetRaw(requestParameters: FilesGetRequest): Promise<runtime.ApiResponse<FilesGetResponse>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesGet.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesGet.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesGet.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesGet.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        if (requestParameters.page !== undefined && requestParameters.page !== null) {
+        if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
         }
 
-        if (requestParameters.limit !== undefined && requestParameters.limit !== null) {
+        if (requestParameters.limit !== undefined) {
             queryParameters['limit'] = requestParameters.limit;
         }
 
-        if (requestParameters.name !== undefined && requestParameters.name !== null) {
+        if (requestParameters.name !== undefined) {
             queryParameters['name'] = requestParameters.name;
         }
 
-        if (requestParameters.userId !== undefined && requestParameters.userId !== null) {
+        if (requestParameters.userId !== undefined) {
             queryParameters['user_id'] = requestParameters.userId;
         }
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<FilesGetResponse>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/files/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FilesGetResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    filesPost(requestParameters: FilesPostRequest): Observable<FileRecord> {
+    async filesGet(requestParameters: FilesGetRequest): Promise<FilesGetResponse> {
+        const response = await this.filesGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async filesPostRaw(requestParameters: FilesPostRequest): Promise<runtime.ApiResponse<FileRecord>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesPost.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling filesPost.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesPost.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling filesPost.');
         }
 
         if (requestParameters.name === null || requestParameters.name === undefined) {
-            throw new RequiredError('name','Required parameter requestParameters.name was null or undefined when calling filesPost.');
+            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling filesPost.');
         }
 
         if (requestParameters.file === null || requestParameters.file === undefined) {
-            throw new RequiredError('file','Required parameter requestParameters.file was null or undefined when calling filesPost.');
+            throw new runtime.RequiredError('file','Required parameter requestParameters.file was null or undefined when calling filesPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
@@ -238,13 +279,22 @@ export class FilesApi extends BaseAPI {
             formData.append('file', requestParameters.file as any);
         }
 
-        return this.request<FileRecord>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/files/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: formData,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FileRecordFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async filesPost(requestParameters: FilesPostRequest): Promise<FileRecord> {
+        const response = await this.filesPostRaw(requestParameters);
+        return await response.value();
     }
 
 }

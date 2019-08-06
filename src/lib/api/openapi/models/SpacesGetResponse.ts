@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     Space,
+    SpaceFromJSON,
+    SpaceToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface SpacesGetResponse
  */
@@ -45,3 +49,26 @@ export interface SpacesGetResponse {
      */
     results: Array<Space>;
 }
+
+export function SpacesGetResponseFromJSON(json: any): SpacesGetResponse {
+    return {
+        'count': json['count'],
+        'next': json['next'],
+        'previous': json['previous'],
+        'results': (json['results'] as Array<any>).map(SpaceFromJSON),
+    };
+}
+
+export function SpacesGetResponseToJSON(value?: SpacesGetResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'count': value.count,
+        'next': value.next,
+        'previous': value.previous,
+        'results': (value.results as Array<any>).map(SpaceToJSON),
+    };
+}
+
+

@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface FileRecord
  */
@@ -53,3 +55,30 @@ export interface FileRecord {
      */
     createdAt: Date;
 }
+
+export function FileRecordFromJSON(json: any): FileRecord {
+    return {
+        'id': json['id'],
+        'user': json['user'],
+        'name': json['name'],
+        'mime': json['mime'],
+        'size': json['size'],
+        'createdAt': new Date(json['createdAt']),
+    };
+}
+
+export function FileRecordToJSON(value?: FileRecord): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'user': value.user,
+        'name': value.name,
+        'mime': value.mime,
+        'size': value.size,
+        'createdAt': value.createdAt.toISOString(),
+    };
+}
+
+

@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface UsersLoginPostRequestBody
  */
@@ -35,3 +37,24 @@ export interface UsersLoginPostRequestBody {
      */
     userId: number;
 }
+
+export function UsersLoginPostRequestBodyFromJSON(json: any): UsersLoginPostRequestBody {
+    return {
+        'token': json['token'],
+        'spaceId': json['spaceId'],
+        'userId': json['userId'],
+    };
+}
+
+export function UsersLoginPostRequestBodyToJSON(value?: UsersLoginPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'token': value.token,
+        'spaceId': value.spaceId,
+        'userId': value.userId,
+    };
+}
+
+

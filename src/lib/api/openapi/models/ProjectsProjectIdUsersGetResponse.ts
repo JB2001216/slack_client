@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     ProjectUser,
+    ProjectUserFromJSON,
+    ProjectUserToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface ProjectsProjectIdUsersGetResponse
  */
@@ -45,3 +49,26 @@ export interface ProjectsProjectIdUsersGetResponse {
      */
     results: Array<ProjectUser>;
 }
+
+export function ProjectsProjectIdUsersGetResponseFromJSON(json: any): ProjectsProjectIdUsersGetResponse {
+    return {
+        'count': json['count'],
+        'next': json['next'],
+        'previous': json['previous'],
+        'results': (json['results'] as Array<any>).map(ProjectUserFromJSON),
+    };
+}
+
+export function ProjectsProjectIdUsersGetResponseToJSON(value?: ProjectsProjectIdUsersGetResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'count': value.count,
+        'next': value.next,
+        'previous': value.previous,
+        'results': (value.results as Array<any>).map(ProjectUserToJSON),
+    };
+}
+
+

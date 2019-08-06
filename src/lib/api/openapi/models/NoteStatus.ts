@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface NoteStatus
  */
@@ -53,3 +55,30 @@ export interface NoteStatus {
      */
     sort: number;
 }
+
+export function NoteStatusFromJSON(json: any): NoteStatus {
+    return {
+        'id': json['id'],
+        'projectId': !exists(json, 'projectId') ? undefined : json['projectId'],
+        'category': json['category'],
+        'name': json['name'],
+        'color': json['color'],
+        'sort': json['sort'],
+    };
+}
+
+export function NoteStatusToJSON(value?: NoteStatus): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'projectId': value.projectId,
+        'category': value.category,
+        'name': value.name,
+        'color': value.color,
+        'sort': value.sort,
+    };
+}
+
+

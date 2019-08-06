@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface NotesNoteIdPutRequestBody
  */
@@ -59,3 +61,32 @@ export interface NotesNoteIdPutRequestBody {
      */
     parentNote?: number;
 }
+
+export function NotesNoteIdPutRequestBodyFromJSON(json: any): NotesNoteIdPutRequestBody {
+    return {
+        'subject': !exists(json, 'subject') ? undefined : json['subject'],
+        'body': !exists(json, 'body') ? undefined : json['body'],
+        'status': !exists(json, 'status') ? undefined : json['status'],
+        'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
+        'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
+        'chargeUsers': !exists(json, 'chargeUsers') ? undefined : json['chargeUsers'],
+        'parentNote': !exists(json, 'parentNote') ? undefined : json['parentNote'],
+    };
+}
+
+export function NotesNoteIdPutRequestBodyToJSON(value?: NotesNoteIdPutRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'subject': value.subject,
+        'body': value.body,
+        'status': value.status,
+        'batonUser': value.batonUser,
+        'writeUser': value.writeUser,
+        'chargeUsers': value.chargeUsers,
+        'parentNote': value.parentNote,
+    };
+}
+
+

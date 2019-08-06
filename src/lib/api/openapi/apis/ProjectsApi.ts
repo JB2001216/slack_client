@@ -11,17 +11,33 @@
  * Do not edit the class manually.
  */
 
-import { Observable } from 'rxjs';
-import { BaseAPI, RequiredError, HttpHeaders, HttpQuery, COLLECTION_FORMATS } from '../runtime';
+
+import * as runtime from '../runtime';
 import {
     Project,
+    ProjectFromJSON,
+    ProjectToJSON,
     ProjectUser,
+    ProjectUserFromJSON,
+    ProjectUserToJSON,
     ProjectsGetResponse,
+    ProjectsGetResponseFromJSON,
+    ProjectsGetResponseToJSON,
     ProjectsPostRequestBody,
+    ProjectsPostRequestBodyFromJSON,
+    ProjectsPostRequestBodyToJSON,
     ProjectsProjectIdPutRequestBody,
+    ProjectsProjectIdPutRequestBodyFromJSON,
+    ProjectsProjectIdPutRequestBodyToJSON,
     ProjectsProjectIdUsersGetResponse,
+    ProjectsProjectIdUsersGetResponseFromJSON,
+    ProjectsProjectIdUsersGetResponseToJSON,
     ProjectsProjectIdUsersPostRequestBody,
+    ProjectsProjectIdUsersPostRequestBodyFromJSON,
+    ProjectsProjectIdUsersPostRequestBodyToJSON,
     ProjectsProjectIdUsersUserIdPutRequestBody,
+    ProjectsProjectIdUsersUserIdPutRequestBodyFromJSON,
+    ProjectsProjectIdUsersUserIdPutRequestBodyToJSON,
 } from '../models';
 
 export interface ProjectsGetRequest {
@@ -90,61 +106,70 @@ export interface ProjectsProjectIdUsersUserIdPutRequest {
 /**
  * no description
  */
-export class ProjectsApi extends BaseAPI {
+export class ProjectsApi extends runtime.BaseAPI {
 
     /**
      */
-    projectsGet(requestParameters: ProjectsGetRequest): Observable<ProjectsGetResponse> {
+    async projectsGetRaw(requestParameters: ProjectsGetRequest): Promise<runtime.ApiResponse<ProjectsGetResponse>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsGet.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsGet.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        if (requestParameters.page !== undefined && requestParameters.page !== null) {
+        if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
         }
 
-        if (requestParameters.limit !== undefined && requestParameters.limit !== null) {
+        if (requestParameters.limit !== undefined) {
             queryParameters['limit'] = requestParameters.limit;
         }
 
-        if (requestParameters.displayName !== undefined && requestParameters.displayName !== null) {
+        if (requestParameters.displayName !== undefined) {
             queryParameters['display_name'] = requestParameters.displayName;
         }
 
-        if (requestParameters.userId !== undefined && requestParameters.userId !== null) {
+        if (requestParameters.userId !== undefined) {
             queryParameters['user_id'] = requestParameters.userId;
         }
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<ProjectsGetResponse>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProjectsGetResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    projectsPost(requestParameters: ProjectsPostRequest): Observable<Project> {
+    async projectsGet(requestParameters: ProjectsGetRequest): Promise<ProjectsGetResponse> {
+        const response = await this.projectsGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async projectsPostRaw(requestParameters: ProjectsPostRequest): Promise<runtime.ApiResponse<Project>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsPost.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsPost.');
         }
 
         if (requestParameters.projectsPostRequestBody === null || requestParameters.projectsPostRequestBody === undefined) {
-            throw new RequiredError('projectsPostRequestBody','Required parameter requestParameters.projectsPostRequestBody was null or undefined when calling projectsPost.');
+            throw new runtime.RequiredError('projectsPostRequestBody','Required parameter requestParameters.projectsPostRequestBody was null or undefined when calling projectsPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -152,87 +177,113 @@ export class ProjectsApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<Project>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.projectsPostRequestBody,
+            body: ProjectsPostRequestBodyToJSON(requestParameters.projectsPostRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProjectFromJSON(jsonValue));
     }
 
     /**
      */
-    projectsProjectIdDelete(requestParameters: ProjectsProjectIdDeleteRequest): Observable<void> {
+    async projectsPost(requestParameters: ProjectsPostRequest): Promise<Project> {
+        const response = await this.projectsPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async projectsProjectIdDeleteRaw(requestParameters: ProjectsProjectIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdDelete.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdDelete.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdDelete.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdDelete.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<void>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    projectsProjectIdGet(requestParameters: ProjectsProjectIdGetRequest): Observable<Project> {
+    async projectsProjectIdDelete(requestParameters: ProjectsProjectIdDeleteRequest): Promise<void> {
+        await this.projectsProjectIdDeleteRaw(requestParameters);
+    }
+
+    /**
+     */
+    async projectsProjectIdGetRaw(requestParameters: ProjectsProjectIdGetRequest): Promise<runtime.ApiResponse<Project>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdGet.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdGet.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdGet.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdGet.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<Project>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProjectFromJSON(jsonValue));
     }
 
     /**
      */
-    projectsProjectIdPut(requestParameters: ProjectsProjectIdPutRequest): Observable<Project> {
+    async projectsProjectIdGet(requestParameters: ProjectsProjectIdGetRequest): Promise<Project> {
+        const response = await this.projectsProjectIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async projectsProjectIdPutRaw(requestParameters: ProjectsProjectIdPutRequest): Promise<runtime.ApiResponse<Project>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdPut.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdPut.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdPut.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdPut.');
         }
 
         if (requestParameters.projectsProjectIdPutRequestBody === null || requestParameters.projectsProjectIdPutRequestBody === undefined) {
-            throw new RequiredError('projectsProjectIdPutRequestBody','Required parameter requestParameters.projectsProjectIdPutRequestBody was null or undefined when calling projectsProjectIdPut.');
+            throw new runtime.RequiredError('projectsProjectIdPutRequestBody','Required parameter requestParameters.projectsProjectIdPutRequestBody was null or undefined when calling projectsProjectIdPut.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -240,76 +291,94 @@ export class ProjectsApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<Project>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.projectsProjectIdPutRequestBody,
+            body: ProjectsProjectIdPutRequestBodyToJSON(requestParameters.projectsProjectIdPutRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProjectFromJSON(jsonValue));
     }
 
     /**
      */
-    projectsProjectIdUsersGet(requestParameters: ProjectsProjectIdUsersGetRequest): Observable<ProjectsProjectIdUsersGetResponse> {
+    async projectsProjectIdPut(requestParameters: ProjectsProjectIdPutRequest): Promise<Project> {
+        const response = await this.projectsProjectIdPutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async projectsProjectIdUsersGetRaw(requestParameters: ProjectsProjectIdUsersGetRequest): Promise<runtime.ApiResponse<ProjectsProjectIdUsersGetResponse>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersGet.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersGet.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersGet.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersGet.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        if (requestParameters.page !== undefined && requestParameters.page !== null) {
+        if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
         }
 
-        if (requestParameters.limit !== undefined && requestParameters.limit !== null) {
+        if (requestParameters.limit !== undefined) {
             queryParameters['limit'] = requestParameters.limit;
         }
 
-        if (requestParameters.account !== undefined && requestParameters.account !== null) {
+        if (requestParameters.account !== undefined) {
             queryParameters['account'] = requestParameters.account;
         }
 
-        if (requestParameters.displayName !== undefined && requestParameters.displayName !== null) {
+        if (requestParameters.displayName !== undefined) {
             queryParameters['display_name'] = requestParameters.displayName;
         }
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<ProjectsProjectIdUsersGetResponse>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/users/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProjectsProjectIdUsersGetResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    projectsProjectIdUsersPost(requestParameters: ProjectsProjectIdUsersPostRequest): Observable<ProjectUser> {
+    async projectsProjectIdUsersGet(requestParameters: ProjectsProjectIdUsersGetRequest): Promise<ProjectsProjectIdUsersGetResponse> {
+        const response = await this.projectsProjectIdUsersGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async projectsProjectIdUsersPostRaw(requestParameters: ProjectsProjectIdUsersPostRequest): Promise<runtime.ApiResponse<ProjectUser>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersPost.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersPost.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersPost.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersPost.');
         }
 
         if (requestParameters.projectsProjectIdUsersPostRequestBody === null || requestParameters.projectsProjectIdUsersPostRequestBody === undefined) {
-            throw new RequiredError('projectsProjectIdUsersPostRequestBody','Required parameter requestParameters.projectsProjectIdUsersPostRequestBody was null or undefined when calling projectsProjectIdUsersPost.');
+            throw new runtime.RequiredError('projectsProjectIdUsersPostRequestBody','Required parameter requestParameters.projectsProjectIdUsersPostRequestBody was null or undefined when calling projectsProjectIdUsersPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -317,99 +386,125 @@ export class ProjectsApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<ProjectUser>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/users/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.projectsProjectIdUsersPostRequestBody,
+            body: ProjectsProjectIdUsersPostRequestBodyToJSON(requestParameters.projectsProjectIdUsersPostRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProjectUserFromJSON(jsonValue));
     }
 
     /**
      */
-    projectsProjectIdUsersUserIdDelete(requestParameters: ProjectsProjectIdUsersUserIdDeleteRequest): Observable<void> {
+    async projectsProjectIdUsersPost(requestParameters: ProjectsProjectIdUsersPostRequest): Promise<ProjectUser> {
+        const response = await this.projectsProjectIdUsersPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async projectsProjectIdUsersUserIdDeleteRaw(requestParameters: ProjectsProjectIdUsersUserIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersUserIdDelete.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersUserIdDelete.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersUserIdDelete.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersUserIdDelete.');
         }
 
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
-            throw new RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling projectsProjectIdUsersUserIdDelete.');
+            throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling projectsProjectIdUsersUserIdDelete.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<void>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/users/{userId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"userId"}}`, encodeURIComponent(String(requestParameters.userId))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    projectsProjectIdUsersUserIdGet(requestParameters: ProjectsProjectIdUsersUserIdGetRequest): Observable<ProjectUser> {
+    async projectsProjectIdUsersUserIdDelete(requestParameters: ProjectsProjectIdUsersUserIdDeleteRequest): Promise<void> {
+        await this.projectsProjectIdUsersUserIdDeleteRaw(requestParameters);
+    }
+
+    /**
+     */
+    async projectsProjectIdUsersUserIdGetRaw(requestParameters: ProjectsProjectIdUsersUserIdGetRequest): Promise<runtime.ApiResponse<ProjectUser>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersUserIdGet.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersUserIdGet.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersUserIdGet.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersUserIdGet.');
         }
 
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
-            throw new RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling projectsProjectIdUsersUserIdGet.');
+            throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling projectsProjectIdUsersUserIdGet.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<ProjectUser>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/users/{userId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"userId"}}`, encodeURIComponent(String(requestParameters.userId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProjectUserFromJSON(jsonValue));
     }
 
     /**
      */
-    projectsProjectIdUsersUserIdPut(requestParameters: ProjectsProjectIdUsersUserIdPutRequest): Observable<ProjectUser> {
+    async projectsProjectIdUsersUserIdGet(requestParameters: ProjectsProjectIdUsersUserIdGetRequest): Promise<ProjectUser> {
+        const response = await this.projectsProjectIdUsersUserIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async projectsProjectIdUsersUserIdPutRaw(requestParameters: ProjectsProjectIdUsersUserIdPutRequest): Promise<runtime.ApiResponse<ProjectUser>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
-            throw new RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersUserIdPut.');
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling projectsProjectIdUsersUserIdPut.');
         }
 
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersUserIdPut.');
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling projectsProjectIdUsersUserIdPut.');
         }
 
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
-            throw new RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling projectsProjectIdUsersUserIdPut.');
+            throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling projectsProjectIdUsersUserIdPut.');
         }
 
         if (requestParameters.projectsProjectIdUsersUserIdPutRequestBody === null || requestParameters.projectsProjectIdUsersUserIdPutRequestBody === undefined) {
-            throw new RequiredError('projectsProjectIdUsersUserIdPutRequestBody','Required parameter requestParameters.projectsProjectIdUsersUserIdPutRequestBody was null or undefined when calling projectsProjectIdUsersUserIdPut.');
+            throw new runtime.RequiredError('projectsProjectIdUsersUserIdPutRequestBody','Required parameter requestParameters.projectsProjectIdUsersUserIdPutRequestBody was null or undefined when calling projectsProjectIdUsersUserIdPut.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -417,13 +512,22 @@ export class ProjectsApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<ProjectUser>({
+        const response = await this.request({
             path: `/spaces/{spaceId}/projects/{projectId}/users/{userId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"userId"}}`, encodeURIComponent(String(requestParameters.userId))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.projectsProjectIdUsersUserIdPutRequestBody,
+            body: ProjectsProjectIdUsersUserIdPutRequestBodyToJSON(requestParameters.projectsProjectIdUsersUserIdPutRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProjectUserFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async projectsProjectIdUsersUserIdPut(requestParameters: ProjectsProjectIdUsersUserIdPutRequest): Promise<ProjectUser> {
+        const response = await this.projectsProjectIdUsersUserIdPutRaw(requestParameters);
+        return await response.value();
     }
 
 }

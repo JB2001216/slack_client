@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     SpacesSpaceIdProjectsProjectIdTasksTags,
+    SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON,
+    SpacesSpaceIdProjectsProjectIdTasksTagsToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface Task
  */
@@ -99,3 +103,44 @@ export interface Task {
      */
     tags: Array<SpacesSpaceIdProjectsProjectIdTasksTags>;
 }
+
+export function TaskFromJSON(json: any): Task {
+    return {
+        'id': json['id'],
+        'project': json['project'],
+        'writeUser': json['writeUser'],
+        'subject': json['subject'],
+        'body': json['body'],
+        'startedAt': new Date(json['startedAt']),
+        'limitedAt': new Date(json['limitedAt']),
+        'status': json['status'],
+        'batonUser': json['batonUser'],
+        'chargeUsers': json['chargeUsers'],
+        'createdAt': new Date(json['createdAt']),
+        'updatedAt': new Date(json['updatedAt']),
+        'tags': (json['tags'] as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON),
+    };
+}
+
+export function TaskToJSON(value?: Task): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'project': value.project,
+        'writeUser': value.writeUser,
+        'subject': value.subject,
+        'body': value.body,
+        'startedAt': value.startedAt.toISOString().substr(0,10),
+        'limitedAt': value.limitedAt.toISOString().substr(0,10),
+        'status': value.status,
+        'batonUser': value.batonUser,
+        'chargeUsers': value.chargeUsers,
+        'createdAt': value.createdAt.toISOString(),
+        'updatedAt': value.updatedAt.toISOString(),
+        'tags': (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),
+    };
+}
+
+

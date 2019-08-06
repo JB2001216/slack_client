@@ -40,9 +40,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { first } from 'rxjs/operators';
-import { AjaxError } from 'rxjs/ajax';
-import { apiRegistry, SpacesApi, ApiErrors } from '@/lib/api';
+import { apiRegistry, SpacesApi, ApiErrors, FetchError } from '@/lib/api';
 
 @Component
 export default class SpaceAdd1 extends Vue {
@@ -81,7 +79,7 @@ export default class SpaceAdd1 extends Vue {
         spacesConfirmPostRequestBody: {
           email: this.email,
         },
-      }).pipe(first()).toPromise();
+      });
 
       this.emailMessage = {
         type: 'success',
@@ -89,11 +87,12 @@ export default class SpaceAdd1 extends Vue {
       };
 
     } catch (err) {
-      if (err instanceof AjaxError) {
-        if (err.response && err.response.error === ApiErrors.ValidationError) {
+      if (err instanceof FetchError) {
+        const res = await err.data!.json();
+        if (res.error === ApiErrors.ValidationError) {
           this.emailMessage = {
             type: 'error',
-            text: err.response.data[Object.keys(err.response.data)[0]],
+            text: res.data[Object.keys(res.data)[0]],
           };
         }
       }

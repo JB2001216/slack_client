@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface SpacesSpaceIdProjectsProjectIdTasksTags
  */
@@ -23,3 +25,20 @@ export interface SpacesSpaceIdProjectsProjectIdTasksTags {
      */
     name: string;
 }
+
+export function SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON(json: any): SpacesSpaceIdProjectsProjectIdTasksTags {
+    return {
+        'name': json['name'],
+    };
+}
+
+export function SpacesSpaceIdProjectsProjectIdTasksTagsToJSON(value?: SpacesSpaceIdProjectsProjectIdTasksTags): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'name': value.name,
+    };
+}
+
+

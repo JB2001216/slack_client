@@ -21,3 +21,11 @@ export enum Locale {
     Ja = 'ja'
 }
 
+export function LocaleFromJSON(json: any): Locale {
+    return json as Locale;
+}
+
+export function LocaleToJSON(value?: Locale): any {
+    return value as any;
+}
+

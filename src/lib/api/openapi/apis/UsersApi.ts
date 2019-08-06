@@ -11,25 +11,57 @@
  * Do not edit the class manually.
  */
 
-import { Observable } from 'rxjs';
-import { BaseAPI, RequiredError, HttpHeaders, HttpQuery, COLLECTION_FORMATS } from '../runtime';
+
+import * as runtime from '../runtime';
 import {
     MyUser,
+    MyUserFromJSON,
+    MyUserToJSON,
     SelectLoginUser,
+    SelectLoginUserFromJSON,
+    SelectLoginUserToJSON,
     UsersEmailLoginConfirmPostRequestBody,
+    UsersEmailLoginConfirmPostRequestBodyFromJSON,
+    UsersEmailLoginConfirmPostRequestBodyToJSON,
     UsersEmailLoginPostRequestBody,
+    UsersEmailLoginPostRequestBodyFromJSON,
+    UsersEmailLoginPostRequestBodyToJSON,
     UsersLoginPostRequestBody,
+    UsersLoginPostRequestBodyFromJSON,
+    UsersLoginPostRequestBodyToJSON,
     UsersLoginPostResponse,
+    UsersLoginPostResponseFromJSON,
+    UsersLoginPostResponseToJSON,
     UsersMeEmailConfirmPostRequestBody,
+    UsersMeEmailConfirmPostRequestBodyFromJSON,
+    UsersMeEmailConfirmPostRequestBodyToJSON,
     UsersMeEmailGetResponse,
+    UsersMeEmailGetResponseFromJSON,
+    UsersMeEmailGetResponseToJSON,
     UsersMeEmailPutRequestBody,
+    UsersMeEmailPutRequestBodyFromJSON,
+    UsersMeEmailPutRequestBodyToJSON,
     UsersMePutRequestBody,
+    UsersMePutRequestBodyFromJSON,
+    UsersMePutRequestBodyToJSON,
     UsersMeSmsConfirmPostRequestBody,
+    UsersMeSmsConfirmPostRequestBodyFromJSON,
+    UsersMeSmsConfirmPostRequestBodyToJSON,
     UsersMeSmsGetResponse,
+    UsersMeSmsGetResponseFromJSON,
+    UsersMeSmsGetResponseToJSON,
     UsersMeSmsPutRequestBody,
+    UsersMeSmsPutRequestBodyFromJSON,
+    UsersMeSmsPutRequestBodyToJSON,
     UsersSmsLoginConfirmPostRequestBody,
+    UsersSmsLoginConfirmPostRequestBodyFromJSON,
+    UsersSmsLoginConfirmPostRequestBodyToJSON,
     UsersSmsLoginConfirmPostResponse,
+    UsersSmsLoginConfirmPostResponseFromJSON,
+    UsersSmsLoginConfirmPostResponseToJSON,
     UsersSmsLoginPostRequestBody,
+    UsersSmsLoginPostRequestBodyFromJSON,
+    UsersSmsLoginPostRequestBodyToJSON,
 } from '../models';
 
 export interface UsersEmailLoginConfirmPostRequest {
@@ -75,88 +107,117 @@ export interface UsersSmsLoginPostRequest {
 /**
  * no description
  */
-export class UsersApi extends BaseAPI {
+export class UsersApi extends runtime.BaseAPI {
 
     /**
      * ログイン用メール認証メッセージ送信
      */
-    usersEmailLoginConfirmPost(requestParameters: UsersEmailLoginConfirmPostRequest): Observable<void> {
+    async usersEmailLoginConfirmPostRaw(requestParameters: UsersEmailLoginConfirmPostRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.usersEmailLoginConfirmPostRequestBody === null || requestParameters.usersEmailLoginConfirmPostRequestBody === undefined) {
-            throw new RequiredError('usersEmailLoginConfirmPostRequestBody','Required parameter requestParameters.usersEmailLoginConfirmPostRequestBody was null or undefined when calling usersEmailLoginConfirmPost.');
+            throw new runtime.RequiredError('usersEmailLoginConfirmPostRequestBody','Required parameter requestParameters.usersEmailLoginConfirmPostRequestBody was null or undefined when calling usersEmailLoginConfirmPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
-        return this.request<void>({
+        const response = await this.request({
             path: `/users/email_login/confirm/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersEmailLoginConfirmPostRequestBody,
+            body: UsersEmailLoginConfirmPostRequestBodyToJSON(requestParameters.usersEmailLoginConfirmPostRequestBody),
         });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * ログイン用メール認証メッセージ送信
+     */
+    async usersEmailLoginConfirmPost(requestParameters: UsersEmailLoginConfirmPostRequest): Promise<void> {
+        await this.usersEmailLoginConfirmPostRaw(requestParameters);
     }
 
     /**
      * メール認証通過後、ログイン可能なユーザーの一覧を取得
      */
-    usersEmailLoginPost(requestParameters: UsersEmailLoginPostRequest): Observable<Array<SelectLoginUser>> {
+    async usersEmailLoginPostRaw(requestParameters: UsersEmailLoginPostRequest): Promise<runtime.ApiResponse<Array<SelectLoginUser>>> {
         if (requestParameters.usersEmailLoginPostRequestBody === null || requestParameters.usersEmailLoginPostRequestBody === undefined) {
-            throw new RequiredError('usersEmailLoginPostRequestBody','Required parameter requestParameters.usersEmailLoginPostRequestBody was null or undefined when calling usersEmailLoginPost.');
+            throw new runtime.RequiredError('usersEmailLoginPostRequestBody','Required parameter requestParameters.usersEmailLoginPostRequestBody was null or undefined when calling usersEmailLoginPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
-        return this.request<Array<SelectLoginUser>>({
+        const response = await this.request({
             path: `/users/email_login/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersEmailLoginPostRequestBody,
+            body: UsersEmailLoginPostRequestBodyToJSON(requestParameters.usersEmailLoginPostRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SelectLoginUserFromJSON));
+    }
+
+    /**
+     * メール認証通過後、ログイン可能なユーザーの一覧を取得
+     */
+    async usersEmailLoginPost(requestParameters: UsersEmailLoginPostRequest): Promise<Array<SelectLoginUser>> {
+        const response = await this.usersEmailLoginPostRaw(requestParameters);
+        return await response.value();
     }
 
     /**
      * メール or SMS認証で得たログイン用トークンを使ってログイン
      */
-    usersLoginPost(requestParameters: UsersLoginPostRequest): Observable<UsersLoginPostResponse> {
+    async usersLoginPostRaw(requestParameters: UsersLoginPostRequest): Promise<runtime.ApiResponse<UsersLoginPostResponse>> {
         if (requestParameters.usersLoginPostRequestBody === null || requestParameters.usersLoginPostRequestBody === undefined) {
-            throw new RequiredError('usersLoginPostRequestBody','Required parameter requestParameters.usersLoginPostRequestBody was null or undefined when calling usersLoginPost.');
+            throw new runtime.RequiredError('usersLoginPostRequestBody','Required parameter requestParameters.usersLoginPostRequestBody was null or undefined when calling usersLoginPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
-        return this.request<UsersLoginPostResponse>({
+        const response = await this.request({
             path: `/users/login/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersLoginPostRequestBody,
+            body: UsersLoginPostRequestBodyToJSON(requestParameters.usersLoginPostRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UsersLoginPostResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * メール or SMS認証で得たログイン用トークンを使ってログイン
+     */
+    async usersLoginPost(requestParameters: UsersLoginPostRequest): Promise<UsersLoginPostResponse> {
+        const response = await this.usersLoginPostRaw(requestParameters);
+        return await response.value();
     }
 
     /**
      * メール変更用メール認証メッセージ送信
      */
-    usersMeEmailConfirmPost(requestParameters: UsersMeEmailConfirmPostRequest): Observable<void> {
+    async usersMeEmailConfirmPostRaw(requestParameters: UsersMeEmailConfirmPostRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.usersMeEmailConfirmPostRequestBody === null || requestParameters.usersMeEmailConfirmPostRequestBody === undefined) {
-            throw new RequiredError('usersMeEmailConfirmPostRequestBody','Required parameter requestParameters.usersMeEmailConfirmPostRequestBody was null or undefined when calling usersMeEmailConfirmPost.');
+            throw new runtime.RequiredError('usersMeEmailConfirmPostRequestBody','Required parameter requestParameters.usersMeEmailConfirmPostRequestBody was null or undefined when calling usersMeEmailConfirmPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -164,46 +225,65 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<void>({
+        const response = await this.request({
             path: `/users/me/email/confirm/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersMeEmailConfirmPostRequestBody,
+            body: UsersMeEmailConfirmPostRequestBodyToJSON(requestParameters.usersMeEmailConfirmPostRequestBody),
         });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * メール変更用メール認証メッセージ送信
+     */
+    async usersMeEmailConfirmPost(requestParameters: UsersMeEmailConfirmPostRequest): Promise<void> {
+        await this.usersMeEmailConfirmPostRaw(requestParameters);
     }
 
     /**
      * 自身のメール取得
      */
-    usersMeEmailGet(): Observable<UsersMeEmailGetResponse> {
-        const queryParameters: HttpQuery = {};
+    async usersMeEmailGetRaw(): Promise<runtime.ApiResponse<UsersMeEmailGetResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<UsersMeEmailGetResponse>({
+        const response = await this.request({
             path: `/users/me/email/`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UsersMeEmailGetResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * 自身のメール取得
+     */
+    async usersMeEmailGet(): Promise<UsersMeEmailGetResponse> {
+        const response = await this.usersMeEmailGetRaw();
+        return await response.value();
     }
 
     /**
      * メール認証通過後、メール変更
      */
-    usersMeEmailPut(requestParameters: UsersMeEmailPutRequest): Observable<UsersMeEmailGetResponse> {
+    async usersMeEmailPutRaw(requestParameters: UsersMeEmailPutRequest): Promise<runtime.ApiResponse<UsersMeEmailGetResponse>> {
         if (requestParameters.usersMeEmailPutRequestBody === null || requestParameters.usersMeEmailPutRequestBody === undefined) {
-            throw new RequiredError('usersMeEmailPutRequestBody','Required parameter requestParameters.usersMeEmailPutRequestBody was null or undefined when calling usersMeEmailPut.');
+            throw new runtime.RequiredError('usersMeEmailPutRequestBody','Required parameter requestParameters.usersMeEmailPutRequestBody was null or undefined when calling usersMeEmailPut.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -211,46 +291,66 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<UsersMeEmailGetResponse>({
+        const response = await this.request({
             path: `/users/me/email/`,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersMeEmailPutRequestBody,
+            body: UsersMeEmailPutRequestBodyToJSON(requestParameters.usersMeEmailPutRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UsersMeEmailGetResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * メール認証通過後、メール変更
+     */
+    async usersMeEmailPut(requestParameters: UsersMeEmailPutRequest): Promise<UsersMeEmailGetResponse> {
+        const response = await this.usersMeEmailPutRaw(requestParameters);
+        return await response.value();
     }
 
     /**
      * 自身のユーザー情報を取得
      */
-    usersMeGet(): Observable<MyUser> {
-        const queryParameters: HttpQuery = {};
+    async usersMeGetRaw(): Promise<runtime.ApiResponse<MyUser>> {
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<MyUser>({
+        const response = await this.request({
             path: `/users/me/`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MyUserFromJSON(jsonValue));
+    }
+
+    /**
+     * 自身のユーザー情報を取得
+     */
+    async usersMeGet(): Promise<MyUser> {
+        const response = await this.usersMeGetRaw();
+        return await response.value();
     }
 
     /**
      * 自身のユーザー情報を更新
      */
-    usersMePut(requestParameters: UsersMePutRequest): Observable<MyUser> {
+    async usersMePutRaw(requestParameters: UsersMePutRequest): Promise<runtime.ApiResponse<MyUser>> {
         if (requestParameters.usersMePutRequestBody === null || requestParameters.usersMePutRequestBody === undefined) {
-            throw new RequiredError('usersMePutRequestBody','Required parameter requestParameters.usersMePutRequestBody was null or undefined when calling usersMePut.');
+            throw new runtime.RequiredError('usersMePutRequestBody','Required parameter requestParameters.usersMePutRequestBody was null or undefined when calling usersMePut.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -258,26 +358,36 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<MyUser>({
+        const response = await this.request({
             path: `/users/me/`,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersMePutRequestBody,
+            body: UsersMePutRequestBodyToJSON(requestParameters.usersMePutRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MyUserFromJSON(jsonValue));
+    }
+
+    /**
+     * 自身のユーザー情報を更新
+     */
+    async usersMePut(requestParameters: UsersMePutRequest): Promise<MyUser> {
+        const response = await this.usersMePutRaw(requestParameters);
+        return await response.value();
     }
 
     /**
      * SMS変更用SMS認証メッセージ送信
      */
-    usersMeSmsConfirmPost(requestParameters: UsersMeSmsConfirmPostRequest): Observable<UsersSmsLoginConfirmPostResponse> {
+    async usersMeSmsConfirmPostRaw(requestParameters: UsersMeSmsConfirmPostRequest): Promise<runtime.ApiResponse<UsersSmsLoginConfirmPostResponse>> {
         if (requestParameters.usersMeSmsConfirmPostRequestBody === null || requestParameters.usersMeSmsConfirmPostRequestBody === undefined) {
-            throw new RequiredError('usersMeSmsConfirmPostRequestBody','Required parameter requestParameters.usersMeSmsConfirmPostRequestBody was null or undefined when calling usersMeSmsConfirmPost.');
+            throw new runtime.RequiredError('usersMeSmsConfirmPostRequestBody','Required parameter requestParameters.usersMeSmsConfirmPostRequestBody was null or undefined when calling usersMeSmsConfirmPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -285,46 +395,66 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<UsersSmsLoginConfirmPostResponse>({
+        const response = await this.request({
             path: `/users/me/sms/confirm/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersMeSmsConfirmPostRequestBody,
+            body: UsersMeSmsConfirmPostRequestBodyToJSON(requestParameters.usersMeSmsConfirmPostRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UsersSmsLoginConfirmPostResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * SMS変更用SMS認証メッセージ送信
+     */
+    async usersMeSmsConfirmPost(requestParameters: UsersMeSmsConfirmPostRequest): Promise<UsersSmsLoginConfirmPostResponse> {
+        const response = await this.usersMeSmsConfirmPostRaw(requestParameters);
+        return await response.value();
     }
 
     /**
      * 自身のSMS取得
      */
-    usersMeSmsGet(): Observable<UsersMeSmsGetResponse> {
-        const queryParameters: HttpQuery = {};
+    async usersMeSmsGetRaw(): Promise<runtime.ApiResponse<UsersMeSmsGetResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<UsersMeSmsGetResponse>({
+        const response = await this.request({
             path: `/users/me/sms/`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UsersMeSmsGetResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * 自身のSMS取得
+     */
+    async usersMeSmsGet(): Promise<UsersMeSmsGetResponse> {
+        const response = await this.usersMeSmsGetRaw();
+        return await response.value();
     }
 
     /**
      * SMS認証通過後、SMS変更
      */
-    usersMeSmsPut(requestParameters: UsersMeSmsPutRequest): Observable<UsersMeSmsGetResponse> {
+    async usersMeSmsPutRaw(requestParameters: UsersMeSmsPutRequest): Promise<runtime.ApiResponse<UsersMeSmsGetResponse>> {
         if (requestParameters.usersMeSmsPutRequestBody === null || requestParameters.usersMeSmsPutRequestBody === undefined) {
-            throw new RequiredError('usersMeSmsPutRequestBody','Required parameter requestParameters.usersMeSmsPutRequestBody was null or undefined when calling usersMeSmsPut.');
+            throw new runtime.RequiredError('usersMeSmsPutRequestBody','Required parameter requestParameters.usersMeSmsPutRequestBody was null or undefined when calling usersMeSmsPut.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -332,59 +462,89 @@ export class UsersApi extends BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        return this.request<UsersMeSmsGetResponse>({
+        const response = await this.request({
             path: `/users/me/sms/`,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersMeSmsPutRequestBody,
+            body: UsersMeSmsPutRequestBodyToJSON(requestParameters.usersMeSmsPutRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UsersMeSmsGetResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * SMS認証通過後、SMS変更
+     */
+    async usersMeSmsPut(requestParameters: UsersMeSmsPutRequest): Promise<UsersMeSmsGetResponse> {
+        const response = await this.usersMeSmsPutRaw(requestParameters);
+        return await response.value();
     }
 
     /**
      * ログイン用SMS認証メッセージ送信
      */
-    usersSmsLoginConfirmPost(requestParameters: UsersSmsLoginConfirmPostRequest): Observable<UsersSmsLoginConfirmPostResponse> {
+    async usersSmsLoginConfirmPostRaw(requestParameters: UsersSmsLoginConfirmPostRequest): Promise<runtime.ApiResponse<UsersSmsLoginConfirmPostResponse>> {
         if (requestParameters.usersSmsLoginConfirmPostRequestBody === null || requestParameters.usersSmsLoginConfirmPostRequestBody === undefined) {
-            throw new RequiredError('usersSmsLoginConfirmPostRequestBody','Required parameter requestParameters.usersSmsLoginConfirmPostRequestBody was null or undefined when calling usersSmsLoginConfirmPost.');
+            throw new runtime.RequiredError('usersSmsLoginConfirmPostRequestBody','Required parameter requestParameters.usersSmsLoginConfirmPostRequestBody was null or undefined when calling usersSmsLoginConfirmPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
-        return this.request<UsersSmsLoginConfirmPostResponse>({
+        const response = await this.request({
             path: `/users/sms_login/confirm/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersSmsLoginConfirmPostRequestBody,
+            body: UsersSmsLoginConfirmPostRequestBodyToJSON(requestParameters.usersSmsLoginConfirmPostRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UsersSmsLoginConfirmPostResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * ログイン用SMS認証メッセージ送信
+     */
+    async usersSmsLoginConfirmPost(requestParameters: UsersSmsLoginConfirmPostRequest): Promise<UsersSmsLoginConfirmPostResponse> {
+        const response = await this.usersSmsLoginConfirmPostRaw(requestParameters);
+        return await response.value();
     }
 
     /**
      * SMS認証通過後、ログイン可能なユーザーの一覧を取得
      */
-    usersSmsLoginPost(requestParameters: UsersSmsLoginPostRequest): Observable<Array<SelectLoginUser>> {
+    async usersSmsLoginPostRaw(requestParameters: UsersSmsLoginPostRequest): Promise<runtime.ApiResponse<Array<SelectLoginUser>>> {
         if (requestParameters.usersSmsLoginPostRequestBody === null || requestParameters.usersSmsLoginPostRequestBody === undefined) {
-            throw new RequiredError('usersSmsLoginPostRequestBody','Required parameter requestParameters.usersSmsLoginPostRequestBody was null or undefined when calling usersSmsLoginPost.');
+            throw new runtime.RequiredError('usersSmsLoginPostRequestBody','Required parameter requestParameters.usersSmsLoginPostRequestBody was null or undefined when calling usersSmsLoginPost.');
         }
 
-        const queryParameters: HttpQuery = {};
+        const queryParameters: runtime.HTTPQuery = {};
 
-        const headerParameters: HttpHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
 
-        return this.request<Array<SelectLoginUser>>({
+        const response = await this.request({
             path: `/users/sms_login/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.usersSmsLoginPostRequestBody,
+            body: UsersSmsLoginPostRequestBodyToJSON(requestParameters.usersSmsLoginPostRequestBody),
         });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SelectLoginUserFromJSON));
+    }
+
+    /**
+     * SMS認証通過後、ログイン可能なユーザーの一覧を取得
+     */
+    async usersSmsLoginPost(requestParameters: UsersSmsLoginPostRequest): Promise<Array<SelectLoginUser>> {
+        const response = await this.usersSmsLoginPostRaw(requestParameters);
+        return await response.value();
     }
 
 }

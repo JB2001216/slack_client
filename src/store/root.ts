@@ -3,7 +3,6 @@ import i18n, { Locale, loadLocale, defaultLocale } from '@/i18n';
 import localStorage from '@/lib/local-storage';
 import { apiRegistry, UsersApi, MyUser } from '@/lib/api';
 import activeUser from './modules/active-user';
-import { first } from 'rxjs/operators';
 
 interface LoggedInUser extends MyUser{
   token: string;
@@ -86,7 +85,7 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
   }
 
   async addLoggedInUsers(token: string, saveToken = true) {
-    const user = await apiRegistry.load(UsersApi, token).usersMeGet().pipe(first()).toPromise();
+    const user = await apiRegistry.load(UsersApi, token).usersMeGet();
     this.mutations.addLoggedInUser(user, token, saveToken);
     return user;
   }

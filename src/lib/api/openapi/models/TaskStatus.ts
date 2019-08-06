@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface TaskStatus
  */
@@ -53,3 +55,30 @@ export interface TaskStatus {
      */
     sort: number;
 }
+
+export function TaskStatusFromJSON(json: any): TaskStatus {
+    return {
+        'id': json['id'],
+        'projectId': !exists(json, 'projectId') ? undefined : json['projectId'],
+        'category': json['category'],
+        'name': json['name'],
+        'color': json['color'],
+        'sort': json['sort'],
+    };
+}
+
+export function TaskStatusToJSON(value?: TaskStatus): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'projectId': value.projectId,
+        'category': value.category,
+        'name': value.name,
+        'color': value.color,
+        'sort': value.sort,
+    };
+}
+
+

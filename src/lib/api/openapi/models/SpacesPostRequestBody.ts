@@ -11,11 +11,15 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 import {
     SpacesPostRequestBodyOwner,
+    SpacesPostRequestBodyOwnerFromJSON,
+    SpacesPostRequestBodyOwnerToJSON,
 } from './';
 
 /**
+ * 
  * @export
  * @interface SpacesPostRequestBody
  */
@@ -45,3 +49,26 @@ export interface SpacesPostRequestBody {
      */
     owner: SpacesPostRequestBodyOwner;
 }
+
+export function SpacesPostRequestBodyFromJSON(json: any): SpacesPostRequestBody {
+    return {
+        'token': json['token'],
+        'account': json['account'],
+        'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
+        'owner': SpacesPostRequestBodyOwnerFromJSON(json['owner']),
+    };
+}
+
+export function SpacesPostRequestBodyToJSON(value?: SpacesPostRequestBody): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'token': value.token,
+        'account': value.account,
+        'displayName': value.displayName,
+        'owner': SpacesPostRequestBodyOwnerToJSON(value.owner),
+    };
+}
+
+

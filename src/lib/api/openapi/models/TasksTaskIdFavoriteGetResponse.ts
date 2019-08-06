@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface TasksTaskIdFavoriteGetResponse
  */
@@ -23,3 +25,20 @@ export interface TasksTaskIdFavoriteGetResponse {
      */
     value: boolean;
 }
+
+export function TasksTaskIdFavoriteGetResponseFromJSON(json: any): TasksTaskIdFavoriteGetResponse {
+    return {
+        'value': json['value'],
+    };
+}
+
+export function TasksTaskIdFavoriteGetResponseToJSON(value?: TasksTaskIdFavoriteGetResponse): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'value': value.value,
+    };
+}
+
+

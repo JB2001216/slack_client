@@ -11,7 +11,9 @@
  * Do not edit the class manually.
  */
 
+import { exists, mapValues } from '../runtime';
 /**
+ * 
  * @export
  * @interface TaskCommentFile
  */
@@ -47,3 +49,28 @@ export interface TaskCommentFile {
      */
     size: number;
 }
+
+export function TaskCommentFileFromJSON(json: any): TaskCommentFile {
+    return {
+        'id': json['id'],
+        'comment': json['comment'],
+        'name': json['name'],
+        'mime': json['mime'],
+        'size': json['size'],
+    };
+}
+
+export function TaskCommentFileToJSON(value?: TaskCommentFile): any {
+    if (value === undefined) {
+        return undefined;
+    }
+    return {
+        'id': value.id,
+        'comment': value.comment,
+        'name': value.name,
+        'mime': value.mime,
+        'size': value.size,
+    };
+}
+
+
