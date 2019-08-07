@@ -22,7 +22,6 @@
     </div>
     <div class="mainColumn_body">
       <div class="dashboardWrap">
-        <my-datepicker v-model="task.limitedAt" :disabled="!editMode" />
         <div class="dashboardWrap_list">
           <dl class="dashboardWrap_list_user">
             <dd class="active">
@@ -123,8 +122,9 @@
           v-model="task.status"
           :options="statusOptions"
           :disabled="!editMode"
-          class="dashboardWrap_status"
+          class="noteEditWrap_status"
         />
+        <my-datepicker v-model="task.limitedAt" :disabled="!editMode" v-show="editMode" />
         <dl class="dashboardWrap_tag">
           <dd v-for="(t,i) in task.tags" :key="t.name">
             <span>{{t.name}}</span>
@@ -317,6 +317,7 @@ export default class TaskColumn extends Vue {
       this.saving = true;
 
       if (this.isAdd) {
+        console.log(this.task);
         const task = await tasksApi.tasksPost({
           spaceId: loginUser.space.id,
           projectId,
@@ -345,6 +346,7 @@ export default class TaskColumn extends Vue {
       }
 
     } catch (err) {
+      console.error(err);
       this.$showApiError(this, err);
     }
 

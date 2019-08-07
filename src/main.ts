@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueFlashMessage from 'vue-flash-message';
+import VueScrollTo from 'vue-scrollto';
 import router from './router';
 import store from './store';
 import i18n from './i18n';
@@ -25,6 +26,21 @@ declare module 'vue/types/vue' {
     $flash: VueFlashMessage.MessageMethod;
   }
 }
+
+// vue-scrollto
+Vue.use<VueScrollTo.Options>(<any>VueScrollTo, {
+  container: 'body',
+  duration: 500,
+  easing: 'ease',
+  offset: 0,
+  force: true,
+  cancelable: true,
+  onStart: false,
+  onDone: false,
+  onCancel: false,
+  x: false,
+  y: true,
+});
 
 // フィルタ登録
 type FiltersKey = keyof typeof filters;
