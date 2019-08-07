@@ -47,7 +47,7 @@ export interface TaskStatus {
      * @type {string}
      * @memberof TaskStatus
      */
-    color: string;
+    color?: string;
     /**
      * 
      * @type {number}
@@ -62,7 +62,7 @@ export function TaskStatusFromJSON(json: any): TaskStatus {
         'projectId': !exists(json, 'projectId') ? undefined : json['projectId'],
         'category': json['category'],
         'name': json['name'],
-        'color': json['color'],
+        'color': !exists(json, 'color') ? undefined : json['color'],
         'sort': json['sort'],
     };
 }

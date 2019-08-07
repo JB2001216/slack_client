@@ -41,7 +41,7 @@ export interface SelectLoginUser {
      * @type {string}
      * @memberof SelectLoginUser
      */
-    displayName: string;
+    displayName?: string;
     /**
      * 
      * @type {string}
@@ -60,7 +60,7 @@ export function SelectLoginUserFromJSON(json: any): SelectLoginUser {
     return {
         'id': json['id'],
         'account': json['account'],
-        'displayName': json['displayName'],
+        'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
         'loginToken': json['loginToken'],
         'space': SpaceFromJSON(json['space']),
     };

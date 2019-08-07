@@ -35,14 +35,14 @@ export interface Space {
      * @type {string}
      * @memberof Space
      */
-    displayName: string;
+    displayName?: string;
 }
 
 export function SpaceFromJSON(json: any): Space {
     return {
         'id': json['id'],
         'account': json['account'],
-        'displayName': json['displayName'],
+        'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
     };
 }
 

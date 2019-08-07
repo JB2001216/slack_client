@@ -35,7 +35,7 @@ export interface SpaceUser {
      * @type {string}
      * @memberof SpaceUser
      */
-    displayName: string;
+    displayName?: string;
     /**
      * 
      * @type {string}
@@ -60,7 +60,7 @@ export function SpaceUserFromJSON(json: any): SpaceUser {
     return {
         'id': json['id'],
         'account': json['account'],
-        'displayName': json['displayName'],
+        'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
         'email': json['email'],
         'spaceId': json['spaceId'],
         'spaceRoleId': json['spaceRoleId'],

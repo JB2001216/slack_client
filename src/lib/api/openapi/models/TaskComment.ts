@@ -41,13 +41,13 @@ export interface TaskComment {
      * @type {number}
      * @memberof TaskComment
      */
-    writeUser: number;
+    writeUser?: number;
     /**
      * 
      * @type {string}
      * @memberof TaskComment
      */
-    body: string;
+    body?: string;
     /**
      * 
      * @type {Array<TaskCommentFile>}
@@ -72,8 +72,8 @@ export function TaskCommentFromJSON(json: any): TaskComment {
     return {
         'id': json['id'],
         'task': json['task'],
-        'writeUser': json['writeUser'],
-        'body': json['body'],
+        'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
+        'body': !exists(json, 'body') ? undefined : json['body'],
         'files': (json['files'] as Array<any>).map(TaskCommentFileFromJSON),
         'createdAt': new Date(json['createdAt']),
         'updatedAt': new Date(json['updatedAt']),

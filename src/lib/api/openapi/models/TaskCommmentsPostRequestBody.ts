@@ -23,12 +23,12 @@ export interface TaskCommmentsPostRequestBody {
      * @type {string}
      * @memberof TaskCommmentsPostRequestBody
      */
-    body: string;
+    body?: string;
 }
 
 export function TaskCommmentsPostRequestBodyFromJSON(json: any): TaskCommmentsPostRequestBody {
     return {
-        'body': json['body'],
+        'body': !exists(json, 'body') ? undefined : json['body'],
     };
 }
 

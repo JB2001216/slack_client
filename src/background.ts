@@ -38,9 +38,14 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
   // CustomURLSchemeをOSに登録(Windowsの場合はレジストリに登録される)
-  // if (app.isDefaultProtocolClient(urlScheme)) {
-  //   app.setAsDefaultProtocolClient(urlScheme);
-  // }
+  if (process.env.NODE_ENV === 'production') {
+    // OSXはinfo.plistに自動追加してくれるので除外
+    if (process.platform !== 'darwin') {
+      if (app.isDefaultProtocolClient(urlScheme)) {
+        app.setAsDefaultProtocolClient(urlScheme);
+      }
+    }
+  }
 
   // 2重起動検知
   app.on('second-instance', (event, argv, cwd) => {

@@ -29,19 +29,19 @@ export interface NotesPostRequestBody {
      * @type {string}
      * @memberof NotesPostRequestBody
      */
-    body: string;
+    body?: string;
     /**
      * 
      * @type {number}
      * @memberof NotesPostRequestBody
      */
-    status: number;
+    status?: number;
     /**
      * 
      * @type {number}
      * @memberof NotesPostRequestBody
      */
-    batonUser: number;
+    batonUser?: number;
     /**
      * 
      * @type {number}
@@ -59,18 +59,18 @@ export interface NotesPostRequestBody {
      * @type {number}
      * @memberof NotesPostRequestBody
      */
-    parentNote: number;
+    parentNote?: number;
 }
 
 export function NotesPostRequestBodyFromJSON(json: any): NotesPostRequestBody {
     return {
         'subject': json['subject'],
-        'body': json['body'],
-        'status': json['status'],
-        'batonUser': json['batonUser'],
+        'body': !exists(json, 'body') ? undefined : json['body'],
+        'status': !exists(json, 'status') ? undefined : json['status'],
+        'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
         'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
         'chargeUsers': json['chargeUsers'],
-        'parentNote': json['parentNote'],
+        'parentNote': !exists(json, 'parentNote') ? undefined : json['parentNote'],
     };
 }
 

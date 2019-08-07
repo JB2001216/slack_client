@@ -35,13 +35,13 @@ export interface TaskCommmentsGetResponse {
      * @type {number}
      * @memberof TaskCommmentsGetResponse
      */
-    next: number;
+    next?: number;
     /**
      * 
      * @type {number}
      * @memberof TaskCommmentsGetResponse
      */
-    previous: number;
+    previous?: number;
     /**
      * 
      * @type {Array<TaskComment>}
@@ -53,8 +53,8 @@ export interface TaskCommmentsGetResponse {
 export function TaskCommmentsGetResponseFromJSON(json: any): TaskCommmentsGetResponse {
     return {
         'count': json['count'],
-        'next': json['next'],
-        'previous': json['previous'],
+        'next': !exists(json, 'next') ? undefined : json['next'],
+        'previous': !exists(json, 'previous') ? undefined : json['previous'],
         'results': (json['results'] as Array<any>).map(TaskCommentFromJSON),
     };
 }

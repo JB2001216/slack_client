@@ -317,7 +317,6 @@ export default class TaskColumn extends Vue {
       this.saving = true;
 
       if (this.isAdd) {
-        console.log(this.task);
         const task = await tasksApi.tasksPost({
           spaceId: loginUser.space.id,
           projectId,
@@ -346,7 +345,6 @@ export default class TaskColumn extends Vue {
       }
 
     } catch (err) {
-      console.error(err);
       this.$showApiError(this, err);
     }
 
