@@ -49,8 +49,15 @@ export interface FilesGetRequest {
     projectId: number;
     page?: number;
     limit?: number;
+    id?: number;
+    idGt?: number;
+    idLt?: number;
     name?: string;
     userId?: number;
+    updatedAt?: Date;
+    updatedAtGt?: Date;
+    updatedAtLt?: Date;
+    ordering?: string;
 }
 
 export interface FilesPostRequest {
@@ -212,12 +219,40 @@ export class FilesApi extends runtime.BaseAPI {
             queryParameters['limit'] = requestParameters.limit;
         }
 
+        if (requestParameters.id !== undefined) {
+            queryParameters['id'] = requestParameters.id;
+        }
+
+        if (requestParameters.idGt !== undefined) {
+            queryParameters['id__gt'] = requestParameters.idGt;
+        }
+
+        if (requestParameters.idLt !== undefined) {
+            queryParameters['id__lt'] = requestParameters.idLt;
+        }
+
         if (requestParameters.name !== undefined) {
             queryParameters['name'] = requestParameters.name;
         }
 
         if (requestParameters.userId !== undefined) {
             queryParameters['user_id'] = requestParameters.userId;
+        }
+
+        if (requestParameters.updatedAt !== undefined) {
+            queryParameters['updated_at'] = (requestParameters.updatedAt as any).toISOString();
+        }
+
+        if (requestParameters.updatedAtGt !== undefined) {
+            queryParameters['updated_at__gt'] = (requestParameters.updatedAtGt as any).toISOString();
+        }
+
+        if (requestParameters.updatedAtLt !== undefined) {
+            queryParameters['updated_at__lt'] = (requestParameters.updatedAtLt as any).toISOString();
+        }
+
+        if (requestParameters.ordering !== undefined) {
+            queryParameters['ordering'] = requestParameters.ordering;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

@@ -1,5 +1,13 @@
 # main-client-electron
 
+## stylus (main-mockからの置換)
+```
+[検索]
+url\(\.\.\/images\/(.+\.(svg|png))\)
+[置換]
+url('~@/assets/images/$1')
+```
+
 ## Project setup
 ```
 npm install

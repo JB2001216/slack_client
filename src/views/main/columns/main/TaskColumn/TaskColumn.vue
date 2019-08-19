@@ -90,13 +90,14 @@
               </svg>
             </dd>
           </dl>
-          <dl v-if="!editMode" class="dashboardWrap_list_menu">
+          <dl class="dashboardWrap_list_menu">
             <dd>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6.16667 2V5.33333H7.83333V2H6.16667ZM16.1667 2V5.33333H17.8333V2H16.1667ZM2.83333 4.5C2.37435 4.5 2 4.87435 2 5.33333V7.83333C2 8.29232 2.37435 8.66667 2.83333 8.66667V22H21.1667V8.66667C21.6257 8.66667 22 8.29232 22 7.83333V5.33333C22 4.87435 21.6257 4.5 21.1667 4.5H18.6667V6.16667H15.3333V4.5H8.66667V6.16667H5.33333V4.5H2.83333ZM4.5 8.66667H19.5V20.3333H4.5V8.66667ZM6.16667 10.3333V12H7.83333V10.3333H6.16667ZM9.5 10.3333V12H11.1667V10.3333H9.5ZM12.8333 10.3333V12H14.5V10.3333H12.8333ZM16.1667 10.3333V12H17.8333V10.3333H16.1667ZM6.16667 13.6667V15.3333H7.83333V13.6667H6.16667ZM9.5 13.6667V15.3333H11.1667V13.6667H9.5ZM12.8333 13.6667V15.3333H14.5V13.6667H12.8333ZM16.1667 13.6667V15.3333H17.8333V13.6667H16.1667ZM6.16667 17V18.6667H7.83333V17H6.16667ZM9.5 17V18.6667H11.1667V17H9.5ZM12.8333 17V18.6667H14.5V17H12.8333ZM16.1667 17V18.6667H17.8333V17H16.1667Z" fill="#333333" fill-opacity="0.72"/>
-              </svg>
+              <my-date-range-input
+                :value="task.limitedAt ? {start: task.startedAt, end: task.limitedAt} : null"
+                :disabled="!editMode"
+                @input="onDateRangeChange($event)" />
             </dd>
-            <dd>
+            <dd v-if="!isAdd">
               <svg @click="favorite(!isFavorite)" class="favoriteIcon" :class="{active: isFavorite}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 1.5L14.3574 8.75532H21.9861L15.8143 13.2394L18.1717 20.4947L12 16.0106L5.82825 20.4947L8.18565 13.2394L2.01391 8.75532H9.6426L12 1.5Z" fill="#333333" fill-opacity="0.72"/>
               </svg>
@@ -111,7 +112,7 @@
                 <path d="M1.5 1.5V18.3H3.6V3.6H18.3V1.5H1.5ZM5.7 5.7V22.5H22.5V5.7H5.7ZM7.8 7.8H20.4V20.4H7.8V7.8Z" fill="#333333" fill-opacity="0.72"/>
               </svg>
             </dd> -->
-            <dd>
+            <dd v-if="!isAdd">
               <svg @click="destroy()" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.9375 1.5L8.90625 2.55H3.75V4.65H20.25V2.55H15.0938L14.0625 1.5H9.9375ZM4.78125 6.75V20.4C4.78125 21.555 5.70938 22.5 6.84375 22.5H17.1562C18.2906 22.5 19.2188 21.555 19.2188 20.4V6.75H4.78125ZM7.875 8.85H9.9375V20.4H7.875V8.85ZM14.0625 8.85H16.125V20.4H14.0625V8.85Z" fill="#333333" fill-opacity="0.72"/>
               </svg>
@@ -122,9 +123,7 @@
           v-model="task.status"
           :options="statusOptions"
           :disabled="!editMode"
-          class="noteEditWrap_status"
         />
-        <my-datepicker v-model="task.limitedAt" :disabled="!editMode" v-show="editMode" />
         <dl class="dashboardWrap_tag">
           <dd v-for="(t,i) in task.tags" :key="t.name">
             <span>{{t.name}}</span>
@@ -323,7 +322,7 @@ export default class TaskColumn extends Vue {
           tasksPostRequestBody: this.task as api.TasksPostRequestBody,
         });
 
-        this.$store.actions.activeUser.replaceTask(task);
+        this.$store.actions.activeUser.replaceInTasks(task);
         this.$router.replace({
           name: 'task',
           params: {
@@ -340,7 +339,7 @@ export default class TaskColumn extends Vue {
           taskId: parseInt(this.$route.params.taskId),
           tasksTaskIdPutRequestBody: this.task as api.TasksTaskIdPutRequestBody,
         });
-        this.$store.actions.activeUser.replaceTask(task);
+        this.$store.actions.activeUser.replaceInTasks(task);
         this.editMode = false;
       }
 
@@ -366,7 +365,7 @@ export default class TaskColumn extends Vue {
         projectId,
         taskId: parseInt(this.$route.params.taskId),
       });
-      this.$store.mutations.activeUser.deleteTask(parseInt(this.$route.params.taskId));
+      this.$store.mutations.activeUser.deleteInTasks(parseInt(this.$route.params.taskId));
       this.$flash('削除しました', 'error');
       this.$router.replace({
         name: 'tasks',
@@ -406,6 +405,11 @@ export default class TaskColumn extends Vue {
     }
 
     this.saving = false;
+  }
+
+  onDateRangeChange(range: {start: Date; end: Date} | null) {
+    this.task.startedAt = range ? range.start : (null as any);
+    this.task.limitedAt = range ? range.end : (null as any);
   }
 
   async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {

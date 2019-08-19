@@ -50,7 +50,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { apiRegistry, SpacesApi, SpacesPostRequestBody, ApiErrors, FetchError } from '@/lib/api';
+import { apiRegistry, SpacesApi, SpacesPostRequestBody, ApiErrors, getJsonFromResponse } from '@/lib/api';
 
 @Component
 export default class SpaceAdd2 extends Vue {
@@ -108,32 +108,32 @@ export default class SpaceAdd2 extends Vue {
       });
 
     } catch (err) {
-      if (err instanceof FetchError) {
-        const res = await err.data!.json();
-        if (res.error) {
-          if (ApiErrors.ValidationError === res.error) {
+      if (err instanceof Response) {
+        const json = await getJsonFromResponse(err);
+        if (json && json.error) {
+          if (ApiErrors.ValidationError === json.error) {
             const messages: {[field: string]: MyTextInputMessage} = {};
             const ownerMessages: {[field: string]: MyTextInputMessage} = {};
-            Object.keys(res.data).forEach((k) => {
+            Object.keys(json.data).forEach((k) => {
               if (k === 'owner') {
-                Object.keys(res.data.owner).forEach((k) => {
+                Object.keys(json.data.owner).forEach((k) => {
                   ownerMessages[k] = {
                     type: 'error',
-                    text: res.data.owner[k],
+                    text: json.data.owner[k],
                   };
                 });
               } else {
                 messages[k] = {
                   type: 'error',
-                  text: res.data[k],
+                  text: json.data[k],
                 };
               }
             });
             this.messages = messages;
             this.ownerMessages = ownerMessages;
 
-          } else if (ApiErrors.ExpiredTokenError === res.error) {
-            this.$flash(res.data.detail, 'error');
+          } else if (ApiErrors.ExpiredTokenError === json.error) {
+            this.$flash(json.data.detail, 'error');
             this.$router.replace({ name: 'space-add1' });
             return;
           }

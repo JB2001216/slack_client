@@ -9,6 +9,11 @@
 <style lang="stylus">
 @import '../node_modules/vue-flash-message/dist/vue-flash-message.min.css'
 @import './stylus/_fixed/full'
+
+.fade-enter-active, .fade-leave-active
+  transition: opacity .2s
+.fade-enter, .fade-leave-to
+  opacity: 0
 </style>
 
 <script lang="ts">

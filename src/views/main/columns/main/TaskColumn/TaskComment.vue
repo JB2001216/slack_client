@@ -132,7 +132,7 @@ export default class TaskCommment extends Vue {
         projectId,
         taskId: parseInt(this.$route.params.taskId),
       });
-      this.$store.mutations.activeUser.deleteTask(parseInt(this.$route.params.taskId));
+      this.$store.mutations.activeUser.deleteInTasks(parseInt(this.$route.params.taskId));
       this.$flash('削除しました', 'error');
       this.$router.replace({
         name: 'tasks',

@@ -117,7 +117,6 @@
           v-model="note.status"
           :options="statusOptions"
           :disabled="!editMode"
-          class="noteEditWrap_status"
         />
         <my-markdown-editor
           v-model="note.body"
@@ -260,7 +259,7 @@ export default class NoteColumn extends Vue {
           notesPostRequestBody: this.note as NotesPostRequestBody,
         });
 
-        this.$store.actions.activeUser.replaceNote(note);
+        this.$store.actions.activeUser.replaceInNotes(note);
         this.$router.replace({
           name: 'note',
           params: {
@@ -277,7 +276,7 @@ export default class NoteColumn extends Vue {
           noteId: parseInt(this.$route.params.noteId),
           notesNoteIdPutRequestBody: this.note as NotesNoteIdPutRequestBody,
         });
-        this.$store.actions.activeUser.replaceNote(note);
+        this.$store.actions.activeUser.replaceInNotes(note);
         this.editMode = false;
       }
 

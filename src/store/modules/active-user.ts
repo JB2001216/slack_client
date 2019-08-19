@@ -44,6 +44,24 @@ function _createTasksGetRequest(user: api.MyUser, project: api.Project, cond: Re
   return req;
 }
 
+interface FilesGetConditions {
+  filter?: Pick<api.FilesGetRequest, 'name'>;
+  order?: {
+    field: 'updatedAt';
+    type: SearchOrderType;
+  };
+}
+function _createFilesGetRequest(user: api.MyUser, project: api.Project, cond: Required<FilesGetConditions>) {
+  const req: api.FilesGetRequest = Object.assign({
+    spaceId: user.space.id,
+    projectId: project.id,
+  }, cond.filter);
+  req.ordering = [cond.order.field, 'id']
+    .map((f) => cond.order.type === 'asc' ? f : `-${f}`)
+    .join(',');
+  return req;
+}
+
 async function _fetchProjects(user: LoggedInUser) {
   const projectsApi = api.apiRegistry.load(api.ProjectsApi, user.token);
   const res = await projectsApi.projectsGet({ spaceId: user.space.id, limit: 500 });
@@ -66,6 +84,10 @@ class ActiveUserState {
   tasks: api.Task[] | null = null;
   tasksGetConditions: Required<TasksGetConditions> | null = null;
   taskStatusOptions: api.TaskStatus[] | null = null;
+
+  // files
+  files: api.FileRecord[] | null = null;
+  filesGetConditions: Required<FilesGetConditions> | null = null;
 }
 
 class ActiveUserGetters extends Getters<ActiveUserState>() {
@@ -116,6 +138,8 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     this.state.tasks = null;
     this.state.tasksGetConditions = null;
     this.state.taskStatusOptions = null;
+    this.state.files = null;
+    this.state.filesGetConditions = null;
   }
 
   addProject(project: api.Project) {
@@ -149,7 +173,7 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     }
   }
 
-  replaceNote(note: api.Note) {
+  replaceInNotes(note: api.Note) {
     if (!this.state.notes) return;
     const index = this.state.notes.findIndex((n) => n.id === note.id);
     if (index >= 0) {
@@ -189,7 +213,7 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     }
   }
 
-  replaceTask(task: api.Task) {
+  replaceInTasks(task: api.Task) {
     if (!this.state.tasks) return;
     const index = this.state.tasks.findIndex((t) => t.id === task.id);
     if (index >= 0) {
@@ -197,11 +221,47 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     }
   }
 
-  deleteTask(id: number) {
+  deleteInTasks(id: number) {
     if (!this.state.tasks) return;
     const index = this.state.tasks.findIndex((t) => t.id === id);
     if (index >= 0) {
       this.state.tasks.splice(index, 1);
+    }
+  }
+
+  fetchedFiles(files: api.FileRecord[], cond: Required<FilesGetConditions>) {
+    this.state.files = files;
+    this.state.filesGetConditions = cond;
+  }
+
+  scrolledFiles(addFiles: api.FileRecord[], type: SearchScrollType) {
+    const files = this.state.files!.concat();
+    addFiles.forEach((af) => {
+      const i = files.findIndex((f) => af.id === f.id);
+      if (i >= 0) {
+        files.splice(i, 1);
+      }
+    });
+    if (type === 'prev') {
+      this.state.files = addFiles.reverse().concat(files);
+    } else {
+      this.state.files = files.concat(addFiles);
+    }
+  }
+
+  replaceInFiles(file: api.FileRecord) {
+    if (!this.state.files) return;
+    const index = this.state.files.findIndex((f) => f.id === file.id);
+    if (index >= 0) {
+      this.state.files.splice(index, 1, file);
+    }
+  }
+
+  deleteFile(id: string) {
+    if (!this.state.files) return;
+    const index = this.state.files.findIndex((f) => f.id === id);
+    if (index >= 0) {
+      this.state.files.splice(index, 1);
     }
   }
 }
@@ -325,7 +385,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     this.mutations.scrolledNotes(addNotes, type);
   }
 
-  async replaceNote(note: api.Note) {
+  async replaceInNotes(note: api.Note) {
     if (!note || !this.state.notes) {
       return;
     }
@@ -333,7 +393,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     if (index < 0) {
       await this.fetchNotes(this.state.notesGetConditions || undefined);
     } else {
-      this.mutations.replaceNote(note);
+      this.mutations.replaceInNotes(note);
     }
   }
 
@@ -411,7 +471,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     this.mutations.scrolledTasks(addTasks, type);
   }
 
-  async replaceTask(task: api.Task) {
+  async replaceInTasks(task: api.Task) {
     if (!task || !this.state.tasks) {
       return;
     }
@@ -419,7 +479,79 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     if (index < 0) {
       await this.fetchTasks(this.state.tasksGetConditions || undefined);
     } else {
-      this.mutations.replaceTask(task);
+      this.mutations.replaceInTasks(task);
+    }
+  }
+
+  async fetchFiles(conditions: FilesGetConditions = {}) {
+    const cond: Required<FilesGetConditions> = Object.assign({
+      filter: {},
+      order: { field: 'updatedAt', type: 'desc' },
+    }, conditions);
+    const user = this.state.loggedInUser;
+    const project = this.getters.activeProject;
+    if (!user || !project) {
+      return;
+    }
+    const filesApi = api.apiRegistry.load(api.FilesApi, user.token);
+    const req = _createFilesGetRequest(user, project, cond);
+    const files = await filesApi.filesGet(req);
+    this.mutations.fetchedFiles(files.results, cond);
+  }
+
+  async scrollFiles(type: SearchScrollType) {
+    const user = this.state.loggedInUser;
+    const project = this.getters.activeProject;
+    if (!user || !project || !this.state.files) {
+      return;
+    }
+    const files = this.state.files;
+    if (!files.length) {
+      await this.fetchFiles(this.state.filesGetConditions!);
+      return;
+    }
+    const cond = this.state.filesGetConditions!;
+    const filesApi = api.apiRegistry.load(api.FilesApi, user.token);
+    const req = _createFilesGetRequest(user, project, cond);
+    const current = type === 'next' ? files[files.length - 1] : files[0];
+    const d = (
+      (cond.order.type === 'asc' && type === 'next') ||
+      (cond.order.type === 'desc' && type === 'prev')
+    ) ? 'higher' : 'lower';
+    const idGtLt = d === 'higher' ? 'idGt' : 'idLt';
+    const field = cond.order.field;
+    const fieldGtLt = d === 'higher' ? `${field}Gt` : `${field}Lt`;
+    const ordering = [field, 'id'].map((f) => d === 'higher' ? f : `-${f}`).join(',');
+    const limit = 30;
+
+    const res1 = await filesApi.filesGet(Object.assign({
+      [idGtLt]: current.id,
+      [field]: current[field],
+      limit,
+      ordering,
+    }, req));
+    const addFiles = res1.results;
+    if (addFiles.length < limit) {
+      const res2 = await filesApi.filesGet(Object.assign({
+        [fieldGtLt]: current[field],
+        limit: limit - addFiles.length,
+        ordering,
+      }, req));
+      addFiles.push(...res2.results);
+    }
+
+    this.mutations.scrolledFiles(addFiles, type);
+  }
+
+  async replaceInFiles(file: api.FileRecord) {
+    if (!file || !this.state.files) {
+      return;
+    }
+    const index = this.state.files.findIndex((f) => f.id === file.id);
+    if (index < 0) {
+      await this.fetchFiles(this.state.filesGetConditions || undefined);
+    } else {
+      this.mutations.replaceInFiles(file);
     }
   }
 }

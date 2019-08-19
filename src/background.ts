@@ -1,5 +1,6 @@
 import { app, protocol, shell, BrowserWindow, Tray, Menu, ipcMain } from 'electron';
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
+import path from 'path';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const urlScheme = process.env.VUE_APP_URL_SCHEME;
 
@@ -8,6 +9,8 @@ const urlScheme = process.env.VUE_APP_URL_SCHEME;
 let win: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let quitting = false;
+
+declare var __static: string;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
@@ -41,7 +44,7 @@ if (!app.requestSingleInstanceLock()) {
   if (process.env.NODE_ENV === 'production') {
     // OSXはinfo.plistに自動追加してくれるので除外
     if (process.platform !== 'darwin') {
-      if (app.isDefaultProtocolClient(urlScheme)) {
+      if (!app.isDefaultProtocolClient(urlScheme)) {
         app.setAsDefaultProtocolClient(urlScheme);
       }
     }
@@ -70,23 +73,23 @@ app.on('will-finish-launching', () => {
   });
 });
 
-function createWindow() {
+function createWindow(this: any) {
   if (win) return;
 
   // Create the browser window.
   win = new BrowserWindow({
     ...(process.env.WEBPACK_DEV_SERVER_URL ? {
       width: 1524,
-      height: 768,
+      height: 576,
     } : {
-      width: 1024,
-      height: 768,
+      width: 1280,
+      height: 720,
     }),
     minWidth: 1024,
-    minHeight: 768,
+    minHeight: 576,
+    icon: path.join(__static, 'img', 'icon.png'),
     webPreferences: {
       nodeIntegration: true,
-      webSecurity: false,
       allowRunningInsecureContent: false,
     },
   });
@@ -143,7 +146,7 @@ function createTask() {
   if (process.platform === 'darwin') return;
   if (tray) return;
 
-  tray = new Tray(`${__dirname}/img/logo.png`);
+  tray = new Tray(path.join(__static, 'img', 'icon.png'));
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Show', click: () => showWindow() },
     { role: 'quit' },

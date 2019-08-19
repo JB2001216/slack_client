@@ -45,6 +45,7 @@ export * from './TasksPostRequestBody';
 export * from './TasksStatusPostRequestBodyItem';
 export * from './TasksTaskIdFavoriteGetResponse';
 export * from './TasksTaskIdFavoritePostRequestBody';
+export * from './TasksTaskIdPatchRequestBody';
 export * from './TasksTaskIdPutRequestBody';
 export * from './UsersEmailLoginConfirmPostRequestBody';
 export * from './UsersEmailLoginPostRequestBody';

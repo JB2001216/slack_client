@@ -29,7 +29,7 @@ export interface TasksTaskIdPutRequestBody {
      * @type {string}
      * @memberof TasksTaskIdPutRequestBody
      */
-    subject?: string;
+    subject: string;
     /**
      *
      * @type {string}
@@ -65,25 +65,25 @@ export interface TasksTaskIdPutRequestBody {
      * @type {Array<number>}
      * @memberof TasksTaskIdPutRequestBody
      */
-    chargeUsers?: Array<number>;
+    chargeUsers: Array<number>;
     /**
      *
      * @type {Array<SpacesSpaceIdProjectsProjectIdTasksTags>}
      * @memberof TasksTaskIdPutRequestBody
      */
-    tags?: Array<SpacesSpaceIdProjectsProjectIdTasksTags>;
+    tags: Array<SpacesSpaceIdProjectsProjectIdTasksTags>;
 }
 
 export function TasksTaskIdPutRequestBodyFromJSON(json: any): TasksTaskIdPutRequestBody {
     return {
-        'subject': !exists(json, 'subject') ? undefined : json['subject'],
+        'subject': json['subject'],
         'body': !exists(json, 'body') ? undefined : json['body'],
         'startedAt': !exists(json, 'startedAt') ? undefined : new Date(json['startedAt']),
         'limitedAt': !exists(json, 'limitedAt') ? undefined : new Date(json['limitedAt']),
         'status': !exists(json, 'status') ? undefined : json['status'],
         'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
-        'chargeUsers': !exists(json, 'chargeUsers') ? undefined : json['chargeUsers'],
-        'tags': !exists(json, 'tags') ? undefined : (json['tags'] as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON),
+        'chargeUsers': json['chargeUsers'],
+        'tags': (json['tags'] as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON),
     };
 }
 
@@ -99,7 +99,7 @@ export function TasksTaskIdPutRequestBodyToJSON(value?: TasksTaskIdPutRequestBod
         'status': value.status,
         'batonUser': value.batonUser,
         'chargeUsers': value.chargeUsers,
-        'tags': value.tags === undefined ? undefined : (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),
+        'tags': (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),
     };
 }
 

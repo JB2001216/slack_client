@@ -46,7 +46,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Route, NavigationGuard } from 'vue-router';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { apiRegistry, UsersApi, SpacesPostRequestBody, SelectLoginUser, ApiErrors, FetchError } from '@/lib/api';
+import { apiRegistry, UsersApi, SpacesPostRequestBody, SelectLoginUser, ApiErrors, getJsonFromResponse } from '@/lib/api';
 import { RouteError } from '@/lib/errors';
 import store from '@/store';
 
@@ -149,9 +149,9 @@ export default class LoginSpaceSelect extends Vue {
           (vm as this).users = users;
         });
       } catch (err) {
-        if (err instanceof FetchError) {
-          const res = await err.data!.json();
-          if (res.error === ApiErrors.ExpiredTokenError) {
+        if (err instanceof Response) {
+          const json = await getJsonFromResponse(err);
+          if (json && json.error === ApiErrors.ExpiredTokenError) {
             return next({ name: 'login-sms' });
           }
         }

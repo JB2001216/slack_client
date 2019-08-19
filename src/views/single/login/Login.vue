@@ -32,7 +32,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { apiRegistry, UsersApi, ApiErrors, FetchError } from '@/lib/api';
+import { apiRegistry, UsersApi, ApiErrors, getJsonFromResponse } from '@/lib/api';
 
 @Component
 export default class Login extends Vue {
@@ -81,17 +81,19 @@ export default class Login extends Vue {
       };
 
     } catch (err) {
-      if (err instanceof FetchError) {
-        const res = await err.data!.json();
-        if (res.error === ApiErrors.ValidationError) {
-          this.emailMessage = {
-            type: 'error',
-            text: res.data[Object.keys(res.data)[0]],
-          };
-        }
-        if (res.error === ApiErrors.LoginUserNotFound) {
-          this.$flash('ログイン可能なユーザーが見つかりませんでした', 'error');
-          return;
+      if (err instanceof Response) {
+        const json = await getJsonFromResponse(err);
+        if (json && json.error) {
+          if (json.error === ApiErrors.ValidationError) {
+            this.emailMessage = {
+              type: 'error',
+              text: json.data[Object.keys(json.data)[0]],
+            };
+          }
+          if (json.error === ApiErrors.LoginUserNotFound) {
+            this.$flash('ログイン可能なユーザーが見つかりませんでした', 'error');
+            return;
+          }
         }
       }
 

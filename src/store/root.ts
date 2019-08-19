@@ -81,7 +81,12 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
   }
 
   async initLoggedInUsers() {
-    await Promise.all(localStorage.tokens.map((t) => this.addLoggedInUsers(t, false)));
+    await Promise.all(localStorage.tokens.map((t) => {
+      return this.addLoggedInUsers(t, false)
+        .catch((err) => {
+          console.error(err);
+        });
+    }));
   }
 
   async addLoggedInUsers(token: string, saveToken = true) {

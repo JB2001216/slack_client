@@ -71,7 +71,7 @@ export interface Task {
      * @type {number}
      * @memberof Task
      */
-    status: number;
+    status?: number;
     /**
      *
      * @type {number}
@@ -113,7 +113,7 @@ export function TaskFromJSON(json: any): Task {
         'body': !exists(json, 'body') ? undefined : json['body'],
         'startedAt': !exists(json, 'startedAt') ? undefined : new Date(json['startedAt']),
         'limitedAt': !exists(json, 'limitedAt') ? undefined : new Date(json['limitedAt']),
-        'status': json['status'],
+        'status': !exists(json, 'status') ? undefined : json['status'],
         'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
         'chargeUsers': json['chargeUsers'],
         'createdAt': new Date(json['createdAt']),

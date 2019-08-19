@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import VCalendar from 'v-calendar';
 import VueFlashMessage from 'vue-flash-message';
 import VueScrollTo from 'vue-scrollto';
 import router from './router';
@@ -11,6 +12,12 @@ import App from './App.vue';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 Vue.config.devtools = process.env.NODE_ENV !== 'production';
+
+// v-calendar
+Vue.use<VCalendar.PluginOptions>(VCalendar, {
+  componentPrefix: 'vc',
+  datePickerShowCaps: true,
+});
 
 // vue-flash-message
 Vue.use<VueFlashMessage.PluginOptions>(VueFlashMessage, {

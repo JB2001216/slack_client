@@ -25,23 +25,47 @@
         </div>
       </div>
       <div class="task_list">
-        <router-link class="task_add" :to="getTaskAddTo()">
+        <a v-if="!adding" class="task_add" @click.prevent="onTaskAddStart()">
           <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="m22 13h-19.99999v-2h19.99999z" />
             <path d="m11 22v-20.00003h2v20.00003z" />
           </svg>
           新規タスク
-        </router-link>
+        </a>
+        <div v-if="adding" class="task_add adding">
+          <input
+            ref="addingTaskSubjectInput"
+            class="task_add_input"
+            type="text"
+            v-model="addingTaskSubject"
+            @keydown.esc="adding = false"
+            @blur="onTaskAddEnd()"
+            @change="$event.target.blur()">
+        </div>
         <ul>
-          <li class="task_item" v-for="t in tasks" :key="t.id" @click="$router.push(getTaskTo(t.id))">
-            <div class="task_item_bar"/>
+          <li class="task_item" v-for="t in tasks" :key="t.id" @click="onTaskItemClick(t, $event)">
+            <!-- <div class="task_item_bar"/> -->
             <div class="task_item_image">
               <img src="@/assets/images/user/user_1.png" alt="">
             </div>
-            <div class="task_item_name">{{t.subject}}</div>
-            <!-- <a class="task_item_add" href="#"/> -->
-            <div class="task_item_date">{{t.limitedAt | dateFormat('M/D')}}</div>
-            <my-project-status class="task_item_status" :option="getStatusOption(t.status)" />
+            <template v-if="!edittingTask || edittingTask.id !== t.id">
+              <div class="task_item_name" @dblclick="onTaskEditStart(t)">{{t.subject}}</div>
+              <a class="task_item_add" href="#"/>
+              <my-date-range-input
+                :value="t.limitedAt ? {start: t.startedAt, end: t.limitedAt} : null"
+                @input="onDateRangeChange(t, $event)"
+                class="task_item_date" />
+              <my-project-status class="task_item_status" :option="getStatusOption(t.status)" />
+            </template>
+            <input
+              v-else
+              ref="edittingTaskSubjectInputs"
+              class="task_edit_input"
+              type="text"
+              v-model="edittingTaskSubject"
+              @keydown.esc="edittingTask = null"
+              @blur="onTaskEditEnd()"
+              @change="$event.target.blur()">
           </li>
         </ul>
       </div>
@@ -49,17 +73,36 @@
   </sub-column-layout>
 </template>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 .tab_task
   .task_item
     cursor: pointer
+    &:not(:hover)
+      .task_item_date
+        .myDateRangeInput_view_icon
+          opacity: 0
+    .task_edit_input
+      padding: 5px
+      width: calc(100% - 30px)
+      box-sizing: border-box
+  a.task_add
+    cursor: pointer
+  .task_add.adding
+    padding: 0 20px;
+    .task_add_input
+      margin: 7px 0
+      padding: 5px
+      width: 100%
+      box-sizing: border-box
 </style>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
 import SubColumnLayout from './SubColumnLayout.vue';
+import { Task, TasksApi, apiRegistry } from '@/lib/api';
 import store from '@/store';
+import { ProjectStatusCategory } from '@/consts';
 
 async function fetchTasks(query: Route['query']) {
   await Promise.all([
@@ -74,6 +117,7 @@ async function fetchTasks(query: Route['query']) {
 
 Component.registerHooks([
   'beforeRouteEnter',
+  'beforeRouteUpdate',
 ]);
 @Component({
   components: {
@@ -81,6 +125,17 @@ Component.registerHooks([
   },
 })
 export default class TasksColumn extends Vue {
+  $refs!: {
+    addingTaskSubjectInput: HTMLInputElement;
+    edittingTaskSubjectInputs: HTMLInputElement[];
+  };
+
+  saving = false;
+  adding = false;
+  addingTaskSubject = '';
+  edittingTask: Task | null = null;
+  edittingTaskSubject = '';
+
   get tasks() {
     return this.$store.state.activeUser.tasks;
   }
@@ -138,6 +193,111 @@ export default class TasksColumn extends Vue {
     }, () => {
       fetchTasks(query);
     });
+  }
+
+  async onDateRangeChange(task: Task, range: {start: Date; end: Date} | null) {
+    if (this.saving) {
+      return;
+    }
+    const loginUser = store.state.activeUser.loggedInUser!;
+    const projectId = store.state.activeUser.activeProjectId!;
+    const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+    try {
+      this.saving = true;
+      const updatedTask = await tasksApi.tasksTaskIdPatch({
+        spaceId: loginUser.space.id,
+        projectId,
+        taskId: task.id,
+        tasksTaskIdPatchRequestBody: {
+          startedAt: range ? range.start : (null as any),
+          limitedAt: range ? range.end : (null as any),
+        },
+      });
+      this.$store.mutations.activeUser.replaceInTasks(updatedTask);
+    } catch (err) {
+      this.$showApiError(this, err);
+    }
+    this.saving = false;
+  }
+
+  onTaskItemClick(task: Task, ev: MouseEvent) {
+    if (this.$route.name !== 'task' || this.$route.params['taskId'] !== task.id.toString()) {
+      this.$router.push(this.getTaskTo(task.id));
+    }
+  }
+
+  async onTaskAddStart() {
+    if (this.adding || this.saving) return;
+    this.addingTaskSubject = '';
+    this.adding = true;
+    await this.$nextTick();
+    this.$refs.addingTaskSubjectInput.focus();
+  }
+
+  async onTaskAddEnd() {
+    if (!this.adding || this.saving) return;
+    if (this.addingTaskSubject.trim() !== '') {
+      const loginUser = store.state.activeUser.loggedInUser!;
+      const projectId = store.state.activeUser.activeProjectId!;
+      const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+      const statusOptions = this.statusOptions!.filter((o) => o.category === ProjectStatusCategory.Progress)
+        .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
+      try {
+        this.saving = true;
+        const updatedTask = await tasksApi.tasksPost({
+          spaceId: loginUser.space.id,
+          projectId,
+          tasksPostRequestBody: {
+            subject: this.addingTaskSubject.trim(),
+            status: statusOptions[0].id,
+            chargeUsers: [],
+            tags: [],
+          },
+        });
+        await this.$store.actions.activeUser.replaceInTasks(updatedTask);
+      } catch (err) {
+        this.$showApiError(this, err);
+        return;
+      } finally {
+        this.saving = false;
+      }
+    }
+    this.adding = false;
+  }
+
+  async onTaskEditStart(task: Task) {
+    if (this.edittingTask || this.saving) return;
+    this.edittingTask = task;
+    this.edittingTaskSubject = task.subject;
+    await this.$nextTick();
+    this.$refs.edittingTaskSubjectInputs[0].focus();
+  }
+
+  async onTaskEditEnd() {
+    if (!this.edittingTask || this.saving) return;
+    if (this.edittingTaskSubject.trim() !== '') {
+      const loginUser = store.state.activeUser.loggedInUser!;
+      const projectId = store.state.activeUser.activeProjectId!;
+      const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+      try {
+        this.saving = true;
+        const updatedTask = await tasksApi.tasksTaskIdPatch({
+          spaceId: loginUser.space.id,
+          projectId,
+          taskId: this.edittingTask.id,
+          tasksTaskIdPatchRequestBody: {
+            subject: this.edittingTaskSubject.trim(),
+          },
+        });
+        await this.$store.actions.activeUser.replaceInTasks(updatedTask);
+      } catch (err) {
+        this.$showApiError(this, err);
+        return;
+      } finally {
+        this.saving = false;
+      }
+    }
+    this.edittingTask = null;
   }
 
   async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {

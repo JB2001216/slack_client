@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { apiRegistry, ProjectsApi, ApiErrors, FetchError } from '@/lib/api';
+import { apiRegistry, ProjectsApi, ApiErrors, getJsonFromResponse } from '@/lib/api';
 
 @Component
 export default class ProjectAddColumn extends Vue {
@@ -56,12 +56,12 @@ export default class ProjectAddColumn extends Vue {
       });
 
     } catch (err) {
-      if (err instanceof FetchError) {
-        const res = await err.data!.json();
-        if (res.error === ApiErrors.ValidationError) {
+      if (err instanceof Response) {
+        const json = await getJsonFromResponse(err);
+        if (json && json.error === ApiErrors.ValidationError) {
           this.displayNameMessage = {
             type: 'error',
-            text: res.data[Object.keys(res.data)[0]],
+            text: json.data[Object.keys(json.data)[0]],
           };
         }
       }

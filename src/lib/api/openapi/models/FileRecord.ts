@@ -54,6 +54,12 @@ export interface FileRecord {
      * @memberof FileRecord
      */
     createdAt: Date;
+    /**
+     * 
+     * @type {Date}
+     * @memberof FileRecord
+     */
+    updatedAt: Date;
 }
 
 export function FileRecordFromJSON(json: any): FileRecord {
@@ -64,6 +70,7 @@ export function FileRecordFromJSON(json: any): FileRecord {
         'mime': !exists(json, 'mime') ? undefined : json['mime'],
         'size': json['size'],
         'createdAt': new Date(json['createdAt']),
+        'updatedAt': new Date(json['updatedAt']),
     };
 }
 
@@ -78,6 +85,7 @@ export function FileRecordToJSON(value?: FileRecord): any {
         'mime': value.mime,
         'size': value.size,
         'createdAt': value.createdAt.toISOString(),
+        'updatedAt': value.updatedAt.toISOString(),
     };
 }
 

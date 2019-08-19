@@ -53,13 +53,13 @@ export interface TasksPostRequestBody {
      * @type {number}
      * @memberof TasksPostRequestBody
      */
-    status: number;
+    status?: number;
     /**
      *
      * @type {number}
      * @memberof TasksPostRequestBody
      */
-    batonUser: number;
+    batonUser?: number;
     /**
      *
      * @type {Array<number>}
@@ -80,8 +80,8 @@ export function TasksPostRequestBodyFromJSON(json: any): TasksPostRequestBody {
         'body': !exists(json, 'body') ? undefined : json['body'],
         'startedAt': !exists(json, 'startedAt') ? undefined : new Date(json['startedAt']),
         'limitedAt': !exists(json, 'limitedAt') ? undefined : new Date(json['limitedAt']),
-        'status': json['status'],
-        'batonUser': json['batonUser'],
+        'status': !exists(json, 'status') ? undefined : json['status'],
+        'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
         'chargeUsers': json['chargeUsers'],
         'tags': (json['tags'] as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON),
     };

@@ -1,5 +1,5 @@
 <template>
-  <dl class="myProjectStatusInput" :class="{disabled}">
+  <dl class="myProjectStatusInput list_status" :class="{disabled}">
     <template v-for="(o,i) in progressOptions">
       <dd
         :key="`dd-${o.id}`"
@@ -61,11 +61,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-
-enum ProjectStatusCategory {
-  progress = 1,
-  etc = 90,
-}
+import { ProjectStatusCategory } from '@/consts';
 
 interface ProjectStatusOption {
   id: number;
@@ -142,11 +138,11 @@ export default class MyProjectStatusInput extends Vue {
   }
 
   isProgress(o: ProjectStatusOption | null) {
-    return o && o.category === ProjectStatusCategory.progress;
+    return o && o.category === ProjectStatusCategory.Progress;
   }
 
   isEtc(o: ProjectStatusOption | null) {
-    return o && o.category === ProjectStatusCategory.etc;
+    return o && o.category === ProjectStatusCategory.Etc;
   }
 
   onDocumentClick(ev: MouseEvent) {

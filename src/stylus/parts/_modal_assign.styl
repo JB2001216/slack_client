@@ -1,0 +1,108 @@
+.modalWrap{
+  *{
+    box-sizing: border-box;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: #aaa;
+  position: relative;
+}
+.assign{
+  width: 100%;
+  max-width: 500px;
+  max-height: 333px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  position: relative;
+  &_search{
+    input{
+      width: 100%;
+      padding: 0 25px 10px 0;
+      margin-bottom: 15px;
+      background: url('~@/assets/images/icn/modal-assign-search.svg') no-repeat top right;
+      border: none;
+      border-bottom: 1px solid #e2e2e2;
+      color: #333;
+      font-size: 14px;
+      &::placeholder{
+        color: #c4c4c4;
+      }
+    }
+  }
+  &_user{
+    max-height: 252px;
+    overflow-y: auto;
+    ul{
+      li{
+        float: left;
+        display: table;
+        width: 50%;
+        margin-top: 2px;
+        cursor: pointer;
+        &:nth-of-type(-n+2){
+          margin-top: 0;
+        }
+        span{
+          display: table-cell;
+          vertical-align: middle;
+          height: 40px;
+          padding: 0 10px 0 40px;
+          position: relative;
+          color: #333;
+          font-size: 14px;
+          &.active{
+            &:before{
+              content: "";
+              display: block;
+              width: 28px;
+              height: 28px;
+              border: 2px solid #2F80ED;
+              border-radius: 50%;
+              position: absolute;
+              top: 0;
+              left: 0;
+              bottom: 0;
+              margin: auto;
+            }
+          }
+        }
+      }
+    }
+    &_gray{
+      background: url('~@/assets/images/icn/modal-assign-user-gray.svg') no-repeat center left 4px;
+    }
+    &_orange{
+      background: url('~@/assets/images/icn/modal-assign-user-orange.svg') no-repeat center left 4px;
+    }
+    &_deepblue{
+      background: url('~@/assets/images/icn/modal-assign-user-deepblue.svg') no-repeat center left 4px;
+    }
+    &_red{
+      background: url('~@/assets/images/icn/modal-assign-user-red.svg') no-repeat center left 4px;
+    }
+    &_deepgreen{
+      background: url('~@/assets/images/icn/modal-assign-user-deepgreen.svg') no-repeat center left 4px;
+    }
+    &_skyblue{
+      background: url('~@/assets/images/icn/modal-assign-user-skyblue.svg') no-repeat center left 4px;
+    }
+    &_blue{
+      background: url('~@/assets/images/icn/modal-assign-user-blue.svg') no-repeat center left 4px;
+    }
+    &_yellow{
+      background: url('~@/assets/images/icn/modal-assign-user-yellow.svg') no-repeat center left 4px;
+    }
+    &_violet{
+      background: url('~@/assets/images/icn/modal-assign-user-violet.svg') no-repeat center left 4px;
+    }
+    &_lightgreen{
+      background: url('~@/assets/images/icn/modal-assign-user-lightgreen.svg') no-repeat center left 4px;
+    }
+  }
+}

@@ -40,7 +40,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { MyTextInputMessage } from '@/components/MyTextInput';
-import { apiRegistry, SpacesApi, ApiErrors, FetchError } from '@/lib/api';
+import { apiRegistry, SpacesApi, ApiErrors, getJsonFromResponse } from '@/lib/api';
 
 @Component
 export default class SpaceAdd1 extends Vue {
@@ -87,12 +87,12 @@ export default class SpaceAdd1 extends Vue {
       };
 
     } catch (err) {
-      if (err instanceof FetchError) {
-        const res = await err.data!.json();
-        if (res.error === ApiErrors.ValidationError) {
+      if (err instanceof Response) {
+        const json = await getJsonFromResponse(err);
+        if (json && json.error === ApiErrors.ValidationError) {
           this.emailMessage = {
             type: 'error',
-            text: res.data[Object.keys(res.data)[0]],
+            text: json.data[Object.keys(json.data)[0]],
           };
         }
       }

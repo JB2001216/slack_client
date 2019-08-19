@@ -56,6 +56,9 @@ import {
     TasksTaskIdFavoritePostRequestBody,
     TasksTaskIdFavoritePostRequestBodyFromJSON,
     TasksTaskIdFavoritePostRequestBodyToJSON,
+    TasksTaskIdPatchRequestBody,
+    TasksTaskIdPatchRequestBodyFromJSON,
+    TasksTaskIdPatchRequestBodyToJSON,
     TasksTaskIdPutRequestBody,
     TasksTaskIdPutRequestBodyFromJSON,
     TasksTaskIdPutRequestBodyToJSON,
@@ -205,6 +208,13 @@ export interface TasksTaskIdGetRequest {
     spaceId: number;
     projectId: number;
     taskId: number;
+}
+
+export interface TasksTaskIdPatchRequest {
+    spaceId: number;
+    projectId: number;
+    taskId: number;
+    tasksTaskIdPatchRequestBody: TasksTaskIdPatchRequestBody;
 }
 
 export interface TasksTaskIdPutRequest {
@@ -1113,6 +1123,53 @@ export class TasksApi extends runtime.BaseAPI {
      */
     async tasksTaskIdGet(requestParameters: TasksTaskIdGetRequest): Promise<Task> {
         const response = await this.tasksTaskIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async tasksTaskIdPatchRaw(requestParameters: TasksTaskIdPatchRequest): Promise<runtime.ApiResponse<Task>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling tasksTaskIdPatch.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling tasksTaskIdPatch.');
+        }
+
+        if (requestParameters.taskId === null || requestParameters.taskId === undefined) {
+            throw new runtime.RequiredError('taskId','Required parameter requestParameters.taskId was null or undefined when calling tasksTaskIdPatch.');
+        }
+
+        if (requestParameters.tasksTaskIdPatchRequestBody === null || requestParameters.tasksTaskIdPatchRequestBody === undefined) {
+            throw new runtime.RequiredError('tasksTaskIdPatchRequestBody','Required parameter requestParameters.tasksTaskIdPatchRequestBody was null or undefined when calling tasksTaskIdPatch.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/tasks/{taskId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"taskId"}}`, encodeURIComponent(String(requestParameters.taskId))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TasksTaskIdPatchRequestBodyToJSON(requestParameters.tasksTaskIdPatchRequestBody),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TaskFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async tasksTaskIdPatch(requestParameters: TasksTaskIdPatchRequest): Promise<Task> {
+        const response = await this.tasksTaskIdPatchRaw(requestParameters);
         return await response.value();
     }
 
