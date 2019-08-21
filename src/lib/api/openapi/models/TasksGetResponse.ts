@@ -32,16 +32,16 @@ export interface TasksGetResponse {
     count: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof TasksGetResponse
      */
-    next?: number;
+    previous?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof TasksGetResponse
      */
-    previous?: number;
+    next?: string;
     /**
      * 
      * @type {Array<Task>}
@@ -53,8 +53,8 @@ export interface TasksGetResponse {
 export function TasksGetResponseFromJSON(json: any): TasksGetResponse {
     return {
         'count': json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
         'previous': !exists(json, 'previous') ? undefined : json['previous'],
+        'next': !exists(json, 'next') ? undefined : json['next'],
         'results': (json['results'] as Array<any>).map(TaskFromJSON),
     };
 }
@@ -65,8 +65,8 @@ export function TasksGetResponseToJSON(value?: TasksGetResponse): any {
     }
     return {
         'count': value.count,
-        'next': value.next,
         'previous': value.previous,
+        'next': value.next,
         'results': (value.results as Array<any>).map(TaskToJSON),
     };
 }

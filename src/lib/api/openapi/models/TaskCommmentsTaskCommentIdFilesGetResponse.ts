@@ -32,16 +32,16 @@ export interface TaskCommmentsTaskCommentIdFilesGetResponse {
     count: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof TaskCommmentsTaskCommentIdFilesGetResponse
      */
-    next?: number;
+    previous?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof TaskCommmentsTaskCommentIdFilesGetResponse
      */
-    previous?: number;
+    next?: string;
     /**
      * 
      * @type {Array<TaskCommentFile>}
@@ -53,8 +53,8 @@ export interface TaskCommmentsTaskCommentIdFilesGetResponse {
 export function TaskCommmentsTaskCommentIdFilesGetResponseFromJSON(json: any): TaskCommmentsTaskCommentIdFilesGetResponse {
     return {
         'count': json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
         'previous': !exists(json, 'previous') ? undefined : json['previous'],
+        'next': !exists(json, 'next') ? undefined : json['next'],
         'results': (json['results'] as Array<any>).map(TaskCommentFileFromJSON),
     };
 }
@@ -65,8 +65,8 @@ export function TaskCommmentsTaskCommentIdFilesGetResponseToJSON(value?: TaskCom
     }
     return {
         'count': value.count,
-        'next': value.next,
         'previous': value.previous,
+        'next': value.next,
         'results': (value.results as Array<any>).map(TaskCommentFileToJSON),
     };
 }

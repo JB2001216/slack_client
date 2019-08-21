@@ -32,16 +32,16 @@ export interface ProjectsProjectIdUsersGetResponse {
     count: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof ProjectsProjectIdUsersGetResponse
      */
-    next?: number;
+    previous?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof ProjectsProjectIdUsersGetResponse
      */
-    previous?: number;
+    next?: string;
     /**
      * 
      * @type {Array<ProjectUser>}
@@ -53,8 +53,8 @@ export interface ProjectsProjectIdUsersGetResponse {
 export function ProjectsProjectIdUsersGetResponseFromJSON(json: any): ProjectsProjectIdUsersGetResponse {
     return {
         'count': json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
         'previous': !exists(json, 'previous') ? undefined : json['previous'],
+        'next': !exists(json, 'next') ? undefined : json['next'],
         'results': (json['results'] as Array<any>).map(ProjectUserFromJSON),
     };
 }
@@ -65,8 +65,8 @@ export function ProjectsProjectIdUsersGetResponseToJSON(value?: ProjectsProjectI
     }
     return {
         'count': value.count,
-        'next': value.next,
         'previous': value.previous,
+        'next': value.next,
         'results': (value.results as Array<any>).map(ProjectUserToJSON),
     };
 }

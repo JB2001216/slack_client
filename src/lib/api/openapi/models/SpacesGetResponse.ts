@@ -32,16 +32,16 @@ export interface SpacesGetResponse {
     count: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacesGetResponse
      */
-    next?: number;
+    previous?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SpacesGetResponse
      */
-    previous?: number;
+    next?: string;
     /**
      * 
      * @type {Array<Space>}
@@ -53,8 +53,8 @@ export interface SpacesGetResponse {
 export function SpacesGetResponseFromJSON(json: any): SpacesGetResponse {
     return {
         'count': json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
         'previous': !exists(json, 'previous') ? undefined : json['previous'],
+        'next': !exists(json, 'next') ? undefined : json['next'],
         'results': (json['results'] as Array<any>).map(SpaceFromJSON),
     };
 }
@@ -65,8 +65,8 @@ export function SpacesGetResponseToJSON(value?: SpacesGetResponse): any {
     }
     return {
         'count': value.count,
-        'next': value.next,
         'previous': value.previous,
+        'next': value.next,
         'results': (value.results as Array<any>).map(SpaceToJSON),
     };
 }

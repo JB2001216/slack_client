@@ -2,12 +2,14 @@ import Vue from 'vue';
 import VCalendar from 'v-calendar';
 import VueFlashMessage from 'vue-flash-message';
 import VueScrollTo from 'vue-scrollto';
+import InfiniteLoading, { InfiniteOptions } from 'vue-infinite-loading';
 import router from './router';
 import store from './store';
 import i18n from './i18n';
 import * as components from './components';
 import * as filters from './filters';
-import ApiErrorAction from './plugins/api-error-action';
+import AppEvent from './plugins/app-event';
+import AppErrorAction from './plugins/app-error-action';
 import App from './App.vue';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
@@ -49,6 +51,18 @@ Vue.use<VueScrollTo.Options>(<any>VueScrollTo, {
   y: true,
 });
 
+// vue-infinite-loading
+Vue.use<InfiniteOptions>(<any>InfiniteLoading, {
+  props: {
+    spinner: 'spiral',
+  },
+  slots: {
+    noResults: '',
+    noMore: '',
+  },
+});
+
+
 // フィルタ登録
 type FiltersKey = keyof typeof filters;
 (<FiltersKey[]>Object.keys(filters)).forEach((k) => {
@@ -56,8 +70,10 @@ type FiltersKey = keyof typeof filters;
   Vue.filter(k, f);
 });
 
-// api-error-action
-Vue.use(ApiErrorAction);
+// app-event
+Vue.use(AppEvent);
+// app-error-action
+Vue.use(AppErrorAction);
 
 // コンポーネント登録
 type ComponentsKey = keyof typeof components;

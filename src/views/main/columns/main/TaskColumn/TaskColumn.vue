@@ -322,7 +322,7 @@ export default class TaskColumn extends Vue {
           tasksPostRequestBody: this.task as api.TasksPostRequestBody,
         });
 
-        this.$store.actions.activeUser.replaceInTasks(task);
+        this.$appEmit('task-added', { task });
         this.$router.replace({
           name: 'task',
           params: {
@@ -339,12 +339,12 @@ export default class TaskColumn extends Vue {
           taskId: parseInt(this.$route.params.taskId),
           tasksTaskIdPutRequestBody: this.task as api.TasksTaskIdPutRequestBody,
         });
-        this.$store.actions.activeUser.replaceInTasks(task);
+        this.$appEmit('task-edited', { task });
         this.editMode = false;
       }
 
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
     }
 
     this.saving = false;
@@ -365,7 +365,7 @@ export default class TaskColumn extends Vue {
         projectId,
         taskId: parseInt(this.$route.params.taskId),
       });
-      this.$store.mutations.activeUser.deleteInTasks(parseInt(this.$route.params.taskId));
+      this.$appEmit('task-deleted', { taskId: parseInt(this.$route.params.taskId) });
       this.$flash('削除しました', 'error');
       this.$router.replace({
         name: 'tasks',
@@ -376,7 +376,7 @@ export default class TaskColumn extends Vue {
       });
 
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
     }
 
     this.saving = false;
@@ -401,7 +401,7 @@ export default class TaskColumn extends Vue {
       this.isFavorite = res.value;
 
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
     }
 
     this.saving = false;

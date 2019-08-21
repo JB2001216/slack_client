@@ -97,7 +97,7 @@ export default class Login extends Vue {
         }
       }
 
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
 
     } finally {
       this.loginning = false;

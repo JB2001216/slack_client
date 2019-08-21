@@ -32,16 +32,16 @@ export interface FilesGetResponse {
     count: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof FilesGetResponse
      */
-    next?: number;
+    previous?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof FilesGetResponse
      */
-    previous?: number;
+    next?: string;
     /**
      * 
      * @type {Array<FileRecord>}
@@ -53,8 +53,8 @@ export interface FilesGetResponse {
 export function FilesGetResponseFromJSON(json: any): FilesGetResponse {
     return {
         'count': json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
         'previous': !exists(json, 'previous') ? undefined : json['previous'],
+        'next': !exists(json, 'next') ? undefined : json['next'],
         'results': (json['results'] as Array<any>).map(FileRecordFromJSON),
     };
 }
@@ -65,8 +65,8 @@ export function FilesGetResponseToJSON(value?: FilesGetResponse): any {
     }
     return {
         'count': value.count,
-        'next': value.next,
         'previous': value.previous,
+        'next': value.next,
         'results': (value.results as Array<any>).map(FileRecordToJSON),
     };
 }

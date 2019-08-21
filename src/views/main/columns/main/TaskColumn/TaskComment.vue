@@ -111,7 +111,7 @@ export default class TaskCommment extends Vue {
       await this.scrollComments('next', true);
 
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
     }
 
     this.saving = false;
@@ -132,7 +132,6 @@ export default class TaskCommment extends Vue {
         projectId,
         taskId: parseInt(this.$route.params.taskId),
       });
-      this.$store.mutations.activeUser.deleteInTasks(parseInt(this.$route.params.taskId));
       this.$flash('削除しました', 'error');
       this.$router.replace({
         name: 'tasks',
@@ -143,7 +142,7 @@ export default class TaskCommment extends Vue {
       });
 
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
     }
 
     this.saving = false;

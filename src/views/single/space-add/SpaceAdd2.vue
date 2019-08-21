@@ -140,7 +140,7 @@ export default class SpaceAdd2 extends Vue {
         }
       }
 
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
       this.saving = false;
     }
   }

@@ -281,7 +281,7 @@ export default class NoteColumn extends Vue {
       }
 
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
     }
 
     this.saving = false;
@@ -313,7 +313,7 @@ export default class NoteColumn extends Vue {
       });
 
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
     }
 
     this.saving = false;
@@ -338,7 +338,7 @@ export default class NoteColumn extends Vue {
       this.isFavorite = res.value;
 
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
     }
 
     this.saving = false;

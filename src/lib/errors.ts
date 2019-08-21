@@ -23,3 +23,14 @@ export class RouteError extends BaseError<any> {
     });
   }
 }
+
+/**
+ * メッセージ表示用のシンプルなエラー
+ */
+export class BasicError extends BaseError<undefined> {
+  constructor(message: string) {
+    super({
+      message,
+    });
+  }
+}

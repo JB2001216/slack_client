@@ -112,7 +112,7 @@ export default class LoginSpaceSelect extends Vue {
       }
 
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
       this.loginning = false;
     }
   }
@@ -128,7 +128,7 @@ export default class LoginSpaceSelect extends Vue {
           },
         });
       } catch (err) {
-        this.$showApiError(this, err);
+        this.$showAppError(this, err);
         this.$router.replace({ name: 'login' });
       }
     }

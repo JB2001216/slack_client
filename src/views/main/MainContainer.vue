@@ -64,7 +64,7 @@ export default class MainContainer extends Vue {
       await beforeRouteChange(to, from, next);
     } catch (err) {
       return next((vm) => {
-        vm.$showApiError(vm, err);
+        vm.$showAppError(vm, err);
         vm.$router.replace({ name: 'users' });
       });
     }
@@ -74,7 +74,7 @@ export default class MainContainer extends Vue {
     try {
       await beforeRouteChange(to, from, next);
     } catch (err) {
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
       this.$router.replace({ name: 'users' });
     }
   }

@@ -66,7 +66,7 @@ export default class ProjectAddColumn extends Vue {
         }
       }
 
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
       this.saving = false;
     }
   }

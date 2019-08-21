@@ -1,13 +1,13 @@
 import Vue, { VueConstructor } from 'vue';
-import ApiErrorActionBus from './ApiErrorActionBus.vue';
+import AppErrorActionBus from './AppErrorActionBus.vue';
 
-const bus = new ApiErrorActionBus();
+const bus = new AppErrorActionBus();
 
 export default {
   install(Vue: VueConstructor) {
     Vue.mixin({
       methods: {
-        async $showApiError(vm: Vue, err: any) {
+        async $showAppError(vm: Vue, err: any) {
           await (<any>bus).show(vm, err);
         },
       },
@@ -17,6 +17,6 @@ export default {
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $showApiError: (vm: Vue, err: any) => Promise<void>;
+    $showAppError: (vm: Vue, err: any) => Promise<void>;
   }
 }

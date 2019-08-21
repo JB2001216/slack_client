@@ -26,24 +26,6 @@ function _createNotesGetRequest(user: api.MyUser, project: api.Project, cond: Re
   return req;
 }
 
-interface TasksGetConditions {
-  filter?: Pick<api.TasksGetRequest, 'subject' | 'status' | 'batonUser' | 'writeUser' | 'favorite'>;
-  order?: {
-    field: 'updatedAt';
-    type: SearchOrderType;
-  };
-}
-function _createTasksGetRequest(user: api.MyUser, project: api.Project, cond: Required<TasksGetConditions>) {
-  const req: api.TasksGetRequest = Object.assign({
-    spaceId: user.space.id,
-    projectId: project.id,
-  }, cond.filter);
-  req.ordering = [cond.order.field, 'id']
-    .map((f) => cond.order.type === 'asc' ? f : `-${f}`)
-    .join(',');
-  return req;
-}
-
 interface FilesGetConditions {
   filter?: Pick<api.FilesGetRequest, 'name'>;
   order?: {
@@ -79,11 +61,6 @@ class ActiveUserState {
   notes: api.Note[] | null = null;
   notesGetConditions: Required<NotesGetConditions> | null = null;
   noteStatusOptions: api.NoteStatus[] | null = null;
-
-  // tasks
-  tasks: api.Task[] | null = null;
-  tasksGetConditions: Required<TasksGetConditions> | null = null;
-  taskStatusOptions: api.TaskStatus[] | null = null;
 
   // files
   files: api.FileRecord[] | null = null;
@@ -135,9 +112,6 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     this.state.notes = null;
     this.state.notesGetConditions = null;
     this.state.noteStatusOptions = null;
-    this.state.tasks = null;
-    this.state.tasksGetConditions = null;
-    this.state.taskStatusOptions = null;
     this.state.files = null;
     this.state.filesGetConditions = null;
   }
@@ -186,46 +160,6 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     const index = this.state.notes.findIndex((n) => n.id === id);
     if (index >= 0) {
       this.state.notes.splice(index, 1);
-    }
-  }
-
-  fetchedTasks(tasks: api.Task[], cond: Required<TasksGetConditions>) {
-    this.state.tasks = tasks;
-    this.state.tasksGetConditions = cond;
-  }
-
-  fetchedTaskStatusOptions(taskStatusOptions: api.TaskStatus[]) {
-    this.state.taskStatusOptions = taskStatusOptions;
-  }
-
-  scrolledTasks(addTasks: api.Task[], type: SearchScrollType) {
-    const tasks = this.state.tasks!.concat();
-    addTasks.forEach((at) => {
-      const i = tasks.findIndex((t) => at.id === t.id);
-      if (i >= 0) {
-        tasks.splice(i, 1);
-      }
-    });
-    if (type === 'prev') {
-      this.state.tasks = addTasks.reverse().concat(tasks);
-    } else {
-      this.state.tasks = tasks.concat(addTasks);
-    }
-  }
-
-  replaceInTasks(task: api.Task) {
-    if (!this.state.tasks) return;
-    const index = this.state.tasks.findIndex((t) => t.id === task.id);
-    if (index >= 0) {
-      this.state.tasks.splice(index, 1, task);
-    }
-  }
-
-  deleteInTasks(id: number) {
-    if (!this.state.tasks) return;
-    const index = this.state.tasks.findIndex((t) => t.id === id);
-    if (index >= 0) {
-      this.state.tasks.splice(index, 1);
     }
   }
 
@@ -394,92 +328,6 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
       await this.fetchNotes(this.state.notesGetConditions || undefined);
     } else {
       this.mutations.replaceInNotes(note);
-    }
-  }
-
-  async fetchTasks(conditions: TasksGetConditions = {}) {
-    const cond: Required<TasksGetConditions> = Object.assign({
-      filter: {},
-      order: { field: 'updatedAt', type: 'desc' },
-    }, conditions);
-    const user = this.state.loggedInUser;
-    const project = this.getters.activeProject;
-    if (!user || !project) {
-      return;
-    }
-    const tasksApi = api.apiRegistry.load(api.TasksApi, user.token);
-    const req = _createTasksGetRequest(user, project, cond);
-    const tasks = await tasksApi.tasksGet(req);
-    this.mutations.fetchedTasks(tasks.results, cond);
-  }
-
-  async fetchTaskStatusOptions() {
-    const user = this.state.loggedInUser;
-    const project = this.getters.activeProject;
-    if (!user || !project) {
-      return;
-    }
-    const tasksApi = api.apiRegistry.load(api.TasksApi, user.token);
-    const taskStatusOptions = await tasksApi.tasksStatusGet({
-      spaceId: user.space.id,
-      projectId: project.id,
-    });
-    this.mutations.fetchedTaskStatusOptions(taskStatusOptions);
-  }
-
-  async scrollTasks(type: SearchScrollType) {
-    const user = this.state.loggedInUser;
-    const project = this.getters.activeProject;
-    if (!user || !project || !this.state.tasks) {
-      return;
-    }
-    const tasks = this.state.tasks;
-    if (!tasks.length) {
-      await this.fetchTasks(this.state.tasksGetConditions!);
-      return;
-    }
-    const cond = this.state.tasksGetConditions!;
-    const tasksApi = api.apiRegistry.load(api.TasksApi, user.token);
-    const req = _createTasksGetRequest(user, project, cond);
-    const current = type === 'next' ? tasks[tasks.length - 1] : tasks[0];
-    const d = (
-      (cond.order.type === 'asc' && type === 'next') ||
-      (cond.order.type === 'desc' && type === 'prev')
-    ) ? 'higher' : 'lower';
-    const idGtLt = d === 'higher' ? 'idGt' : 'idLt';
-    const field = cond.order.field;
-    const fieldGtLt = d === 'higher' ? `${field}Gt` : `${field}Lt`;
-    const ordering = [field, 'id'].map((f) => d === 'higher' ? f : `-${f}`).join(',');
-    const limit = 30;
-
-    const res1 = await tasksApi.tasksGet(Object.assign({
-      [idGtLt]: current.id,
-      [field]: current[field],
-      limit,
-      ordering,
-    }, req));
-    const addTasks = res1.results;
-    if (addTasks.length < limit) {
-      const res2 = await tasksApi.tasksGet(Object.assign({
-        [fieldGtLt]: current[field],
-        limit: limit - addTasks.length,
-        ordering,
-      }, req));
-      addTasks.push(...res2.results);
-    }
-
-    this.mutations.scrolledTasks(addTasks, type);
-  }
-
-  async replaceInTasks(task: api.Task) {
-    if (!task || !this.state.tasks) {
-      return;
-    }
-    const index = this.state.tasks.findIndex((t) => t.id === task.id);
-    if (index < 0) {
-      await this.fetchTasks(this.state.tasksGetConditions || undefined);
-    } else {
-      this.mutations.replaceInTasks(task);
     }
   }
 

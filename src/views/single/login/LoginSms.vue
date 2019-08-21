@@ -66,7 +66,7 @@ export default class LoginSms extends Vue {
           };
         }
       }
-      this.$showApiError(this, err);
+      this.$showAppError(this, err);
     }
   }
 
@@ -82,7 +82,7 @@ export default class LoginSms extends Vue {
       },
       undefined,
       (err) => {
-        this.$showApiError(this, err);
+        this.$showAppError(this, err);
       }
     );
   }

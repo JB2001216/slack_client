@@ -26,6 +26,12 @@ import {
 export interface TasksTaskIdPutRequestBody {
     /**
      *
+     * @type {number}
+     * @memberof TasksTaskIdPutRequestBody
+     */
+    parent?: number;
+    /**
+     *
      * @type {string}
      * @memberof TasksTaskIdPutRequestBody
      */
@@ -76,6 +82,7 @@ export interface TasksTaskIdPutRequestBody {
 
 export function TasksTaskIdPutRequestBodyFromJSON(json: any): TasksTaskIdPutRequestBody {
     return {
+        'parent': !exists(json, 'parent') ? undefined : json['parent'],
         'subject': json['subject'],
         'body': !exists(json, 'body') ? undefined : json['body'],
         'startedAt': !exists(json, 'startedAt') ? undefined : new Date(json['startedAt']),
@@ -92,6 +99,7 @@ export function TasksTaskIdPutRequestBodyToJSON(value?: TasksTaskIdPutRequestBod
         return undefined;
     }
     return {
+        'parent': value.parent,
         'subject': value.subject,
         'body': value.body,
         'startedAt': !value.startedAt ? (value.startedAt === null ? null : undefined) : value.startedAt.toISOString().substr(0, 10),

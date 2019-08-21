@@ -41,6 +41,12 @@ export interface Task {
      * @type {number}
      * @memberof Task
      */
+    parent?: number;
+    /**
+     *
+     * @type {number}
+     * @memberof Task
+     */
     writeUser?: number;
     /**
      *
@@ -86,6 +92,18 @@ export interface Task {
     chargeUsers: Array<number>;
     /**
      *
+     * @type {number}
+     * @memberof Task
+     */
+    priority: number;
+    /**
+     *
+     * @type {boolean}
+     * @memberof Task
+     */
+    hasChilds: boolean;
+    /**
+     *
      * @type {Date}
      * @memberof Task
      */
@@ -108,6 +126,7 @@ export function TaskFromJSON(json: any): Task {
     return {
         'id': json['id'],
         'project': json['project'],
+        'parent': !exists(json, 'parent') ? undefined : json['parent'],
         'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
         'subject': json['subject'],
         'body': !exists(json, 'body') ? undefined : json['body'],
@@ -116,6 +135,8 @@ export function TaskFromJSON(json: any): Task {
         'status': !exists(json, 'status') ? undefined : json['status'],
         'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
         'chargeUsers': json['chargeUsers'],
+        'priority': json['priority'],
+        'hasChilds': json['hasChilds'],
         'createdAt': new Date(json['createdAt']),
         'updatedAt': new Date(json['updatedAt']),
         'tags': (json['tags'] as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON),
@@ -129,6 +150,7 @@ export function TaskToJSON(value?: Task): any {
     return {
         'id': value.id,
         'project': value.project,
+        'parent': value.parent,
         'writeUser': value.writeUser,
         'subject': value.subject,
         'body': value.body,
@@ -137,6 +159,8 @@ export function TaskToJSON(value?: Task): any {
         'status': value.status,
         'batonUser': value.batonUser,
         'chargeUsers': value.chargeUsers,
+        'priority': value.priority,
+        'hasChilds': value.hasChilds,
         'createdAt': value.createdAt.toISOString(),
         'updatedAt': value.updatedAt.toISOString(),
         'tags': (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),

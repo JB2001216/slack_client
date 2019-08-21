@@ -78,7 +78,7 @@ Component.registerHooks([
     SubColumnLayout,
   },
 })
-export default class NoteColumn extends Vue {
+export default class NotesColumn extends Vue {
   get notes() {
     return this.$store.state.activeUser.notes;
   }

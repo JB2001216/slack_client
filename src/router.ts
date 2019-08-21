@@ -12,7 +12,7 @@ import ProjectColumn from './views/main/columns/project/ProjectColumn.vue';
 import SubColumnPass from './views/main/columns/sub/SubColumnPass.vue';
 import FilesColumn from './views/main/columns/sub/FilesColumn.vue';
 import NotesColumn from './views/main/columns/sub/NotesColumn.vue';
-import TasksColumn from './views/main/columns/sub/TasksColumn.vue';
+import TasksColumn from './views/main/columns/sub/TasksColumn';
 import MainColumnPass from './views/main/columns/main/MainColumnPass.vue';
 import ProjectAddColumn from './views/main/columns/main/ProjectAddColumn.vue';
 import FileColumn from './views/main/columns/main/FileColumn.vue';

@@ -154,16 +154,11 @@ export interface TasksGetRequest {
     projectId: number;
     page?: number;
     limit?: number;
-    id?: number;
-    idGt?: number;
-    idLt?: number;
+    parent?: number;
+    root?: boolean;
     subject?: string;
-    status?: number;
     batonUser?: number;
     writeUser?: number;
-    updatedAt?: Date;
-    updatedAtGt?: Date;
-    updatedAtLt?: Date;
     favorite?: boolean;
     ordering?: string;
 }
@@ -767,24 +762,16 @@ export class TasksApi extends runtime.BaseAPI {
             queryParameters['limit'] = requestParameters.limit;
         }
 
-        if (requestParameters.id !== undefined) {
-            queryParameters['id'] = requestParameters.id;
+        if (requestParameters.parent !== undefined) {
+            queryParameters['parent'] = requestParameters.parent;
         }
 
-        if (requestParameters.idGt !== undefined) {
-            queryParameters['id__gt'] = requestParameters.idGt;
-        }
-
-        if (requestParameters.idLt !== undefined) {
-            queryParameters['id__lt'] = requestParameters.idLt;
+        if (requestParameters.root !== undefined) {
+            queryParameters['root'] = requestParameters.root;
         }
 
         if (requestParameters.subject !== undefined) {
             queryParameters['subject'] = requestParameters.subject;
-        }
-
-        if (requestParameters.status !== undefined) {
-            queryParameters['status'] = requestParameters.status;
         }
 
         if (requestParameters.batonUser !== undefined) {
@@ -793,18 +780,6 @@ export class TasksApi extends runtime.BaseAPI {
 
         if (requestParameters.writeUser !== undefined) {
             queryParameters['write_user'] = requestParameters.writeUser;
-        }
-
-        if (requestParameters.updatedAt !== undefined) {
-            queryParameters['updated_at'] = (requestParameters.updatedAt as any).toISOString();
-        }
-
-        if (requestParameters.updatedAtGt !== undefined) {
-            queryParameters['updated_at__gt'] = (requestParameters.updatedAtGt as any).toISOString();
-        }
-
-        if (requestParameters.updatedAtLt !== undefined) {
-            queryParameters['updated_at__lt'] = (requestParameters.updatedAtLt as any).toISOString();
         }
 
         if (requestParameters.favorite !== undefined) {

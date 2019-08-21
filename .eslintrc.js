@@ -19,6 +19,7 @@ module.exports = {
     'no-tabs': 'error',
     'no-extra-semi': 'error',
     'no-useless-constructor': 'off',
+    'no-multiple-empty-lines': 'off',
     'use-isnan': 'error',
     'object-property-newline': [
       'error',

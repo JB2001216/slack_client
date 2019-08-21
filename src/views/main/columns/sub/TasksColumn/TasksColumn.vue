@@ -1,0 +1,365 @@
+<template>
+  <sub-column-layout active-tab="task">
+    <div class="tab_task">
+      <div class="task_menu">
+        <div class="task_menu_left">
+          <a class="task_menu_favorite" href="#" :class="{active: isFavorite}" @click.prevent="favorite(!isFavorite)">
+            <svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="m12 1.5 2.3574 7.25532h7.6287l-6.1718 4.48408 2.3574 7.2553-6.1717-4.4841-6.17175 4.4841 2.3574-7.2553-6.17174-4.48408h7.62869z" />
+            </svg>
+          </a>
+        </div>
+        <div class="task_menu_right">
+          <a class="task_menu_search" href="#">
+            <span class="t-caption">絞り込み</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="m2.8442 3.00008c-.1103-.00153-.2198.0185-.32215.05893-.10236.04043-.19551.10045-.27406.17658-.07855.07612-.14092.16684-.18349.26686-.04258.10003-.0645.20738-.0645.31581s.02192.21578.0645.31581c.04257.10002.10494.19074.18349.26686.07855.07613.1717.13615.27406.17658.10235.04043.21185.06046.32215.05893h.66653l5.99223 7.36356h4.99404l5.9923-7.36356h.6665c.1103.00153.2198-.0185.3222-.05893.1023-.04043.1955-.10045.274-.17658.0786-.07612.1409-.16684.1835-.26686.0426-.10003.0645-.20738.0645-.31581s-.0219-.21578-.0645-.31581c-.0426-.10002-.1049-.19074-.1835-.26686-.0785-.07613-.1717-.13615-.274-.17658-.1024-.04043-.2119-.06046-.3222-.05893zm6.65876 10.63632v7.3636l4.99404-1.6364v-5.7272z" />
+            </svg>
+          </a>
+          <my-simple-menu>
+            <template v-slot="{open}">
+              <a class="task_menu_sort" href="#" @click.stop="open()">
+                <span class="t-caption">{{currentSort.text}}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m12 20-8.66025-13.5h17.32055z" />
+                </svg>
+              </a>
+            </template>
+            <template v-slot:items>
+              <li v-for="s in sorts" :key="`${s.field}_${s.type}`" @click="onCurrentSortChange(s)">
+                <span v-if="s === currentSort">→ {{s.text}}</span>
+                <span v-else>{{s.text}}</span>
+              </li>
+            </template>
+          </my-simple-menu>
+        </div>
+      </div>
+      <div class="task_list">
+        <a v-if="!adding" class="task_add" @click.prevent="onInlineTaskAddStart()">
+          <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="m22 13h-19.99999v-2h19.99999z" />
+            <path d="m11 22v-20.00003h2v20.00003z" />
+          </svg>
+          新規タスク
+        </a>
+        <div v-if="adding" class="task_add adding">
+          <input
+            ref="addingTaskSubjectInput"
+            class="task_add_input"
+            type="text"
+            v-model="addingTaskSubject"
+            @keydown.esc="adding = false"
+            @blur="onInlineTaskAddEnd()"
+            @change="$event.target.blur()">
+        </div>
+        <div class="taskListContainer" ref="taskListContainer">
+          <nested-list
+            :tasks="tasks"
+            :status-options="statusOptions"
+            :fetch-tasks="fetchTasks"
+            @item-click="onTaskItemClick" />
+          <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
+        </div>
+      </div>
+    </div>
+  </sub-column-layout>
+</template>
+
+
+<style lang="stylus">
+.tab_task
+  .taskListContainer
+    height: calc(100vh - 225px)
+    overflow-y: scroll
+  a.task_add
+    cursor: pointer
+  .task_add.adding
+    padding: 0 20px;
+    .task_add_input
+      margin: 7px 0
+      padding: 5px
+      width: 100%
+      box-sizing: border-box
+  .nestedList
+    .nestedList
+      padding-left: 20px
+</style>
+
+
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Location, Route, NavigationGuard } from 'vue-router';
+import { StateChanger } from 'vue-infinite-loading';
+import SubColumnLayout from '../SubColumnLayout.vue';
+import NestedList from './NestedList.vue';
+import { MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry, TasksGetRequest } from '@/lib/api';
+import { BasicError } from '@/lib/errors';
+import { ProjectStatusCategory } from '@/consts';
+import { toSnakeCase } from '@/lib/utils/string-util';
+
+type SearchScrollType = 'next' | 'prev';
+type SearchOrderField = 'priority' | 'limitedAt' | 'status';
+type SearchOrderType = 'asc' | 'desc';
+
+interface TasksGetConditions {
+  filter: Pick<TasksGetRequest, 'subject' | 'batonUser' | 'writeUser' | 'favorite'>;
+  order: {
+    field: SearchOrderField;
+    type: SearchOrderType;
+  };
+}
+
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteUpdate',
+]);
+@Component({
+  components: {
+    SubColumnLayout,
+    NestedList,
+  },
+})
+export default class TasksColumn extends Vue {
+  $refs!: {
+    addingTaskSubjectInput: HTMLInputElement;
+    taskListContainer: HTMLDivElement;
+  };
+
+  sorts: {field: SearchOrderField; type: SearchOrderType; text: string}[] = [
+    { field: 'priority', type: 'desc', text: '優先度順' },
+    { field: 'limitedAt', type: 'asc', text: '期限順' },
+    { field: 'status', type: 'asc', text: 'ステータス順' },
+  ];
+
+  initialConditions: TasksGetConditions = {
+    'filter': {},
+    'order': {
+      field: this.sorts[0].field,
+      type: this.sorts[0].type,
+    },
+  };
+
+  conditions = Object.assign({}, this.initialConditions);
+
+  tasks: Task[] = [];
+  page = 1;
+  limit = 30;
+  infiniteId = +new Date();
+
+  statusOptions: TaskStatus[] | null = null;
+
+  initialized = false;
+  saving = false;
+  adding = false;
+  addingTaskSubject = '';
+
+  get isFavorite() {
+    return this.conditions.filter &&
+      this.conditions.filter.favorite;
+  }
+
+  get currentSort() {
+    return this.sorts.find((s) => s.field === this.conditions.order.field && s.type === this.conditions.order.type)!;
+  }
+
+  async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
+    const cond = this.conditions;
+    const user = this.$store.state.activeUser.loggedInUser!;
+    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const tasksApi = apiRegistry.load(TasksApi, user.token);
+    const req: TasksGetRequest = Object.assign({
+      spaceId: user.space.id,
+      projectId: projectId,
+      parent: options.parent ? options.parent! : undefined,
+      root: options.parent ? undefined : true,
+    }, cond.filter);
+    req.ordering = [toSnakeCase(cond.order.field), 'id']
+      .map((f) => cond.order.type === 'asc' ? f : `-${f}`)
+      .join(',');
+    if (options.limit) {
+      req.limit = options.limit;
+    }
+    if (options.page) {
+      req.page = options.page;
+    }
+
+    return tasksApi.tasksGet(req);
+  }
+
+  async fetchStatusOptions() {
+    const loginUser = this.$store.state.activeUser.loggedInUser!;
+    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+    this.statusOptions = await tasksApi.tasksStatusGet({ spaceId: loginUser.space.id, projectId });
+  }
+
+  async onInfinite($state: StateChanger) {
+    try {
+      if (this.$refs.taskListContainer) {
+        this.$refs.taskListContainer.scrollTop = 0;
+      }
+
+      const res = await this.fetchTasks({
+        page: this.page,
+        limit: this.limit,
+      });
+      const addTasks = res.results.filter((r) => !this.tasks.find((t) => t.id === r.id));
+      if (addTasks.length) {
+        this.tasks.push(...addTasks);
+      }
+
+      if (res.next) {
+        this.page += 1;
+        $state.loaded();
+      } else {
+        $state.complete();
+      }
+
+    } catch (err) {
+      this.$showAppError(this, err);
+    }
+  }
+
+  changeCondition(cond: TasksGetConditions) {
+    this.conditions = cond;
+    this.page = 1;
+    this.tasks = [];
+    this.infiniteId += 1;
+  }
+
+  getTaskAddTo(): Location {
+    return {
+      name: 'task-add',
+      params: {
+        userId: this.$route.params.userId,
+        projectId: this.$route.params.projectId,
+      },
+    };
+  }
+
+  getTaskTo(taskId: number): Location {
+    return {
+      name: 'task',
+      params: {
+        userId: this.$route.params.userId,
+        projectId: this.$route.params.projectId,
+        taskId: taskId.toString(),
+      },
+    };
+  }
+
+  async favorite(favorite: boolean) {
+    this.changeCondition({
+      filter: Object.assign(this.conditions.filter, { favorite }),
+      order: this.conditions.order,
+    });
+  }
+
+  async onCurrentSortChange(order: this['conditions']['order']) {
+    this.changeCondition(Object.assign(this.conditions, { order }));
+  }
+
+  onTaskItemClick(ev: MouseEvent, task: Task) {
+    if (this.$route.name !== 'task' || this.$route.params['taskId'] !== task.id.toString()) {
+      this.$router.push(this.getTaskTo(task.id));
+    }
+  }
+
+  async onInlineTaskAddStart() {
+    if (this.adding || this.saving) return;
+    this.addingTaskSubject = '';
+    this.adding = true;
+    await this.$nextTick();
+    this.$refs.addingTaskSubjectInput.focus();
+  }
+
+  async onInlineTaskAddEnd() {
+    if (!this.adding || this.saving) return;
+    if (this.addingTaskSubject.trim() !== '') {
+      const loginUser = this.$store.state.activeUser.loggedInUser!;
+      const projectId = this.$store.state.activeUser.activeProjectId!;
+      const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+      const statusOptions = this.statusOptions!
+        .filter((o) => o.category === ProjectStatusCategory.Progress)
+        .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
+      try {
+        this.saving = true;
+        const updatedTask = await tasksApi.tasksPost({
+          spaceId: loginUser.space.id,
+          projectId,
+          tasksPostRequestBody: {
+            subject: this.addingTaskSubject.trim(),
+            status: statusOptions[0].id,
+            chargeUsers: [],
+            tags: [],
+          },
+        });
+        this.$appEmit('task-added', { task: updatedTask });
+      } catch (err) {
+        this.$showAppError(this, err);
+        return;
+      } finally {
+        this.saving = false;
+      }
+    }
+    this.adding = false;
+  }
+
+  onTaskAdded(ev: { task: Task }) {
+    if (!this.tasks || ev.task.parent) return;
+    if (!this.tasks.find((t) => t.id === ev.task.id)) {
+      this.tasks.unshift(ev.task);
+    }
+  }
+
+  onTaskEdited(ev: { task: Task }) {
+    if (!this.tasks) return;
+    const index = this.tasks.findIndex((t) => t.id === ev.task.id);
+    if (index >= 0) {
+      this.tasks.splice(index, 1, ev.task);
+    }
+  }
+
+  onTaskDeleted(ev: { taskId: number }) {
+    if (!this.tasks) return;
+    const index = this.tasks.findIndex((t) => t.id === ev.taskId);
+    if (index >= 0) {
+      this.tasks.splice(index, 1);
+    }
+  }
+
+  async init(to: Route, from: Route) {
+    if (to.name === 'tasks' || !from || from.params.projectId !== to.params.projectId) {
+      await this.fetchStatusOptions();
+      if (this.initialized) {
+        this.changeCondition(this.initialConditions);
+      } else {
+        this.initialized = true;
+      }
+    }
+  }
+
+  beforeMount() {
+    this.$appOn('task-added', this.onTaskAdded);
+    this.$appOn('task-edited', this.onTaskEdited);
+    this.$appOn('task-deleted', this.onTaskDeleted);
+  }
+
+  beforeDestroy() {
+    this.$appOff('task-added', this.onTaskAdded);
+    this.$appOff('task-edited', this.onTaskEdited);
+    this.$appOff('task-deleted', this.onTaskDeleted);
+  }
+
+  async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    next(async(vm) => {
+      await (vm as this).init(to, from);
+    });
+  }
+
+  async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    next();
+    await this.init(to, from);
+  }
+}
+</script>
