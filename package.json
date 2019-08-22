@@ -1,6 +1,6 @@
 {
   "name": "main-client-electron",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "author": "Ernie inc <info@ernie.co.jp>",
   "homepage": "http://ernie.co.jp/",
   "private": true,

@@ -80,6 +80,10 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
     this.mutations.setLocale(await loadLocale(localStorage.locale || defaultLocale));
   }
 
+  async setLocale(locale: Locale) {
+    this.mutations.setLocale(await loadLocale(locale));
+  }
+
   async initLoggedInUsers() {
     await Promise.all(localStorage.tokens.map((t) => {
       return this.addLoggedInUsers(t, false)

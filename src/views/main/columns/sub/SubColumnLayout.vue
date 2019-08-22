@@ -14,7 +14,7 @@
       <li v-for="t in tabs" :key="t.name">
         <router-link
           :class="{[`open_tab_${t.name}`]: true, active: activeTab === t.name}"
-          :to="{name: t.toName, params: tabToParams }">{{t.text}}</router-link>
+          :to="{name: t.toName, params: tabToParams }">{{$t(`views.subColumn.tabs.${t.name}`)}}</router-link>
       </li>
     </ul>
     <div class="subColumn_body">
@@ -30,7 +30,7 @@ enum SubColumnTabNames {
   task = 'task',
   file = 'file',
   note = 'note',
-  chart = 'chart',
+  ganttChart = 'ganttChart',
 }
 
 @Component
@@ -39,10 +39,10 @@ export default class SubColumnLayout extends Vue {
   activeTab!: SubColumnTabNames | null;
 
   tabs = [
-    { name: SubColumnTabNames.task, text: 'タスク', toName: 'tasks' },
-    { name: SubColumnTabNames.file, text: 'ファイル', toName: 'files' },
-    { name: SubColumnTabNames.note, text: 'ノート', toName: 'notes' },
-    { name: SubColumnTabNames.chart, text: 'ガントチャート', toName: 'notes' },
+    { name: SubColumnTabNames.task, toName: 'tasks' },
+    { name: SubColumnTabNames.file, toName: 'files' },
+    { name: SubColumnTabNames.note, toName: 'notes' },
+    { name: SubColumnTabNames.ganttChart, toName: 'notes' },
   ];
 
   get tabToParams() {

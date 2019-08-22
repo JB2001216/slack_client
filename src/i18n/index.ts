@@ -2,11 +2,11 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import moment from 'moment';
 import { Locale, LocaleStruct } from './types';
-import defaultLocaleStruct from './locale/ja';
+import defaultLocaleStruct from './locale/en';
 
 Vue.use(VueI18n);
 
-export const defaultLocale: Locale = 'ja';
+export const defaultLocale: Locale = 'en';
 export const loadableLocales: Locale[] = ['en', 'ja'];
 const loadedLocales: Locale[] = [defaultLocale];
 

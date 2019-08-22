@@ -14,7 +14,7 @@ export default class AppErrorActionBus extends Vue {
       const json = await getJsonFromResponse(err);
       if (json && json.error) {
         if (ApiErrors.ValidationError === json.error) {
-          vm.$flash('入力内容に問題があります', 'error');
+          vm.$flash(vm.$t('common.invalidInput').toString(), 'error');
           return;
         }
         if (json.data && json.data.detail) {
@@ -23,7 +23,7 @@ export default class AppErrorActionBus extends Vue {
         }
       }
       if (!err.status) {
-        vm.$flash('ネットワーク接続に問題があります', 'error');
+        vm.$flash(vm.$t('common.networkConnectionError').toString(), 'error');
         return;
       }
 
@@ -32,7 +32,7 @@ export default class AppErrorActionBus extends Vue {
       return;
     }
 
-    vm.$flash('エラーが発生しました', 'error');
+    vm.$flash(vm.$t('common.anErrorHasOccurred').toString(), 'error');
   }
 }
 </script>

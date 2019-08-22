@@ -3,21 +3,108 @@ import moment from 'moment';
 
 const struct: LocaleStruct = {
   i18n: {
-    task: {
-      state: {
-        name: {
-          notStarted: '未着手',
-          inProgress: '進行中',
-          waiting: '待機中',
-          pending: '保留',
-          later: 'いつかやる',
-          leftAlone: '放置',
-          done: '完了',
-          rejected: '却下',
+    common: {
+      deleted: '削除しました',
+      filterByKeyword: 'キーワードで絞り込む',
+      anErrorHasOccurred: 'エラーが発生しました',
+      networkConnectionError: 'ネットワーク接続に問題があります',
+      invalidInput: '入力内容に問題があります',
+      login: 'ログイン',
+    },
+    components: {
+      myDateRangeInput: {
+        save: 'Save',
+        cancel: 'Cancel',
+        clear: 'Clear',
+      },
+      myProjectStatusInput: {
+        others: 'Others',
+      },
+    },
+    views: {
+      // project
+      projectColumn: {
+        project: 'プロジェクト',
+        archive: 'アーカイブ',
+      },
+
+      // sub
+      subColumn: {
+        tabs: {
+          task: 'タスク',
+          file: 'ファイル',
+          note: 'ノート',
+          ganttChart: 'ガントチャート',
         },
+      },
+      projectAddColumn: {
+        addANewProject: 'プロジェクト追加',
+        projectName: 'プロジェクト名',
+      },
+      tasksColumn: {
+        addANewTask: '新規タスク',
+        filter: '絞り込み',
+        ordering: {
+          priorityOrder: '優先度順',
+          deadlineOrder: '期限順',
+          statusOrder: 'ステータス順',
+        },
+      },
+      notesColumn: {
+        addANewNote: '新規ノート',
+        filter: '絞り込み',
+        ordering: {
+          priorityOrder: '優先度順',
+          statusOrder: 'ステータス順',
+        },
+      },
+
+      // main
+      taskColumn: {
+        addTags: 'タグを追加',
+        writeDetails: 'タスクの詳細を追加',
+        save: '編集を終了',
+        '_name_HasCreatedTask': '{name} が課題を作成しました。',
+        writeAComment: 'コメントを追加',
+        commentSyncFailed: 'コメントの取得に失敗しました',
+      },
+      noteColumn: {
+        save: '編集を終了',
+        enterWideScreen: '全画面表示',
+        exitWideScreen: 'デフォルト表示',
+        markdownHelp: 'Markdownヘルプ',
+      },
+
+      // single
+      login: {
+        noLoginableUsersFound: 'ログイン可能なユーザーが見つかりませんでした',
+        welcomeHomeLetsWorkSmoothlyToday: 'お帰りなさい！今日もスムーズに仕事を進めましょう。',
+        yourLoginURLHasBeenSent: 'ログイン用URLを送信しました',
+        yourPinHasBeenSent: 'ワンタイムパスワードを送信しました。',
+        loginUsingEmail: 'メールアドレスでログインする',
+        loginUsingSMS: 'SMSでログインする',
+        smsLogin: 'SMSログイン',
+        enterTheEmail: 'メールアドレスを入力',
+        enterThePhoneNumber: '電話番号を入力',
+        enterPin: 'ワンタイムパスワードを入力',
+      },
+      loginSpaceSelect: {
+        spaceSelection: 'スペース選択',
+        loginToTheSelectedSpace: '選択したスペースにログイン',
+      },
+      spaceAdd: {
+        topMessage: 'アーニーによる完璧なプロジェクト管理を手に入れましょう。登録は無料です。',
+        doYouAlreadyHaveAnAccount: 'すでにアカウントをお持ちですか？',
+        login: 'ログインする',
+        enterTheEmail: 'メールアドレスを入力',
+        theRegistrationURLHasBeenSent: '登録用URLを送信しました。',
+        addANewspace: 'スペース作成',
+        spaceName: 'スペース名(英数字のみ)',
+        userName: 'ユーザー名(英数字のみ)"',
       },
     },
   },
+
   moment: {
     months: '一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月'.split('_'),
     monthsShort: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),

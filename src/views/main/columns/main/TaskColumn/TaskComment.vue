@@ -2,7 +2,8 @@
   <div class="taskColumn_taskComment" v-if="comments">
     <div class="dashboardWrap_post">
       <my-space-user tag="small" :user-id="task.writeUser" v-slot="{user}">
-        {{task.createdAt | dateFormat('YYYY/M/D')}} <span v-if="user">{{user.displayName || user.account}} が</span>課題を作成しました。
+        {{task.createdAt | dateFormat('YYYY/M/D')}}
+        {{$t('views.taskColumn._name_HasCreatedTask', { name: user ? (user.displayName || user.account) : 'unknown' })}}
       </my-space-user>
       <div class="dashboardWrap_post_board" ref="board" @scroll="onBoardScroll($event)">
         <table>
@@ -40,7 +41,7 @@
         <textarea
           type="text"
           class="dashboardWrap_comment_box_content"
-          placeholder="コメントを追加"
+          :placeholder="$t('views.taskColumn.writeAComment')"
           v-model="newComment.body"
           :disabled="saving"
           @keydown="onTextKeydown($event)" />
@@ -132,7 +133,7 @@ export default class TaskCommment extends Vue {
         projectId,
         taskId: parseInt(this.$route.params.taskId),
       });
-      this.$flash('削除しました', 'error');
+      this.$flash(this.$t('common.deleted').toString(), 'success');
       this.$router.replace({
         name: 'tasks',
         params: {
@@ -183,7 +184,7 @@ export default class TaskCommment extends Vue {
       }
 
     } catch (err) {
-      this.$flash('コメントの取得に失敗しました', 'error');
+      this.$flash(this.$t('views.taskColumn.commentSyncFailed').toString(), 'error');
     } finally {
       this.fetching = false;
     }
@@ -278,7 +279,7 @@ export default class TaskCommment extends Vue {
       }
 
     } catch (err) {
-      this.$flash('コメントの取得に失敗しました', 'error');
+      this.$flash(this.$t('views.taskColumn.commentSyncFailed').toString(), 'error');
     } finally {
       this.fetching = false;
     }

@@ -4,19 +4,19 @@
       <h2>Ernie</h2>
     </div>
     <div class="columnWrap_right">
-      <h3><strong>SMSログイン</strong></h3>
-      <p class="columnWrap_right_description">お帰りなさい！今日もスムーズに仕事を進めましょう。</p>
+      <h3><strong>{{$t('views.login.smsLogin')}}</strong></h3>
+      <p class="columnWrap_right_description">{{$t('views.login.welcomeHomeLetsWorkSmoothlyToday')}}</p>
       <p class="columnWrap_right_learn"><a href="" target="_blank" @click.prevent>Learn more</a></p>
       <div class="columnWrap_right_inputText">
         <form @submit.prevent="send()">
-          <my-text-input v-model="sms" placeholder="電話番号を入力" :message="smsMessage" />
+          <my-text-input v-model="sms" :placeholder="$t('views.login.enterThePhoneNumber')" :message="smsMessage" />
         </form>
         <form v-if="token" @submit.prevent="auth()">
-          <my-text-input v-model="pin" placeholder="ワンタイムパスワード" :message="pinMessage" />
+          <my-text-input v-model="pin" :placeholder="$t('views.login.enterPin')" :message="pinMessage" />
         </form>
       </div>
       <div class="columnWrap_right_login">
-        <router-link :to="{name: 'login'}">メールアドレスでログインする</router-link>
+        <router-link :to="{name: 'login'}">{{$t('views.login.loginUsingEmail')}}</router-link>
       </div>
       <div class="columnWrap_right_back">
         <router-link :to="backTo">
@@ -54,7 +54,7 @@ export default class LoginSms extends Vue {
         },
       });
       this.token = res.token;
-      this.smsMessage = { type: 'success', text: 'ワンタイムパスワードを送信しました。' };
+      this.smsMessage = { type: 'success', text: this.$t('views.login.yourPinHasBeenSent').toString() };
 
     } catch (err) {
       if (err instanceof Response) {

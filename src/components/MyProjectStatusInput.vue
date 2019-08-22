@@ -17,7 +17,7 @@
       class="other"
       :style="{'background-color': isEtc(selectedOption) ? (selectedOption.color || defaultColor) : undefined}"
     >
-      <span>{{isEtc(selectedOption) ? selectedOption.name : 'その他'}}</span>
+      <span>{{isEtc(selectedOption) ? selectedOption.name : $t('components.myProjectStatusInput.others')}}</span>
       <div v-if="selectingEtc" class="other_dialog">
         <div
           v-for="o in etcOptions"

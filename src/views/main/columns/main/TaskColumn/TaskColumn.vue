@@ -12,7 +12,7 @@
       </h2>
 
       <div class="search">
-        <input type="search" placeholder="キーワードで絞り込む">
+        <input type="search" :placeholder="$t('common.filterByKeyword')">
         <button class="search_button">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M7.607 0.666656C3.78223 0.666656 0.666748 3.78213 0.666748 7.60691C0.666748 11.4317 3.78223 14.5472 7.607 14.5472C9.27024 14.5472 10.7977 13.9565 11.9948 12.9761L16.1386 17.1199C16.2026 17.1865 16.2792 17.2397 16.3639 17.2764C16.4487 17.313 16.5399 17.3323 16.6323 17.3333C16.7246 17.3342 16.8162 17.3167 16.9017 17.2818C16.9872 17.2469 17.0648 17.1953 17.1301 17.13C17.1954 17.0647 17.247 16.9871 17.2819 16.9016C17.3168 16.8161 17.3343 16.7245 17.3334 16.6322C17.3324 16.5398 17.3131 16.4486 17.2765 16.3639C17.2398 16.2791 17.1866 16.2025 17.12 16.1385L12.9762 11.9947C13.9566 10.7976 14.5473 9.27015 14.5473 7.60691C14.5473 3.78213 11.4318 0.666656 7.607 0.666656ZM7.607 2.05471C10.6816 2.05471 13.1592 4.53229 13.1592 7.60691C13.1592 10.6815 10.6816 13.1591 7.607 13.1591C4.53238 13.1591 2.0548 10.6815 2.0548 7.60691C2.0548 4.53229 4.53238 2.05471 7.607 2.05471Z" fill="#C4C4C4" />
@@ -135,14 +135,14 @@
               v-if="editMode"
               @blur="addTags()"
               class="dashboardWrap_tag_input"
-              placeholder="タグを追加">
+              :placeholder="$t('views.taskColumn.addTags')">
           </form>
         </dl>
         <div class="dashboardWrap_task">
-          <textarea v-model="task.body" :disabled="!editMode" placeholder="タスクの詳細を追加"/>
+          <textarea v-model="task.body" :disabled="!editMode" :placeholder="$t('views.taskColumn.writeDetails')"/>
         </div>
         <div class="dashboardWrap_submit" v-if="editMode">
-          <button v-if="editMode" @click="save()">編集を終了</button>
+          <button v-if="editMode" @click="save()">{{$t('views.taskColumn.save')}}</button>
         </div>
         <task-comment :task="task" v-if="!isAdd" v-show="!editMode" />
       </div>
@@ -239,7 +239,7 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isAdd' | '
       editMode: true,
       statusOptions: await statusOptionsPromise,
       task: {
-        subject: '新規タスク',
+        subject: 'New task',
         chargeUsers: [],
         tags: [],
       },
@@ -296,8 +296,8 @@ export default class TaskColumn extends Vue {
   addTags() {
     const newTagText = this.$refs.tagInput.value;
     this.$refs.tagInput.value = '';
-    const newTags = newTagText.split(/[,、\s]/)
-      .map((s) => s.trim())
+    const newTagNames = newTagText.split(/[,、\s]/).map((s) => s.trim());
+    const newTags = Array.from(new Set(newTagNames))
       .filter((s) => s.length > 0 && !this.task.tags!.find((t) => t.name === s))
       .map((s) => ({ name: s }));
     if (newTags.length) {
@@ -366,12 +366,15 @@ export default class TaskColumn extends Vue {
         taskId: parseInt(this.$route.params.taskId),
       });
       this.$appEmit('task-deleted', { taskId: parseInt(this.$route.params.taskId) });
-      this.$flash('削除しました', 'error');
+      this.$flash(this.$t('common.deleted').toString(), 'success');
       this.$router.replace({
         name: 'tasks',
         params: {
           userId: loginUser.id.toString(),
           projectId: projectId.toString(),
+        },
+        query: {
+          search: '0',
         },
       });
 

@@ -4,9 +4,7 @@
       <h2>Ernie</h2>
     </div>
     <div class="columnWrap_right">
-      <h3>Welcome to <strong>Ernie.</strong></h3>
-      <p class="columnWrap_right_description">アーニーによる完璧なプロジェクト管理を手に入れましょう。<br>登録は無料です。</p>
-      <p class="columnWrap_right_learn"><a href="" target="_blank">Learn more</a></p>
+      <h3>{{$t('views.spaceAdd.addANewWorkspace')}}</h3>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
           <my-text-input
@@ -20,7 +18,7 @@
             :message="messages.account || null"
             type="text"
             required
-            placeholder="スペース名(英数字のみ)"
+            :placeholder="$t('views.spaceAdd.spaceName')"
             @input="messages.account = null"
           />
           <my-text-input
@@ -28,7 +26,7 @@
             :message="ownerMessages.account || null"
             type="text"
             required
-            placeholder="ユーザー名(英数字のみ)"
+            :placeholder="$t('views.spaceAdd.userName')"
             @input="ownerMessages.account = null"
           />
         </div>

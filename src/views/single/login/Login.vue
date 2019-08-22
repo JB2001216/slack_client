@@ -4,17 +4,17 @@
       <h2>Ernie</h2>
     </div>
     <div class="columnWrap_right">
-      <h3><strong>ログイン</strong></h3>
-      <p class="columnWrap_right_description">お帰りなさい！今日もスムーズに仕事を進めましょう。</p>
+      <h3><strong>{{$t('common.login')}}</strong></h3>
+      <p class="columnWrap_right_description">{{$t('views.login.welcomeHomeLetsWorkSmoothlyToday')}}</p>
       <p class="columnWrap_right_learn"><a href="" target="_blank" @click.prevent>Learn more</a></p>
       <form @submit.prevent="login()">
         <div class="columnWrap_right_inputText">
-          <my-text-input v-model="email" :message="emailMessage" type="email" placeholder="メールアドレス" />
+          <my-text-input v-model="email" :message="emailMessage" type="email" :placeholder="$t('views.login.enterTheEmail')" />
         </div>
         <button type="submit" v-show="false" />
       </form>
       <div class="columnWrap_right_login">
-        <router-link :to="{name: 'login-sms'}">SMSでログインする</router-link>
+        <router-link :to="{name: 'login-sms'}">{{$t('views.login.loginUsingSMS')}}</router-link>
       </div>
       <div class="columnWrap_right_back">
         <router-link :to="backTo">
@@ -77,7 +77,7 @@ export default class Login extends Vue {
 
       this.emailMessage = {
         type: 'success',
-        text: 'ログイン用URLを送信しました。',
+        text: this.$t('views.login.yourLoginURLHasBeenSent').toString(),
       };
 
     } catch (err) {
@@ -91,7 +91,7 @@ export default class Login extends Vue {
             };
           }
           if (json.error === ApiErrors.LoginUserNotFound) {
-            this.$flash('ログイン可能なユーザーが見つかりませんでした', 'error');
+            this.$flash(this.$t('views.login.noLoginableUsersFound').toString(), 'error');
             return;
           }
         }

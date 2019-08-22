@@ -27,10 +27,11 @@
           v-model="pickerValue"
           :columns="2"
           is-inline
+          :locale="locale"
         />
-        <button @click="onSaveButtonClick">保存</button>
-        <button @click="onCancelButtonClick">キャンセル</button>
-        <button @click="onClearButtonClick">日付を消去</button>
+        <button @click="onSaveButtonClick">{{$t('components.myDateRangeInput.save')}}</button>
+        <button @click="onCancelButtonClick">{{$t('components.myDateRangeInput.cancel')}}</button>
+        <button @click="onClearButtonClick">{{$t('components.myDateRangeInput.clear')}}</button>
       </div>
     </transition>
     <slot :range="value" :pop="onPop">
@@ -157,6 +158,10 @@ export default class MyDateRangeInput extends Vue {
       return end.format('M/D');
     }
     return end.format('YYYY/M/D');
+  }
+
+  get locale() {
+    return this.$store.state.locale;
   }
 
   setPopPosition() {

@@ -11,13 +11,13 @@
         </div>
         <div class="note_menu_right">
           <a class="note_menu_search" href="#">
-            <span class="t-caption">絞り込み</span>
+            <span class="t-caption">{{$t('views.notesColumn.filter')}}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="m2.8442 3.00008c-.1103-.00153-.2198.0185-.32215.05893-.10236.04043-.19551.10045-.27406.17658-.07855.07612-.14092.16684-.18349.26686-.04258.10003-.0645.20738-.0645.31581s.02192.21578.0645.31581c.04257.10002.10494.19074.18349.26686.07855.07613.1717.13615.27406.17658.10235.04043.21185.06046.32215.05893h.66653l5.99223 7.36356h4.99404l5.9923-7.36356h.6665c.1103.00153.2198-.0185.3222-.05893.1023-.04043.1955-.10045.274-.17658.0786-.07612.1409-.16684.1835-.26686.0426-.10003.0645-.20738.0645-.31581s-.0219-.21578-.0645-.31581c-.0426-.10002-.1049-.19074-.1835-.26686-.0785-.07613-.1717-.13615-.274-.17658-.1024-.04043-.2119-.06046-.3222-.05893zm6.65876 10.63632v7.3636l4.99404-1.6364v-5.7272z" />
             </svg>
           </a>
           <a class="note_menu_sort" href="#">
-            <span class="t-caption">優先度順</span>
+            <span class="t-caption">{{$t('views.notesColumn.ordering.priorityOrder')}}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="m12 20-8.66025-13.5h17.32055z" />
             </svg>
@@ -30,7 +30,7 @@
             <path d="m22 13h-19.99999v-2h19.99999z" />
             <path d="m11 22v-20.00003h2v20.00003z" />
           </svg>
-          新規ノート
+          {{$t('views.notesColumn.addANewNote')}}
         </router-link>
         <ul>
           <li class="note_item" v-for="n in notes" :key="n.id" @click="$router.push(getNoteTo(n.id))">

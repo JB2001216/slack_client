@@ -3,7 +3,7 @@
     <div class="spaceWrap_container">
       <h2>Ernie</h2>
       <div class="spaceWrap_box">
-        <h3>スペース選択</h3>
+        <h3>{{$t('views.loginSpaceSelect.spaceSelection')}}</h3>
         <dl>
           <dd class="clearfix" v-for="u in users" :key="u.id">
             <input type="checkbox" :id="`user${u.id}`" :value="u.id" v-model="checkedUserIds" v-show="false">
@@ -14,7 +14,7 @@
           <input
             type="submit"
             name="send"
-            value="選択したスペースにログイン"
+            :value="$t('views.loginSpaceSelect.loginToTheSelectedSpace')"
             :class="{active: checkedUserIds.length}"
             :disabled="!checkedUserIds.length"
             @click.prevent="login()">

@@ -1,9 +1,9 @@
 <template>
   <div class="nestedList" :list="tasks" :group="{ name: 'nestedList' }">
     <div class="task_itemContaner" v-for="t in tasks" :key="t.id" @click.stop="onItemClick($event, t)">
-      <div class="task_item">
+      <div class="task_item" draggable="true">
         <template v-if="t.hasChilds">
-          <span v-if="childs[t.id]" @click.stop="onContractChilds(t)">▼</span>
+          <span v-if="t.childs && t.childs.length" @click.stop="onContractChilds(t)">▼</span>
           <span v-else @click.stop="onExpandChilds(t)">＞</span>
         </template>
         <div class="task_item_image">
@@ -39,8 +39,8 @@
           @change="$event.target.blur()">
       </div>
       <nested-list
-        v-if="t.hasChilds && childs[t.id]"
-        :tasks="childs[t.id]"
+        v-if="t.hasChilds && t.childs && t.childs.length"
+        :tasks="t.childs"
         :status-options="statusOptions"
         :fetch-tasks="fetchTasks"
         @item-click="onNestedItemClick" />
@@ -80,6 +80,10 @@ import {
 } from '@/lib/api';
 import { ProjectStatusCategory } from '@/consts';
 
+interface TaskWithChilds extends Task {
+  childs?: TaskWithChilds[];
+}
+
 @Component({
   name: 'nested-list',
 })
@@ -90,7 +94,7 @@ export default class NestedList extends Vue {
   };
 
   @Prop({ required: true })
-  tasks!: Task[];
+  tasks!: TaskWithChilds[];
 
   @Prop({ required: true })
   statusOptions!: TaskStatus[];
@@ -99,11 +103,10 @@ export default class NestedList extends Vue {
   fetchTasks!: (options: { parent?: number; limit?: number; page?: number }) => Promise<TasksGetResponse>;
 
   saving = false;
-  addingParentTask: Task | null = null;
+  addingParentTask: TaskWithChilds | null = null;
   addingTaskSubject = '';
-  editingTask: Task | null = null;
+  editingTask: TaskWithChilds | null = null;
   editingTaskSubject = '';
-  childs: {[id: number]: Task[]} = {};
 
   getStatusOption(optionId: number | null) {
     if (!optionId || !this.statusOptions) {
@@ -159,7 +162,7 @@ export default class NestedList extends Vue {
           chargeUsers: [],
         });
         this.$appEmit('task-added', { task: addedTask });
-        if (!this.childs[this.addingParentTask.id]) {
+        if (!this.addingParentTask.childs || !this.addingParentTask.childs.length) {
           await this.onExpandChilds(this.addingParentTask);
         }
 
@@ -227,14 +230,14 @@ export default class NestedList extends Vue {
       } else if (!task.hasChilds) {
         this.$appEmit('task-edited', { task: Object.assign(task, { hasChilds: true }) });
       }
-      this.$set(this.childs, task.id, res.results);
+      this.$set(task, 'childs', res.results);
     } catch (err) {
       this.$showAppError(this, err);
     }
   }
 
   async onContractChilds(task: Task) {
-    this.$delete(this.childs, task.id);
+    this.$delete(task, 'childs');
   }
 
   onItemClick(ev: MouseEvent, task: Task) {
@@ -248,42 +251,37 @@ export default class NestedList extends Vue {
   onTaskAdded(ev: { task: Task }) {
     if (!ev.task.parent) return;
 
-    const tasks = this.childs[ev.task.parent];
-    if (!tasks) return;
+    const parentTask = this.tasks.find((t) => t.id === ev.task.parent);
+    if (!parentTask || !parentTask.childs || !parentTask.childs) return;
 
-    if (!tasks.find((t) => t.id === ev.task.id)) {
-      tasks.unshift(ev.task);
+    if (!parentTask.childs.find((t) => t.id === ev.task.id)) {
+      parentTask.childs.unshift(ev.task);
     }
   }
 
   onTaskEdited(ev: { task: Task }) {
     if (!ev.task.parent) return;
 
-    const tasks = this.childs[ev.task.parent];
-    if (!tasks) return;
+    const parentTask = this.tasks.find((t) => t.id === ev.task.parent);
+    if (!parentTask || !parentTask.childs || !parentTask.childs) return;
 
-    const index = tasks.findIndex((t) => t.id === ev.task.id);
+    const index = parentTask.childs.findIndex((t) => t.id === ev.task.id);
     if (index >= 0) {
-      tasks.splice(index, 1, ev.task);
+      parentTask.childs.splice(index, 1, ev.task);
     }
   }
 
   onTaskDeleted(ev: { taskId: number }) {
-    for (let [k, tasks] of Object.entries(this.childs)) {
-      const index = tasks.findIndex((t) => t.id === ev.taskId);
-      tasks.splice(index, 1);
-      if (!tasks.length) {
-        this.$delete(this.childs, k);
-        const parentId = parseInt(k);
-        const parent = this.tasks.find((t) => t.id === parentId);
-        if (parent) {
+    this.tasks.forEach((parent) => {
+      if (parent.childs) {
+        const index = parent.childs.findIndex((t) => t.id === ev.taskId);
+        parent.childs.splice(index, 1);
+        if (!parent.childs.length) {
+          this.$delete(parent, 'childs');
           this.$appEmit('task-edited', { task: Object.assign(parent, { hasChilds: false }) });
         }
       }
-    }
-    if (this.childs[ev.taskId]) {
-      this.$delete(this.childs, ev.taskId);
-    }
+    });
   }
 
   beforeMount() {

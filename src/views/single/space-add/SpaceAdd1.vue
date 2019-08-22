@@ -5,7 +5,7 @@
     </div>
     <div class="columnWrap_right">
       <h3>Welcome to <strong>Ernie.</strong></h3>
-      <p class="columnWrap_right_description">アーニーによる完璧なプロジェクト管理を手に入れましょう。<br>登録は無料です。</p>
+      <p class="columnWrap_right_description">{{$t('views.spaceAdd.topMessage')}}</p>
       <p class="columnWrap_right_learn"><a href="" target="_blank">Learn more</a></p>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
@@ -14,15 +14,15 @@
             type="email"
             required
             :message="emailMessage"
-            placeholder="メールアドレスを入力"
+            :placeholder="$t('views.spaceAdd.enterTheEmail')"
             @input="emailMessage = null"
           />
         </div>
         <button type="submit" v-show="false" />
       </form>
       <div class="columnWrap_right_login">
-        <p>すでにアカウントをお持ちですか？</p>
-        <router-link :to="{name: 'login'}">ログインする</router-link>
+        <p>{{$t('views.spaceAdd.doYouAlreadyHaveAnAccount')}}</p>
+        <router-link :to="{name: 'login'}">{{$t('views.spaceAdd.login')}}</router-link>
       </div>
       <div class="columnWrap_right_back" v-if="backTo">
         <router-link :to="backTo">
@@ -83,7 +83,7 @@ export default class SpaceAdd1 extends Vue {
 
       this.emailMessage = {
         type: 'success',
-        text: '登録用URLを送信しました。',
+        text: this.$t('views.spaceAdd.theRegistrationURLHasBeenSent').toString(),
       };
 
     } catch (err) {

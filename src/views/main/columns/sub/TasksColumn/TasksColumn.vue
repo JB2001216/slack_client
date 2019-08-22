@@ -11,7 +11,7 @@
         </div>
         <div class="task_menu_right">
           <a class="task_menu_search" href="#">
-            <span class="t-caption">絞り込み</span>
+            <span class="t-caption">{{$t('views.tasksColumn.filter')}}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="m2.8442 3.00008c-.1103-.00153-.2198.0185-.32215.05893-.10236.04043-.19551.10045-.27406.17658-.07855.07612-.14092.16684-.18349.26686-.04258.10003-.0645.20738-.0645.31581s.02192.21578.0645.31581c.04257.10002.10494.19074.18349.26686.07855.07613.1717.13615.27406.17658.10235.04043.21185.06046.32215.05893h.66653l5.99223 7.36356h4.99404l5.9923-7.36356h.6665c.1103.00153.2198-.0185.3222-.05893.1023-.04043.1955-.10045.274-.17658.0786-.07612.1409-.16684.1835-.26686.0426-.10003.0645-.20738.0645-.31581s-.0219-.21578-.0645-.31581c-.0426-.10002-.1049-.19074-.1835-.26686-.0785-.07613-.1717-.13615-.274-.17658-.1024-.04043-.2119-.06046-.3222-.05893zm6.65876 10.63632v7.3636l4.99404-1.6364v-5.7272z" />
             </svg>
@@ -19,7 +19,7 @@
           <my-simple-menu>
             <template v-slot="{open}">
               <a class="task_menu_sort" href="#" @click.stop="open()">
-                <span class="t-caption">{{currentSort.text}}</span>
+                <span class="t-caption">{{$t(`views.tasksColumn.ordering.${currentSort.i18nKey}`)}}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="m12 20-8.66025-13.5h17.32055z" />
                 </svg>
@@ -27,8 +27,10 @@
             </template>
             <template v-slot:items>
               <li v-for="s in sorts" :key="`${s.field}_${s.type}`" @click="onCurrentSortChange(s)">
-                <span v-if="s === currentSort">→ {{s.text}}</span>
-                <span v-else>{{s.text}}</span>
+                <span >
+                  <template v-if="s === currentSort">→</template>
+                  {{$t(`views.tasksColumn.ordering.${s.i18nKey}`)}}
+                </span>
               </li>
             </template>
           </my-simple-menu>
@@ -40,7 +42,7 @@
             <path d="m22 13h-19.99999v-2h19.99999z" />
             <path d="m11 22v-20.00003h2v20.00003z" />
           </svg>
-          新規タスク
+          {{$t('views.tasksColumn.addANewTask')}}
         </a>
         <div v-if="adding" class="task_add adding">
           <input
@@ -125,10 +127,10 @@ export default class TasksColumn extends Vue {
     taskListContainer: HTMLDivElement;
   };
 
-  sorts: {field: SearchOrderField; type: SearchOrderType; text: string}[] = [
-    { field: 'priority', type: 'desc', text: '優先度順' },
-    { field: 'limitedAt', type: 'asc', text: '期限順' },
-    { field: 'status', type: 'asc', text: 'ステータス順' },
+  sorts: {field: SearchOrderField; type: SearchOrderType; i18nKey: string}[] = [
+    { field: 'priority', type: 'desc', i18nKey: 'priorityOrder' },
+    { field: 'limitedAt', type: 'asc', i18nKey: 'deadlineOrder' },
+    { field: 'status', type: 'asc', i18nKey: 'statusOrder' },
   ];
 
   initialConditions: TasksGetConditions = {
