@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{[theme]: true}">
     <my-debug-tool v-if="enableDebugTool" />
     <my-flash-message/>
     <router-view/>
@@ -45,6 +45,8 @@ if (enableDebugTool) {
   components,
 })
 export default class App extends Vue {
+  theme: 'color_default' | 'color_gray_green' | 'color_blueGray_green' = 'color_blueGray_green';
+
   get enableDebugTool() {
     return enableDebugTool;
   }

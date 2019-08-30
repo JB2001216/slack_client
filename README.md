@@ -4,6 +4,7 @@
 ```
 [検索]
 url\(\.\.\/images\/(.+\.(svg|png))\)
+
 [置換]
 url('~@/assets/images/$1')
 ```
