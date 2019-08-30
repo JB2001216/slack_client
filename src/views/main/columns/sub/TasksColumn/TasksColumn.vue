@@ -59,6 +59,13 @@
             :tasks="tasks"
             :status-options="statusOptions"
             :fetch-tasks="fetchTasks"
+            item-draggable
+            :item-droppable-between="currentSort.droppableBetween"
+            :drag-task="dragTask"
+            @drag-task-change="dragTask = $event"
+            :drop-hover="dropHover"
+            @drop-hover-change="dropHover = $event"
+            @drop-task="onDropTask"
             @item-click="onTaskItemClick" />
           <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
         </div>
@@ -73,6 +80,7 @@
   .taskListContainer
     height: calc(100vh - 225px)
     overflow-y: scroll
+    padding-top: 4px
   a.task_add
     cursor: pointer
   .task_add.adding
@@ -98,6 +106,7 @@ import { MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry, TasksGetReque
 import { BasicError } from '@/lib/errors';
 import { ProjectStatusCategory } from '@/consts';
 import { toSnakeCase } from '@/lib/utils/string-util';
+import { TaskWithChilds, DropItemHover, DropTaskEvent } from './types';
 
 type SearchScrollType = 'next' | 'prev';
 type SearchOrderField = 'priority' | 'limitedAt' | 'status';
@@ -127,10 +136,10 @@ export default class TasksColumn extends Vue {
     taskListContainer: HTMLDivElement;
   };
 
-  sorts: {field: SearchOrderField; type: SearchOrderType; i18nKey: string}[] = [
-    { field: 'priority', type: 'desc', i18nKey: 'priorityOrder' },
-    { field: 'limitedAt', type: 'asc', i18nKey: 'deadlineOrder' },
-    { field: 'status', type: 'asc', i18nKey: 'statusOrder' },
+  sorts: {field: SearchOrderField; type: SearchOrderType; i18nKey: string; droppableBetween: boolean}[] = [
+    { field: 'priority', type: 'desc', i18nKey: 'priorityOrder', droppableBetween: true },
+    { field: 'limitedAt', type: 'asc', i18nKey: 'deadlineOrder', droppableBetween: false },
+    { field: 'status', type: 'asc', i18nKey: 'statusOrder', droppableBetween: false },
   ];
 
   initialConditions: TasksGetConditions = {
@@ -143,7 +152,7 @@ export default class TasksColumn extends Vue {
 
   conditions = Object.assign({}, this.initialConditions);
 
-  tasks: Task[] = [];
+  tasks: TaskWithChilds[] = [];
   page = 1;
   limit = 30;
   infiniteId = +new Date();
@@ -154,6 +163,9 @@ export default class TasksColumn extends Vue {
   saving = false;
   adding = false;
   addingTaskSubject = '';
+
+  dragTask: TaskWithChilds | null = null;
+  dropHover: DropItemHover | null = null;
 
   get isFavorite() {
     return this.conditions.filter &&
@@ -328,6 +340,10 @@ export default class TasksColumn extends Vue {
     if (index >= 0) {
       this.tasks.splice(index, 1);
     }
+  }
+
+  onDropTask(ev: DropTaskEvent) {
+    console.log(ev);
   }
 
   async init(to: Route, from: Route) {

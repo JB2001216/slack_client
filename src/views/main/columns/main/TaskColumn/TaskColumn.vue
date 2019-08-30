@@ -373,9 +373,6 @@ export default class TaskColumn extends Vue {
           userId: loginUser.id.toString(),
           projectId: projectId.toString(),
         },
-        query: {
-          search: '0',
-        },
       });
 
     } catch (err) {
