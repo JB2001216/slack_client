@@ -6,13 +6,18 @@ export interface TaskWithChilds extends Task {
 
 export type DropItemPosition = 'before' | 'after' | 'child';
 
-export interface DropItemHover {
+export interface DragTaskData {
   task: TaskWithChilds;
+  taskParent: TaskWithChilds | null;
+}
+
+export interface DropTaskData {
+  task: TaskWithChilds;
+  taskParent: TaskWithChilds | null;
   position: DropItemPosition;
 }
 
 export interface DropTaskEvent {
-  dragTask: TaskWithChilds;
-  dropTask: TaskWithChilds;
-  position: DropItemPosition;
+  dragData: DragTaskData;
+  dropData: DropTaskData;
 }

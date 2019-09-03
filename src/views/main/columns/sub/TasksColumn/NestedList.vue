@@ -1,18 +1,24 @@
 <template>
   <div class="nestedList">
     <div
-      class="task_itemContaner"
-      :class="{dragging: dragTask}"
       v-for="(t,i) in tasks"
       :key="t.id"
+      class="task_itemContaner"
+      :class="{
+        dragging: dragData,
+        dragCurrent: dragData && dragData.task === t,
+      }"
       :draggable="itemDraggable"
       @dragstart.stop="onItemDragStart($event, t)"
       @dragend.stop.prevent="onItemDragEnd($event, t)"
     >
       <div
-        v-if="itemDroppableBetween && dragTask && t !== dragTask && (i<=0 || (i>0 && tasks[i-1] !== dragTask))"
+        v-if="dragData && t !== dragData.task && (i<=0 || (i>0 && tasks[i-1] !== dragData.task))"
         class="task_item_top"
-        :class="{dropHover: dropHover && dropHover.position === 'before' && dropHover.task === t}"
+        :class="{
+          dropHover: dropHover && dropHover.position === 'before' && dropHover.task === t,
+          between: itemDroppableBetween,
+        }"
         @dragenter.stop.prevent="onItemDragEnterTop($event, t)"
         @dragleave.stop.prevent="onItemDragLeaveTop($event, t)"
         @dragover.stop.prevent="$event.dataTransfer.dropEffect = 'move'"
@@ -21,9 +27,12 @@
         <div class="task_item_top_line" />
       </div>
       <div
-        v-if="itemDroppableBetween && dragTask && t !== dragTask && i === tasks.length - 1"
+        v-if="dragData && t !== dragData.task && i === tasks.length - 1"
         class="task_item_bottom"
-        :class="{dropHover: dropHover && dropHover.position === 'after' && dropHover.task === t}"
+        :class="{
+          dropHover: dropHover && dropHover.position === 'after' && dropHover.task === t,
+          between: itemDroppableBetween,
+        }"
         @dragenter.stop.prevent="onItemDragEnterBottom($event, t)"
         @dragleave.stop.prevent="onItemDragLeaveBottom($event, t)"
         @dragover.stop.prevent="$event.dataTransfer.dropEffect = 'move'"
@@ -78,13 +87,14 @@
       </div>
       <nested-list
         v-if="t.hasChilds && t.childs && t.childs.length"
+        :parent-task="t"
         :tasks="t.childs"
         :status-options="statusOptions"
         :fetch-tasks="fetchTasks"
         :item-draggable="itemDraggable"
         :item-droppable-between="itemDroppableBetween"
-        :drag-task="dragTask"
-        @drag-task-change="emitDragTaskChange($event)"
+        :drag-data="dragData"
+        @drag-data-change="emitDragDataChange($event)"
         :drop-hover="dropHover"
         @drop-hover-change="emitDropHoverChange($event)"
         @drop-task="emitDropTask($event)"
@@ -105,9 +115,14 @@
       .task_item_bottom
         *
           pointer-events: none
+    &.dragCurrent
+      .task_item
+        background: rgba(0,0,0,0.1)
+        opacity: 0.3
   .task_item
     cursor: pointer
     padding-left: 5px
+    background: transparent
     &:not(:hover)
       .task_item_date
         .myDateRangeInput_view_icon
@@ -129,7 +144,7 @@
     &_line
       height: 4px
       width: 100%
-    &.dropHover
+    &.dropHover.between
       .task_item_top_line,
       .task_item_bottom_line
         background: rgba(125,200,255,0.5)
@@ -158,7 +173,7 @@ import {
   MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry,
   TasksGetResponse, TasksPostRequestBody, TasksTaskIdPatchRequestBody,
 } from '@/lib/api';
-import { TaskWithChilds, DropItemHover, DropTaskEvent } from './types';
+import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent } from './types';
 import { ProjectStatusCategory } from '@/consts';
 
 @Component({
@@ -169,6 +184,9 @@ export default class NestedList extends Vue {
     addingTaskSubjectInputs: HTMLInputElement[];
     editingTaskSubjectInputs: HTMLInputElement[];
   };
+
+  @Prop({ default: null })
+  parentTask!: TaskWithChilds | null;
 
   @Prop({ required: true })
   tasks!: TaskWithChilds[];
@@ -186,10 +204,10 @@ export default class NestedList extends Vue {
   itemDroppableBetween!: boolean;
 
   @Prop({ default: null })
-  dragTask: TaskWithChilds | null = null;
+  dragData: DragTaskData | null = null;
 
   @Prop({ default: null })
-  dropHover: DropItemHover | null = null;
+  dropHover: DropTaskData | null = null;
 
   saving = false;
   addingParentTask: TaskWithChilds | null = null;
@@ -314,10 +332,10 @@ export default class NestedList extends Vue {
     try {
       const res = await this.fetchTasks({ parent: task.id, limit: 500 });
       if (res.count <= 0) {
-        this.$appEmit('task-edited', { task: Object.assign(task, { hasChilds: false }) });
+        task.hasChilds = false;
         return;
       } else if (!task.hasChilds) {
-        this.$appEmit('task-edited', { task: Object.assign(task, { hasChilds: true }) });
+        task.hasChilds = true;
       }
       this.$set(task, 'childs', res.results);
     } catch (err) {
@@ -333,8 +351,8 @@ export default class NestedList extends Vue {
     this.$emit('item-click', ev, task);
   }
 
-  emitDragTaskChange(value: this['dragTask']) {
-    this.$emit('drag-task-change', value);
+  emitDragDataChange(value: this['dragData']) {
+    this.$emit('drag-data-change', value);
   }
 
   emitDropHoverChange(value: this['dropHover']) {
@@ -347,13 +365,17 @@ export default class NestedList extends Vue {
 
   onItemDragStart(ev: DragEvent, task: TaskWithChilds) {
     ev.dataTransfer!.effectAllowed = 'move';
-    this.emitDragTaskChange(task);
+    this.emitDragDataChange({
+      task,
+      taskParent: this.parentTask,
+    });
     this.emitDropHoverChange(null);
   }
 
   onItemDragEnter(ev: DragEvent, task: TaskWithChilds) {
-    this.emitDropHoverChange(this.dragTask === task ? null : {
+    this.emitDropHoverChange(this.dragData!.task === task ? null : {
       task,
+      taskParent: this.parentTask,
       position: 'child',
     });
   }
@@ -365,17 +387,25 @@ export default class NestedList extends Vue {
   }
 
   onItemDragEnd(ev: DragEvent, task: TaskWithChilds) {
-    this.emitDragTaskChange(null);
+    this.emitDragDataChange(null);
     this.emitDropHoverChange(null);
   }
 
   onItemDrop(ev: DragEvent, task: TaskWithChilds) {
-    this.emitDropTask({ dragTask: this.dragTask!, dropTask: task, position: 'child' });
+    this.emitDropTask({
+      dragData: this.dragData!,
+      dropData: {
+        task,
+        taskParent: this.parentTask,
+        position: 'child',
+      },
+    });
   }
 
   onItemDragEnterTop(ev: DragEvent, task: TaskWithChilds) {
-    this.emitDropHoverChange(this.dragTask === task ? null : {
+    this.emitDropHoverChange(this.dragData!.task === task ? null : {
       task,
+      taskParent: this.parentTask,
       position: 'before',
     });
   }
@@ -387,12 +417,20 @@ export default class NestedList extends Vue {
   }
 
   onItemDropTop(ev: DragEvent, task: TaskWithChilds) {
-    this.emitDropTask({ dragTask: this.dragTask!, dropTask: task, position: 'before' });
+    this.emitDropTask({
+      dragData: this.dragData!,
+      dropData: {
+        task,
+        taskParent: this.parentTask,
+        position: 'before',
+      },
+    });
   }
 
   onItemDragEnterBottom(ev: DragEvent, task: TaskWithChilds) {
-    this.emitDropHoverChange(this.dragTask === task ? null : {
+    this.emitDropHoverChange(this.dragData!.task === task ? null : {
       task,
+      taskParent: this.parentTask,
       position: 'after',
     });
   }
@@ -404,7 +442,14 @@ export default class NestedList extends Vue {
   }
 
   onItemDropBottom(ev: DragEvent, task: TaskWithChilds) {
-    this.emitDropTask({ dragTask: this.dragTask!, dropTask: task, position: 'after' });
+    this.emitDropTask({
+      dragData: this.dragData!,
+      dropData: {
+        task,
+        taskParent: this.parentTask,
+        position: 'after',
+      },
+    });
   }
 
   onTaskAdded(ev: { task: Task }) {
@@ -437,7 +482,7 @@ export default class NestedList extends Vue {
         parent.childs.splice(index, 1);
         if (!parent.childs.length) {
           this.$delete(parent, 'childs');
-          this.$appEmit('task-edited', { task: Object.assign(parent, { hasChilds: false }) });
+          parent.hasChilds = false;
         }
       }
     });

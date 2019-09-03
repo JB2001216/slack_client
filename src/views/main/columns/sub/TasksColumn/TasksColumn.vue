@@ -54,15 +54,19 @@
             @blur="onInlineTaskAddEnd()"
             @change="$event.target.blur()">
         </div>
-        <div class="taskListContainer" ref="taskListContainer">
+        <div
+          class="taskListContainer"
+          :class="{dropHoverRoot: !currentSort.droppableBetween && dragData && dropHover && dropHover.position !== 'child'}"
+          ref="taskListContainer"
+        >
           <nested-list
             :tasks="tasks"
             :status-options="statusOptions"
             :fetch-tasks="fetchTasks"
             item-draggable
             :item-droppable-between="currentSort.droppableBetween"
-            :drag-task="dragTask"
-            @drag-task-change="dragTask = $event"
+            :drag-data="dragData"
+            @drag-data-change="dragData = $event"
             :drop-hover="dropHover"
             @drop-hover-change="dropHover = $event"
             @drop-task="onDropTask"
@@ -78,9 +82,13 @@
 <style lang="stylus">
 .tab_task
   .taskListContainer
-    height: calc(100vh - 225px)
+    max-height: calc(100vh - 225px)
     overflow-y: scroll
     padding-top: 4px
+    position: relative
+    &.dropHoverRoot
+      outline: solid 3px rgba(125,200,255,0.8)
+      outline-offset: -3px
   a.task_add
     cursor: pointer
   .task_add.adding
@@ -106,7 +114,7 @@ import { MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry, TasksGetReque
 import { BasicError } from '@/lib/errors';
 import { ProjectStatusCategory } from '@/consts';
 import { toSnakeCase } from '@/lib/utils/string-util';
-import { TaskWithChilds, DropItemHover, DropTaskEvent } from './types';
+import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent } from './types';
 
 type SearchScrollType = 'next' | 'prev';
 type SearchOrderField = 'priority' | 'limitedAt' | 'status';
@@ -164,8 +172,8 @@ export default class TasksColumn extends Vue {
   adding = false;
   addingTaskSubject = '';
 
-  dragTask: TaskWithChilds | null = null;
-  dropHover: DropItemHover | null = null;
+  dragData: DragTaskData | null = null;
+  dropHover: DropTaskData | null = null;
 
   get isFavorite() {
     return this.conditions.filter &&
@@ -342,8 +350,58 @@ export default class TasksColumn extends Vue {
     }
   }
 
-  onDropTask(ev: DropTaskEvent) {
-    console.log(ev);
+
+  async onDropTask(ev: DropTaskEvent) {
+    const dragData = ev.dragData;
+    const dropData = ev.dropData;
+    if (!this.currentSort.droppableBetween && dropData.position !== 'child') {
+      dropData.taskParent = null;
+      dropData.task = null as any;
+      dropData.position = 'child';
+    }
+
+    if (dragData.task === dropData.task) {
+      return;
+    }
+    if (dropData.position === 'child') {
+      if ((dropData.task && dragData.taskParent === dropData.task) ||
+          (!dropData.task && !dragData.taskParent)
+      ) {
+        return;
+      }
+    }
+
+    // 現在の親グループから脱退
+    if (dragData.taskParent) {
+      dragData.taskParent.childs!.splice(dragData.taskParent.childs!.indexOf(dragData.task), 1);
+      if (!dragData.taskParent.childs!.length) {
+        this.$delete(dragData.taskParent, 'childs');
+        dragData.taskParent.hasChilds = false;
+      }
+    } else {
+      this.tasks!.splice(this.tasks!.indexOf(dragData.task), 1);
+    }
+
+    // 指定の親グループに加入
+    if (dropData.position === 'child') {
+      if (dropData.task) {
+        if (dropData.task.childs) {
+          dropData.task.childs.push(dragData.task);
+        } else if (!dropData.task.hasChilds) {
+          dropData.task.hasChilds = true;
+        }
+      } else {
+        this.tasks.push(dragData.task);
+      }
+
+    } else if (dropData.position === 'before') {
+      const targetTasks = dropData.taskParent ? dropData.taskParent.childs! : this.tasks;
+      targetTasks.splice(targetTasks.indexOf(dropData.task!), 0, dragData.task);
+
+    } else if (dropData.position === 'after') {
+      const targetTasks = dropData.taskParent ? dropData.taskParent.childs! : this.tasks;
+      targetTasks.push(dragData.task);
+    }
   }
 
   async init(to: Route, from: Route) {
