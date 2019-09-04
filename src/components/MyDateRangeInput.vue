@@ -4,11 +4,13 @@
       <div
         class="myDateRangeInput_pop"
         ref="pop"
+        @click.stop
         v-if="poped"
         :style="{
           left: `${popLeft}px`,
           top: `${popTop}px`,
-        }">
+        }"
+      >
         <div
           class="myDateRangeInput_pop_arrow"
           :style="{

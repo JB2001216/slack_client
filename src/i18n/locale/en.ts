@@ -48,6 +48,15 @@ const struct: LocaleStruct = {
           deadlineOrder: 'Deadline order',
           statusOrder: 'Status order',
         },
+        filterForm: {
+          all: 'All',
+          notClosed: 'Not {closedName}',
+          status: 'Status',
+          assignedUsers: 'Assigned users',
+          assignedUser: 'Assigned user',
+          batonHolder: 'Baton holder',
+          tags: 'Tags',
+        },
       },
       notesColumn: {
         addANewNote: 'Add a new note',

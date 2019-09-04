@@ -10,7 +10,7 @@
           </a>
         </div>
         <div class="task_menu_right">
-          <a class="task_menu_search" href="#">
+          <a class="task_menu_search" :class="{active: activeFilter}" href="#" @click.prevent="showedFilter = !showedFilter">
             <span class="t-caption">{{$t('views.tasksColumn.filter')}}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="m2.8442 3.00008c-.1103-.00153-.2198.0185-.32215.05893-.10236.04043-.19551.10045-.27406.17658-.07855.07612-.14092.16684-.18349.26686-.04258.10003-.0645.20738-.0645.31581s.02192.21578.0645.31581c.04257.10002.10494.19074.18349.26686.07855.07613.1717.13615.27406.17658.10235.04043.21185.06046.32215.05893h.66653l5.99223 7.36356h4.99404l5.9923-7.36356h.6665c.1103.00153.2198-.0185.3222-.05893.1023-.04043.1955-.10045.274-.17658.0786-.07612.1409-.16684.1835-.26686.0426-.10003.0645-.20738.0645-.31581s-.0219-.21578-.0645-.31581c-.0426-.10002-.1049-.19074-.1835-.26686-.0785-.07613-.1717-.13615-.274-.17658-.1024-.04043-.2119-.06046-.3222-.05893zm6.65876 10.63632v7.3636l4.99404-1.6364v-5.7272z" />
@@ -74,6 +74,9 @@
           <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
         </div>
       </div>
+      <transition name="slide-right">
+        <filter-form v-if="showedFilter" ref="filterForm" :value="filter" @input="onFilterInput" :status-options="statusOptions" />
+      </transition>
     </div>
   </sub-column-layout>
 </template>
@@ -81,6 +84,9 @@
 
 <style lang="stylus">
 .tab_task
+  .task_menu_search.active
+    svg
+      fill: #2f80ed
   .taskListContainer
     max-height: calc(100vh - 225px)
     overflow-y: scroll
@@ -109,12 +115,13 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
 import { StateChanger } from 'vue-infinite-loading';
 import SubColumnLayout from '../SubColumnLayout.vue';
+import FilterForm from './FilterForm.vue';
 import NestedList from './NestedList.vue';
 import { MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry, TasksGetRequest } from '@/lib/api';
 import { BasicError } from '@/lib/errors';
 import { ProjectStatusCategory } from '@/consts';
 import { toSnakeCase } from '@/lib/utils/string-util';
-import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent } from './types';
+import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent, FilterFormValue } from './types';
 
 type SearchScrollType = 'next' | 'prev';
 type SearchOrderField = 'priority' | 'limitedAt' | 'status';
@@ -135,6 +142,7 @@ Component.registerHooks([
 @Component({
   components: {
     SubColumnLayout,
+    FilterForm,
     NestedList,
   },
 })
@@ -142,6 +150,7 @@ export default class TasksColumn extends Vue {
   $refs!: {
     addingTaskSubjectInput: HTMLInputElement;
     taskListContainer: HTMLDivElement;
+    filterForm: FilterForm;
   };
 
   sorts: {field: SearchOrderField; type: SearchOrderType; i18nKey: string; droppableBetween: boolean}[] = [
@@ -157,6 +166,9 @@ export default class TasksColumn extends Vue {
       type: this.sorts[0].type,
     },
   };
+
+  showedFilter = false;
+  filter: FilterFormValue = {};
 
   conditions = Object.assign({}, this.initialConditions);
 
@@ -182,6 +194,13 @@ export default class TasksColumn extends Vue {
 
   get currentSort() {
     return this.sorts.find((s) => s.field === this.conditions.order.field && s.type === this.conditions.order.type)!;
+  }
+
+  get activeFilter() {
+    return (this.filter.status && this.filter.status.length) ||
+      (this.filter.chargeUsers && this.filter.chargeUsers.length) ||
+      (this.filter.batonUsers && this.filter.batonUsers.length) ||
+      (this.filter.tags && this.filter.tags.length);
   }
 
   async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
@@ -415,16 +434,30 @@ export default class TasksColumn extends Vue {
     }
   }
 
+  async onFilterInput(filter: this['filter']) {
+    this.filter = filter;
+  }
+
+  onWindowMouseDownUseCapture(ev: MouseEvent) {
+    if (this.showedFilter) {
+      if (this.$refs.filterForm.$el !== ev.target && !this.$refs.filterForm.$el.contains(ev.target as Element)) {
+        this.showedFilter = false;
+      }
+    }
+  }
+
   beforeMount() {
     this.$appOn('task-added', this.onTaskAdded);
     this.$appOn('task-edited', this.onTaskEdited);
     this.$appOn('task-deleted', this.onTaskDeleted);
+    window.addEventListener('mousedown', this.onWindowMouseDownUseCapture, true);
   }
 
   beforeDestroy() {
     this.$appOff('task-added', this.onTaskAdded);
     this.$appOff('task-edited', this.onTaskEdited);
     this.$appOff('task-deleted', this.onTaskDeleted);
+    window.removeEventListener('mousedown', this.onWindowMouseDownUseCapture, true);
   }
 
   async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {

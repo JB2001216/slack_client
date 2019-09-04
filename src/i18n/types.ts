@@ -57,6 +57,15 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         deadlineOrder: string;
         statusOrder: string;
       };
+      filterForm: {
+        all: string;
+        notClosed: string;
+        status: string;
+        assignedUsers: string;
+        assignedUser: string;
+        batonHolder: string;
+        tags: string;
+      };
     };
     notesColumn: {
       addANewNote: string;

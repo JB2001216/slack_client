@@ -49,6 +49,15 @@ const struct: LocaleStruct = {
           deadlineOrder: '期限順',
           statusOrder: 'ステータス順',
         },
+        filterForm: {
+          all: 'すべて',
+          notClosed: '{closedName}以外',
+          status: 'ステータス',
+          assignedUsers: '担当者',
+          assignedUser: '担当になっている人',
+          batonHolder: 'バトンを持っている人',
+          tags: 'タグ',
+        },
       },
       notesColumn: {
         addANewNote: '新規ノート',

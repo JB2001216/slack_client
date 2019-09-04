@@ -20,9 +20,14 @@
 @import './stylus/_fixed/full'
 
 .fade-enter-active, .fade-leave-active
-  transition: opacity .2s
+  transition: opacity 200ms
 .fade-enter, .fade-leave-to
   opacity: 0
+.slide-right-enter-active, .slide-right-leave-active
+  transform: translate(0px, 0px)
+  transition: transform 225ms ease-in-out
+.slide-right-enter, .slide-right-leave-to
+  transform: translateX(100vw) translateX(0px)
 </style>
 
 
