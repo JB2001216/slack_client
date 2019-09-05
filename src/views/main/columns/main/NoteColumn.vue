@@ -140,16 +140,6 @@
 
 <style lang="stylus">
 .noteColumn
-  .noteEditWrap_post
-    .noteEditWrap_post_view
-      float: left
-    .noteEditWrap_post_edit
-      float: left
-      textarea
-        background: transparent
-        border: none
-        outline: none
-        font-size: 14px
   .favoriteIcon
     &.active path
       fill: #EDA62A !important

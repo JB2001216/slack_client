@@ -10,6 +10,8 @@ const struct: LocaleStruct = {
       networkConnectionError: 'ネットワーク接続に問題があります',
       invalidInput: '入力内容に問題があります',
       login: 'ログイン',
+      save: '保存',
+      cancel: 'キャンセル',
     },
     components: {
       myDateRangeInput: {
@@ -71,10 +73,10 @@ const struct: LocaleStruct = {
       // main
       taskColumn: {
         addTags: 'タグを追加',
-        writeDetails: 'タスクの詳細を追加',
-        save: '編集を終了',
-        '_name_HasCreatedTask': '{name} が課題を作成しました。',
-        writeAComment: 'コメントを追加',
+        enterDetails: '詳細を入力',
+        detailsAreEmpty: '詳細は未入力です',
+        '_name_HasCreatedTask': '{name} がタスクを作成しました。',
+        enterAComment: 'コメントを追加',
         commentSyncFailed: 'コメントの取得に失敗しました',
       },
       noteColumn: {

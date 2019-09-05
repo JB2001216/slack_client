@@ -10,15 +10,15 @@
           </a>
         </div>
         <div class="task_menu_right">
-          <a class="task_menu_search" :class="{active: activeFilter}" href="#" @click.prevent="showedFilter = !showedFilter">
+          <a ref="filterButton" class="task_menu_search" :class="{active: activeFilter}" href="#" @click.prevent="showedFilter = !showedFilter">
             <span class="t-caption">{{$t('views.tasksColumn.filter')}}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="m2.8442 3.00008c-.1103-.00153-.2198.0185-.32215.05893-.10236.04043-.19551.10045-.27406.17658-.07855.07612-.14092.16684-.18349.26686-.04258.10003-.0645.20738-.0645.31581s.02192.21578.0645.31581c.04257.10002.10494.19074.18349.26686.07855.07613.1717.13615.27406.17658.10235.04043.21185.06046.32215.05893h.66653l5.99223 7.36356h4.99404l5.9923-7.36356h.6665c.1103.00153.2198-.0185.3222-.05893.1023-.04043.1955-.10045.274-.17658.0786-.07612.1409-.16684.1835-.26686.0426-.10003.0645-.20738.0645-.31581s-.0219-.21578-.0645-.31581c-.0426-.10002-.1049-.19074-.1835-.26686-.0785-.07613-.1717-.13615-.274-.17658-.1024-.04043-.2119-.06046-.3222-.05893zm6.65876 10.63632v7.3636l4.99404-1.6364v-5.7272z" />
             </svg>
           </a>
           <my-simple-menu>
-            <template v-slot="{open}">
-              <a class="task_menu_sort" href="#" @click.stop="open()">
+            <template v-slot="{open, close, opened}">
+              <a class="task_menu_sort" href="#" @click.stop.prevent="opened ? close() : open()">
                 <span class="t-caption">{{$t(`views.tasksColumn.ordering.${currentSort.i18nKey}`)}}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="m12 20-8.66025-13.5h17.32055z" />
@@ -85,6 +85,7 @@
 <style lang="stylus">
 .tab_task
   .task_menu_search.active
+    color: #2f80ed
     svg
       fill: #2f80ed
   .taskListContainer
@@ -151,6 +152,7 @@ export default class TasksColumn extends Vue {
     addingTaskSubjectInput: HTMLInputElement;
     taskListContainer: HTMLDivElement;
     filterForm: FilterForm;
+    filterButton: HTMLAnchorElement;
   };
 
   sorts: {field: SearchOrderField; type: SearchOrderType; i18nKey: string; droppableBetween: boolean}[] = [
@@ -197,10 +199,7 @@ export default class TasksColumn extends Vue {
   }
 
   get activeFilter() {
-    return (this.filter.status && this.filter.status.length) ||
-      (this.filter.chargeUsers && this.filter.chargeUsers.length) ||
-      (this.filter.batonUsers && this.filter.batonUsers.length) ||
-      (this.filter.tags && this.filter.tags.length);
+    return !!Object.keys(this.filter).length;
   }
 
   async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
@@ -440,7 +439,12 @@ export default class TasksColumn extends Vue {
 
   onWindowMouseDownUseCapture(ev: MouseEvent) {
     if (this.showedFilter) {
-      if (this.$refs.filterForm.$el !== ev.target && !this.$refs.filterForm.$el.contains(ev.target as Element)) {
+      if (
+        this.$refs.filterForm.$el !== ev.target &&
+        !this.$refs.filterForm.$el.contains(ev.target as Element) &&
+        this.$refs.filterButton !== ev.target &&
+        !this.$refs.filterButton.contains(ev.target as Element)
+      ) {
         this.showedFilter = false;
       }
     }

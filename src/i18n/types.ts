@@ -18,6 +18,8 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     networkConnectionError: string;
     invalidInput: string;
     login: string;
+    save: string;
+    cancel: string;
   };
   components: {
     myDateRangeInput: {
@@ -79,10 +81,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     // main
     taskColumn: {
       addTags: string;
-      writeDetails: string;
-      save: string;
+      enterDetails: string;
+      detailsAreEmpty: string;
       '_name_HasCreatedTask': string;
-      writeAComment: string;
+      enterAComment: string;
       commentSyncFailed: string;
     };
     noteColumn: {

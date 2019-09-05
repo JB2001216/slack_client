@@ -1,18 +1,20 @@
 <template>
-  <div class="markdownEditor">
+  <div class="markdownEditor" :class="{hideEditor}">
     <div :class="editorClass" v-if="!hideEditor">
-      <textarea ref="textarea" :value="value" @input="onInput" />
+      <textarea ref="textarea" :value="value" @input="onInput" :placeholder="editorPlaceholder" />
     </div>
-    <div :class="previewClass" v-html="compiledValue" />
+    <div :class="previewClass" v-html="compiledValue !== '' ? compiledValue : previewPlaceholderHtml" />
   </div>
 </template>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 @import '../../node_modules/highlight.js/styles/github.css'
 .markdownEditor
   textarea
     width: 100%
     height: 100%
+  &_previewPlaceholder
+    color: #C4C4C4
 </style>
 
 <script lang="ts">
@@ -30,10 +32,16 @@ export default class MyMarkdownEditor extends Vue {
   @Prop({ type: String, default: '' })
   value!: string;
 
-  @Prop({ default: {} })
+  @Prop({ type: String, default: '' })
+  editorPlaceholder!: string;
+
+  @Prop({ default: '' })
   editorClass!: {[k: string]: boolean} | string;
 
-  @Prop({ default: {} })
+  @Prop({ type: String, default: '' })
+  previewPlaceholder!: string;
+
+  @Prop({ default: '' })
   previewClass!: {[k: string]: boolean} | string;
 
   @Prop({ type: Boolean, default: false })
@@ -47,6 +55,13 @@ export default class MyMarkdownEditor extends Vue {
         return highlight.highlightAuto(code, [lang]).value;
       },
     });
+  }
+
+  get previewPlaceholderHtml() {
+    if (!this.previewPlaceholder || this.previewPlaceholder === '') {
+      return '';
+    }
+    return `<span class="markdownEditor_previewPlaceholder">${this.previewPlaceholder}</span>`;
   }
 
   // methods

@@ -1,6 +1,6 @@
 <template>
   <div class="mySimpleMenu">
-    <slot :open="onOpen" />
+    <slot :open="onOpen" :close="onClose" :opened="opened" />
     <div v-if="opened" ref="pop" class="other_status">
       <ul>
         <slot name="items">

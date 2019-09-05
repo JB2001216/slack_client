@@ -131,13 +131,6 @@ const router = new Router({
                   },
                   children: [
                     {
-                      path: 'add',
-                      name: 'task-add',
-                      components: {
-                        mainColumn: TaskColumn,
-                      },
-                    },
-                    {
                       path: ':taskId',
                       name: 'task',
                       components: {

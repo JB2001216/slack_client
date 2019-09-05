@@ -9,6 +9,8 @@ const struct: LocaleStruct = {
       networkConnectionError: 'Network connection error',
       invalidInput: 'Invalid input',
       login: 'Login',
+      save: 'Save',
+      cancel: 'Cancel',
     },
     components: {
       myDateRangeInput: {
@@ -70,10 +72,10 @@ const struct: LocaleStruct = {
       // main
       taskColumn: {
         addTags: 'Add tags',
-        writeDetails: 'Write details',
-        save: 'save',
+        enterDetails: 'Enter details',
+        detailsAreEmpty: 'Details are empty.',
         '_name_HasCreatedTask': '{name} has created a task.',
-        writeAComment: 'Write a comment',
+        enterAComment: 'Enter a comment',
         commentSyncFailed: 'Comment sync failed',
       },
       noteColumn: {

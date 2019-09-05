@@ -41,7 +41,7 @@
         <textarea
           type="text"
           class="dashboardWrap_comment_box_content"
-          :placeholder="$t('views.taskColumn.writeAComment')"
+          :placeholder="$t('views.taskColumn.enterAComment')"
           v-model="newComment.body"
           :disabled="saving"
           @keydown="onTextKeydown($event)" />
