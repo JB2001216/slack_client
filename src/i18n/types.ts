@@ -21,6 +21,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     save: string;
     cancel: string;
   };
+
   components: {
     myDateRangeInput: {
       save: string;
@@ -31,11 +32,17 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       others: string;
     };
   };
+
   views: {
     // project
     projectColumn: {
       project: string;
       archive: string;
+      spaceMenu: {
+        profileAndAccount: string;
+        inviteMembers: string;
+        spaceSettings: string;
+      };
     };
 
     // sub
@@ -92,6 +99,26 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       enterWideScreen: string;
       exitWideScreen: string;
       markdownHelp: string;
+    };
+
+    // setting
+    setting: {
+      sub: {
+        spaces: {
+          title: string;
+          general: string;
+          members: string;
+        };
+      };
+      main: {
+        spaceMembers: {
+          memberList: string;
+          email: string;
+          name: string;
+          role: string;
+          addMember: string;
+        };
+      };
     };
 
     // single

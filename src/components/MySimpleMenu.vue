@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 .mySimpleMenu
   position: relative
   display: inline-block
@@ -31,6 +31,7 @@
       border: solid 1px #eee
       li
         padding: 7px 15px
+        color: #333
         &:hover
           background: #eee
         a

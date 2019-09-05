@@ -3,6 +3,7 @@ import i18n, { Locale, loadLocale, defaultLocale } from '@/i18n';
 import localStorage from '@/lib/local-storage';
 import { apiRegistry, UsersApi, MyUser } from '@/lib/api';
 import activeUser from './modules/active-user';
+import settingRouter from './modules/setting-router';
 
 interface LoggedInUser extends MyUser{
   token: string;
@@ -105,6 +106,7 @@ const root = module({
   getters: RootGetters,
   mutations: RootMutations,
   actions: RootActions,
-}).child('activeUser', activeUser);
+}).child('activeUser', activeUser)
+  .child('settingRouter', settingRouter);
 
 export default root;

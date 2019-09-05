@@ -404,11 +404,11 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
   }
 }
 
-const ActiveUser = module({
+const activeUser = module({
   state: ActiveUserState,
   getters: ActiveUserGetters,
   mutations: ActiveUserMutations,
   actions: ActiveUserActions,
 });
 
-export default ActiveUser;
+export default activeUser;

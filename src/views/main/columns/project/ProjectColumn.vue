@@ -1,7 +1,16 @@
 <template>
   <div class="projectColumn">
     <div class="projectColumn_head">
-      <h1 class="t-sub">{{loggedInUser.space.displayName || loggedInUser.space.account}}</h1>
+      <my-simple-menu class="projectColumn_spaceMenu">
+        <template v-slot="{open, close, opened}">
+          <h1 class="t-sub" @click.stop="opened ? close() : open()">{{loggedInUser.space.displayName || loggedInUser.space.account}}</h1>
+        </template>
+        <template v-slot:items>
+          <li><span>{{$t(`views.projectColumn.spaceMenu.profileAndAccount`)}}</span></li>
+          <li><span>{{$t(`views.projectColumn.spaceMenu.inviteMembers`)}}</span></li>
+          <li><span @click="$store.mutations.settingRouter.to('space-members')">{{$t(`views.projectColumn.spaceMenu.spaceSettings`)}}</span></li>
+        </template>
+      </my-simple-menu>
     </div>
     <div class="projectColumn_body">
       <ul>
@@ -36,6 +45,23 @@
     </div>
   </div>
 </template>
+
+
+<style lang="stylus">
+.projectColumn
+  .t-sub
+    cursor: pointer
+  &_spaceMenu.mySimpleMenu
+    .other_status
+      width: auto
+      ul
+        width: auto
+        padding: 14px 0
+        li
+          font-size: 14px
+          padding: 10px 24px
+          white-space: nowrap
+</style>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';

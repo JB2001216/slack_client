@@ -2,6 +2,7 @@
   <div id="app" :class="{[theme]: true}">
     <my-debug-tool v-if="enableDebugTool" />
     <my-flash-message/>
+    <setting-view/>
     <router-view/>
 
     <!-- TODO: 暫定的に言語切替をここに入れる -->
@@ -35,10 +36,12 @@
 import { Component as SyncComponent, AsyncComponent } from 'vue';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import MyFlashMessage from '@/components/MyFlashMessage.vue';
+import SettingView from '@/views/setting/SettingView.vue';
 import { loadableLocales } from '@/i18n';
 
 const components: { [key: string]: SyncComponent<any, any, any, any> | AsyncComponent<any, any, any, any> } = {
   MyFlashMessage,
+  SettingView,
 };
 
 const enableDebugTool = process.env.NODE_ENV !== 'production';

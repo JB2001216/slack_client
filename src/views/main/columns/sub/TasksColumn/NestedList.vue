@@ -479,10 +479,12 @@ export default class NestedList extends Vue {
     this.tasks.forEach((parent) => {
       if (parent.childs) {
         const index = parent.childs.findIndex((t) => t.id === ev.taskId);
-        parent.childs.splice(index, 1);
-        if (!parent.childs.length) {
-          this.$delete(parent, 'childs');
-          parent.hasChilds = false;
+        if (index >= 0) {
+          parent.childs.splice(index, 1);
+          if (!parent.childs.length) {
+            this.$delete(parent, 'childs');
+            parent.hasChilds = false;
+          }
         }
       }
     });

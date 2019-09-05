@@ -12,6 +12,7 @@ const struct: LocaleStruct = {
       save: 'Save',
       cancel: 'Cancel',
     },
+
     components: {
       myDateRangeInput: {
         save: 'Save',
@@ -22,11 +23,17 @@ const struct: LocaleStruct = {
         others: 'Others',
       },
     },
+
     views: {
       // project
       projectColumn: {
         project: 'Project',
         archive: 'Archive',
+        spaceMenu: {
+          profileAndAccount: 'Profile and Account',
+          inviteMembers: 'Invite members',
+          spaceSettings: 'Space settings',
+        },
       },
 
       // sub
@@ -83,6 +90,26 @@ const struct: LocaleStruct = {
         enterWideScreen: 'Enter wide screen',
         exitWideScreen: 'Exit wide screen',
         markdownHelp: 'Markdown Help',
+      },
+
+      // setting
+      setting: {
+        sub: {
+          spaces: {
+            title: 'Space Settings',
+            general: 'General',
+            members: 'Members',
+          },
+        },
+        main: {
+          spaceMembers: {
+            memberList: 'Member List',
+            email: 'Email',
+            name: 'Name',
+            role: 'Role',
+            addMember: 'Add Member',
+          },
+        },
       },
 
       // single

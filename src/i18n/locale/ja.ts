@@ -13,6 +13,7 @@ const struct: LocaleStruct = {
       save: '保存',
       cancel: 'キャンセル',
     },
+
     components: {
       myDateRangeInput: {
         save: 'Save',
@@ -23,11 +24,17 @@ const struct: LocaleStruct = {
         others: 'Others',
       },
     },
+
     views: {
       // project
       projectColumn: {
         project: 'プロジェクト',
         archive: 'アーカイブ',
+        spaceMenu: {
+          profileAndAccount: 'プロフィール & アカウント',
+          inviteMembers: 'メンバー招待',
+          spaceSettings: 'スペース設定',
+        },
       },
 
       // sub
@@ -84,6 +91,26 @@ const struct: LocaleStruct = {
         enterWideScreen: '全画面表示',
         exitWideScreen: 'デフォルト表示',
         markdownHelp: 'Markdownヘルプ',
+      },
+
+      // setting
+      setting: {
+        sub: {
+          spaces: {
+            title: 'スペース設定',
+            general: '基本設定',
+            members: 'メンバー設定',
+          },
+        },
+        main: {
+          spaceMembers: {
+            memberList: 'メンバー一覧',
+            email: 'メールアドレス',
+            name: '表示名',
+            role: '権限',
+            addMember: 'メンバーを追加する',
+          },
+        },
       },
 
       // single

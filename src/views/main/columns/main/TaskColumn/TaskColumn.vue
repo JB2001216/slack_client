@@ -135,7 +135,7 @@
                 </svg>
               </dd> -->
               <dd>
-                <svg @click="destroy()" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg v-if="editMode" @click="destroy()" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M9.9375 1.5L8.90625 2.55H3.75V4.65H20.25V2.55H15.0938L14.0625 1.5H9.9375ZM4.78125 6.75V20.4C4.78125 21.555 5.70938 22.5 6.84375 22.5H17.1562C18.2906 22.5 19.2188 21.555 19.2188 20.4V6.75H4.78125ZM7.875 8.85H9.9375V20.4H7.875V8.85ZM14.0625 8.85H16.125V20.4H14.0625V8.85Z" fill="#333333" fill-opacity="0.72"/>
                 </svg>
               </dd>
@@ -392,13 +392,6 @@ export default class TaskColumn extends Vue {
       });
       this.$appEmit('task-deleted', { taskId: parseInt(this.$route.params.taskId) });
       this.$flash(this.$t('common.deleted').toString(), 'success');
-      this.$router.replace({
-        name: 'tasks',
-        params: {
-          userId: loginUser.id.toString(),
-          projectId: projectId.toString(),
-        },
-      });
 
     } catch (err) {
       this.$showAppError(this, err);

@@ -36,6 +36,12 @@ export interface Space {
      * @memberof Space
      */
     displayName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    avatarUrl?: string;
 }
 
 export function SpaceFromJSON(json: any): Space {
@@ -43,6 +49,7 @@ export function SpaceFromJSON(json: any): Space {
         'id': json['id'],
         'account': json['account'],
         'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
+        'avatarUrl': !exists(json, 'avatarUrl') ? undefined : json['avatarUrl'],
     };
 }
 
@@ -54,6 +61,7 @@ export function SpaceToJSON(value?: Space): any {
         'id': value.id,
         'account': value.account,
         'displayName': value.displayName,
+        'avatarUrl': value.avatarUrl,
     };
 }
 

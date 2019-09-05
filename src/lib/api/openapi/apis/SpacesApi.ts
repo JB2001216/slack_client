@@ -32,9 +32,6 @@ import {
     SpacesPostResponse,
     SpacesPostResponseFromJSON,
     SpacesPostResponseToJSON,
-    SpacesSpaceIdPutRequestBody,
-    SpacesSpaceIdPutRequestBodyFromJSON,
-    SpacesSpaceIdPutRequestBodyToJSON,
     SpacesSpaceIdUsersGetResponse,
     SpacesSpaceIdUsersGetResponseFromJSON,
     SpacesSpaceIdUsersGetResponseToJSON,
@@ -68,7 +65,8 @@ export interface SpacesSpaceIdGetRequest {
 
 export interface SpacesSpaceIdPutRequest {
     spaceId: number;
-    spacesSpaceIdPutRequestBody: SpacesSpaceIdPutRequestBody;
+    displayName?: string;
+    avator?: Blob;
 }
 
 export interface SpacesSpaceIdUsersGetRequest {
@@ -272,18 +270,21 @@ export class SpacesApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling spacesSpaceIdPut.');
         }
 
-        if (requestParameters.spacesSpaceIdPutRequestBody === null || requestParameters.spacesSpaceIdPutRequestBody === undefined) {
-            throw new runtime.RequiredError('spacesSpaceIdPutRequestBody','Required parameter requestParameters.spacesSpaceIdPutRequestBody was null or undefined when calling spacesSpaceIdPut.');
-        }
-
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters['Content-Type'] = 'application/json';
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const formData = new FormData();
+        if (requestParameters.displayName !== undefined) {
+            formData.append('displayName', requestParameters.displayName as any);
+        }
+
+        if (requestParameters.avator !== undefined) {
+            formData.append('avator', requestParameters.avator as any);
         }
 
         const response = await this.request({
@@ -291,7 +292,7 @@ export class SpacesApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: SpacesSpaceIdPutRequestBodyToJSON(requestParameters.spacesSpaceIdPutRequestBody),
+            body: formData,
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));

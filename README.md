@@ -7,6 +7,12 @@ url\(\.\.\/images\/(.+\.(svg|png))\)
 
 [置換]
 url('~@/assets/images/$1')
+
+[検索]
+url\(\.\/\.\.\/\.\.\/dest\/images\/(.+\.(svg|png))\)
+
+[置換]
+url('~@/assets/images/$1')
 ```
 
 ## Project setup

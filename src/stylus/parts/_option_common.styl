@@ -1,0 +1,142 @@
+.optionWrap{
+  *{
+    box-sizing: border-box;
+  }
+}
+
+.option{
+  &_title{
+    padding: 17px 20px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.16);
+    color: #333333;
+    font-family: "Noto Sans CJK JP";
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 29px;
+    text-align: center;
+    position: relative;
+    button{
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      position: absolute;
+      top: 0;
+      right: 20px;
+      bottom: 0;
+      margin: auto;
+      &:before,
+      &:after{
+        content: "";
+        display: block;
+        width: 30px;
+        height: 2px;
+        background: #6d6d6d;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+      }
+      &:before{
+        transform: rotate(315deg);
+      }
+      &:after{
+        transform: rotate(-315deg);
+      }
+    }
+  }
+  &_container{
+    max-width: 960px;
+    padding: 48px 20px 90px 20px;
+    margin: 0 auto;
+  }
+  &_mainColumn{
+    float: right;
+    width: calc(100% - 240px);
+    padding-left: 40px;
+    border-left: 1px solid #E0E0E0;
+    &_title{
+      color: #333333;
+      font-family: "Noto Sans CJK JP";
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 27px;
+    }
+  }
+  &_subColumn{
+    float: right;
+    width: 240px;
+    padding-right: 40px;
+    &_title{
+      padding-left: 15px;
+      margin-top: 10px;
+      color: #333333;	font-family: "Noto Sans CJK JP";	font-size: 16px;	line-height: 24px;
+    }
+    &_button{
+      display: block;
+      width: 100%;
+      padding: 10px 15px;
+      margin-top: 10px;
+      background: #e2e2e2;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      outline: none;
+      color: #FFFFFF;	font-family: "Noto Sans CJK JP";	font-size: 16px;	font-weight: bold;	line-height: 24px;
+      text-align: left;
+      &.green{
+        background: #519589;
+      }
+    }
+  }
+  &_modal{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    &_dialog{
+      max-width: 400px;
+      padding: 30px;
+      background: #fff;
+      border-radius: 4px;
+      &_title{
+        color: #333333;	font-family: "Noto Sans CJK JP";	font-size: 16px;	font-weight: bold;	line-height: 24px;
+      }
+      &_description{
+        margin-top: 15px;
+        color: #666666;	font-family: "Noto Sans CJK JP";	font-size: 16px;	line-height: 24px;
+      }
+      &_button{
+        margin-top: 30px;
+        button{
+          height: 40px;
+          padding: 10px 20px;
+          margin-left: 15px;
+          float: right;
+          border: none;
+          border-radius: 20px;
+          cursor: pointer;
+          outline: none;
+          color: #FFFFFF;	font-family: "Noto Sans CJK JP";	font-size: 14px;	font-weight: bold;	line-height: 20px;	text-align: center;
+        }
+        &_yes{
+          background: #E02D2D;
+        }
+        &_no{
+          background: #c4c4c4;
+        }
+      }
+    }
+  }
+}
