@@ -12,6 +12,17 @@ const struct: LocaleStruct = {
       login: 'ログイン',
       save: '保存',
       cancel: 'キャンセル',
+      spaceRole: {
+        OWNER: 'オーナー',
+        ADMIN: '管理者',
+        USER: 'ユーザー',
+      },
+      projectRole: {
+        PROJECT_ADMIN: 'プロジェクト管理者',
+        USER_WRITABLE: 'ユーザー(書き込み可)',
+        USER_READONLY: 'ユーザー(読み取りのみ)',
+      },
+      alreadyLoggedIn: '既にログイン済です',
     },
 
     components: {
@@ -106,9 +117,21 @@ const struct: LocaleStruct = {
           spaceMembers: {
             memberList: 'メンバー一覧',
             email: 'メールアドレス',
-            name: '表示名',
+            name: '名前',
             role: '権限',
             addMember: 'メンバーを追加する',
+          },
+          spaceMemberInvite: {
+            title: '{spaceName}にメンバーを招待する',
+            invitationLink: 'メンバー招待用リンク',
+            copy: 'コピーする',
+            email: 'メールアドレス',
+            account: 'アカウント名',
+            role: '権限',
+            addAnEntryField: '枠を一つ追加する',
+            sendInvitation: '招待を送信する',
+            accountSample: 'taro_yamada',
+            invitedMessage: '招待メールを送信しました',
           },
         },
       },

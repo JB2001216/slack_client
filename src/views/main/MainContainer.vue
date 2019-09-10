@@ -24,7 +24,7 @@ async function beforeRouteChange(to: Route, from: Route, next: Parameters<Naviga
     return next({ name: 'users' });
   }
 
-  if (!store.state.activeUser.loggedInUser || user.id !== store.state.activeUser.loggedInUser.id) {
+  if (!store.state.activeUser.myUser || user.id !== store.state.activeUser.myUser.id) {
     await store.actions.activeUser.init(user);
   }
 
@@ -64,7 +64,7 @@ export default class MainContainer extends Vue {
       await beforeRouteChange(to, from, next);
     } catch (err) {
       return next((vm) => {
-        vm.$showAppError(vm, err);
+        vm.$appEmit('error', { err });
         vm.$router.replace({ name: 'users' });
       });
     }
@@ -74,7 +74,7 @@ export default class MainContainer extends Vue {
     try {
       await beforeRouteChange(to, from, next);
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
       this.$router.replace({ name: 'users' });
     }
   }

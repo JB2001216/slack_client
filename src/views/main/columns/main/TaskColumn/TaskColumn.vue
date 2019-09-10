@@ -278,24 +278,24 @@ import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import TaskComment from './TaskComment.vue';
 
 async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'editMode' | 'statusOptions' | 'task'>>> {
-  const loginUser = store.state.activeUser.loggedInUser!;
+  const loginUser = store.state.activeUser.myUser!;
   const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
   const spaceId = loginUser.space.id;
   const projectId = store.state.activeUser.activeProjectId;
   const statusOptionsPromise = tasksApi.tasksStatusGet({
-    spaceId: store.state.activeUser.loggedInUser!.space.id,
+    spaceId: store.state.activeUser.myUser!.space.id,
     projectId: store.state.activeUser.activeProjectId!,
   });
 
   const [statusOptions, task, resFavorite] = await Promise.all([
     statusOptionsPromise,
     tasksApi.tasksTaskIdGet({
-      spaceId: store.state.activeUser.loggedInUser!.space.id,
+      spaceId: store.state.activeUser.myUser!.space.id,
       projectId: store.state.activeUser.activeProjectId!,
       taskId: parseInt(to.params.taskId),
     }),
     tasksApi.tasksTaskIdFavoriteGet({
-      spaceId: store.state.activeUser.loggedInUser!.space.id,
+      spaceId: store.state.activeUser.myUser!.space.id,
       projectId: store.state.activeUser.activeProjectId!,
       taskId: parseInt(to.params.taskId),
     }),
@@ -353,7 +353,7 @@ export default class TaskColumn extends Vue {
     if (this.saving) {
       return;
     }
-    const loginUser = store.state.activeUser.loggedInUser!;
+    const loginUser = store.state.activeUser.myUser!;
     const projectId = store.state.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
     try {
@@ -367,7 +367,7 @@ export default class TaskColumn extends Vue {
       this.$appEmit('task-edited', { task });
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
       throw err;
 
     } finally {
@@ -379,7 +379,7 @@ export default class TaskColumn extends Vue {
     if (this.saving) {
       return;
     }
-    const loginUser = store.state.activeUser.loggedInUser!;
+    const loginUser = store.state.activeUser.myUser!;
     const projectId = store.state.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
 
@@ -394,7 +394,7 @@ export default class TaskColumn extends Vue {
       this.$flash(this.$t('common.deleted').toString(), 'success');
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
 
     this.saving = false;
@@ -405,7 +405,7 @@ export default class TaskColumn extends Vue {
       return;
     }
 
-    const loginUser = store.state.activeUser.loggedInUser!;
+    const loginUser = store.state.activeUser.myUser!;
     const projectId = store.state.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
     try {
@@ -419,7 +419,7 @@ export default class TaskColumn extends Vue {
       this.isFavorite = res.value;
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
 
     this.saving = false;

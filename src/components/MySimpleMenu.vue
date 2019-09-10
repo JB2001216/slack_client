@@ -25,6 +25,7 @@
     left: 0
     z-index: 10
     box-shadow: none
+    user-select: none
     ul
       padding-left: 0
       padding-right: 0

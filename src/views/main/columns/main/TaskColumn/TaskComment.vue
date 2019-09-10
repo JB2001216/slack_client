@@ -97,7 +97,7 @@ export default class TaskCommment extends Vue {
     if (this.saving) {
       return;
     }
-    const loginUser = this.$store.state.activeUser.loggedInUser!;
+    const loginUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.state.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
     try {
@@ -112,7 +112,7 @@ export default class TaskCommment extends Vue {
       await this.scrollComments('next', true);
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
 
     this.saving = false;
@@ -122,7 +122,7 @@ export default class TaskCommment extends Vue {
     if (this.saving) {
       return;
     }
-    const loginUser = this.$store.state.activeUser.loggedInUser!;
+    const loginUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.state.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
 
@@ -143,7 +143,7 @@ export default class TaskCommment extends Vue {
       });
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
 
     this.saving = false;
@@ -151,7 +151,7 @@ export default class TaskCommment extends Vue {
 
   async fetchComments() {
     if (this.fetching) return;
-    const loginUser = this.$store.state.activeUser.loggedInUser!;
+    const loginUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.state.activeUser.activeProjectId!;
     const taskApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
 
@@ -194,7 +194,7 @@ export default class TaskCommment extends Vue {
     if (this.fetching) return;
     if (type === 'prev' && !this.prevable) return;
 
-    const loginUser = this.$store.state.activeUser.loggedInUser!;
+    const loginUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.state.activeUser.activeProjectId!;
     const taskApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
     const comments = this.comments;

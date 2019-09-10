@@ -62,8 +62,8 @@ export default class LoginSpaceSelect extends Vue {
 
   get backTo() {
     let userId: number | null = null;
-    if (this.$store.state.activeUser.loggedInUser) {
-      userId = this.$store.state.activeUser.loggedInUser.id;
+    if (this.$store.state.activeUser.myUser) {
+      userId = this.$store.state.activeUser.myUser.id;
     } else if (this.$store.state.loggedInUsers.length) {
       userId = this.$store.state.loggedInUsers[0].id;
     }
@@ -112,7 +112,7 @@ export default class LoginSpaceSelect extends Vue {
       }
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
       this.loginning = false;
     }
   }
@@ -128,7 +128,7 @@ export default class LoginSpaceSelect extends Vue {
           },
         });
       } catch (err) {
-        this.$showAppError(this, err);
+        this.$appEmit('error', { err });
         this.$router.replace({ name: 'login' });
       }
     }

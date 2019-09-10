@@ -3,18 +3,27 @@
     <div class="projectColumn_head">
       <my-simple-menu class="projectColumn_spaceMenu">
         <template v-slot="{open, close, opened}">
-          <h1 class="t-sub" @click.stop="opened ? close() : open()">{{loggedInUser.space.displayName || loggedInUser.space.account}}</h1>
+          <h1 class="t-sub" @click.stop="opened ? close() : open()">{{myUser.space.displayName || myUser.space.account}}</h1>
         </template>
         <template v-slot:items>
+          <li @click.prevent.stop class="projectColumn_spaceMenu_profile">
+            <div class="projectColumn_spaceMenu_profile_avatar">
+              <img v-if="myUser.avatarUrl" :src="myUser.avatarUrl" alt="">
+              <img v-else src="~@/assets/images/parts/img_option_space_member_01.jpg" alt="">
+            </div>
+            <div class="projectColumn_spaceMenu_profile_name">
+              {{myUser.displayName || myUser.account}}
+            </div>
+          </li>
           <li><span>{{$t(`views.projectColumn.spaceMenu.profileAndAccount`)}}</span></li>
-          <li><span>{{$t(`views.projectColumn.spaceMenu.inviteMembers`)}}</span></li>
-          <li><span @click="$store.mutations.settingRouter.to('space-members')">{{$t(`views.projectColumn.spaceMenu.spaceSettings`)}}</span></li>
+          <li v-if="spaceUserAddable" @click="$store.mutations.settingRouter.to('space-member-invite')"><span>{{$t(`views.projectColumn.spaceMenu.inviteMembers`)}}</span></li>
+          <li v-if="spaceUserListable" @click="$store.mutations.settingRouter.to('space-members')"><span>{{$t(`views.projectColumn.spaceMenu.spaceSettings`)}}</span></li>
         </template>
       </my-simple-menu>
     </div>
     <div class="projectColumn_body">
       <ul>
-        <li><router-link class="projectColumn_add" :to="{name: 'project-add', params: { userId: loggedInUser.id }}">{{$t('views.projectColumn.project')}}
+        <li v-if="projectAddable"><router-link class="projectColumn_add" :to="{name: 'project-add', params: { userId: myUser.id }}">{{$t('views.projectColumn.project')}}
           <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="m22 13h-19.99999v-2h19.99999z" />
             <path d="m11 22v-20.00003h2v20.00003z" />
@@ -26,7 +35,7 @@
             :to="{
               name: 'project',
               params: {
-                userId: loggedInUser.id.toString(),
+                userId: myUser.id.toString(),
                 projectId: p.id.toString(),
               },
             }"
@@ -56,17 +65,35 @@
       width: auto
       ul
         width: auto
+        min-width: 220px
         padding: 14px 0
         li
           font-size: 14px
           padding: 10px 24px
           white-space: nowrap
+        .projectColumn_spaceMenu_profile
+          display: flex
+          align-items: center
+          cursor: default
+          &:hover
+            background: transparent
+          &_avatar
+            width: 40px
+            height: 40px
+            overflow: hidden
+            display: inline-block
+          &_name
+            flex: 1
+            padding-left: 10px
+            font-weight: bold
+            font-size: 14px
 </style>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Route, NavigationGuard } from 'vue-router';
 import store from '@/store';
+import { Perm } from '@/lib/permissions';
 
 async function beforeRouteChange(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
   if (to.params.projectId) {
@@ -100,14 +127,31 @@ Component.registerHooks([
 ]);
 @Component
 export default class ProjectColumn extends Vue {
-  get loggedInUser() {
-    return this.$store.state.activeUser.loggedInUser;
+  get myUser() {
+    return this.$store.state.activeUser.myUser;
   }
   get projects() {
     return this.$store.state.activeUser.projects;
   }
   get activeProjectId() {
     return this.$store.state.activeUser.activeProjectId;
+  }
+  get mySpaceRole() {
+    return this.$store.getters.activeUser.mySpaceRole;
+  }
+
+  get projectAddable() {
+    if (!this.mySpaceRole) return false;
+    return this.mySpaceRole.perms.includes(Perm.ADD_PROJECT);
+  }
+  get spaceUserAddable() {
+    if (!this.mySpaceRole) return false;
+    return this.mySpaceRole.perms.includes(Perm.ADD_SPACE_USER);
+  }
+  get spaceUserListable() {
+    if (!this.mySpaceRole) return false;
+    return this.mySpaceRole.perms.includes(Perm.UPDATE_SPACE_USER) ||
+      this.mySpaceRole.perms.includes(Perm.DELETE_SPACE_USER);
   }
 
   async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {

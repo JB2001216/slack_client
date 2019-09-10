@@ -13,9 +13,9 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    SelectLoginUser,
-    SelectLoginUserFromJSON,
-    SelectLoginUserToJSON,
+    SpaceUser,
+    SpaceUserFromJSON,
+    SpaceUserToJSON,
 } from './';
 
 /**
@@ -44,10 +44,10 @@ export interface SpacesSpaceIdUsersGetResponse {
     next?: string;
     /**
      * 
-     * @type {Array<SelectLoginUser>}
+     * @type {Array<SpaceUser>}
      * @memberof SpacesSpaceIdUsersGetResponse
      */
-    results: Array<SelectLoginUser>;
+    results: Array<SpaceUser>;
 }
 
 export function SpacesSpaceIdUsersGetResponseFromJSON(json: any): SpacesSpaceIdUsersGetResponse {
@@ -55,7 +55,7 @@ export function SpacesSpaceIdUsersGetResponseFromJSON(json: any): SpacesSpaceIdU
         'count': json['count'],
         'previous': !exists(json, 'previous') ? undefined : json['previous'],
         'next': !exists(json, 'next') ? undefined : json['next'],
-        'results': (json['results'] as Array<any>).map(SelectLoginUserFromJSON),
+        'results': (json['results'] as Array<any>).map(SpaceUserFromJSON),
     };
 }
 
@@ -67,7 +67,7 @@ export function SpacesSpaceIdUsersGetResponseToJSON(value?: SpacesSpaceIdUsersGe
         'count': value.count,
         'previous': value.previous,
         'next': value.next,
-        'results': (value.results as Array<any>).map(SelectLoginUserToJSON),
+        'results': (value.results as Array<any>).map(SpaceUserToJSON),
     };
 }
 

@@ -204,7 +204,7 @@ export default class TasksColumn extends Vue {
 
   async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
     const cond = this.conditions;
-    const user = this.$store.state.activeUser.loggedInUser!;
+    const user = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.state.activeUser.activeProjectId!;
     const tasksApi = apiRegistry.load(TasksApi, user.token);
     const req: TasksGetRequest = Object.assign({
@@ -227,7 +227,7 @@ export default class TasksColumn extends Vue {
   }
 
   async fetchStatusOptions() {
-    const loginUser = this.$store.state.activeUser.loggedInUser!;
+    const loginUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.state.activeUser.activeProjectId!;
     const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
     this.statusOptions = await tasksApi.tasksStatusGet({ spaceId: loginUser.space.id, projectId });
@@ -256,7 +256,7 @@ export default class TasksColumn extends Vue {
       }
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
   }
 
@@ -316,7 +316,7 @@ export default class TasksColumn extends Vue {
   async onInlineTaskAddEnd() {
     if (!this.adding || this.saving) return;
     if (this.addingTaskSubject.trim() !== '') {
-      const loginUser = this.$store.state.activeUser.loggedInUser!;
+      const loginUser = this.$store.state.activeUser.myUser!;
       const projectId = this.$store.state.activeUser.activeProjectId!;
       const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
       const statusOptions = this.statusOptions!
@@ -336,7 +336,7 @@ export default class TasksColumn extends Vue {
         });
         this.$appEmit('task-added', { task: updatedTask });
       } catch (err) {
-        this.$showAppError(this, err);
+        this.$appEmit('error', { err });
         return;
       } finally {
         this.saving = false;

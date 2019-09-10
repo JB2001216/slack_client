@@ -2,6 +2,9 @@ import electron from 'electron';
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
+import { apiRegistry, UsersApi } from '@/lib/api';
+import { appEventBus } from '@/plugins/app-event';
+import i18n from '@/i18n';
 import SpaceAdd1 from './views/single/space-add/SpaceAdd1.vue';
 import SpaceAdd2 from './views/single/space-add/SpaceAdd2.vue';
 import Login from './views/single/login/Login.vue';
@@ -164,13 +167,15 @@ const router = new Router({
   ],
 });
 
+
 // ブラウザ経由
-electron.ipcRenderer.on('open-url', (ev: any, urlraw: string) => {
+electron.ipcRenderer.on('open-url', async(ev: any, urlraw: string) => {
   const match = urlraw.match(new RegExp(`^${process.env.VUE_APP_URL_SCHEME}://([a-zA-Z0-9_-]+)`));
   if (match) {
     const method = match[1];
     const url = new URL(urlraw);
     const sparams = url.searchParams;
+
     if (method === 'create_space') {
       return router.push({
         name: 'space-add2',
@@ -180,6 +185,7 @@ electron.ipcRenderer.on('open-url', (ev: any, urlraw: string) => {
         },
       });
     }
+
     if (method === 'email_login') {
       return router.push({
         name: 'login-space-select',
@@ -188,6 +194,41 @@ electron.ipcRenderer.on('open-url', (ev: any, urlraw: string) => {
           type: 'email',
         },
       });
+    }
+
+    if (method === 'login') {
+      const loginToken = sparams.get('token');
+      const spaceIdStr = sparams.get('sid');
+      const userIdStr = sparams.get('uid');
+      if (loginToken && spaceIdStr && userIdStr && isFinite(spaceIdStr as any) && isFinite(userIdStr as any)) {
+        const spaceId = parseInt(spaceIdStr);
+        const userId = parseInt(userIdStr);
+        if (store.state.loggedInUsers.find((u) => u.space.id === spaceId && u.id === userId)) {
+          appEventBus.emit('flash', { 'message': i18n.t('common.alreadyLoggedIn').toString(), 'name': 'error' });
+
+        } else {
+          try {
+            const usersApi = apiRegistry.load(UsersApi);
+            const res = await usersApi.usersLoginPost({
+              usersLoginPostRequestBody: {
+                token: loginToken,
+                spaceId,
+                userId,
+              },
+            });
+            const user = await store.actions.addLoggedInUsers(res.token, true);
+            return router.push({
+              name: 'user',
+              params: {
+                userId: user.id.toString(),
+              },
+            });
+
+          } catch (err) {
+            appEventBus.emit('error', { err });
+          }
+        }
+      }
     }
   }
 });

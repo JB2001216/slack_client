@@ -1,7 +1,5 @@
 import { PluginObject } from 'vue';
 
-type MessageType = 'success' | 'error';
-
 declare const VueFlashMessage: PluginObject<VueFlashMessage.PluginOptions>;
 
 // eslint-disable-next-line no-redeclare
@@ -116,6 +114,8 @@ declare namespace VueFlashMessage {
      */
     killSelfDestructTimer: () => void;
   }
+
+  export type MessageType = 'success' | 'error';
 
   export type MessageMethod = {
     (message: string, name: MessageType, options?: MessageOptions): MessageObject;

@@ -9,7 +9,6 @@ import i18n from './i18n';
 import * as components from './components';
 import * as filters from './filters';
 import AppEvent from './plugins/app-event';
-import AppErrorAction from './plugins/app-error-action';
 import App from './App.vue';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
@@ -72,8 +71,6 @@ type FiltersKey = keyof typeof filters;
 
 // app-event
 Vue.use(AppEvent);
-// app-error-action
-Vue.use(AppErrorAction);
 
 // コンポーネント登録
 type ComponentsKey = keyof typeof components;

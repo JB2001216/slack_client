@@ -42,8 +42,8 @@ export default class Login extends Vue {
 
   get backTo() {
     let userId: number | null = null;
-    if (this.$store.state.activeUser.loggedInUser) {
-      userId = this.$store.state.activeUser.loggedInUser.id;
+    if (this.$store.state.activeUser.myUser) {
+      userId = this.$store.state.activeUser.myUser.id;
     } else if (this.$store.state.loggedInUsers.length) {
       userId = this.$store.state.loggedInUsers[0].id;
     }
@@ -97,7 +97,7 @@ export default class Login extends Vue {
         }
       }
 
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
 
     } finally {
       this.loginning = false;

@@ -20,6 +20,17 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     login: string;
     save: string;
     cancel: string;
+    spaceRole: {
+      OWNER: string;
+      ADMIN: string;
+      USER: string;
+    };
+    projectRole: {
+      PROJECT_ADMIN: string;
+      USER_WRITABLE: string;
+      USER_READONLY: string;
+    };
+    alreadyLoggedIn: string;
   };
 
   components: {
@@ -117,6 +128,18 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           name: string;
           role: string;
           addMember: string;
+        };
+        spaceMemberInvite: {
+          title: string;
+          invitationLink: string;
+          copy: string;
+          email: string;
+          account: string;
+          role: string;
+          addAnEntryField: string;
+          sendInvitation: string;
+          accountSample: string;
+          invitedMessage: string;
         };
       };
     };

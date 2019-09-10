@@ -1,6 +1,65 @@
 .option{
-  &_spaceMember{
+  &_spaceMemberInvite{
+    // 共通ボタン
+    &_button{
+      display: block;
+      min-width: 130px;
+      height: 40px;
+      padding: 9px;
+      background: #007FF5;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      outline: none;
+      color: #FFFFFF;
+      font-family: "Noto Sans CJK JP";
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 20px;
+      text-align: center;
+    }
+    &_link{
+      padding-bottom: 40px;
+      margin-top: 25px;
+      border-bottom: 1px solid #e0e0e0;
+      table{
+        width: 100%;
+        table-layout: fixed;
+        tr{
+          th,td{
+            vertical-align: middle;
+            font-weight: 400;
+            text-align: left;
+          }
+          th{
+            width: calc(100% - 130px);
+            padding-right: 15px;
+            p{
+              height: 60px;
+              padding: 15px 25px;
+              border: 1px solid #c4c4c4;
+              border-radius: 4px;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              color: #007FF5;
+              font-family: "Noto Sans CJK JP";
+              font-size: 18px;
+              line-height: 27px;
+              &::placeholder{
+                color: #ccc;
+              }
+            }
+          }
+          td{
+            width: 130px;
+            text-align: right;
+          }
+        }
+      }
+    }
     &_table{
+      margin-top: 28px;
       table{
         width: 100%;
         margin-top: 10px;
@@ -8,20 +67,16 @@
           th,
           td{
             vertical-align: middle;
-            padding: 16px 15px 16px 0;
-            border-bottom: 1px solid #E0E0E0;
+            padding: 12px 15px 12px 0;
             text-align: left;
             &:nth-of-type(1){
-              width: 55px;
+              width: 375px;
             }
             &:nth-of-type(2){
-              width: 250px;
+              width: 240px;
             }
             &:nth-of-type(3){
-              width: 140px;
-            }
-            &:nth-of-type(4){
-              width: 194px;
+              width: 280px;
               padding-right: 0;
             }
           }
@@ -32,6 +87,20 @@
             line-height: 24px;
           }
           td{
+            input[type=text]{
+              width: 100%;
+              height: 40px;
+              padding: 9px 15px;
+              border: 1px solid #c4c4c4;
+              border-radius: 4px;
+              color: #333333;
+              font-family: "Noto Sans CJK JP";
+              font-size: 16px;
+              line-height: 20px;
+              &::placeholder{
+                color: #ccc;
+              }
+            }
             .select{
               float: left;
               width: calc(100% - 40px);
@@ -58,7 +127,7 @@
                 appearance: none;
                 color: #333333;
                 font-family: "Noto Sans CJK JP";
-                font-size: 14px;
+                font-size: 16px;
                 line-height: 20px;
                 &::-ms-expand{
                   display: none;
@@ -102,57 +171,16 @@
           }
         }
       }
-      &_img{
-        width: 40px;
-        height: 40px;
-        border-radius: 4px;
-        overflow: hidden;
-        &.bg{
-          &_blue{
-            background-color: #0074E0;
-          }
-        }
-        p{
-          color: #FFFFFF;
-          font-family: "Noto Sans CJK JP";
-          font-size: 25px;
-          font-weight: bold;
-          line-height: 37px;
-          text-align: center;
-        }
-      }
     }
     &_addButton{
-      margin-top: 25px;
-      button{
-        padding-left: 30px;
-        background: url('~@/assets/images/parts/img_option_space_member_add.svg') no-repeat center left, transparent;
-        border: none;
-        cursor: pointer;
-        outline: none;
-        color: #007FF5;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        font-weight: bold;
-        line-height: 24px;
+      margin-top: 13px;
+      button:nth-of-type(1){
+        float: left;
       }
-    }
-    &_addBar{
-      width: 100%;
-      padding: 17px 20px;
-      background-color: #FFFFFF;
-      box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.16);
-      color: #333333;
-      font-family: "Noto Sans CJK JP";
-      font-size: 20px;
-      font-weight: bold;
-      line-height: 29px;
-      text-align: center;
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      z-index: 1;
-      button{
+      button:nth-of-type(2){
+        float: right;
+      }
+      &_button{
         padding-left: 30px;
         background: url('~@/assets/images/parts/img_option_space_member_add.svg') no-repeat center left, transparent;
         border: none;

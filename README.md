@@ -3,13 +3,13 @@
 ## stylus (main-mockからの置換)
 ```
 [検索]
-url\(\.\.\/images\/(.+\.(svg|png))\)
+url\(\.\.\/images\/(.+\.(svg|png|jpg))\)
 
 [置換]
 url('~@/assets/images/$1')
 
 [検索]
-url\(\.\/\.\.\/\.\.\/dest\/images\/(.+\.(svg|png))\)
+url\(\.\/\.\.\/\.\.\/dest\/images\/(.+\.(svg|png|jpg))\)
 
 [置換]
 url('~@/assets/images/$1')

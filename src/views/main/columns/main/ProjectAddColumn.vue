@@ -38,7 +38,7 @@ export default class ProjectAddColumn extends Vue {
   async save() {
     if (this.saving) return;
 
-    const loginUser = this.$store.state.activeUser.loggedInUser!;
+    const loginUser = this.$store.state.activeUser.myUser!;
     const projectsApi = apiRegistry.load(ProjectsApi, loginUser.token);
 
     try {
@@ -70,7 +70,7 @@ export default class ProjectAddColumn extends Vue {
         }
       }
 
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
       this.saving = false;
     }
   }

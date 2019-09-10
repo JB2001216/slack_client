@@ -6,6 +6,7 @@
 
 .option{
   &_title{
+    min-height: 63px;
     padding: 17px 20px;
     background-color: #FFFFFF;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.16);
@@ -47,6 +48,9 @@
       &:after{
         transform: rotate(-315deg);
       }
+    }
+    &.noShadow{
+      box-shadow: none;
     }
   }
   &_container{

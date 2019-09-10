@@ -223,7 +223,7 @@ export default class NestedList extends Vue {
   }
 
   async addTask(requestBody: TasksPostRequestBody) {
-    const loginUser = this.$store.state.activeUser.loggedInUser!;
+    const loginUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.state.activeUser.activeProjectId!;
     const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
     return tasksApi.tasksPost({
@@ -234,7 +234,7 @@ export default class NestedList extends Vue {
   }
 
   async patchTask(taskId: number, requestBody: TasksTaskIdPatchRequestBody) {
-    const loginUser = this.$store.state.activeUser.loggedInUser!;
+    const loginUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.state.activeUser.activeProjectId!;
     const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
     return tasksApi.tasksTaskIdPatch({
@@ -274,7 +274,7 @@ export default class NestedList extends Vue {
         }
 
       } catch (err) {
-        this.$showAppError(this, err);
+        this.$appEmit('error', { err });
         return;
       } finally {
         this.saving = false;
@@ -302,7 +302,7 @@ export default class NestedList extends Vue {
         });
         this.$appEmit('task-edited', { task: updatedTask });
       } catch (err) {
-        this.$showAppError(this, err);
+        this.$appEmit('error', { err });
         return;
       } finally {
         this.saving = false;
@@ -323,7 +323,7 @@ export default class NestedList extends Vue {
       });
       this.$appEmit('task-edited', { task: updatedTask });
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
     this.saving = false;
   }
@@ -339,7 +339,7 @@ export default class NestedList extends Vue {
       }
       this.$set(task, 'childs', res.results);
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
   }
 

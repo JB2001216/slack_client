@@ -1,0 +1,33 @@
+.option{
+  &_spaceMemberAdd{
+    max-width: 720px;
+    margin: 0 auto;
+    &_title{
+      color: #333333;
+      font-family: "Noto Sans CJK JP";
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 36px;
+    }
+    &_input{
+      margin-top: 25px;
+      input[type=text]{
+        width: 100%;
+        height: 60px;
+        padding: 15px 25px;
+        border: 1px solid #c4c4c4;
+        border-radius: 4px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #333333;
+        font-family: "Noto Sans CJK JP";
+        font-size: 18px;
+        line-height: 27px;
+        &::placeholder{
+          color: #ccc;
+        }
+      }
+    }
+  }
+}

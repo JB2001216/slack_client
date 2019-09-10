@@ -11,6 +11,17 @@ const struct: LocaleStruct = {
       login: 'Login',
       save: 'Save',
       cancel: 'Cancel',
+      spaceRole: {
+        OWNER: 'Owner',
+        ADMIN: 'Administrator',
+        USER: 'User',
+      },
+      projectRole: {
+        PROJECT_ADMIN: 'Project Administrator',
+        USER_WRITABLE: 'User (Writable)',
+        USER_READONLY: 'User (Readonly)',
+      },
+      alreadyLoggedIn: 'Already logged in',
     },
 
     components: {
@@ -108,6 +119,18 @@ const struct: LocaleStruct = {
             name: 'Name',
             role: 'Role',
             addMember: 'Add Member',
+          },
+          spaceMemberInvite: {
+            title: 'Invite members to {spaceName}',
+            invitationLink: 'Invitation Link',
+            copy: 'Copy',
+            email: 'Email',
+            account: 'Account Name',
+            role: 'Role',
+            addAnEntryField: 'Add an entry field',
+            sendInvitation: 'Send Invitation',
+            accountSample: 'john_smith',
+            invitedMessage: 'Invitation email sent successfully',
           },
         },
       },

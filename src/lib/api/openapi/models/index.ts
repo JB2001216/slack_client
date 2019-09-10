@@ -29,6 +29,7 @@ export * from './SpacesPostResponse';
 export * from './SpacesSpaceIdProjectsProjectIdTasksTags';
 export * from './SpacesSpaceIdPutRequestBody';
 export * from './SpacesSpaceIdUsersGetResponse';
+export * from './SpacesSpaceIdUsersInviteByEmailPostRequestBody';
 export * from './SpacesSpaceIdUsersUserIdPutRequestBody';
 export * from './Task';
 export * from './TaskComment';

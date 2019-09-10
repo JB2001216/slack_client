@@ -2,7 +2,7 @@
   <div id="app" :class="{[theme]: true}">
     <my-debug-tool v-if="enableDebugTool" />
     <my-flash-message/>
-    <setting-view/>
+    <setting-router-view/>
     <router-view/>
 
     <!-- TODO: 暫定的に言語切替をここに入れる -->
@@ -36,12 +36,14 @@
 import { Component as SyncComponent, AsyncComponent } from 'vue';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import MyFlashMessage from '@/components/MyFlashMessage.vue';
-import SettingView from '@/views/setting/SettingView.vue';
+import { getErrorMessage } from '@/lib/errors';
+import SettingRouterView from '@/views/setting/SettingRouterView.vue';
 import { loadableLocales } from '@/i18n';
+import { AppEventMap } from '@/plugins/app-event';
 
 const components: { [key: string]: SyncComponent<any, any, any, any> | AsyncComponent<any, any, any, any> } = {
   MyFlashMessage,
-  SettingView,
+  SettingRouterView,
 };
 
 const enableDebugTool = process.env.NODE_ENV !== 'production';
@@ -61,6 +63,27 @@ export default class App extends Vue {
 
   get loadableLocales() {
     return loadableLocales;
+  }
+
+  onFlash(ev: AppEventMap['flash']) {
+    this.$flash(ev.message, ev.name, ev.options);
+  }
+
+  async onError(ev: AppEventMap['error']) {
+    if (typeof ev.flash === 'undefined' || ev.flash) {
+      const message = await getErrorMessage(ev.flash, this.$i18n);
+      this.$flash(message, 'error');
+    }
+  }
+
+  beforeMount() {
+    this.$appOn('flash', this.onFlash);
+    this.$appOn('error', this.onError);
+  }
+
+  beforeDestroy() {
+    this.$appOff('flash', this.onFlash);
+    this.$appOff('error', this.onError);
   }
 }
 </script>

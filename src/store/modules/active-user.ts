@@ -1,5 +1,6 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import * as api from '@/lib/api';
+import { SpaceRoles } from '@/lib/permissions';
 
 interface LoggedInUser extends api.MyUser {
   token: string;
@@ -51,7 +52,7 @@ async function _fetchProjects(user: LoggedInUser) {
 }
 
 class ActiveUserState {
-  loggedInUser: LoggedInUser | null = null;
+  myUser: LoggedInUser | null = null;
   projects: api.Project[] | null = null;
   activeProjectId: number | null = null;
 
@@ -74,11 +75,16 @@ class ActiveUserGetters extends Getters<ActiveUserState>() {
     }
     return this.state.projects.find((p) => p.id === this.state.activeProjectId);
   }
+
+  get mySpaceRole() {
+    if (!this.state.myUser) return undefined;
+    return SpaceRoles.get(this.state.myUser.spaceRoleId);
+  }
 }
 
 class ActiveUserMutations extends Mutations<ActiveUserState>() {
   clear() {
-    this.state.loggedInUser = null;
+    this.state.myUser = null;
     this.state.spaceUsers = [];
     this.state.projects = null;
     this.state.activeProjectId = null;
@@ -87,19 +93,21 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
 
   init(user: LoggedInUser, projects: api.Project[]) {
     this.clear();
-    this.state.loggedInUser = user;
+    this.state.myUser = user;
     this.state.projects = projects;
     if (projects.length) {
       this.state.activeProjectId = projects[0].id;
     }
   }
 
-  addSpaceUser(spaceUser: api.SpaceUser) {
-    const index = this.state.spaceUsers.findIndex((u) => u.id === spaceUser.id);
-    if (index >= 0) {
-      this.state.spaceUsers.splice(index, 1, spaceUser);
-    } else {
-      this.state.spaceUsers.push(spaceUser);
+  addSpaceUser(...spaceUsers: api.SpaceUser[]) {
+    for (const user of spaceUsers) {
+      const index = this.state.spaceUsers.findIndex((u) => u.id === user.id);
+      if (index >= 0) {
+        this.state.spaceUsers.splice(index, 1, user);
+      } else {
+        this.state.spaceUsers.push(user);
+      }
     }
   }
 
@@ -117,8 +125,8 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
   }
 
   addProject(project: api.Project) {
-    if (!this.state.loggedInUser || !this.state.projects) return;
-    if (this.state.loggedInUser.space.id !== project.spaceId) return;
+    if (!this.state.myUser || !this.state.projects) return;
+    if (this.state.myUser.space.id !== project.spaceId) return;
     if (this.state.projects.find((p) => p.id === project.id)) return;
     this.state.projects.push(project);
   }
@@ -211,12 +219,12 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
   }
 
   async getSpaceUser(userId: number) {
-    const loggedInUser = this.state.loggedInUser;
-    if (!loggedInUser) {
+    const myUser = this.state.myUser;
+    if (!myUser) {
       return null;
     }
     const user = this.state.spaceUsers.find((u) => u.id === userId);
-    if (user && user.spaceId === loggedInUser.space.id) {
+    if (user && user.spaceId === myUser.space.id) {
       return user;
     }
 
@@ -228,9 +236,9 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     const promises: {[userId: number]: Promise<api.SpaceUser>} = (this as any)[attr];
     let promise = promises[userId];
     if (!promise) {
-      const spacesApi = api.apiRegistry.load(api.SpacesApi, loggedInUser.token);
+      const spacesApi = api.apiRegistry.load(api.SpacesApi, myUser.token);
       promise = spacesApi.spacesSpaceIdUsersUserIdGet({
-        spaceId: loggedInUser.space.id,
+        spaceId: myUser.space.id,
         userId,
       });
       promises[userId] = promise;
@@ -250,7 +258,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
       filter: {},
       order: { field: 'updatedAt', type: 'desc' },
     }, conditions);
-    const user = this.state.loggedInUser;
+    const user = this.state.myUser;
     const project = this.getters.activeProject;
     if (!user || !project) {
       return;
@@ -262,7 +270,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
   }
 
   async fetchNoteStatusOptions() {
-    const user = this.state.loggedInUser;
+    const user = this.state.myUser;
     const project = this.getters.activeProject;
     if (!user || !project) {
       return;
@@ -276,7 +284,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
   }
 
   async scrollNotes(type: SearchScrollType) {
-    const user = this.state.loggedInUser;
+    const user = this.state.myUser;
     const project = this.getters.activeProject;
     if (!user || !project || !this.state.notes) {
       return;
@@ -336,7 +344,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
       filter: {},
       order: { field: 'updatedAt', type: 'desc' },
     }, conditions);
-    const user = this.state.loggedInUser;
+    const user = this.state.myUser;
     const project = this.getters.activeProject;
     if (!user || !project) {
       return;
@@ -348,7 +356,7 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
   }
 
   async scrollFiles(type: SearchScrollType) {
-    const user = this.state.loggedInUser;
+    const user = this.state.myUser;
     const project = this.getters.activeProject;
     if (!user || !project || !this.state.files) {
       return;

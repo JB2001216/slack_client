@@ -160,12 +160,12 @@ import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 
 async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isAdd' | 'isFavorite' | 'editMode' | 'statusOptions' | 'note'>>> {
-  const loginUser = store.state.activeUser.loggedInUser!;
-  const notesApi = apiRegistry.load(NotesApi, loginUser.token);
-  const spaceId = loginUser.space.id;
+  const myUser = store.state.activeUser.myUser!;
+  const notesApi = apiRegistry.load(NotesApi, myUser.token);
+  const spaceId = myUser.space.id;
   const projectId = store.state.activeUser.activeProjectId;
   const statusOptionsPromise = notesApi.notesStatusGet({
-    spaceId: store.state.activeUser.loggedInUser!.space.id,
+    spaceId: store.state.activeUser.myUser!.space.id,
     projectId: store.state.activeUser.activeProjectId!,
   });
 
@@ -186,12 +186,12 @@ async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isAdd' | '
     const [statusOptions, note, resFavorite] = await Promise.all([
       statusOptionsPromise,
       notesApi.notesNoteIdGet({
-        spaceId: store.state.activeUser.loggedInUser!.space.id,
+        spaceId: store.state.activeUser.myUser!.space.id,
         projectId: store.state.activeUser.activeProjectId!,
         noteId: parseInt(to.params.noteId),
       }),
       notesApi.notesNoteIdFavoriteGet({
-        spaceId: store.state.activeUser.loggedInUser!.space.id,
+        spaceId: store.state.activeUser.myUser!.space.id,
         projectId: store.state.activeUser.activeProjectId!,
         noteId: parseInt(to.params.noteId),
       }),
@@ -236,7 +236,7 @@ export default class NoteColumn extends Vue {
     if (this.saving) {
       return;
     }
-    const loginUser = store.state.activeUser.loggedInUser!;
+    const loginUser = store.state.activeUser.myUser!;
     const projectId = store.state.activeUser.activeProjectId!;
     const notesApi = apiRegistry.load(NotesApi, loginUser.token);
     try {
@@ -271,7 +271,7 @@ export default class NoteColumn extends Vue {
       }
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
 
     this.saving = false;
@@ -281,7 +281,7 @@ export default class NoteColumn extends Vue {
     if (this.saving) {
       return;
     }
-    const loginUser = store.state.activeUser.loggedInUser!;
+    const loginUser = store.state.activeUser.myUser!;
     const projectId = store.state.activeUser.activeProjectId!;
     const notesApi = apiRegistry.load(NotesApi, loginUser.token);
 
@@ -303,7 +303,7 @@ export default class NoteColumn extends Vue {
       });
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
 
     this.saving = false;
@@ -314,7 +314,7 @@ export default class NoteColumn extends Vue {
       return;
     }
 
-    const loginUser = store.state.activeUser.loggedInUser!;
+    const loginUser = store.state.activeUser.myUser!;
     const projectId = store.state.activeUser.activeProjectId!;
     const notesApi = apiRegistry.load(NotesApi, loginUser.token);
     try {
@@ -328,7 +328,7 @@ export default class NoteColumn extends Vue {
       this.isFavorite = res.value;
 
     } catch (err) {
-      this.$showAppError(this, err);
+      this.$appEmit('error', { err });
     }
 
     this.saving = false;

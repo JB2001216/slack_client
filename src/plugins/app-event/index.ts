@@ -2,15 +2,16 @@ import Vue, { VueConstructor } from 'vue';
 import AppEventBusVue from './AppEventBus.vue';
 import { AppEventBus } from './types';
 
-const bus: AppEventBus = new AppEventBusVue();
+export const appEventBus: AppEventBus = new AppEventBusVue();
+export * from './types';
 
 export default {
   install(Vue: VueConstructor) {
     Vue.mixin({
       methods: {
-        $appOn: bus.on,
-        $appOff: bus.off,
-        $appEmit: bus.emit,
+        $appOn: appEventBus.on,
+        $appOff: appEventBus.off,
+        $appEmit: appEventBus.emit,
       },
     });
   },
@@ -18,8 +19,8 @@ export default {
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $appOn: typeof bus.on;
-    $appOff: typeof bus.off;
-    $appEmit: typeof bus.emit;
+    $appOn: typeof appEventBus.on;
+    $appOff: typeof appEventBus.off;
+    $appEmit: typeof appEventBus.emit;
   }
 }

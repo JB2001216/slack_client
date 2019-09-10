@@ -291,17 +291,17 @@ export default class FilterForm extends Vue {
 
 
   async beforeMount() {
-    const loggedInUser = this.$store.state.activeUser.loggedInUser!;
+    const myUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.state.activeUser.activeProjectId!;
-    const projectsApi = apiRegistry.load(ProjectsApi, loggedInUser.token);
+    const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
     const res = await projectsApi.projectsProjectIdUsersGet({
-      spaceId: loggedInUser.space.id,
+      spaceId: myUser.space.id,
       projectId,
       limit: 500,
     });
 
     // 自分を最初に持ってくる
-    const index = res.results.findIndex((pu) => pu.userId === loggedInUser.id);
+    const index = res.results.findIndex((pu) => pu.userId === myUser.id);
     const myProjectUser = res.results[index];
     res.results.splice(index, 1);
     res.results.unshift(myProjectUser);

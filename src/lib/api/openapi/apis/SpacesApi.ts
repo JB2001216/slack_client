@@ -35,6 +35,9 @@ import {
     SpacesSpaceIdUsersGetResponse,
     SpacesSpaceIdUsersGetResponseFromJSON,
     SpacesSpaceIdUsersGetResponseToJSON,
+    SpacesSpaceIdUsersInviteByEmailPostRequestBody,
+    SpacesSpaceIdUsersInviteByEmailPostRequestBodyFromJSON,
+    SpacesSpaceIdUsersInviteByEmailPostRequestBodyToJSON,
     SpacesSpaceIdUsersUserIdPutRequestBody,
     SpacesSpaceIdUsersUserIdPutRequestBodyFromJSON,
     SpacesSpaceIdUsersUserIdPutRequestBodyToJSON,
@@ -76,6 +79,11 @@ export interface SpacesSpaceIdUsersGetRequest {
     account?: string;
     displayName?: string;
     spaceRoleId?: number;
+}
+
+export interface SpacesSpaceIdUsersInviteByEmailPostRequest {
+    spaceId: number;
+    spacesSpaceIdUsersInviteByEmailPostRequestBody: Array<SpacesSpaceIdUsersInviteByEmailPostRequestBody>;
 }
 
 export interface SpacesSpaceIdUsersUserIdDeleteRequest {
@@ -355,6 +363,44 @@ export class SpacesApi extends runtime.BaseAPI {
     async spacesSpaceIdUsersGet(requestParameters: SpacesSpaceIdUsersGetRequest): Promise<SpacesSpaceIdUsersGetResponse> {
         const response = await this.spacesSpaceIdUsersGetRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     */
+    async spacesSpaceIdUsersInviteByEmailPostRaw(requestParameters: SpacesSpaceIdUsersInviteByEmailPostRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling spacesSpaceIdUsersInviteByEmailPost.');
+        }
+
+        if (requestParameters.spacesSpaceIdUsersInviteByEmailPostRequestBody === null || requestParameters.spacesSpaceIdUsersInviteByEmailPostRequestBody === undefined) {
+            throw new runtime.RequiredError('spacesSpaceIdUsersInviteByEmailPostRequestBody','Required parameter requestParameters.spacesSpaceIdUsersInviteByEmailPostRequestBody was null or undefined when calling spacesSpaceIdUsersInviteByEmailPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/users/invite_by_email/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.spacesSpaceIdUsersInviteByEmailPostRequestBody.map(SpacesSpaceIdUsersInviteByEmailPostRequestBodyToJSON),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async spacesSpaceIdUsersInviteByEmailPost(requestParameters: SpacesSpaceIdUsersInviteByEmailPostRequest): Promise<void> {
+        await this.spacesSpaceIdUsersInviteByEmailPostRaw(requestParameters);
     }
 
     /**

@@ -1,6 +1,9 @@
 import * as api from '@/lib/api';
+import VueFlashMessage from 'vue-flash-message';
 
 export interface AppEventMap {
+  'flash': { message: string; name: VueFlashMessage.MessageType; options?: VueFlashMessage.MessageOptions };
+  'error': { err: any; flash?: boolean };
   'task-added': { task: api.Task };
   'task-edited': { task: api.Task };
   'task-deleted': { taskId: number };
