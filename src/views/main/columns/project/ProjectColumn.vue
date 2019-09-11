@@ -3,10 +3,10 @@
     <div class="projectColumn_head">
       <my-simple-menu class="projectColumn_spaceMenu">
         <template v-slot="{open, close, opened}">
-          <h1 class="t-sub" @click.stop="opened ? close() : open()">{{myUser.space.displayName || myUser.space.account}}</h1>
+          <h1 class="t-sub" id="projectColumn_title" @click.stop="opened ? close() : open()">{{myUser.space.displayName || myUser.space.account}}</h1>
         </template>
         <template v-slot:items>
-          <li @click.prevent.stop class="projectColumn_spaceMenu_profile">
+          <li @click.prevent.stop class="projectColumn_spaceMenu_profile notHover">
             <div class="projectColumn_spaceMenu_profile_avatar">
               <img v-if="myUser.avatarUrl" :src="myUser.avatarUrl" alt="">
               <img v-else src="~@/assets/images/parts/img_option_space_member_01.jpg" alt="">
@@ -57,6 +57,7 @@
 
 
 <style lang="stylus">
+@import '../../../../stylus/_fixed/base/_theme'
 .projectColumn
   .t-sub
     cursor: pointer
@@ -71,12 +72,14 @@
           font-size: 14px
           padding: 10px 24px
           white-space: nowrap
+          &.notHover
+            cursor: default
+            background: transparent
+          &:not(.notHover):hover
+            @extends .themeMenuItemHover
         .projectColumn_spaceMenu_profile
           display: flex
           align-items: center
-          cursor: default
-          &:hover
-            background: transparent
           &_avatar
             width: 40px
             height: 40px
@@ -103,8 +106,8 @@ async function beforeRouteChange(to: Route, from: Route, next: Parameters<Naviga
       return next({ name: 'user', params: { userId: to.params.userId } });
     }
 
-    if (project.id !== store.state.activeUser.activeProjectId) {
-      store.mutations.activeUser.setActiveProjectId(project.id);
+    if (project.id !== store.getters.activeUser.activeProjectId) {
+      await store.actions.activeUser.setActiveProject(project.id);
     }
   }
 
@@ -134,7 +137,7 @@ export default class ProjectColumn extends Vue {
     return this.$store.state.activeUser.projects;
   }
   get activeProjectId() {
-    return this.$store.state.activeUser.activeProjectId;
+    return this.$store.getters.activeUser.activeProjectId;
   }
   get mySpaceRole() {
     return this.$store.getters.activeUser.mySpaceRole;

@@ -64,6 +64,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         note: string;
         ganttChart: string;
       };
+      projectMenu: {
+        addMembers: string;
+        projectSettings: string;
+      };
     };
     projectAddColumn: {
       addANewProject: string;
@@ -140,6 +144,14 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           sendInvitation: string;
           accountSample: string;
           invitedMessage: string;
+        };
+        projectMemberAdd: {
+          title: string;
+          searchTextPlaceholder: string;
+          email: string;
+          name: string;
+          role: string;
+          addMembers: string;
         };
       };
     };

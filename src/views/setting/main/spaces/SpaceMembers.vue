@@ -115,10 +115,6 @@ export default class SpaceMembers extends Vue {
         $state.complete();
       }
 
-      if (res.results.length) {
-        this.$store.mutations.activeUser.addSpaceUser(...res.results);
-      }
-
     } catch (err) {
       this.$appEmit('error', { err });
     }
@@ -141,7 +137,7 @@ export default class SpaceMembers extends Vue {
       user.spaceRoleId = spaceRoleId;
       user.currentRole = SpaceRoles.get(spaceRoleId);
     } catch (err) {
-      this.$appEmit('error', err);
+      this.$appEmit('error', { err });
     } finally {
       this.saving = false;
     }
@@ -166,7 +162,7 @@ export default class SpaceMembers extends Vue {
       this.removingUser = null;
 
     } catch (err) {
-      this.$appEmit('error', err);
+      this.$appEmit('error', { err });
 
     } finally {
       this.saving = false;

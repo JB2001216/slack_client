@@ -56,6 +56,10 @@ const struct: LocaleStruct = {
           note: 'ノート',
           ganttChart: 'ガントチャート',
         },
+        projectMenu: {
+          addMembers: 'メンバーの追加',
+          projectSettings: 'プロジェクト設定',
+        },
       },
       projectAddColumn: {
         addANewProject: 'プロジェクト追加',
@@ -132,6 +136,14 @@ const struct: LocaleStruct = {
             sendInvitation: '招待を送信する',
             accountSample: 'taro_yamada',
             invitedMessage: '招待メールを送信しました',
+          },
+          projectMemberAdd: {
+            title: '{projectName}にメンバーを追加する',
+            searchTextPlaceholder: 'Search by name or email address',
+            email: 'メールアドレス',
+            name: '名前',
+            role: '権限',
+            addMembers: 'メンバーを追加する',
           },
         },
       },

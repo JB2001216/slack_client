@@ -1,7 +1,7 @@
 <template>
   <div class="optionWrap" v-if="currentRoute">
     <div class="option">
-      <h2 class="option_title">{{currentRoute.title()}}<button @click="$store.mutations.settingRouter.close()"/></h2>
+      <h2 class="option_title" :class="{noShadow: !currentRoute.title}">{{currentRoute.title ? currentRoute.title() : ''}}<button @click="$store.mutations.settingRouter.close()"/></h2>
       <div class="option_container clearfix">
         <component v-if="currentRoute.main" :is="currentRoute.main"/>
         <component v-if="currentRoute.sub" :is="currentRoute.sub"/>
@@ -16,6 +16,7 @@ import { Component, Prop, Vue, Watch, Constructor as VueConstructor } from 'vue-
 import SpacesSub from './sub/SpacesSub.vue';
 import SpaceMembers from './main/spaces/SpaceMembers.vue';
 import SpaceMemberInvite from './main/spaces/SpaceMemberInvite.vue';
+import ProjectMemberAdd from './main/projects/ProjectMemberAdd.vue';
 import { TranslateResult } from 'vue-i18n';
 import i18n from '@/i18n';
 
@@ -24,13 +25,14 @@ import i18n from '@/i18n';
     SpacesSub,
     SpaceMembers,
     SpaceMemberInvite,
+    ProjectMemberAdd,
   },
 })
 export default class SettingRouterView extends Vue {
 
   routes: {
     [name: string]: {
-      title: () => TranslateResult;
+      title?: () => TranslateResult;
       sub: VueConstructor | null;
       main: VueConstructor;
     };
@@ -44,6 +46,10 @@ export default class SettingRouterView extends Vue {
       title: () => this.myUser ? i18n.t('views.setting.main.spaceMemberInvite.title', { spaceName: this.myUser.space.displayName || this.myUser.space.account }) : '',
       sub: null,
       main: SpaceMemberInvite,
+    },
+    'project-member-add': {
+      sub: null,
+      main: ProjectMemberAdd,
     },
   };
 

@@ -292,7 +292,7 @@ export default class FilterForm extends Vue {
 
   async beforeMount() {
     const myUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
     const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
     const res = await projectsApi.projectsProjectIdUsersGet({
       spaceId: myUser.space.id,

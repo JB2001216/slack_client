@@ -205,7 +205,7 @@ export default class TasksColumn extends Vue {
   async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
     const cond = this.conditions;
     const user = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
     const tasksApi = apiRegistry.load(TasksApi, user.token);
     const req: TasksGetRequest = Object.assign({
       spaceId: user.space.id,
@@ -228,7 +228,7 @@ export default class TasksColumn extends Vue {
 
   async fetchStatusOptions() {
     const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
     const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
     this.statusOptions = await tasksApi.tasksStatusGet({ spaceId: loginUser.space.id, projectId });
   }
@@ -317,7 +317,7 @@ export default class TasksColumn extends Vue {
     if (!this.adding || this.saving) return;
     if (this.addingTaskSubject.trim() !== '') {
       const loginUser = this.$store.state.activeUser.myUser!;
-      const projectId = this.$store.state.activeUser.activeProjectId!;
+      const projectId = this.$store.getters.activeUser.activeProjectId!;
       const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
       const statusOptions = this.statusOptions!
         .filter((o) => o.category === ProjectStatusCategory.Progress)

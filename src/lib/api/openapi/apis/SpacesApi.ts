@@ -78,7 +78,8 @@ export interface SpacesSpaceIdUsersGetRequest {
     limit?: number;
     account?: string;
     displayName?: string;
-    spaceRoleId?: number;
+    projectIdNotExact?: number;
+    keyword?: string;
 }
 
 export interface SpacesSpaceIdUsersInviteByEmailPostRequest {
@@ -338,8 +339,12 @@ export class SpacesApi extends runtime.BaseAPI {
             queryParameters['display_name'] = requestParameters.displayName;
         }
 
-        if (requestParameters.spaceRoleId !== undefined) {
-            queryParameters['space_role_id'] = requestParameters.spaceRoleId;
+        if (requestParameters.projectIdNotExact !== undefined) {
+            queryParameters['project_id__not_exact'] = requestParameters.projectIdNotExact;
+        }
+
+        if (requestParameters.keyword !== undefined) {
+            queryParameters['keyword'] = requestParameters.keyword;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

@@ -224,7 +224,7 @@ export default class NestedList extends Vue {
 
   async addTask(requestBody: TasksPostRequestBody) {
     const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
     const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
     return tasksApi.tasksPost({
       spaceId: loginUser.space.id,
@@ -235,7 +235,7 @@ export default class NestedList extends Vue {
 
   async patchTask(taskId: number, requestBody: TasksTaskIdPatchRequestBody) {
     const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
     const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
     return tasksApi.tasksTaskIdPatch({
       spaceId: loginUser.space.id,

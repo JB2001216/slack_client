@@ -55,6 +55,10 @@ const struct: LocaleStruct = {
           note: 'Note',
           ganttChart: 'GanttChart',
         },
+        projectMenu: {
+          addMembers: 'Add members',
+          projectSettings: 'Project settings',
+        },
       },
       projectAddColumn: {
         addANewProject: 'Add a new Project',
@@ -131,6 +135,14 @@ const struct: LocaleStruct = {
             sendInvitation: 'Send Invitation',
             accountSample: 'john_smith',
             invitedMessage: 'Invitation email sent successfully',
+          },
+          projectMemberAdd: {
+            title: 'Add members to {projectName}',
+            searchTextPlaceholder: 'Search by name or email address',
+            email: 'Email',
+            name: 'Name',
+            role: 'Role',
+            addMembers: 'Add Members',
           },
         },
       },

@@ -74,7 +74,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { StateChanger } from 'vue-infinite-loading';
 import { apiRegistry, SpacesApi, SpacesSpaceIdUsersInviteByEmailPostRequestBody, ApiErrors, getJsonFromResponse } from '@/lib/api';
 import { SpaceRoles, SpaceRole } from '@/lib/permissions';
 

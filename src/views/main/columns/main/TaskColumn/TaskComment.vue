@@ -98,7 +98,7 @@ export default class TaskCommment extends Vue {
       return;
     }
     const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
     try {
       this.saving = true;
@@ -123,7 +123,7 @@ export default class TaskCommment extends Vue {
       return;
     }
     const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
 
     try {
@@ -152,7 +152,7 @@ export default class TaskCommment extends Vue {
   async fetchComments() {
     if (this.fetching) return;
     const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
     const taskApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
 
     if (this.comments.length && this.comments[0].task !== this.task.id) {
@@ -195,7 +195,7 @@ export default class TaskCommment extends Vue {
     if (type === 'prev' && !this.prevable) return;
 
     const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectId!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
     const taskApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
     const comments = this.comments;
 

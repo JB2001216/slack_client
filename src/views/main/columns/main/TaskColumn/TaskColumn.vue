@@ -281,22 +281,22 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite
   const loginUser = store.state.activeUser.myUser!;
   const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
   const spaceId = loginUser.space.id;
-  const projectId = store.state.activeUser.activeProjectId;
+  const projectId = store.getters.activeUser.activeProjectId;
   const statusOptionsPromise = tasksApi.tasksStatusGet({
     spaceId: store.state.activeUser.myUser!.space.id,
-    projectId: store.state.activeUser.activeProjectId!,
+    projectId: store.getters.activeUser.activeProjectId!,
   });
 
   const [statusOptions, task, resFavorite] = await Promise.all([
     statusOptionsPromise,
     tasksApi.tasksTaskIdGet({
       spaceId: store.state.activeUser.myUser!.space.id,
-      projectId: store.state.activeUser.activeProjectId!,
+      projectId: store.getters.activeUser.activeProjectId!,
       taskId: parseInt(to.params.taskId),
     }),
     tasksApi.tasksTaskIdFavoriteGet({
       spaceId: store.state.activeUser.myUser!.space.id,
-      projectId: store.state.activeUser.activeProjectId!,
+      projectId: store.getters.activeUser.activeProjectId!,
       taskId: parseInt(to.params.taskId),
     }),
   ]);
@@ -354,7 +354,7 @@ export default class TaskColumn extends Vue {
       return;
     }
     const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.state.activeUser.activeProjectId!;
+    const projectId = store.getters.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
     try {
       this.saving = true;
@@ -380,7 +380,7 @@ export default class TaskColumn extends Vue {
       return;
     }
     const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.state.activeUser.activeProjectId!;
+    const projectId = store.getters.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
 
     try {
@@ -406,7 +406,7 @@ export default class TaskColumn extends Vue {
     }
 
     const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.state.activeUser.activeProjectId!;
+    const projectId = store.getters.activeUser.activeProjectId!;
     const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
     try {
       this.saving = true;

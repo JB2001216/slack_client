@@ -108,6 +108,11 @@ export class ProjectRole {
   checkManageable(targetRole: this) {
     return this._priorityOrder < targetRole._priorityOrder;
   }
+
+  /** 自身が他ユーザーをselectRoleに変更可能かチェックする */
+  checkSelectable(selectRole: this) {
+    return this._priorityOrder <= selectRole._priorityOrder;
+  }
 }
 
 /** ワークスペース権限グループ一覧 */
@@ -209,5 +214,20 @@ export class ProjectRoles {
       }
     }
     throw new Error('ProjectRole not found.');
+  }
+
+  static * getSelectables(mySpaceRole: SpaceRole, myProjectRole: ProjectRole | null) {
+    if (mySpaceRole.joinAllProjects && mySpaceRole.perms.includes(Perm.UPDATE_PROJECT_USER)) {
+      for (const r of this.all()) {
+        yield r;
+      }
+    }
+    if (myProjectRole && mySpaceRole.perms.includes(Perm.UPDATE_PROJECT_USER)) {
+      for (const r of this.all()) {
+        if (myProjectRole.checkSelectable(r)) {
+          yield r;
+        }
+      }
+    }
   }
 }

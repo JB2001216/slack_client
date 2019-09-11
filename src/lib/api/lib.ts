@@ -3,6 +3,7 @@ export enum ApiErrors {
   ExpiredTokenError = 'ExpiredTokenError',
   LoginUserNotFound = 'LoginUserNotFound',
   AuthenticationFailed = 'AuthenticationFailed',
+  NotFound = 'NotFound',
 }
 
 /** Responseのjson()が一度実行されると2度目でエラーになってしまうので回避 */

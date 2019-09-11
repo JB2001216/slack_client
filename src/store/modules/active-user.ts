@@ -1,6 +1,6 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import * as api from '@/lib/api';
-import { SpaceRoles } from '@/lib/permissions';
+import { SpaceRoles, ProjectRoles } from '@/lib/permissions';
 
 interface LoggedInUser extends api.MyUser {
   token: string;
@@ -54,8 +54,7 @@ async function _fetchProjects(user: LoggedInUser) {
 class ActiveUserState {
   myUser: LoggedInUser | null = null;
   projects: api.Project[] | null = null;
-  activeProjectId: number | null = null;
-
+  activeProjectData: { id: number; user: api.ProjectUser | null } | null = null
   spaceUsers: api.SpaceUser[] = [];
 
   // notes
@@ -69,16 +68,25 @@ class ActiveUserState {
 }
 
 class ActiveUserGetters extends Getters<ActiveUserState>() {
-  get activeProject() {
-    if (!this.state.projects) {
-      return undefined;
-    }
-    return this.state.projects.find((p) => p.id === this.state.activeProjectId);
-  }
-
   get mySpaceRole() {
     if (!this.state.myUser) return undefined;
     return SpaceRoles.get(this.state.myUser.spaceRoleId);
+  }
+
+  get activeProject() {
+    if (!this.state.projects || !this.state.activeProjectData) {
+      return undefined;
+    }
+    return this.state.projects.find((p) => p.id === this.state.activeProjectData!.id);
+  }
+
+  get activeProjectId() {
+    return this.state.activeProjectData ? this.state.activeProjectData.id : undefined;
+  }
+
+  get activeProjectMyRole() {
+    const projectUser = this.state.activeProjectData ? this.state.activeProjectData!.user : null;
+    return projectUser && projectUser.projectRoleId ? ProjectRoles.get(projectUser.projectRoleId) : null;
   }
 }
 
@@ -87,17 +95,13 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     this.state.myUser = null;
     this.state.spaceUsers = [];
     this.state.projects = null;
-    this.state.activeProjectId = null;
-    this.setActiveProjectId(null);
+    this.setActiveProjectData(null);
   }
 
   init(user: LoggedInUser, projects: api.Project[]) {
     this.clear();
     this.state.myUser = user;
     this.state.projects = projects;
-    if (projects.length) {
-      this.state.activeProjectId = projects[0].id;
-    }
   }
 
   addSpaceUser(...spaceUsers: api.SpaceUser[]) {
@@ -111,11 +115,11 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     }
   }
 
-  setActiveProjectId(projectId: ActiveUserState['activeProjectId']) {
-    if (!projectId || !this.state.projects || !this.state.projects.find((p) => p.id === projectId)) {
-      this.state.activeProjectId = null;
+  setActiveProjectData(value: ActiveUserState['activeProjectData']) {
+    if (!value || !this.state.projects || !this.state.projects.find((p) => p.id === value.id)) {
+      this.state.activeProjectData = null;
     } else {
-      this.state.activeProjectId = projectId;
+      this.state.activeProjectData = value;
     }
     this.state.notes = null;
     this.state.notesGetConditions = null;
@@ -218,11 +222,43 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     this.mutations.init(user, projects);
   }
 
+  async setActiveProject(id: number | null) {
+    const myUser = this.state.myUser;
+    if (!myUser || !id) {
+      this.mutations.setActiveProjectData(null);
+      return;
+    }
+
+    let projectUser: api.ProjectUser | null | undefined;
+    if (this.getters.mySpaceRole!.settableProjectRole) {
+      try {
+        const projectsApi = api.apiRegistry.load(api.ProjectsApi, myUser.token);
+        projectUser = await projectsApi.projectsProjectIdUsersUserIdGet({
+          spaceId: myUser.space.id,
+          projectId: id,
+          userId: myUser.id,
+        });
+      } catch (err) {
+        if (err instanceof Response) {
+          const json = await api.getJsonFromResponse(err);
+          if (json && json.error === api.ApiErrors.NotFound) {
+            projectUser = null;
+          }
+        }
+        if (typeof projectUser === 'undefined') {
+          this.mutations.setActiveProjectData(null);
+          throw err;
+        }
+      }
+    }
+
+    this.mutations.setActiveProjectData({ id, user: projectUser || null });
+  }
+
   async getSpaceUser(userId: number) {
     const myUser = this.state.myUser;
-    if (!myUser) {
-      return null;
-    }
+    if (!myUser) return null;
+
     const user = this.state.spaceUsers.find((u) => u.id === userId);
     if (user && user.spaceId === myUser.space.id) {
       return user;

@@ -68,12 +68,22 @@ export default class MySimpleMenu extends Vue {
     this.onClose();
   }
 
+  onWindowMouseDownUseCapture(ev: MouseEvent) {
+    if (this.opened) {
+      if (this.$refs.pop !== ev.target && !this.$refs.pop.contains(ev.target as Element)) {
+        this.onClose();
+      }
+    }
+  }
+
   beforeMount() {
     window.addEventListener('click', this.onWindowClick);
+    window.addEventListener('mousedown', this.onWindowMouseDownUseCapture, true);
   }
 
   beforeDestroy() {
     window.removeEventListener('click', this.onWindowClick);
+    window.removeEventListener('mousedown', this.onWindowMouseDownUseCapture, true);
   }
 }
 </script>

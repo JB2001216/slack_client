@@ -163,10 +163,10 @@ async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isAdd' | '
   const myUser = store.state.activeUser.myUser!;
   const notesApi = apiRegistry.load(NotesApi, myUser.token);
   const spaceId = myUser.space.id;
-  const projectId = store.state.activeUser.activeProjectId;
+  const projectId = store.getters.activeUser.activeProjectId;
   const statusOptionsPromise = notesApi.notesStatusGet({
     spaceId: store.state.activeUser.myUser!.space.id,
-    projectId: store.state.activeUser.activeProjectId!,
+    projectId: store.getters.activeUser.activeProjectId!,
   });
 
   if (to.name === 'note-add') {
@@ -187,12 +187,12 @@ async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isAdd' | '
       statusOptionsPromise,
       notesApi.notesNoteIdGet({
         spaceId: store.state.activeUser.myUser!.space.id,
-        projectId: store.state.activeUser.activeProjectId!,
+        projectId: store.getters.activeUser.activeProjectId!,
         noteId: parseInt(to.params.noteId),
       }),
       notesApi.notesNoteIdFavoriteGet({
         spaceId: store.state.activeUser.myUser!.space.id,
-        projectId: store.state.activeUser.activeProjectId!,
+        projectId: store.getters.activeUser.activeProjectId!,
         noteId: parseInt(to.params.noteId),
       }),
     ]);
@@ -237,7 +237,7 @@ export default class NoteColumn extends Vue {
       return;
     }
     const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.state.activeUser.activeProjectId!;
+    const projectId = store.getters.activeUser.activeProjectId!;
     const notesApi = apiRegistry.load(NotesApi, loginUser.token);
     try {
       this.saving = true;
@@ -282,7 +282,7 @@ export default class NoteColumn extends Vue {
       return;
     }
     const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.state.activeUser.activeProjectId!;
+    const projectId = store.getters.activeUser.activeProjectId!;
     const notesApi = apiRegistry.load(NotesApi, loginUser.token);
 
     try {
@@ -315,7 +315,7 @@ export default class NoteColumn extends Vue {
     }
 
     const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.state.activeUser.activeProjectId!;
+    const projectId = store.getters.activeUser.activeProjectId!;
     const notesApi = apiRegistry.load(NotesApi, loginUser.token);
     try {
       this.saving = true;
