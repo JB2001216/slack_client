@@ -41,7 +41,7 @@ export interface TaskCommentFile {
      * @type {string}
      * @memberof TaskCommentFile
      */
-    mime?: string;
+    mime: string | null;
     /**
      * 
      * @type {number}
@@ -55,7 +55,7 @@ export function TaskCommentFileFromJSON(json: any): TaskCommentFile {
         'id': json['id'],
         'comment': json['comment'],
         'name': json['name'],
-        'mime': !exists(json, 'mime') ? undefined : json['mime'],
+        'mime': json['mime'],
         'size': json['size'],
     };
 }

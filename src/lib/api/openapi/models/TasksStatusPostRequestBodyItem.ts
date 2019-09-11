@@ -35,7 +35,7 @@ export interface TasksStatusPostRequestBodyItem {
      * @type {string}
      * @memberof TasksStatusPostRequestBodyItem
      */
-    color?: string;
+    color?: string | null;
     /**
      * 
      * @type {number}

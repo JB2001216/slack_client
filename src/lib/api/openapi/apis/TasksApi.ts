@@ -41,6 +41,9 @@ import {
     TaskStatus,
     TaskStatusFromJSON,
     TaskStatusToJSON,
+    TaskTagsGetRequestBodyItem,
+    TaskTagsGetRequestBodyItemFromJSON,
+    TaskTagsGetRequestBodyItemToJSON,
     TasksGetResponse,
     TasksGetResponseFromJSON,
     TasksGetResponseToJSON,
@@ -59,6 +62,9 @@ import {
     TasksTaskIdPatchRequestBody,
     TasksTaskIdPatchRequestBodyFromJSON,
     TasksTaskIdPatchRequestBodyToJSON,
+    TasksTaskIdPriorityPostRequestBody,
+    TasksTaskIdPriorityPostRequestBodyFromJSON,
+    TasksTaskIdPriorityPostRequestBodyToJSON,
     TasksTaskIdPutRequestBody,
     TasksTaskIdPutRequestBodyFromJSON,
     TasksTaskIdPutRequestBodyToJSON,
@@ -180,6 +186,11 @@ export interface TasksStatusPostRequest {
     tasksStatusPostRequestBodyItem: Array<TasksStatusPostRequestBodyItem>;
 }
 
+export interface TasksTagsGetRequest {
+    spaceId: number;
+    projectId: number;
+}
+
 export interface TasksTaskIdDeleteRequest {
     spaceId: number;
     projectId: number;
@@ -210,6 +221,13 @@ export interface TasksTaskIdPatchRequest {
     projectId: number;
     taskId: number;
     tasksTaskIdPatchRequestBody: TasksTaskIdPatchRequestBody;
+}
+
+export interface TasksTaskIdPriorityPostRequest {
+    spaceId: number;
+    projectId: number;
+    taskId: number;
+    tasksTaskIdPriorityPostRequestBody: TasksTaskIdPriorityPostRequestBody;
 }
 
 export interface TasksTaskIdPutRequest {
@@ -293,8 +311,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskCommmentsGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsGet(requestParameters: TaskCommmentsGetRequest): Promise<TaskCommmentsGetResponse> {
         const response = await this.taskCommmentsGetRaw(requestParameters);
         return await response.value();
@@ -340,8 +358,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskCommentFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsPost(requestParameters: TaskCommmentsPostRequest): Promise<TaskComment> {
         const response = await this.taskCommmentsPostRaw(requestParameters);
         return await response.value();
@@ -384,8 +402,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsTaskCommentIdDelete(requestParameters: TaskCommmentsTaskCommentIdDeleteRequest): Promise<void> {
         await this.taskCommmentsTaskCommentIdDeleteRaw(requestParameters);
     }
@@ -427,8 +445,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskCommmentsTaskCommentIdFilesGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsTaskCommentIdFilesGet(requestParameters: TaskCommmentsTaskCommentIdFilesGetRequest): Promise<TaskCommmentsTaskCommentIdFilesGetResponse> {
         const response = await this.taskCommmentsTaskCommentIdFilesGetRaw(requestParameters);
         return await response.value();
@@ -489,8 +507,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskCommentFileFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsTaskCommentIdFilesPost(requestParameters: TaskCommmentsTaskCommentIdFilesPostRequest): Promise<TaskCommentFile> {
         const response = await this.taskCommmentsTaskCommentIdFilesPostRaw(requestParameters);
         return await response.value();
@@ -537,8 +555,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsTaskCommentIdFilesTaskCommentFileIdDelete(requestParameters: TaskCommmentsTaskCommentIdFilesTaskCommentFileIdDeleteRequest): Promise<void> {
         await this.taskCommmentsTaskCommentIdFilesTaskCommentFileIdDeleteRaw(requestParameters);
     }
@@ -584,8 +602,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskCommentFileFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsTaskCommentIdFilesTaskCommentFileIdGet(requestParameters: TaskCommmentsTaskCommentIdFilesTaskCommentFileIdGetRequest): Promise<TaskCommentFile> {
         const response = await this.taskCommmentsTaskCommentIdFilesTaskCommentFileIdGetRaw(requestParameters);
         return await response.value();
@@ -639,8 +657,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskCommentFileFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsTaskCommentIdFilesTaskCommentFileIdPut(requestParameters: TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequest): Promise<TaskCommentFile> {
         const response = await this.taskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRaw(requestParameters);
         return await response.value();
@@ -683,8 +701,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskCommentFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsTaskCommentIdGet(requestParameters: TaskCommmentsTaskCommentIdGetRequest): Promise<TaskComment> {
         const response = await this.taskCommmentsTaskCommentIdGetRaw(requestParameters);
         return await response.value();
@@ -734,8 +752,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskCommentFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async taskCommmentsTaskCommentIdPut(requestParameters: TaskCommmentsTaskCommentIdPutRequest): Promise<TaskComment> {
         const response = await this.taskCommmentsTaskCommentIdPutRaw(requestParameters);
         return await response.value();
@@ -806,8 +824,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TasksGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async tasksGet(requestParameters: TasksGetRequest): Promise<TasksGetResponse> {
         const response = await this.tasksGetRaw(requestParameters);
         return await response.value();
@@ -849,8 +867,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async tasksPost(requestParameters: TasksPostRequest): Promise<Task> {
         const response = await this.tasksPostRaw(requestParameters);
         return await response.value();
@@ -885,8 +903,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TaskStatusFromJSON));
     }
 
-    /**
-     */
+   /**
+    */
     async tasksStatusGet(requestParameters: TasksStatusGetRequest): Promise<Array<TaskStatus>> {
         const response = await this.tasksStatusGetRaw(requestParameters);
         return await response.value();
@@ -928,10 +946,46 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskStatusFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async tasksStatusPost(requestParameters: TasksStatusPostRequest): Promise<TaskStatus> {
         const response = await this.tasksStatusPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async tasksTagsGetRaw(requestParameters: TasksTagsGetRequest): Promise<runtime.ApiResponse<Array<TaskTagsGetRequestBodyItem>>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling tasksTagsGet.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling tasksTagsGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/tasks/tags/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TaskTagsGetRequestBodyItemFromJSON));
+    }
+
+   /**
+    */
+    async tasksTagsGet(requestParameters: TasksTagsGetRequest): Promise<Array<TaskTagsGetRequestBodyItem>> {
+        const response = await this.tasksTagsGetRaw(requestParameters);
         return await response.value();
     }
 
@@ -968,8 +1022,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-    /**
-     */
+   /**
+    */
     async tasksTaskIdDelete(requestParameters: TasksTaskIdDeleteRequest): Promise<void> {
         await this.tasksTaskIdDeleteRaw(requestParameters);
     }
@@ -1007,8 +1061,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TasksTaskIdFavoriteGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async tasksTaskIdFavoriteGet(requestParameters: TasksTaskIdFavoriteGetRequest): Promise<TasksTaskIdFavoriteGetResponse> {
         const response = await this.tasksTaskIdFavoriteGetRaw(requestParameters);
         return await response.value();
@@ -1054,8 +1108,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TasksTaskIdFavoriteGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async tasksTaskIdFavoritePost(requestParameters: TasksTaskIdFavoritePostRequest): Promise<TasksTaskIdFavoriteGetResponse> {
         const response = await this.tasksTaskIdFavoritePostRaw(requestParameters);
         return await response.value();
@@ -1094,8 +1148,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async tasksTaskIdGet(requestParameters: TasksTaskIdGetRequest): Promise<Task> {
         const response = await this.tasksTaskIdGetRaw(requestParameters);
         return await response.value();
@@ -1141,11 +1195,57 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async tasksTaskIdPatch(requestParameters: TasksTaskIdPatchRequest): Promise<Task> {
         const response = await this.tasksTaskIdPatchRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     */
+    async tasksTaskIdPriorityPostRaw(requestParameters: TasksTaskIdPriorityPostRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling tasksTaskIdPriorityPost.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling tasksTaskIdPriorityPost.');
+        }
+
+        if (requestParameters.taskId === null || requestParameters.taskId === undefined) {
+            throw new runtime.RequiredError('taskId','Required parameter requestParameters.taskId was null or undefined when calling tasksTaskIdPriorityPost.');
+        }
+
+        if (requestParameters.tasksTaskIdPriorityPostRequestBody === null || requestParameters.tasksTaskIdPriorityPostRequestBody === undefined) {
+            throw new runtime.RequiredError('tasksTaskIdPriorityPostRequestBody','Required parameter requestParameters.tasksTaskIdPriorityPostRequestBody was null or undefined when calling tasksTaskIdPriorityPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/tasks/{taskId}/priority/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"taskId"}}`, encodeURIComponent(String(requestParameters.taskId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TasksTaskIdPriorityPostRequestBodyToJSON(requestParameters.tasksTaskIdPriorityPostRequestBody),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+   /**
+    */
+    async tasksTaskIdPriorityPost(requestParameters: TasksTaskIdPriorityPostRequest): Promise<void> {
+        await this.tasksTaskIdPriorityPostRaw(requestParameters);
     }
 
     /**
@@ -1188,8 +1288,8 @@ export class TasksApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TaskFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async tasksTaskIdPut(requestParameters: TasksTaskIdPutRequest): Promise<Task> {
         const response = await this.tasksTaskIdPutRaw(requestParameters);
         return await response.value();

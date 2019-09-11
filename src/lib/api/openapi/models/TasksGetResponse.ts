@@ -35,13 +35,13 @@ export interface TasksGetResponse {
      * @type {string}
      * @memberof TasksGetResponse
      */
-    previous?: string;
+    previous: string | null;
     /**
      * 
      * @type {string}
      * @memberof TasksGetResponse
      */
-    next?: string;
+    next: string | null;
     /**
      * 
      * @type {Array<Task>}
@@ -53,8 +53,8 @@ export interface TasksGetResponse {
 export function TasksGetResponseFromJSON(json: any): TasksGetResponse {
     return {
         'count': json['count'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
+        'previous': json['previous'],
+        'next': json['next'],
         'results': (json['results'] as Array<any>).map(TaskFromJSON),
     };
 }

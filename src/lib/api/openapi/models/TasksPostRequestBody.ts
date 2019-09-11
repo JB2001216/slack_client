@@ -29,7 +29,7 @@ export interface TasksPostRequestBody {
      * @type {number}
      * @memberof TasksPostRequestBody
      */
-    parent?: number;
+    parent?: number | null;
     /**
      *
      * @type {string}
@@ -41,31 +41,31 @@ export interface TasksPostRequestBody {
      * @type {string}
      * @memberof TasksPostRequestBody
      */
-    body?: string;
+    body?: string | null;
     /**
      *
      * @type {Date}
      * @memberof TasksPostRequestBody
      */
-    startedAt?: Date;
+    startedAt?: Date | null;
     /**
      *
      * @type {Date}
      * @memberof TasksPostRequestBody
      */
-    limitedAt?: Date;
+    limitedAt?: Date | null;
     /**
      *
      * @type {number}
      * @memberof TasksPostRequestBody
      */
-    status?: number;
+    status?: number | null;
     /**
      *
      * @type {number}
      * @memberof TasksPostRequestBody
      */
-    batonUser?: number;
+    batonUser?: number | null;
     /**
      *
      * @type {Array<number>}

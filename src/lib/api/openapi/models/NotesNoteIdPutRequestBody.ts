@@ -29,25 +29,25 @@ export interface NotesNoteIdPutRequestBody {
      * @type {string}
      * @memberof NotesNoteIdPutRequestBody
      */
-    body?: string;
+    body?: string | null;
     /**
      * 
      * @type {number}
      * @memberof NotesNoteIdPutRequestBody
      */
-    status?: number;
+    status?: number | null;
     /**
      * 
      * @type {number}
      * @memberof NotesNoteIdPutRequestBody
      */
-    batonUser?: number;
+    batonUser?: number | null;
     /**
      * 
      * @type {number}
      * @memberof NotesNoteIdPutRequestBody
      */
-    writeUser?: number;
+    writeUser?: number | null;
     /**
      * 
      * @type {Array<number>}
@@ -59,7 +59,7 @@ export interface NotesNoteIdPutRequestBody {
      * @type {number}
      * @memberof NotesNoteIdPutRequestBody
      */
-    parentNote?: number;
+    parentNote?: number | null;
 }
 
 export function NotesNoteIdPutRequestBodyFromJSON(json: any): NotesNoteIdPutRequestBody {

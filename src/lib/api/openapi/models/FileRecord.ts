@@ -41,7 +41,7 @@ export interface FileRecord {
      * @type {string}
      * @memberof FileRecord
      */
-    mime?: string;
+    mime: string | null;
     /**
      * 
      * @type {number}
@@ -67,7 +67,7 @@ export function FileRecordFromJSON(json: any): FileRecord {
         'id': json['id'],
         'user': json['user'],
         'name': json['name'],
-        'mime': !exists(json, 'mime') ? undefined : json['mime'],
+        'mime': json['mime'],
         'size': json['size'],
         'createdAt': new Date(json['createdAt']),
         'updatedAt': new Date(json['updatedAt']),

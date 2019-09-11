@@ -35,7 +35,7 @@ export interface SpacesPostRequestBodyOwner {
      * @type {string}
      * @memberof SpacesPostRequestBodyOwner
      */
-    displayName?: string;
+    displayName?: string | null;
 }
 
 export function SpacesPostRequestBodyOwnerFromJSON(json: any): SpacesPostRequestBodyOwner {

@@ -198,8 +198,8 @@ export class NotesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => NotesGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async notesGet(requestParameters: NotesGetRequest): Promise<NotesGetResponse> {
         const response = await this.notesGetRaw(requestParameters);
         return await response.value();
@@ -238,8 +238,8 @@ export class NotesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-    /**
-     */
+   /**
+    */
     async notesNoteIdDelete(requestParameters: NotesNoteIdDeleteRequest): Promise<void> {
         await this.notesNoteIdDeleteRaw(requestParameters);
     }
@@ -277,8 +277,8 @@ export class NotesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TasksTaskIdFavoriteGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async notesNoteIdFavoriteGet(requestParameters: NotesNoteIdFavoriteGetRequest): Promise<TasksTaskIdFavoriteGetResponse> {
         const response = await this.notesNoteIdFavoriteGetRaw(requestParameters);
         return await response.value();
@@ -324,8 +324,8 @@ export class NotesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => TasksTaskIdFavoriteGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async notesNoteIdFavoritePost(requestParameters: NotesNoteIdFavoritePostRequest): Promise<TasksTaskIdFavoriteGetResponse> {
         const response = await this.notesNoteIdFavoritePostRaw(requestParameters);
         return await response.value();
@@ -364,8 +364,8 @@ export class NotesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => NoteFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async notesNoteIdGet(requestParameters: NotesNoteIdGetRequest): Promise<Note> {
         const response = await this.notesNoteIdGetRaw(requestParameters);
         return await response.value();
@@ -411,8 +411,8 @@ export class NotesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => NoteFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async notesNoteIdPut(requestParameters: NotesNoteIdPutRequest): Promise<Note> {
         const response = await this.notesNoteIdPutRaw(requestParameters);
         return await response.value();
@@ -454,8 +454,8 @@ export class NotesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => NoteFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async notesPost(requestParameters: NotesPostRequest): Promise<Note> {
         const response = await this.notesPostRaw(requestParameters);
         return await response.value();
@@ -490,8 +490,8 @@ export class NotesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(NoteStatusFromJSON));
     }
 
-    /**
-     */
+   /**
+    */
     async notesStatusGet(requestParameters: NotesStatusGetRequest): Promise<Array<NoteStatus>> {
         const response = await this.notesStatusGetRaw(requestParameters);
         return await response.value();
@@ -533,8 +533,8 @@ export class NotesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => NoteStatusFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async notesStatusPost(requestParameters: NotesStatusPostRequest): Promise<NoteStatus> {
         const response = await this.notesStatusPostRaw(requestParameters);
         return await response.value();

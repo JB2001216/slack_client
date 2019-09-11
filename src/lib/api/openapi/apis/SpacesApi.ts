@@ -68,8 +68,8 @@ export interface SpacesSpaceIdGetRequest {
 
 export interface SpacesSpaceIdPutRequest {
     spaceId: number;
-    displayName?: string;
-    avator?: Blob;
+    displayName?: string | null;
+    avator?: Blob | null;
 }
 
 export interface SpacesSpaceIdUsersGetRequest {
@@ -133,9 +133,9 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-    /**
-     * スペース登録用メール認証メッセージ送信
-     */
+   /**
+    * スペース登録用メール認証メッセージ送信
+    */
     async spacesConfirmPost(requestParameters: SpacesConfirmPostRequest): Promise<void> {
         await this.spacesConfirmPostRaw(requestParameters);
     }
@@ -173,8 +173,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpacesGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async spacesGet(requestParameters: SpacesGetRequest): Promise<SpacesGetResponse> {
         const response = await this.spacesGetRaw(requestParameters);
         return await response.value();
@@ -205,9 +205,9 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpacesPostResponseFromJSON(jsonValue));
     }
 
-    /**
-     * メール認証通過後、スペース登録
-     */
+   /**
+    * メール認証通過後、スペース登録
+    */
     async spacesPost(requestParameters: SpacesPostRequest): Promise<SpacesPostResponse> {
         const response = await this.spacesPostRaw(requestParameters);
         return await response.value();
@@ -238,8 +238,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-    /**
-     */
+   /**
+    */
     async spacesSpaceIdDelete(requestParameters: SpacesSpaceIdDeleteRequest): Promise<void> {
         await this.spacesSpaceIdDeleteRaw(requestParameters);
     }
@@ -265,8 +265,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async spacesSpaceIdGet(requestParameters: SpacesSpaceIdGetRequest): Promise<Space> {
         const response = await this.spacesSpaceIdGetRaw(requestParameters);
         return await response.value();
@@ -307,8 +307,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async spacesSpaceIdPut(requestParameters: SpacesSpaceIdPutRequest): Promise<Space> {
         const response = await this.spacesSpaceIdPutRaw(requestParameters);
         return await response.value();
@@ -363,8 +363,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpacesSpaceIdUsersGetResponseFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async spacesSpaceIdUsersGet(requestParameters: SpacesSpaceIdUsersGetRequest): Promise<SpacesSpaceIdUsersGetResponse> {
         const response = await this.spacesSpaceIdUsersGetRaw(requestParameters);
         return await response.value();
@@ -402,8 +402,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-    /**
-     */
+   /**
+    */
     async spacesSpaceIdUsersInviteByEmailPost(requestParameters: SpacesSpaceIdUsersInviteByEmailPostRequest): Promise<void> {
         await this.spacesSpaceIdUsersInviteByEmailPostRaw(requestParameters);
     }
@@ -437,8 +437,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-    /**
-     */
+   /**
+    */
     async spacesSpaceIdUsersUserIdDelete(requestParameters: SpacesSpaceIdUsersUserIdDeleteRequest): Promise<void> {
         await this.spacesSpaceIdUsersUserIdDeleteRaw(requestParameters);
     }
@@ -472,8 +472,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceUserFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async spacesSpaceIdUsersUserIdGet(requestParameters: SpacesSpaceIdUsersUserIdGetRequest): Promise<SpaceUser> {
         const response = await this.spacesSpaceIdUsersUserIdGetRaw(requestParameters);
         return await response.value();
@@ -515,8 +515,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceUserFromJSON(jsonValue));
     }
 
-    /**
-     */
+   /**
+    */
     async spacesSpaceIdUsersUserIdPut(requestParameters: SpacesSpaceIdUsersUserIdPutRequest): Promise<SpaceUser> {
         const response = await this.spacesSpaceIdUsersUserIdPutRaw(requestParameters);
         return await response.value();

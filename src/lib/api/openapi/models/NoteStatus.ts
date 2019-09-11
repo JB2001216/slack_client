@@ -47,7 +47,7 @@ export interface NoteStatus {
      * @type {string}
      * @memberof NoteStatus
      */
-    color?: string;
+    color: string | null;
     /**
      * 
      * @type {number}
@@ -62,7 +62,7 @@ export function NoteStatusFromJSON(json: any): NoteStatus {
         'projectId': !exists(json, 'projectId') ? undefined : json['projectId'],
         'category': json['category'],
         'name': json['name'],
-        'color': !exists(json, 'color') ? undefined : json['color'],
+        'color': json['color'],
         'sort': json['sort'],
     };
 }

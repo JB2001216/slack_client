@@ -29,8 +29,8 @@ export default class MyMarkdownEditor extends Vue {
   }
 
   // props
-  @Prop({ type: String, default: '' })
-  value!: string;
+  @Prop({ type: String, default: null })
+  value!: string | null;
 
   @Prop({ type: String, default: '' })
   editorPlaceholder!: string;
@@ -49,7 +49,7 @@ export default class MyMarkdownEditor extends Vue {
 
   // computed
   get compiledValue() {
-    return marked(this.value, {
+    return marked(this.value || '', {
       langPrefix: '',
       highlight(code, lang) {
         return highlight.highlightAuto(code, [lang]).value;

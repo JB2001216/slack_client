@@ -35,13 +35,13 @@ export interface FilesGetResponse {
      * @type {string}
      * @memberof FilesGetResponse
      */
-    previous?: string;
+    previous: string | null;
     /**
      * 
      * @type {string}
      * @memberof FilesGetResponse
      */
-    next?: string;
+    next: string | null;
     /**
      * 
      * @type {Array<FileRecord>}
@@ -53,8 +53,8 @@ export interface FilesGetResponse {
 export function FilesGetResponseFromJSON(json: any): FilesGetResponse {
     return {
         'count': json['count'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
+        'previous': json['previous'],
+        'next': json['next'],
         'results': (json['results'] as Array<any>).map(FileRecordFromJSON),
     };
 }

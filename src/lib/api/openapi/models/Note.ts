@@ -35,7 +35,7 @@ export interface Note {
      * @type {number}
      * @memberof Note
      */
-    writeUser?: number;
+    writeUser: number | null;
     /**
      * 
      * @type {string}
@@ -47,19 +47,19 @@ export interface Note {
      * @type {string}
      * @memberof Note
      */
-    body?: string;
+    body: string | null;
     /**
      * 
      * @type {number}
      * @memberof Note
      */
-    status?: number;
+    status: number | null;
     /**
      * 
      * @type {number}
      * @memberof Note
      */
-    batonUser?: number;
+    batonUser: number | null;
     /**
      * 
      * @type {Array<number>}
@@ -71,7 +71,7 @@ export interface Note {
      * @type {number}
      * @memberof Note
      */
-    parentNote?: number;
+    parentNote: number | null;
     /**
      * 
      * @type {Date}
@@ -90,13 +90,13 @@ export function NoteFromJSON(json: any): Note {
     return {
         'id': json['id'],
         'project': json['project'],
-        'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
+        'writeUser': json['writeUser'],
         'subject': json['subject'],
-        'body': !exists(json, 'body') ? undefined : json['body'],
-        'status': !exists(json, 'status') ? undefined : json['status'],
-        'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
+        'body': json['body'],
+        'status': json['status'],
+        'batonUser': json['batonUser'],
         'chargeUsers': json['chargeUsers'],
-        'parentNote': !exists(json, 'parentNote') ? undefined : json['parentNote'],
+        'parentNote': json['parentNote'],
         'createdAt': new Date(json['createdAt']),
         'updatedAt': new Date(json['updatedAt']),
     };

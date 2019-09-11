@@ -35,13 +35,13 @@ export interface ProjectsGetResponse {
      * @type {string}
      * @memberof ProjectsGetResponse
      */
-    previous?: string;
+    previous: string | null;
     /**
      * 
      * @type {string}
      * @memberof ProjectsGetResponse
      */
-    next?: string;
+    next: string | null;
     /**
      * 
      * @type {Array<Project>}
@@ -53,8 +53,8 @@ export interface ProjectsGetResponse {
 export function ProjectsGetResponseFromJSON(json: any): ProjectsGetResponse {
     return {
         'count': json['count'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
+        'previous': json['previous'],
+        'next': json['next'],
         'results': (json['results'] as Array<any>).map(ProjectFromJSON),
     };
 }

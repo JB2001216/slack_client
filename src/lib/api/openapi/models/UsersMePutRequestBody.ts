@@ -35,7 +35,7 @@ export interface UsersMePutRequestBody {
      * @type {string}
      * @memberof UsersMePutRequestBody
      */
-    displayName?: string;
+    displayName?: string | null;
     /**
      * 
      * @type {Locale}

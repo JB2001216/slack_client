@@ -44,7 +44,7 @@ export interface MyUser {
      * @type {string}
      * @memberof MyUser
      */
-    displayName?: string;
+    displayName: string | null;
     /**
      * 
      * @type {string}
@@ -81,7 +81,7 @@ export function MyUserFromJSON(json: any): MyUser {
     return {
         'id': json['id'],
         'account': json['account'],
-        'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
+        'displayName': json['displayName'],
         'email': json['email'],
         'spaceRoleId': json['spaceRoleId'],
         'locale': LocaleFromJSON(json['locale']),

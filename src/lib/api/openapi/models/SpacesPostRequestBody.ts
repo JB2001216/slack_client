@@ -41,7 +41,7 @@ export interface SpacesPostRequestBody {
      * @type {string}
      * @memberof SpacesPostRequestBody
      */
-    displayName?: string;
+    displayName?: string | null;
     /**
      * 
      * @type {SpacesPostRequestBodyOwner}

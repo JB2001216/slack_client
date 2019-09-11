@@ -35,13 +35,13 @@ export interface NotesGetResponse {
      * @type {string}
      * @memberof NotesGetResponse
      */
-    previous?: string;
+    previous: string | null;
     /**
      * 
      * @type {string}
      * @memberof NotesGetResponse
      */
-    next?: string;
+    next: string | null;
     /**
      * 
      * @type {Array<Note>}
@@ -53,8 +53,8 @@ export interface NotesGetResponse {
 export function NotesGetResponseFromJSON(json: any): NotesGetResponse {
     return {
         'count': json['count'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
+        'previous': json['previous'],
+        'next': json['next'],
         'results': (json['results'] as Array<any>).map(NoteFromJSON),
     };
 }

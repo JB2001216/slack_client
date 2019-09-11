@@ -35,14 +35,14 @@ export interface ProjectUser {
      * @type {number}
      * @memberof ProjectUser
      */
-    projectRoleId?: number;
+    projectRoleId: number | null;
 }
 
 export function ProjectUserFromJSON(json: any): ProjectUser {
     return {
         'userId': json['userId'],
         'spaceRoleId': json['spaceRoleId'],
-        'projectRoleId': !exists(json, 'projectRoleId') ? undefined : json['projectRoleId'],
+        'projectRoleId': json['projectRoleId'],
     };
 }
 

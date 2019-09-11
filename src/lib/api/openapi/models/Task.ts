@@ -41,13 +41,13 @@ export interface Task {
      * @type {number}
      * @memberof Task
      */
-    parent?: number;
+    parent: number | null;
     /**
      *
      * @type {number}
      * @memberof Task
      */
-    writeUser?: number;
+    writeUser: number | null;
     /**
      *
      * @type {string}
@@ -59,31 +59,31 @@ export interface Task {
      * @type {string}
      * @memberof Task
      */
-    body?: string;
+    body: string | null;
     /**
      *
      * @type {Date}
      * @memberof Task
      */
-    startedAt?: Date;
+    startedAt?: Date | null;
     /**
      *
      * @type {Date}
      * @memberof Task
      */
-    limitedAt?: Date;
+    limitedAt?: Date | null;
     /**
      *
      * @type {number}
      * @memberof Task
      */
-    status?: number;
+    status: number | null;
     /**
      *
      * @type {number}
      * @memberof Task
      */
-    batonUser?: number;
+    batonUser: number | null;
     /**
      *
      * @type {Array<number>}
@@ -126,14 +126,14 @@ export function TaskFromJSON(json: any): Task {
     return {
         'id': json['id'],
         'project': json['project'],
-        'parent': !exists(json, 'parent') ? undefined : json['parent'],
-        'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
+        'parent': json['parent'],
+        'writeUser': json['writeUser'],
         'subject': json['subject'],
-        'body': !exists(json, 'body') ? undefined : json['body'],
+        'body': json['body'],
         'startedAt': !exists(json, 'startedAt') ? undefined : new Date(json['startedAt']),
         'limitedAt': !exists(json, 'limitedAt') ? undefined : new Date(json['limitedAt']),
-        'status': !exists(json, 'status') ? undefined : json['status'],
-        'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
+        'status': json['status'],
+        'batonUser': json['batonUser'],
         'chargeUsers': json['chargeUsers'],
         'priority': json['priority'],
         'hasChilds': json['hasChilds'],

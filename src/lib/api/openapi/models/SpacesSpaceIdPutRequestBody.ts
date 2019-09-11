@@ -23,13 +23,13 @@ export interface SpacesSpaceIdPutRequestBody {
      * @type {string}
      * @memberof SpacesSpaceIdPutRequestBody
      */
-    displayName?: string;
+    displayName?: string | null;
     /**
      * 
      * @type {Blob}
      * @memberof SpacesSpaceIdPutRequestBody
      */
-    avator?: Blob;
+    avator?: Blob | null;
 }
 
 export function SpacesSpaceIdPutRequestBodyFromJSON(json: any): SpacesSpaceIdPutRequestBody {
