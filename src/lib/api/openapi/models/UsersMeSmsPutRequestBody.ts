@@ -33,7 +33,15 @@ export interface UsersMeSmsPutRequestBody {
 }
 
 export function UsersMeSmsPutRequestBodyFromJSON(json: any): UsersMeSmsPutRequestBody {
+    return UsersMeSmsPutRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersMeSmsPutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersMeSmsPutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'token': json['token'],
         'pin': json['pin'],
     };
@@ -43,7 +51,11 @@ export function UsersMeSmsPutRequestBodyToJSON(value?: UsersMeSmsPutRequestBody)
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'token': value.token,
         'pin': value.pin,
     };

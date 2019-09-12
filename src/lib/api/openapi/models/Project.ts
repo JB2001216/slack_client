@@ -39,7 +39,15 @@ export interface Project {
 }
 
 export function ProjectFromJSON(json: any): Project {
+    return ProjectFromJSONTyped(json, false);
+}
+
+export function ProjectFromJSONTyped(json: any, ignoreDiscriminator: boolean): Project {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'id': json['id'],
         'spaceId': json['spaceId'],
         'displayName': json['displayName'],
@@ -50,7 +58,11 @@ export function ProjectToJSON(value?: Project): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'spaceId': value.spaceId,
         'displayName': value.displayName,

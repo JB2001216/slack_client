@@ -63,7 +63,15 @@ export interface FileRecord {
 }
 
 export function FileRecordFromJSON(json: any): FileRecord {
+    return FileRecordFromJSONTyped(json, false);
+}
+
+export function FileRecordFromJSONTyped(json: any, ignoreDiscriminator: boolean): FileRecord {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'id': json['id'],
         'user': json['user'],
         'name': json['name'],
@@ -78,7 +86,11 @@ export function FileRecordToJSON(value?: FileRecord): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'user': value.user,
         'name': value.name,

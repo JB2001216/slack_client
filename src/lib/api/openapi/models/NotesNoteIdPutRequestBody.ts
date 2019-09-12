@@ -63,7 +63,15 @@ export interface NotesNoteIdPutRequestBody {
 }
 
 export function NotesNoteIdPutRequestBodyFromJSON(json: any): NotesNoteIdPutRequestBody {
+    return NotesNoteIdPutRequestBodyFromJSONTyped(json, false);
+}
+
+export function NotesNoteIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): NotesNoteIdPutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'subject': !exists(json, 'subject') ? undefined : json['subject'],
         'body': !exists(json, 'body') ? undefined : json['body'],
         'status': !exists(json, 'status') ? undefined : json['status'],
@@ -78,7 +86,11 @@ export function NotesNoteIdPutRequestBodyToJSON(value?: NotesNoteIdPutRequestBod
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'subject': value.subject,
         'body': value.body,
         'status': value.status,

@@ -27,7 +27,15 @@ export interface UsersMeSmsConfirmPostRequestBody {
 }
 
 export function UsersMeSmsConfirmPostRequestBodyFromJSON(json: any): UsersMeSmsConfirmPostRequestBody {
+    return UsersMeSmsConfirmPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersMeSmsConfirmPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersMeSmsConfirmPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'sms': json['sms'],
     };
 }
@@ -36,7 +44,11 @@ export function UsersMeSmsConfirmPostRequestBodyToJSON(value?: UsersMeSmsConfirm
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'sms': value.sms,
     };
 }

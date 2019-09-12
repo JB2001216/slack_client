@@ -33,7 +33,15 @@ export interface TaskCommmentsTaskCommentIdFilesPostRequestBody {
 }
 
 export function TaskCommmentsTaskCommentIdFilesPostRequestBodyFromJSON(json: any): TaskCommmentsTaskCommentIdFilesPostRequestBody {
+    return TaskCommmentsTaskCommentIdFilesPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function TaskCommmentsTaskCommentIdFilesPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): TaskCommmentsTaskCommentIdFilesPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'name': json['name'],
         'file': json['file'],
     };
@@ -43,7 +51,11 @@ export function TaskCommmentsTaskCommentIdFilesPostRequestBodyToJSON(value?: Tas
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'name': value.name,
         'file': value.file,
     };

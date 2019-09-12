@@ -33,7 +33,15 @@ export interface SpacesSpaceIdPutRequestBody {
 }
 
 export function SpacesSpaceIdPutRequestBodyFromJSON(json: any): SpacesSpaceIdPutRequestBody {
+    return SpacesSpaceIdPutRequestBodyFromJSONTyped(json, false);
+}
+
+export function SpacesSpaceIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesSpaceIdPutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
         'avator': !exists(json, 'avator') ? undefined : json['avator'],
     };
@@ -43,7 +51,11 @@ export function SpacesSpaceIdPutRequestBodyToJSON(value?: SpacesSpaceIdPutReques
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'displayName': value.displayName,
         'avator': value.avator,
     };

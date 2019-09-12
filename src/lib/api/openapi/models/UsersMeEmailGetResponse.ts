@@ -27,7 +27,15 @@ export interface UsersMeEmailGetResponse {
 }
 
 export function UsersMeEmailGetResponseFromJSON(json: any): UsersMeEmailGetResponse {
+    return UsersMeEmailGetResponseFromJSONTyped(json, false);
+}
+
+export function UsersMeEmailGetResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersMeEmailGetResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'email': json['email'],
     };
 }
@@ -36,7 +44,11 @@ export function UsersMeEmailGetResponseToJSON(value?: UsersMeEmailGetResponse): 
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'email': value.email,
     };
 }

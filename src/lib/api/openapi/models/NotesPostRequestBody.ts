@@ -63,7 +63,15 @@ export interface NotesPostRequestBody {
 }
 
 export function NotesPostRequestBodyFromJSON(json: any): NotesPostRequestBody {
+    return NotesPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function NotesPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): NotesPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'subject': json['subject'],
         'body': !exists(json, 'body') ? undefined : json['body'],
         'status': !exists(json, 'status') ? undefined : json['status'],
@@ -78,7 +86,11 @@ export function NotesPostRequestBodyToJSON(value?: NotesPostRequestBody): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'subject': value.subject,
         'body': value.body,
         'status': value.status,

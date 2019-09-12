@@ -27,7 +27,15 @@ export interface TasksTaskIdFavoritePostRequestBody {
 }
 
 export function TasksTaskIdFavoritePostRequestBodyFromJSON(json: any): TasksTaskIdFavoritePostRequestBody {
+    return TasksTaskIdFavoritePostRequestBodyFromJSONTyped(json, false);
+}
+
+export function TasksTaskIdFavoritePostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): TasksTaskIdFavoritePostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'value': json['value'],
     };
 }
@@ -36,7 +44,11 @@ export function TasksTaskIdFavoritePostRequestBodyToJSON(value?: TasksTaskIdFavo
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'value': value.value,
     };
 }

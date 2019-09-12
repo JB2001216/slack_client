@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     SpacesSpaceIdProjectsProjectIdTasksTags,
     SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON,
+    SpacesSpaceIdProjectsProjectIdTasksTagsFromJSONTyped,
     SpacesSpaceIdProjectsProjectIdTasksTagsToJSON,
 } from './';
 
@@ -81,7 +82,15 @@ export interface TasksTaskIdPatchRequestBody {
 }
 
 export function TasksTaskIdPatchRequestBodyFromJSON(json: any): TasksTaskIdPatchRequestBody {
+    return TasksTaskIdPatchRequestBodyFromJSONTyped(json, false);
+}
+
+export function TasksTaskIdPatchRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): TasksTaskIdPatchRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+
         'parent': !exists(json, 'parent') ? undefined : json['parent'],
         'subject': !exists(json, 'subject') ? undefined : json['subject'],
         'body': !exists(json, 'body') ? undefined : json['body'],
@@ -98,7 +107,11 @@ export function TasksTaskIdPatchRequestBodyToJSON(value?: TasksTaskIdPatchReques
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+
         'parent': value.parent,
         'subject': value.subject,
         'body': value.body,

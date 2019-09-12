@@ -27,7 +27,15 @@ export interface TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBody 
 }
 
 export function TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBodyFromJSON(json: any): TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBody {
+    return TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBodyFromJSONTyped(json, false);
+}
+
+export function TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'name': !exists(json, 'name') ? undefined : json['name'],
     };
 }
@@ -36,7 +44,11 @@ export function TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBodyTo
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'name': value.name,
     };
 }

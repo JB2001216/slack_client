@@ -33,7 +33,15 @@ export interface UsersSmsLoginConfirmPostRequestBody {
 }
 
 export function UsersSmsLoginConfirmPostRequestBodyFromJSON(json: any): UsersSmsLoginConfirmPostRequestBody {
+    return UsersSmsLoginConfirmPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersSmsLoginConfirmPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersSmsLoginConfirmPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'sms': json['sms'],
         'idNotIn': !exists(json, 'idNotIn') ? undefined : json['idNotIn'],
     };
@@ -43,7 +51,11 @@ export function UsersSmsLoginConfirmPostRequestBodyToJSON(value?: UsersSmsLoginC
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'sms': value.sms,
         'idNotIn': value.idNotIn,
     };

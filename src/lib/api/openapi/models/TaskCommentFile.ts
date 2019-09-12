@@ -51,7 +51,15 @@ export interface TaskCommentFile {
 }
 
 export function TaskCommentFileFromJSON(json: any): TaskCommentFile {
+    return TaskCommentFileFromJSONTyped(json, false);
+}
+
+export function TaskCommentFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): TaskCommentFile {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'id': json['id'],
         'comment': json['comment'],
         'name': json['name'],
@@ -64,7 +72,11 @@ export function TaskCommentFileToJSON(value?: TaskCommentFile): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'comment': value.comment,
         'name': value.name,

@@ -27,7 +27,15 @@ export interface SpacesConfirmPostRequestBody {
 }
 
 export function SpacesConfirmPostRequestBodyFromJSON(json: any): SpacesConfirmPostRequestBody {
+    return SpacesConfirmPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function SpacesConfirmPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesConfirmPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'email': json['email'],
     };
 }
@@ -36,7 +44,11 @@ export function SpacesConfirmPostRequestBodyToJSON(value?: SpacesConfirmPostRequ
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'email': value.email,
     };
 }

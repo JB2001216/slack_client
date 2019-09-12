@@ -33,7 +33,15 @@ export interface UsersEmailLoginConfirmPostRequestBody {
 }
 
 export function UsersEmailLoginConfirmPostRequestBodyFromJSON(json: any): UsersEmailLoginConfirmPostRequestBody {
+    return UsersEmailLoginConfirmPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersEmailLoginConfirmPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersEmailLoginConfirmPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'email': json['email'],
         'idNotIn': !exists(json, 'idNotIn') ? undefined : json['idNotIn'],
     };
@@ -43,7 +51,11 @@ export function UsersEmailLoginConfirmPostRequestBodyToJSON(value?: UsersEmailLo
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'email': value.email,
         'idNotIn': value.idNotIn,
     };

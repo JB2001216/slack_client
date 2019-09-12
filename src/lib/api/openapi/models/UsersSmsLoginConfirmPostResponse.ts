@@ -27,7 +27,15 @@ export interface UsersSmsLoginConfirmPostResponse {
 }
 
 export function UsersSmsLoginConfirmPostResponseFromJSON(json: any): UsersSmsLoginConfirmPostResponse {
+    return UsersSmsLoginConfirmPostResponseFromJSONTyped(json, false);
+}
+
+export function UsersSmsLoginConfirmPostResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersSmsLoginConfirmPostResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'token': json['token'],
     };
 }
@@ -36,7 +44,11 @@ export function UsersSmsLoginConfirmPostResponseToJSON(value?: UsersSmsLoginConf
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'token': value.token,
     };
 }

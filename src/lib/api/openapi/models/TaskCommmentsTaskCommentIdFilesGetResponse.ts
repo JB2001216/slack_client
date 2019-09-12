@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     TaskCommentFile,
     TaskCommentFileFromJSON,
+    TaskCommentFileFromJSONTyped,
     TaskCommentFileToJSON,
 } from './';
 
@@ -51,7 +52,15 @@ export interface TaskCommmentsTaskCommentIdFilesGetResponse {
 }
 
 export function TaskCommmentsTaskCommentIdFilesGetResponseFromJSON(json: any): TaskCommmentsTaskCommentIdFilesGetResponse {
+    return TaskCommmentsTaskCommentIdFilesGetResponseFromJSONTyped(json, false);
+}
+
+export function TaskCommmentsTaskCommentIdFilesGetResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): TaskCommmentsTaskCommentIdFilesGetResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'count': json['count'],
         'previous': json['previous'],
         'next': json['next'],
@@ -63,7 +72,11 @@ export function TaskCommmentsTaskCommentIdFilesGetResponseToJSON(value?: TaskCom
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'count': value.count,
         'previous': value.previous,
         'next': value.next,

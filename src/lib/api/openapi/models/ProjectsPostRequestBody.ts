@@ -27,7 +27,15 @@ export interface ProjectsPostRequestBody {
 }
 
 export function ProjectsPostRequestBodyFromJSON(json: any): ProjectsPostRequestBody {
+    return ProjectsPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function ProjectsPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectsPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'displayName': json['displayName'],
     };
 }
@@ -36,7 +44,11 @@ export function ProjectsPostRequestBodyToJSON(value?: ProjectsPostRequestBody): 
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'displayName': value.displayName,
     };
 }

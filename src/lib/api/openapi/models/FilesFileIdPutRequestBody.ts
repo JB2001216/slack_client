@@ -27,7 +27,15 @@ export interface FilesFileIdPutRequestBody {
 }
 
 export function FilesFileIdPutRequestBodyFromJSON(json: any): FilesFileIdPutRequestBody {
+    return FilesFileIdPutRequestBodyFromJSONTyped(json, false);
+}
+
+export function FilesFileIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): FilesFileIdPutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'name': !exists(json, 'name') ? undefined : json['name'],
     };
 }
@@ -36,7 +44,11 @@ export function FilesFileIdPutRequestBodyToJSON(value?: FilesFileIdPutRequestBod
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'name': value.name,
     };
 }

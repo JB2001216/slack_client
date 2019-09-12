@@ -27,7 +27,15 @@ export interface SpacesSpaceIdUsersUserIdPutRequestBody {
 }
 
 export function SpacesSpaceIdUsersUserIdPutRequestBodyFromJSON(json: any): SpacesSpaceIdUsersUserIdPutRequestBody {
+    return SpacesSpaceIdUsersUserIdPutRequestBodyFromJSONTyped(json, false);
+}
+
+export function SpacesSpaceIdUsersUserIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesSpaceIdUsersUserIdPutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'spaceRoleId': !exists(json, 'spaceRoleId') ? undefined : json['spaceRoleId'],
     };
 }
@@ -36,7 +44,11 @@ export function SpacesSpaceIdUsersUserIdPutRequestBodyToJSON(value?: SpacesSpace
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'spaceRoleId': value.spaceRoleId,
     };
 }

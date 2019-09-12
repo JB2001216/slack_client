@@ -27,7 +27,15 @@ export interface TaskCommmentsPostRequestBody {
 }
 
 export function TaskCommmentsPostRequestBodyFromJSON(json: any): TaskCommmentsPostRequestBody {
+    return TaskCommmentsPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function TaskCommmentsPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): TaskCommmentsPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'body': !exists(json, 'body') ? undefined : json['body'],
     };
 }
@@ -36,7 +44,11 @@ export function TaskCommmentsPostRequestBodyToJSON(value?: TaskCommmentsPostRequ
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'body': value.body,
     };
 }

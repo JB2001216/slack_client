@@ -27,7 +27,15 @@ export interface NotesNoteIdFavoritePostRequestBody {
 }
 
 export function NotesNoteIdFavoritePostRequestBodyFromJSON(json: any): NotesNoteIdFavoritePostRequestBody {
+    return NotesNoteIdFavoritePostRequestBodyFromJSONTyped(json, false);
+}
+
+export function NotesNoteIdFavoritePostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): NotesNoteIdFavoritePostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'value': json['value'],
     };
 }
@@ -36,7 +44,11 @@ export function NotesNoteIdFavoritePostRequestBodyToJSON(value?: NotesNoteIdFavo
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'value': value.value,
     };
 }

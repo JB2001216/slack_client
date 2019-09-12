@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     Task,
     TaskFromJSON,
+    TaskFromJSONTyped,
     TaskToJSON,
 } from './';
 
@@ -51,7 +52,15 @@ export interface TasksGetResponse {
 }
 
 export function TasksGetResponseFromJSON(json: any): TasksGetResponse {
+    return TasksGetResponseFromJSONTyped(json, false);
+}
+
+export function TasksGetResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): TasksGetResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'count': json['count'],
         'previous': json['previous'],
         'next': json['next'],
@@ -63,7 +72,11 @@ export function TasksGetResponseToJSON(value?: TasksGetResponse): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'count': value.count,
         'previous': value.previous,
         'next': value.next,

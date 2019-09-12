@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     SpacesSpaceIdProjectsProjectIdTasksTags,
     SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON,
+    SpacesSpaceIdProjectsProjectIdTasksTagsFromJSONTyped,
     SpacesSpaceIdProjectsProjectIdTasksTagsToJSON,
 } from './';
 
@@ -123,7 +124,15 @@ export interface Task {
 }
 
 export function TaskFromJSON(json: any): Task {
+    return TaskFromJSONTyped(json, false);
+}
+
+export function TaskFromJSONTyped(json: any, ignoreDiscriminator: boolean): Task {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+
         'id': json['id'],
         'project': json['project'],
         'parent': json['parent'],
@@ -147,7 +156,11 @@ export function TaskToJSON(value?: Task): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+
         'id': value.id,
         'project': value.project,
         'parent': value.parent,

@@ -57,7 +57,15 @@ export interface TaskStatus {
 }
 
 export function TaskStatusFromJSON(json: any): TaskStatus {
+    return TaskStatusFromJSONTyped(json, false);
+}
+
+export function TaskStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean): TaskStatus {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'id': json['id'],
         'projectId': !exists(json, 'projectId') ? undefined : json['projectId'],
         'category': json['category'],
@@ -71,7 +79,11 @@ export function TaskStatusToJSON(value?: TaskStatus): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'projectId': value.projectId,
         'category': value.category,

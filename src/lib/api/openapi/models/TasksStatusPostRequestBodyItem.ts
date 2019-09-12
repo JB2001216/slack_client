@@ -45,7 +45,15 @@ export interface TasksStatusPostRequestBodyItem {
 }
 
 export function TasksStatusPostRequestBodyItemFromJSON(json: any): TasksStatusPostRequestBodyItem {
+    return TasksStatusPostRequestBodyItemFromJSONTyped(json, false);
+}
+
+export function TasksStatusPostRequestBodyItemFromJSONTyped(json: any, ignoreDiscriminator: boolean): TasksStatusPostRequestBodyItem {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'category': json['category'],
         'name': json['name'],
         'color': !exists(json, 'color') ? undefined : json['color'],
@@ -57,7 +65,11 @@ export function TasksStatusPostRequestBodyItemToJSON(value?: TasksStatusPostRequ
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'category': value.category,
         'name': value.name,
         'color': value.color,

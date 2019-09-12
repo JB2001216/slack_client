@@ -27,7 +27,15 @@ export interface ProjectsProjectIdPutRequestBody {
 }
 
 export function ProjectsProjectIdPutRequestBodyFromJSON(json: any): ProjectsProjectIdPutRequestBody {
+    return ProjectsProjectIdPutRequestBodyFromJSONTyped(json, false);
+}
+
+export function ProjectsProjectIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectsProjectIdPutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
     };
 }
@@ -36,7 +44,11 @@ export function ProjectsProjectIdPutRequestBodyToJSON(value?: ProjectsProjectIdP
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'displayName': value.displayName,
     };
 }

@@ -57,7 +57,15 @@ export interface SpaceUser {
 }
 
 export function SpaceUserFromJSON(json: any): SpaceUser {
+    return SpaceUserFromJSONTyped(json, false);
+}
+
+export function SpaceUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpaceUser {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'id': json['id'],
         'account': json['account'],
         'displayName': json['displayName'],
@@ -71,7 +79,11 @@ export function SpaceUserToJSON(value?: SpaceUser): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'account': value.account,
         'displayName': value.displayName,

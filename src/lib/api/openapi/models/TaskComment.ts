@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     TaskCommentFile,
     TaskCommentFileFromJSON,
+    TaskCommentFileFromJSONTyped,
     TaskCommentFileToJSON,
 } from './';
 
@@ -69,7 +70,15 @@ export interface TaskComment {
 }
 
 export function TaskCommentFromJSON(json: any): TaskComment {
+    return TaskCommentFromJSONTyped(json, false);
+}
+
+export function TaskCommentFromJSONTyped(json: any, ignoreDiscriminator: boolean): TaskComment {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'id': json['id'],
         'task': json['task'],
         'writeUser': json['writeUser'],
@@ -84,7 +93,11 @@ export function TaskCommentToJSON(value?: TaskComment): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'task': value.task,
         'writeUser': value.writeUser,

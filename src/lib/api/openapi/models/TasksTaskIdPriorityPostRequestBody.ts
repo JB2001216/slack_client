@@ -33,7 +33,15 @@ export interface TasksTaskIdPriorityPostRequestBody {
 }
 
 export function TasksTaskIdPriorityPostRequestBodyFromJSON(json: any): TasksTaskIdPriorityPostRequestBody {
+    return TasksTaskIdPriorityPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function TasksTaskIdPriorityPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): TasksTaskIdPriorityPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'parent': !exists(json, 'parent') ? undefined : json['parent'],
         'nextHighestTask': !exists(json, 'next_highest_task') ? undefined : json['next_highest_task'],
     };
@@ -43,7 +51,11 @@ export function TasksTaskIdPriorityPostRequestBodyToJSON(value?: TasksTaskIdPrio
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'parent': value.parent,
         'next_highest_task': value.nextHighestTask,
     };

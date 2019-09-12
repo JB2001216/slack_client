@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     FileRecord,
     FileRecordFromJSON,
+    FileRecordFromJSONTyped,
     FileRecordToJSON,
 } from './';
 
@@ -51,7 +52,15 @@ export interface FilesGetResponse {
 }
 
 export function FilesGetResponseFromJSON(json: any): FilesGetResponse {
+    return FilesGetResponseFromJSONTyped(json, false);
+}
+
+export function FilesGetResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): FilesGetResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'count': json['count'],
         'previous': json['previous'],
         'next': json['next'],
@@ -63,7 +72,11 @@ export function FilesGetResponseToJSON(value?: FilesGetResponse): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'count': value.count,
         'previous': value.previous,
         'next': value.next,

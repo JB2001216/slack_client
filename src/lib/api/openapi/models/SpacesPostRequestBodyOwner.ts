@@ -39,7 +39,15 @@ export interface SpacesPostRequestBodyOwner {
 }
 
 export function SpacesPostRequestBodyOwnerFromJSON(json: any): SpacesPostRequestBodyOwner {
+    return SpacesPostRequestBodyOwnerFromJSONTyped(json, false);
+}
+
+export function SpacesPostRequestBodyOwnerFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesPostRequestBodyOwner {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'email': json['email'],
         'account': json['account'],
         'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
@@ -50,7 +58,11 @@ export function SpacesPostRequestBodyOwnerToJSON(value?: SpacesPostRequestBodyOw
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'email': value.email,
         'account': value.account,
         'displayName': value.displayName,

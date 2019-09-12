@@ -15,9 +15,11 @@ import { exists, mapValues } from '../runtime';
 import {
     Locale,
     LocaleFromJSON,
+    LocaleFromJSONTyped,
     LocaleToJSON,
     Space,
     SpaceFromJSON,
+    SpaceFromJSONTyped,
     SpaceToJSON,
 } from './';
 
@@ -78,7 +80,15 @@ export interface MyUser {
 }
 
 export function MyUserFromJSON(json: any): MyUser {
+    return MyUserFromJSONTyped(json, false);
+}
+
+export function MyUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): MyUser {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'id': json['id'],
         'account': json['account'],
         'displayName': json['displayName'],
@@ -94,7 +104,11 @@ export function MyUserToJSON(value?: MyUser): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'account': value.account,
         'displayName': value.displayName,

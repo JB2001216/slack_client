@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import { TaskStatus, apiRegistry, ProjectsApi, ProjectUser } from '@/lib/api';
+import { TaskStatus, apiRegistry, ProjectsApi, ProjectUser, TasksApi } from '@/lib/api';
 import { ProjectStatusCategory } from '@/consts';
 import { FilterFormValue } from './types';
 
@@ -82,11 +82,7 @@ export default class FilterForm extends Vue {
 
   projectUsers: ProjectUser[] = [];
 
-  tags: {id: number; name: string}[] = [
-    { id: 1, name: '優先度高' },
-    { id: 2, name: '工数40H' },
-    { id: 3, name: '終わったら田中さんに連絡' },
-  ];
+  tags: {id: number; name: string}[] = [];
 
   checkedStatusOptionIdList: number[] = [];
   checkedStatusOptionAll = true;
@@ -294,18 +290,26 @@ export default class FilterForm extends Vue {
     const myUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.getters.activeUser.activeProjectId!;
     const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
+    const tasksApi = apiRegistry.load(TasksApi, myUser.token);
+
+    // ProjectUser
     const res = await projectsApi.projectsProjectIdUsersGet({
       spaceId: myUser.space.id,
       projectId,
       limit: 500,
     });
-
-    // 自分を最初に持ってくる
+    // - 自分を最初に持ってくる
     const index = res.results.findIndex((pu) => pu.userId === myUser.id);
     const myProjectUser = res.results[index];
     res.results.splice(index, 1);
     res.results.unshift(myProjectUser);
     this.projectUsers = res.results;
+
+    // Tag
+    this.tags = await tasksApi.tasksTagsGet({
+      spaceId: myUser.space.id,
+      projectId,
+    });
 
     // 初期のバインド
     this.onValueChange(this.value);

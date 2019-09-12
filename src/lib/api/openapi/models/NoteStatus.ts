@@ -57,7 +57,15 @@ export interface NoteStatus {
 }
 
 export function NoteStatusFromJSON(json: any): NoteStatus {
+    return NoteStatusFromJSONTyped(json, false);
+}
+
+export function NoteStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean): NoteStatus {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'id': json['id'],
         'projectId': !exists(json, 'projectId') ? undefined : json['projectId'],
         'category': json['category'],
@@ -71,7 +79,11 @@ export function NoteStatusToJSON(value?: NoteStatus): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'projectId': value.projectId,
         'category': value.category,

@@ -23,19 +23,27 @@ export interface TaskTagsGetRequestBodyItem {
      * @type {number}
      * @memberof TaskTagsGetRequestBodyItem
      */
-    id?: number;
+    id: number;
     /**
      * 
      * @type {string}
      * @memberof TaskTagsGetRequestBodyItem
      */
-    name?: string;
+    name: string;
 }
 
 export function TaskTagsGetRequestBodyItemFromJSON(json: any): TaskTagsGetRequestBodyItem {
+    return TaskTagsGetRequestBodyItemFromJSONTyped(json, false);
+}
+
+export function TaskTagsGetRequestBodyItemFromJSONTyped(json: any, ignoreDiscriminator: boolean): TaskTagsGetRequestBodyItem {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
+        
+        'id': json['id'],
+        'name': json['name'],
     };
 }
 
@@ -43,7 +51,11 @@ export function TaskTagsGetRequestBodyItemToJSON(value?: TaskTagsGetRequestBodyI
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'name': value.name,
     };

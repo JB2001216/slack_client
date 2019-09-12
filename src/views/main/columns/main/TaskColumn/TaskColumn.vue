@@ -205,6 +205,7 @@
         height: auto
       &.hideEditor
         height: 210px
+        overflow-y: scroll
         .noteEditWrap_post_view
           padding: 24px
   .dashboardWrap_tag

@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     SpacesPostRequestBodyOwner,
     SpacesPostRequestBodyOwnerFromJSON,
+    SpacesPostRequestBodyOwnerFromJSONTyped,
     SpacesPostRequestBodyOwnerToJSON,
 } from './';
 
@@ -51,7 +52,15 @@ export interface SpacesPostRequestBody {
 }
 
 export function SpacesPostRequestBodyFromJSON(json: any): SpacesPostRequestBody {
+    return SpacesPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function SpacesPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'token': json['token'],
         'account': json['account'],
         'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
@@ -63,7 +72,11 @@ export function SpacesPostRequestBodyToJSON(value?: SpacesPostRequestBody): any 
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'token': value.token,
         'account': value.account,
         'displayName': value.displayName,

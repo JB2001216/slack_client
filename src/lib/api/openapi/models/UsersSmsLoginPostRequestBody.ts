@@ -39,7 +39,15 @@ export interface UsersSmsLoginPostRequestBody {
 }
 
 export function UsersSmsLoginPostRequestBodyFromJSON(json: any): UsersSmsLoginPostRequestBody {
+    return UsersSmsLoginPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersSmsLoginPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersSmsLoginPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'token': json['token'],
         'pin': json['pin'],
         'idNotIn': !exists(json, 'idNotIn') ? undefined : json['idNotIn'],
@@ -50,7 +58,11 @@ export function UsersSmsLoginPostRequestBodyToJSON(value?: UsersSmsLoginPostRequ
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'token': value.token,
         'pin': value.pin,
         'idNotIn': value.idNotIn,

@@ -27,7 +27,15 @@ export interface UsersMeEmailConfirmPostRequestBody {
 }
 
 export function UsersMeEmailConfirmPostRequestBodyFromJSON(json: any): UsersMeEmailConfirmPostRequestBody {
+    return UsersMeEmailConfirmPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersMeEmailConfirmPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersMeEmailConfirmPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'email': json['email'],
     };
 }
@@ -36,7 +44,11 @@ export function UsersMeEmailConfirmPostRequestBodyToJSON(value?: UsersMeEmailCon
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'email': value.email,
     };
 }

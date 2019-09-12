@@ -27,7 +27,15 @@ export interface UsersMeSmsGetResponse {
 }
 
 export function UsersMeSmsGetResponseFromJSON(json: any): UsersMeSmsGetResponse {
+    return UsersMeSmsGetResponseFromJSONTyped(json, false);
+}
+
+export function UsersMeSmsGetResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersMeSmsGetResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'sms': json['sms'],
     };
 }
@@ -36,7 +44,11 @@ export function UsersMeSmsGetResponseToJSON(value?: UsersMeSmsGetResponse): any 
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'sms': value.sms,
     };
 }

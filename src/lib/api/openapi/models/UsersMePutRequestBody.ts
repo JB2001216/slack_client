@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     Locale,
     LocaleFromJSON,
+    LocaleFromJSONTyped,
     LocaleToJSON,
 } from './';
 
@@ -51,7 +52,15 @@ export interface UsersMePutRequestBody {
 }
 
 export function UsersMePutRequestBodyFromJSON(json: any): UsersMePutRequestBody {
+    return UsersMePutRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersMePutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersMePutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'account': !exists(json, 'account') ? undefined : json['account'],
         'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
         'locale': !exists(json, 'locale') ? undefined : LocaleFromJSON(json['locale']),
@@ -63,7 +72,11 @@ export function UsersMePutRequestBodyToJSON(value?: UsersMePutRequestBody): any 
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'account': value.account,
         'displayName': value.displayName,
         'locale': LocaleToJSON(value.locale),

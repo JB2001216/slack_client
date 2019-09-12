@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     Note,
     NoteFromJSON,
+    NoteFromJSONTyped,
     NoteToJSON,
 } from './';
 
@@ -51,7 +52,15 @@ export interface NotesGetResponse {
 }
 
 export function NotesGetResponseFromJSON(json: any): NotesGetResponse {
+    return NotesGetResponseFromJSONTyped(json, false);
+}
+
+export function NotesGetResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): NotesGetResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'count': json['count'],
         'previous': json['previous'],
         'next': json['next'],
@@ -63,7 +72,11 @@ export function NotesGetResponseToJSON(value?: NotesGetResponse): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'count': value.count,
         'previous': value.previous,
         'next': value.next,

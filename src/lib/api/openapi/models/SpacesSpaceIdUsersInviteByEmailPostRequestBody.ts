@@ -39,7 +39,15 @@ export interface SpacesSpaceIdUsersInviteByEmailPostRequestBody {
 }
 
 export function SpacesSpaceIdUsersInviteByEmailPostRequestBodyFromJSON(json: any): SpacesSpaceIdUsersInviteByEmailPostRequestBody {
+    return SpacesSpaceIdUsersInviteByEmailPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function SpacesSpaceIdUsersInviteByEmailPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesSpaceIdUsersInviteByEmailPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'email': json['email'],
         'account': json['account'],
         'spaceRoleId': json['spaceRoleId'],
@@ -50,7 +58,11 @@ export function SpacesSpaceIdUsersInviteByEmailPostRequestBodyToJSON(value?: Spa
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'email': value.email,
         'account': value.account,
         'spaceRoleId': value.spaceRoleId,

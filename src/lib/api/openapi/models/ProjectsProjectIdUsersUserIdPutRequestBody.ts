@@ -27,7 +27,15 @@ export interface ProjectsProjectIdUsersUserIdPutRequestBody {
 }
 
 export function ProjectsProjectIdUsersUserIdPutRequestBodyFromJSON(json: any): ProjectsProjectIdUsersUserIdPutRequestBody {
+    return ProjectsProjectIdUsersUserIdPutRequestBodyFromJSONTyped(json, false);
+}
+
+export function ProjectsProjectIdUsersUserIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectsProjectIdUsersUserIdPutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'projectRoleId': !exists(json, 'projectRoleId') ? undefined : json['projectRoleId'],
     };
 }
@@ -36,7 +44,11 @@ export function ProjectsProjectIdUsersUserIdPutRequestBodyToJSON(value?: Project
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'projectRoleId': value.projectRoleId,
     };
 }

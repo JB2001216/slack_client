@@ -39,7 +39,15 @@ export interface ProjectUser {
 }
 
 export function ProjectUserFromJSON(json: any): ProjectUser {
+    return ProjectUserFromJSONTyped(json, false);
+}
+
+export function ProjectUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectUser {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'userId': json['userId'],
         'spaceRoleId': json['spaceRoleId'],
         'projectRoleId': json['projectRoleId'],
@@ -50,7 +58,11 @@ export function ProjectUserToJSON(value?: ProjectUser): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'userId': value.userId,
         'spaceRoleId': value.spaceRoleId,
         'projectRoleId': value.projectRoleId,

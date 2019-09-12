@@ -87,7 +87,15 @@ export interface Note {
 }
 
 export function NoteFromJSON(json: any): Note {
+    return NoteFromJSONTyped(json, false);
+}
+
+export function NoteFromJSONTyped(json: any, ignoreDiscriminator: boolean): Note {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'id': json['id'],
         'project': json['project'],
         'writeUser': json['writeUser'],
@@ -106,7 +114,11 @@ export function NoteToJSON(value?: Note): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'id': value.id,
         'project': value.project,
         'writeUser': value.writeUser,

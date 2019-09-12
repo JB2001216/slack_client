@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     Project,
     ProjectFromJSON,
+    ProjectFromJSONTyped,
     ProjectToJSON,
 } from './';
 
@@ -51,7 +52,15 @@ export interface ProjectsGetResponse {
 }
 
 export function ProjectsGetResponseFromJSON(json: any): ProjectsGetResponse {
+    return ProjectsGetResponseFromJSONTyped(json, false);
+}
+
+export function ProjectsGetResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectsGetResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'count': json['count'],
         'previous': json['previous'],
         'next': json['next'],
@@ -63,7 +72,11 @@ export function ProjectsGetResponseToJSON(value?: ProjectsGetResponse): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'count': value.count,
         'previous': value.previous,
         'next': value.next,

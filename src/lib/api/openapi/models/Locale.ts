@@ -22,6 +22,10 @@ export enum Locale {
 }
 
 export function LocaleFromJSON(json: any): Locale {
+    return LocaleFromJSONTyped(json, false);
+}
+
+export function LocaleFromJSONTyped(json: any, ignoreDiscriminator: boolean): Locale {
     return json as Locale;
 }
 

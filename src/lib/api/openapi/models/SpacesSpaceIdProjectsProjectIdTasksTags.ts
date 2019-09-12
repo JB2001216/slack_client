@@ -27,7 +27,15 @@ export interface SpacesSpaceIdProjectsProjectIdTasksTags {
 }
 
 export function SpacesSpaceIdProjectsProjectIdTasksTagsFromJSON(json: any): SpacesSpaceIdProjectsProjectIdTasksTags {
+    return SpacesSpaceIdProjectsProjectIdTasksTagsFromJSONTyped(json, false);
+}
+
+export function SpacesSpaceIdProjectsProjectIdTasksTagsFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesSpaceIdProjectsProjectIdTasksTags {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'name': json['name'],
     };
 }
@@ -36,7 +44,11 @@ export function SpacesSpaceIdProjectsProjectIdTasksTagsToJSON(value?: SpacesSpac
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'name': value.name,
     };
 }

@@ -27,7 +27,15 @@ export interface UsersMeEmailPutRequestBody {
 }
 
 export function UsersMeEmailPutRequestBodyFromJSON(json: any): UsersMeEmailPutRequestBody {
+    return UsersMeEmailPutRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersMeEmailPutRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersMeEmailPutRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'token': json['token'],
     };
 }
@@ -36,7 +44,11 @@ export function UsersMeEmailPutRequestBodyToJSON(value?: UsersMeEmailPutRequestB
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'token': value.token,
     };
 }

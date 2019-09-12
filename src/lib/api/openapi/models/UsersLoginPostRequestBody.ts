@@ -39,7 +39,15 @@ export interface UsersLoginPostRequestBody {
 }
 
 export function UsersLoginPostRequestBodyFromJSON(json: any): UsersLoginPostRequestBody {
+    return UsersLoginPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersLoginPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersLoginPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'token': json['token'],
         'spaceId': json['spaceId'],
         'userId': json['userId'],
@@ -50,7 +58,11 @@ export function UsersLoginPostRequestBodyToJSON(value?: UsersLoginPostRequestBod
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'token': value.token,
         'spaceId': value.spaceId,
         'userId': value.userId,

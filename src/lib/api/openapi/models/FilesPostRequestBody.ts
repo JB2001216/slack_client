@@ -33,7 +33,15 @@ export interface FilesPostRequestBody {
 }
 
 export function FilesPostRequestBodyFromJSON(json: any): FilesPostRequestBody {
+    return FilesPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function FilesPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): FilesPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'name': json['name'],
         'file': json['file'],
     };
@@ -43,7 +51,11 @@ export function FilesPostRequestBodyToJSON(value?: FilesPostRequestBody): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'name': value.name,
         'file': value.file,
     };

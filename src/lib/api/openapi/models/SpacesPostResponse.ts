@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     Space,
     SpaceFromJSON,
+    SpaceFromJSONTyped,
     SpaceToJSON,
 } from './';
 
@@ -39,7 +40,15 @@ export interface SpacesPostResponse {
 }
 
 export function SpacesPostResponseFromJSON(json: any): SpacesPostResponse {
+    return SpacesPostResponseFromJSONTyped(json, false);
+}
+
+export function SpacesPostResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesPostResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'space': SpaceFromJSON(json['space']),
         'token': json['token'],
     };
@@ -49,7 +58,11 @@ export function SpacesPostResponseToJSON(value?: SpacesPostResponse): any {
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'space': SpaceToJSON(value.space),
         'token': value.token,
     };

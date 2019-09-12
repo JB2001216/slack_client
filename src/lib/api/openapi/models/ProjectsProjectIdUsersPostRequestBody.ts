@@ -33,7 +33,15 @@ export interface ProjectsProjectIdUsersPostRequestBody {
 }
 
 export function ProjectsProjectIdUsersPostRequestBodyFromJSON(json: any): ProjectsProjectIdUsersPostRequestBody {
+    return ProjectsProjectIdUsersPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function ProjectsProjectIdUsersPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectsProjectIdUsersPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'projectRoleId': json['projectRoleId'],
         'userId': json['userId'],
     };
@@ -43,7 +51,11 @@ export function ProjectsProjectIdUsersPostRequestBodyToJSON(value?: ProjectsProj
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'projectRoleId': value.projectRoleId,
         'userId': value.userId,
     };

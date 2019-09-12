@@ -33,7 +33,15 @@ export interface UsersEmailLoginPostRequestBody {
 }
 
 export function UsersEmailLoginPostRequestBodyFromJSON(json: any): UsersEmailLoginPostRequestBody {
+    return UsersEmailLoginPostRequestBodyFromJSONTyped(json, false);
+}
+
+export function UsersEmailLoginPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersEmailLoginPostRequestBody {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'token': json['token'],
         'idNotIn': !exists(json, 'idNotIn') ? undefined : json['idNotIn'],
     };
@@ -43,7 +51,11 @@ export function UsersEmailLoginPostRequestBodyToJSON(value?: UsersEmailLoginPost
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'token': value.token,
         'idNotIn': value.idNotIn,
     };

@@ -15,6 +15,7 @@ import { exists, mapValues } from '../runtime';
 import {
     MyUser,
     MyUserFromJSON,
+    MyUserFromJSONTyped,
     MyUserToJSON,
 } from './';
 
@@ -39,7 +40,15 @@ export interface UsersLoginPostResponse {
 }
 
 export function UsersLoginPostResponseFromJSON(json: any): UsersLoginPostResponse {
+    return UsersLoginPostResponseFromJSONTyped(json, false);
+}
+
+export function UsersLoginPostResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsersLoginPostResponse {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
     return {
+        
         'token': json['token'],
         'user': MyUserFromJSON(json['user']),
     };
@@ -49,7 +58,11 @@ export function UsersLoginPostResponseToJSON(value?: UsersLoginPostResponse): an
     if (value === undefined) {
         return undefined;
     }
+    if (value === null) {
+        return null;
+    }
     return {
+        
         'token': value.token,
         'user': MyUserToJSON(value.user),
     };
