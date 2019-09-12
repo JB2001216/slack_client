@@ -48,7 +48,7 @@ const components: { [key: string]: SyncComponent<any, any, any, any> | AsyncComp
 
 const enableDebugTool = process.env.NODE_ENV !== 'production';
 if (enableDebugTool) {
-  components['MyDebugTool'] = () => import(/* webpackChunkName: "debug/MyDebugTool" */ './debug/MyDebugTool.vue');
+  components['MyDebugTool'] = () => import(/* webpackChunkName: "plugins/debug/MyDebugTool" */ './plugins/debug/MyDebugTool.vue');
 }
 
 @Component({

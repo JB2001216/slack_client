@@ -3,7 +3,7 @@
     <div class="projectColumn_head">
       <my-simple-menu class="projectColumn_spaceMenu">
         <template v-slot="{open, close, opened}">
-          <h1 class="t-sub" id="projectColumn_title" @click.stop="opened ? close() : open()">{{myUser.space.displayName || myUser.space.account}}</h1>
+          <h1 class="t-sub" id="projectColumn_title" @click.stop="opened ? close() : open()"><span>{{myUser.space.displayName || myUser.space.account}}</span></h1>
         </template>
         <template v-slot:items>
           <li @click.prevent.stop class="projectColumn_spaceMenu_profile notHover">
