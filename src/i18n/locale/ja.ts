@@ -4,6 +4,8 @@ import moment from 'moment';
 const struct: LocaleStruct = {
   i18n: {
     common: {
+      yes: 'はい',
+      no: 'いいえ',
       deleted: '削除しました',
       filterByKeyword: 'キーワードで絞り込む',
       anErrorHasOccurred: 'エラーが発生しました',
@@ -19,8 +21,8 @@ const struct: LocaleStruct = {
       },
       projectRole: {
         PROJECT_ADMIN: 'プロジェクト管理者',
-        USER_WRITABLE: 'ユーザー(書き込み可)',
-        USER_READONLY: 'ユーザー(読み取りのみ)',
+        USER_WRITABLE: 'ユーザー(書込可)',
+        USER_READONLY: 'ユーザー(閲覧のみ)',
       },
       alreadyLoggedIn: '既にログイン済です',
     },
@@ -116,6 +118,13 @@ const struct: LocaleStruct = {
             general: '基本設定',
             members: 'メンバー設定',
           },
+          projects: {
+            title: 'プロジェクト設定',
+            general: '基本設定',
+            members: 'メンバー設定',
+            taskSettings: 'タスク設定',
+            noteSettings: 'ノート設定',
+          },
         },
         main: {
           spaceMembers: {
@@ -124,6 +133,8 @@ const struct: LocaleStruct = {
             name: '名前',
             role: '権限',
             addMember: 'メンバーを追加する',
+            deleteConfirmMessage: '{name} ({email}) を削除してよろしいですか？',
+            deleteAttentionMessage: '一度削除をすると元に戻せません。',
           },
           spaceMemberInvite: {
             title: '{spaceName}にメンバーを招待する',
@@ -137,13 +148,22 @@ const struct: LocaleStruct = {
             accountSample: 'taro_yamada',
             invitedMessage: '招待メールを送信しました',
           },
+          projectMembers: {
+            memberList: 'メンバー一覧',
+            email: 'メールアドレス',
+            name: '名前',
+            role: '権限',
+            addMember: 'メンバーを追加する',
+            removeConfirmMessage: '{name} ({email}) を削除してよろしいですか？',
+          },
           projectMemberAdd: {
             title: '{projectName}にメンバーを追加する',
-            searchTextPlaceholder: 'Search by name or email address',
+            searchTextPlaceholder: '名前またはメールアドレスで検索',
             email: 'メールアドレス',
             name: '名前',
             role: '権限',
             addMembers: 'メンバーを追加する',
+            addedMessage: 'メンバーの追加に成功しました',
           },
         },
       },

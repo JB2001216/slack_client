@@ -23,7 +23,7 @@
         <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
       </div>
     </div>
-    <div class="option_spaceMemberAdd_table">
+    <div v-if="users.length" class="option_spaceMemberAdd_table">
       <table>
         <tr>
           <th/>
@@ -148,6 +148,14 @@ export default class ProjectMemberAdd extends Vue {
     return [...ProjectRoles.getSelectables(this.mySpaceRole, this.myProjectRole)];
   }
 
+  get defaultRole() {
+    const roles = this.selectableRoles;
+    if (roles.includes(ProjectRoles.USER_WRITABLE)) {
+      return ProjectRoles.USER_WRITABLE;
+    }
+    return roles[roles.length - 1];
+  }
+
   getSpaceRole(spaceRoleId: number) {
     return SpaceRoles.get(spaceRoleId);
   }
@@ -173,7 +181,7 @@ export default class ProjectMemberAdd extends Vue {
       user,
       body: {
         userId: user.id,
-        projectRoleId: this.selectableRoles[this.selectableRoles.length - 1].id,
+        projectRoleId: this.defaultRole.id,
       },
     });
   }
@@ -192,19 +200,27 @@ export default class ProjectMemberAdd extends Vue {
     const myUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.getters.activeUser.activeProjectId!;
     const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
-    for (const data of this.users.concat()) {
+    const errorUsers: this['users'] = [];
+    for (const data of this.users) {
       try {
         await projectsApi.projectsProjectIdUsersPost({
           spaceId: myUser.space.id,
           projectId,
           projectsProjectIdUsersPostRequestBody: data.body,
         });
-        this.users.splice(this.users.findIndex((d) => data === d), 1);
       } catch (err) {
+        errorUsers.push(data);
         this.$appEmit('error', { err });
       }
     }
 
+    if (!errorUsers.length) {
+      this.$flash(this.$t('views.setting.main.projectMemberAdd.addedMessage').toString(), 'success');
+      this.$store.mutations.settingRouter.to('project-members');
+      return;
+    }
+
+    this.users = errorUsers;
     this.saving = false;
   }
 

@@ -12,6 +12,8 @@ export interface LocaleStruct {
 
 export interface LocaleMessageStruct extends LocaleMessageObject {
   common: {
+    yes: string;
+    no: string;
     deleted: string;
     filterByKeyword: string;
     anErrorHasOccurred: string;
@@ -124,6 +126,13 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           general: string;
           members: string;
         };
+        projects: {
+          title: string;
+          general: string;
+          members: string;
+          taskSettings: string;
+          noteSettings: string;
+        };
       };
       main: {
         spaceMembers: {
@@ -132,6 +141,8 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           name: string;
           role: string;
           addMember: string;
+          deleteConfirmMessage: string;
+          deleteAttentionMessage: string;
         };
         spaceMemberInvite: {
           title: string;
@@ -145,6 +156,14 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           accountSample: string;
           invitedMessage: string;
         };
+        projectMembers: {
+          memberList: string;
+          email: string;
+          name: string;
+          role: string;
+          addMember: string;
+          removeConfirmMessage: string;
+        };
         projectMemberAdd: {
           title: string;
           searchTextPlaceholder: string;
@@ -152,6 +171,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           name: string;
           role: string;
           addMembers: string;
+          addedMessage: string;
         };
       };
     };

@@ -7,7 +7,14 @@
   >
     <option v-for="r in selectableRoles" :key="r.id" :value="r.id">{{$t(`common.projectRole.${r.key}`)}}</option>
   </select>
-  <div v-else class="myProjectRoleSelect">{{currentRoleName}}</div>
+  <select
+    v-else
+    class="myProjectRoleSelect"
+    value="1"
+    disabled
+  >
+    <option value="1">{{currentRoleName}}</option>
+  </select>
 </template>
 
 <script lang="ts">

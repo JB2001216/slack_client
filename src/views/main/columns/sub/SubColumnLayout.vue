@@ -14,7 +14,7 @@
         </template>
         <template v-slot:items>
           <li @click="$store.mutations.settingRouter.to('project-member-add')"><span>{{$t(`views.subColumn.projectMenu.addMembers`)}}</span></li>
-          <li><span>{{$t(`views.subColumn.projectMenu.projectSettings`)}}</span></li>
+          <li @click="$store.mutations.settingRouter.to('project-members')"><span>{{$t(`views.subColumn.projectMenu.projectSettings`)}}</span></li>
         </template>
       </my-simple-menu>
     </div>

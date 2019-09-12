@@ -16,6 +16,8 @@ import { Component, Prop, Vue, Watch, Constructor as VueConstructor } from 'vue-
 import SpacesSub from './sub/SpacesSub.vue';
 import SpaceMembers from './main/spaces/SpaceMembers.vue';
 import SpaceMemberInvite from './main/spaces/SpaceMemberInvite.vue';
+import ProjectsSub from './sub/ProjectsSub.vue';
+import ProjectMembers from './main/projects/ProjectMembers.vue';
 import ProjectMemberAdd from './main/projects/ProjectMemberAdd.vue';
 import { TranslateResult } from 'vue-i18n';
 import i18n from '@/i18n';
@@ -25,6 +27,8 @@ import i18n from '@/i18n';
     SpacesSub,
     SpaceMembers,
     SpaceMemberInvite,
+    ProjectsSub,
+    ProjectMembers,
     ProjectMemberAdd,
   },
 })
@@ -46,6 +50,11 @@ export default class SettingRouterView extends Vue {
       title: () => this.myUser ? i18n.t('views.setting.main.spaceMemberInvite.title', { spaceName: this.myUser.space.displayName || this.myUser.space.account }) : '',
       sub: null,
       main: SpaceMemberInvite,
+    },
+    'project-members': {
+      title: () => i18n.t('views.setting.sub.projects.title'),
+      sub: ProjectsSub,
+      main: ProjectMembers,
     },
     'project-member-add': {
       sub: null,

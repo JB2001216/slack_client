@@ -27,7 +27,7 @@
                 @input="onSpaceRoleChange($event, user)"
               />
             </div>
-            <button v-if="myRole.checkManageable(user.currentRole)" @click="removingUser = user" />
+            <button v-if="myRole.checkManageable(user.currentRole)" @click="removingUser = removingUser || user" />
           </td>
         </tr>
         <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
@@ -51,11 +51,11 @@
       class="option_modal"
       content-class="option_modal_dialog"
     >
-      <p class="option_modal_dialog_title">{{removingUser.displayName || removingUser.account}}（{{removingUser.email}}）を削除してよかったですか？</p>
-      <p class="option_modal_dialog_description">一度削除をすると元に戻せません。</p>
+      <p class="option_modal_dialog_title">{{$t('views.setting.main.spaceMembers.deleteConfirmMessage', { name: removingUser.displayName || removingUser.account, email: removingUser.email })}}</p>
+      <p class="option_modal_dialog_description">{{$t('views.setting.main.spaceMembers.deleteAttentionMessage')}}</p>
       <div class="option_modal_dialog_button clearfix">
-        <button class="option_modal_dialog_button_yes" @click="remove()">はい</button>
-        <button class="option_modal_dialog_button_no" @click="removingUser = null">いいえ</button>
+        <button class="option_modal_dialog_button_yes" @click="remove()">{{$t('common.yes')}}</button>
+        <button class="option_modal_dialog_button_no" @click="removingUser = null">{{$t('common.no')}}</button>
       </div>
     </my-modal>
   </div>

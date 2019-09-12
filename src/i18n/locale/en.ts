@@ -3,6 +3,8 @@ import { LocaleStruct } from '../types';
 const struct: LocaleStruct = {
   i18n: {
     common: {
+      yes: 'Yes',
+      no: 'No',
       deleted: 'Deleted',
       filterByKeyword: 'Filter by keyword',
       anErrorHasOccurred: 'An error has occurred',
@@ -115,6 +117,13 @@ const struct: LocaleStruct = {
             general: 'General',
             members: 'Members',
           },
+          projects: {
+            title: 'Project Settings',
+            general: 'General',
+            members: 'Members',
+            taskSettings: 'Task Settings',
+            noteSettings: 'Note Settings',
+          },
         },
         main: {
           spaceMembers: {
@@ -123,6 +132,8 @@ const struct: LocaleStruct = {
             name: 'Name',
             role: 'Role',
             addMember: 'Add Member',
+            deleteConfirmMessage: 'Delete {name} ({email}) ?',
+            deleteAttentionMessage: 'Once deleted, it cannot be recovered.',
           },
           spaceMemberInvite: {
             title: 'Invite members to {spaceName}',
@@ -136,6 +147,14 @@ const struct: LocaleStruct = {
             accountSample: 'john_smith',
             invitedMessage: 'Invitation email sent successfully',
           },
+          projectMembers: {
+            memberList: 'Member List',
+            email: 'Email',
+            name: 'Name',
+            role: 'Role',
+            addMember: 'Add Member',
+            removeConfirmMessage: 'Remove {name} ({email}) ?',
+          },
           projectMemberAdd: {
             title: 'Add members to {projectName}',
             searchTextPlaceholder: 'Search by name or email address',
@@ -143,6 +162,7 @@ const struct: LocaleStruct = {
             name: 'Name',
             role: 'Role',
             addMembers: 'Add Members',
+            addedMessage: 'Member added successfully',
           },
         },
       },
