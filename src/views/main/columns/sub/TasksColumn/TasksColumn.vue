@@ -118,11 +118,11 @@ import { StateChanger } from 'vue-infinite-loading';
 import SubColumnLayout from '../SubColumnLayout.vue';
 import FilterForm from './FilterForm.vue';
 import NestedList from './NestedList.vue';
-import { MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry, TasksGetRequest } from '@/lib/api';
+import { MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry, TasksGetRequest, TasksTaskIdPriorityPostRequestBody } from '@/lib/api';
 import { BasicError } from '@/lib/errors';
 import { ProjectStatusCategory } from '@/consts';
 import { toSnakeCase } from '@/lib/utils/string-util';
-import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent, FilterFormValue } from './types';
+import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent, DropItemPosition, FilterFormValue } from './types';
 
 type SearchScrollType = 'next' | 'prev';
 type SearchOrderField = 'priority' | 'limitedAt' | 'status';
@@ -227,10 +227,10 @@ export default class TasksColumn extends Vue {
   }
 
   async fetchStatusOptions() {
-    const loginUser = this.$store.state.activeUser.myUser!;
+    const myUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
-    this.statusOptions = await tasksApi.tasksStatusGet({ spaceId: loginUser.space.id, projectId });
+    const tasksApi = apiRegistry.load(TasksApi, myUser.token);
+    this.statusOptions = await tasksApi.tasksStatusGet({ spaceId: myUser.space.id, projectId });
   }
 
   async onInfinite($state: StateChanger) {
@@ -316,16 +316,16 @@ export default class TasksColumn extends Vue {
   async onInlineTaskAddEnd() {
     if (!this.adding || this.saving) return;
     if (this.addingTaskSubject.trim() !== '') {
-      const loginUser = this.$store.state.activeUser.myUser!;
+      const myUser = this.$store.state.activeUser.myUser!;
       const projectId = this.$store.getters.activeUser.activeProjectId!;
-      const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
+      const tasksApi = apiRegistry.load(TasksApi, myUser.token);
       const statusOptions = this.statusOptions!
         .filter((o) => o.category === ProjectStatusCategory.Progress)
         .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
       try {
         this.saving = true;
         const updatedTask = await tasksApi.tasksPost({
-          spaceId: loginUser.space.id,
+          spaceId: myUser.space.id,
           projectId,
           tasksPostRequestBody: {
             subject: this.addingTaskSubject.trim(),
@@ -370,12 +370,25 @@ export default class TasksColumn extends Vue {
 
 
   async onDropTask(ev: DropTaskEvent) {
+    if (this.saving) return;
+
+    // 循環参照によるPropの直接変更対策
+    this.dragData = null;
+    this.dropHover = null;
+    await this.$nextTick();
+
     const dragData = ev.dragData;
-    const dropData = ev.dropData;
+    let dropData: {
+      task: TaskWithChilds | null;
+      taskParent: TaskWithChilds | null;
+      position: DropItemPosition;
+    } = ev.dropData;
     if (!this.currentSort.droppableBetween && dropData.position !== 'child') {
-      dropData.taskParent = null;
-      dropData.task = null as any;
-      dropData.position = 'child';
+      dropData = {
+        task: null,
+        taskParent: null,
+        position: 'child',
+      };
     }
 
     if (dragData.task === dropData.task) {
@@ -400,6 +413,11 @@ export default class TasksColumn extends Vue {
       this.tasks!.splice(this.tasks!.indexOf(dragData.task), 1);
     }
 
+    const myUser = this.$store.state.activeUser.myUser!;
+    const projectId = this.$store.getters.activeUser.activeProjectId!;
+    const tasksApi = apiRegistry.load(TasksApi, myUser.token);
+    const body: TasksTaskIdPriorityPostRequestBody = {};
+
     // 指定の親グループに加入
     if (dropData.position === 'child') {
       if (dropData.task) {
@@ -408,17 +426,37 @@ export default class TasksColumn extends Vue {
         } else if (!dropData.task.hasChilds) {
           dropData.task.hasChilds = true;
         }
+        body.parent = dropData.task.id;
       } else {
         this.tasks.push(dragData.task);
+        body.parent = null;
       }
 
     } else if (dropData.position === 'before') {
       const targetTasks = dropData.taskParent ? dropData.taskParent.childs! : this.tasks;
       targetTasks.splice(targetTasks.indexOf(dropData.task!), 0, dragData.task);
+      body.parent = dropData.task!.parent;
+      body.nextHighestTask = dropData.task!.id;
 
     } else if (dropData.position === 'after') {
       const targetTasks = dropData.taskParent ? dropData.taskParent.childs! : this.tasks;
       targetTasks.push(dragData.task);
+      body.parent = dropData.task!.parent;
+      body.nextHighestTask = null;
+    }
+
+    try {
+      this.saving = true;
+      await tasksApi.tasksTaskIdPriorityPost({
+        spaceId: myUser.space.id,
+        projectId,
+        taskId: dragData.task.id,
+        tasksTaskIdPriorityPostRequestBody: body,
+      });
+    } catch (err) {
+      this.$appEmit('error', { err });
+    } finally {
+      this.saving = false;
     }
   }
 
