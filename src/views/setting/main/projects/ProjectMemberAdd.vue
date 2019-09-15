@@ -150,9 +150,6 @@ export default class ProjectMemberAdd extends Vue {
 
   get defaultRole() {
     const roles = this.selectableRoles;
-    if (roles.includes(ProjectRoles.USER_WRITABLE)) {
-      return ProjectRoles.USER_WRITABLE;
-    }
     return roles[roles.length - 1];
   }
 

@@ -88,6 +88,16 @@ class ActiveUserGetters extends Getters<ActiveUserState>() {
     const projectUser = this.state.activeProjectData ? this.state.activeProjectData!.user : null;
     return projectUser && projectUser.projectRoleId ? ProjectRoles.get(projectUser.projectRoleId) : null;
   }
+
+  get activeProjectMyPerms() {
+    if (!this.mySpaceRole) {
+      return [];
+    }
+    if (!this.mySpaceRole.settableProjectRole || !this.activeProjectMyRole) {
+      return this.mySpaceRole.perms.concat();
+    }
+    return this.mySpaceRole.perms.concat(this.activeProjectMyRole.perms);
+  }
 }
 
 class ActiveUserMutations extends Mutations<ActiveUserState>() {

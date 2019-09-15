@@ -5,9 +5,10 @@
         {{task.createdAt | dateFormat('YYYY/M/D')}}
         {{$t('views.taskColumn._name_HasCreatedTask', { name: user ? (user.displayName || user.account) : 'unknown' })}}
       </my-space-user>
-      <div class="dashboardWrap_post_board" ref="board" @scroll="onBoardScroll($event)">
+      <div class="dashboardWrap_post_board" ref="board">
         <table>
           <tbody ref="boardTableBody">
+            <infinite-loading direction="top" :identifier="infiniteId" @infinite="onInfinite" />
             <tr v-for="c in comments" :key="c.id">
               <th class="dashboardWrap_post_board_user">
                 <img src="@/assets/images/mainColumn/icn_post-user-heavyGreen.svg" alt="">
@@ -33,12 +34,13 @@
       </div>
     </div>
     <div class="dashboardWrap_comment">
-      <div class="dashboardWrap_comment_box">
+      <div v-if="commentAddable" class="dashboardWrap_comment_box">
         <label class="dashboardWrap_comment_box_upload" for="file_upload">
           <input type="file" id="file">
           <input type="text" id="file_upload" value="">
         </label>
         <textarea
+          ref="textarea"
           type="text"
           class="dashboardWrap_comment_box_content"
           :placeholder="$t('views.taskColumn.enterAComment')"
@@ -54,15 +56,24 @@
 </template>
 
 <style lang="stylus" scoped>
+.dashboardWrap_post_board
+  tbody
+    tr:last-child
+      .dashboardWrap_post_board_text
+        padding-bottom: 0
 .dashboardWrap_post_board_text
   white-space: pre-wrap
+  padding-bottom: 30px
+.dashboardWrap_comment_box_content
+  margin-left: 4px
 </style>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
+import { StateChanger } from 'vue-infinite-loading';
 import * as api from '@/lib/api';
-import { setTimeout } from 'timers';
+import { Perm } from '@/lib/permissions';
 
 Component.registerHooks([
   'beforeRouteEnter',
@@ -73,19 +84,29 @@ export default class TaskCommment extends Vue {
   $refs!: {
     board: HTMLDivElement;
     boardTableBody: HTMLTableSectionElement;
+    textarea: HTMLTextAreaElement;
   }
 
   @Prop({ required: true })
   task!: api.Task;
 
   comments: api.TaskComment[] = [];
-  limit = 20;
+  page = 1;
+  limit = 15;
+  infiniteId = +new Date();
+
   newComment: api.TaskCommmentsPostRequestBody = {
     body: '',
   };
-  prevable = true;
-  fetching = false;
   saving = false;
+
+  get myPerms() {
+    return this.$store.getters.activeUser.activeProjectMyPerms;
+  }
+
+  get commentAddable() {
+    return this.myPerms.includes(Perm.ADD_TASK_COMMENT);
+  }
 
   resetNewComment() {
     this.newComment = {
@@ -97,198 +118,115 @@ export default class TaskCommment extends Vue {
     if (this.saving) {
       return;
     }
-    const loginUser = this.$store.state.activeUser.myUser!;
+    const myUser = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
+    const tasksApi = api.apiRegistry.load(api.TasksApi, myUser.token);
     try {
       this.saving = true;
       const comment = await tasksApi.taskCommmentsPost({
-        spaceId: loginUser.space.id,
+        spaceId: myUser.space.id,
         projectId,
         taskId: this.task.id,
         taskCommmentsPostRequestBody: this.newComment,
       });
       this.resetNewComment();
-      await this.scrollComments('next', true);
+      this.saving = false;
+      await this.fetchNextComments();
+      await this.scrollBottom();
+      this.focusTextarea();
 
     } catch (err) {
       this.$appEmit('error', { err });
+      this.saving = false;
     }
-
-    this.saving = false;
   }
 
-  async destroy() {
-    if (this.saving) {
-      return;
-    }
-    const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
-
+  async onInfinite($state: StateChanger) {
     try {
-      this.saving = true;
-      await tasksApi.tasksTaskIdDelete({
-        spaceId: loginUser.space.id,
-        projectId,
-        taskId: parseInt(this.$route.params.taskId),
-      });
-      this.$flash(this.$t('common.deleted').toString(), 'success');
-      this.$router.replace({
-        name: 'tasks',
-        params: {
-          userId: loginUser.id.toString(),
-          projectId: projectId.toString(),
-        },
-      });
-
-    } catch (err) {
-      this.$appEmit('error', { err });
-    }
-
-    this.saving = false;
-  }
-
-  async fetchComments() {
-    if (this.fetching) return;
-    const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const taskApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
-
-    if (this.comments.length && this.comments[0].task !== this.task.id) {
-      this.comments = [];
-    }
-
-    try {
-      this.fetching = true;
+      const myUser = this.$store.state.activeUser.myUser!;
+      const projectId = this.$store.getters.activeUser.activeProjectId!;
+      const taskApi = api.apiRegistry.load(api.TasksApi, myUser.token);
+      const searchPage = this.page;
       const res = await taskApi.taskCommmentsGet({
-        spaceId: loginUser.space.id,
-        projectId: projectId,
+        spaceId: myUser.space.id,
+        projectId,
         taskId: this.task.id,
+        page: searchPage,
         limit: this.limit,
+        ordering: '-createdAt,-id',
       });
-      if (res.count <= this.limit) {
-        this.prevable = false;
-      }
-      this.comments = res.results.reverse();
-      if (this.comments.length) {
-        await this.$nextTick();
-        this.$forceUpdate();
-        await this.$nextTick();
-        this.$scrollTo(this.$refs.boardTableBody.lastElementChild!, {
-          container: this.$refs.board,
-          x: false,
-          y: true,
-          duration: 1,
-        });
+      const addData = res.results.filter((r) => !this.comments.find((c) => c.id === r.id));
+      if (addData.length) {
+        this.comments.unshift(...addData.reverse());
       }
 
-    } catch (err) {
-      this.$flash(this.$t('views.taskColumn.commentSyncFailed').toString(), 'error');
-    } finally {
-      this.fetching = false;
-    }
-  }
-
-  async scrollComments(type: 'next' | 'prev', full: boolean = false) {
-    if (this.fetching) return;
-    if (type === 'prev' && !this.prevable) return;
-
-    const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const taskApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
-    const comments = this.comments;
-
-    if (!comments.length) {
-      await this.fetchComments();
-      return;
-    }
-
-    let current = type === 'next' ? comments[comments.length - 1] : comments[0];
-    const d = type === 'next' ? 'higher' : 'lower';
-    const idGtLt = d === 'higher' ? 'idGt' : 'idLt';
-    const field = 'createdAt';
-    const fieldGtLt = d === 'higher' ? `${field}Gt` : `${field}Lt`;
-    const ordering = [field, 'id'].map((f) => d === 'higher' ? f : `-${f}`).join(',');
-    let limit = this.limit;
-    if (full) {
-      limit = 500;
-    }
-
-    const req: api.TaskCommmentsGetRequest = {
-      spaceId: loginUser.space.id,
-      projectId: projectId,
-      taskId: this.task.id,
-    };
-
-    try {
-      this.fetching = true;
-      const addComments: api.TaskComment[] = [];
-      while (true) {
-        const res1 = await taskApi.taskCommmentsGet(Object.assign({
-          [idGtLt]: current.id,
-          [field]: current[field],
-          limit,
-          ordering,
-        }, req));
-        const tempComments = res1.results;
-        if (tempComments.length < limit) {
-          const res2 = await taskApi.taskCommmentsGet(Object.assign({
-            [fieldGtLt]: current[field],
-            limit: limit - tempComments.length,
-            ordering,
-          }, req));
-          tempComments.push(...res2.results);
-        }
-        addComments.push(...tempComments);
-        if (!full || tempComments.length < limit || !tempComments.length) {
-          break;
-        }
-        current = tempComments[tempComments.length - 1];
-      }
-
-      if (type === 'prev') {
-        this.comments = addComments.reverse().concat(comments);
-        if (full && comments.length) {
-          await this.$nextTick();
-          this.$forceUpdate();
-          await this.$nextTick();
-          this.$scrollTo(this.$refs.boardTableBody.firstElementChild!, {
-            container: this.$refs.board,
-            x: false,
-            y: true,
-            duration: 1,
-          });
-        }
-        if (comments.length < limit) {
-          this.prevable = false;
-        }
+      if (res.next) {
+        this.page += 1;
+        $state.loaded();
       } else {
-        this.comments = comments.concat(addComments);
-        if (full && comments.length) {
-          await this.$nextTick();
-          this.$forceUpdate();
-          await this.$nextTick();
-          this.$scrollTo(this.$refs.boardTableBody.lastElementChild!, {
-            container: this.$refs.board,
-            x: false,
-            y: true,
-            duration: 1,
-          });
-        }
+        $state.complete();
+      }
+
+      if (searchPage === 1 && this.comments.length) {
+        await this.scrollBottom();
       }
 
     } catch (err) {
-      this.$flash(this.$t('views.taskColumn.commentSyncFailed').toString(), 'error');
-    } finally {
-      this.fetching = false;
+      this.$appEmit('error', { err });
     }
   }
 
-  async init() {
-    this.prevable = true;
-    await this.fetchComments();
+  async fetchNextComments() {
+    try {
+      const myUser = this.$store.state.activeUser.myUser!;
+      const projectId = this.$store.getters.activeUser.activeProjectId!;
+      const taskApi = api.apiRegistry.load(api.TasksApi, myUser.token);
+      const lastComments = this.comments.length ? this.comments[this.comments.length - 1] : null;
+      const res = await taskApi.taskCommmentsGet({
+        spaceId: myUser.space.id,
+        projectId,
+        taskId: this.task.id,
+        page: 1,
+        limit: 500,
+        ordering: '-createdAt,-id',
+        createdAtGt: lastComments ? lastComments.createdAt : undefined,
+      });
+      const addData = res.results.filter((r) => !this.comments.find((c) => c.id === r.id));
+      if (addData.length) {
+        this.comments.push(...addData.reverse());
+      }
+
+    } catch (err) {
+      this.$appEmit('error', { err });
+    }
+  }
+
+  async scrollBottom() {
+    await this.$nextTick();
+    this.$forceUpdate();
+    await this.$nextTick();
+    this.$scrollTo(this.$refs.boardTableBody.lastElementChild!, {
+      container: this.$refs.board,
+      x: false,
+      y: true,
+      duration: 1,
+    });
+  }
+
+  focusTextarea() {
+    if (this.commentAddable) {
+      this.$refs.textarea.focus();
+    }
+  }
+
+  init(first = false) {
+    if (!first) {
+      this.comments = [];
+      this.page = 1;
+      this.infiniteId = +new Date();
+    }
     this.resetNewComment();
+    this.focusTextarea();
   }
 
   async onTextKeydown(ev: KeyboardEvent) {
@@ -299,25 +237,16 @@ export default class TaskCommment extends Vue {
     }
   }
 
-  async onBoardScroll(ev: Event) {
-    if (this.fetching || this.saving || !this.prevable) {
-      return;
-    }
-    if (this.$refs.board.scrollTop <= 300) {
-      await this.scrollComments('prev');
-    }
-  }
-
   @Watch('task')
-  async onTaskChange(newVal: api.Task, oldVal?: api.Task) {
+  onTaskChange(newVal: api.Task, oldVal?: api.Task) {
     if (oldVal && newVal.id === oldVal.id) {
       return;
     }
-    await this.init();
+    this.init();
   }
 
-  async mounted() {
-    await this.init();
+  mounted() {
+    this.init(true);
   }
 }
 </script>

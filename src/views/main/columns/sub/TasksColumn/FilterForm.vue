@@ -18,8 +18,8 @@
 
     <h2>{{$t('views.tasksColumn.filterForm.assignedUsers')}}</h2>
     <ul class="searchWrap_tabBox">
-      <li><a class="open_tab_task" :class="{active: assignedUserField === 'chargeUsers'}" @click.prevent="assignedUserField = 'chargeUsers'" href="#">{{$t('views.tasksColumn.filterForm.assignedUser')}}</a></li>
-      <li><a class="open_tab_file" :class="{active: assignedUserField === 'batonUsers'}" @click.prevent="assignedUserField = 'batonUsers'" href="#">{{$t('views.tasksColumn.filterForm.batonHolder')}}</a></li>
+      <li><a class="open_tab_task" :class="{active: assignedUserField === 'chargeUsers'}" @click.prevent="onUserFieldChange('chargeUsers')" href="#">{{$t('views.tasksColumn.filterForm.assignedUser')}}</a></li>
+      <li><a class="open_tab_file" :class="{active: assignedUserField === 'batonUser'}" @click.prevent="onUserFieldChange('batonUser')" href="#">{{$t('views.tasksColumn.filterForm.batonHolder')}}</a></li>
     </ul>
     <dl class="searchWrap_humanBox">
       <dd class="searchWrap_humanBox_item_all">
@@ -92,7 +92,7 @@ export default class FilterForm extends Vue {
   checkedTagIdList: number[] = [];
   checkedTagAll = true;
 
-  assignedUserField: 'chargeUsers' | 'batonUsers' = 'chargeUsers';
+  assignedUserField: 'chargeUsers' | 'batonUser' = 'chargeUsers';
 
 
   get progressOptions() {
@@ -199,6 +199,11 @@ export default class FilterForm extends Vue {
     this.emitInput();
   }
 
+  onUserFieldChange(field: this['assignedUserField']) {
+    this.assignedUserField = field;
+    this.emitInput();
+  }
+
   async emitInput() {
     await this.$nextTick();
 
@@ -215,8 +220,8 @@ export default class FilterForm extends Vue {
     if (!this.checkedAssignedUserAll && this.checkedAssignedUserIdList.length) {
       if (this.assignedUserField === 'chargeUsers') {
         value.chargeUsers = this.checkedAssignedUserIdList.concat();
-      } else if (this.assignedUserField === 'batonUsers') {
-        value.batonUsers = this.checkedAssignedUserIdList.concat();
+      } else if (this.assignedUserField === 'batonUser') {
+        value.batonUser = this.checkedAssignedUserIdList.concat();
       }
     }
     // tags
@@ -254,10 +259,10 @@ export default class FilterForm extends Vue {
 
     // users
     if ((newVal.chargeUsers && newVal.chargeUsers.length) ||
-        (newVal.batonUsers && newVal.batonUsers.length)
+        (newVal.batonUser && newVal.batonUser.length)
     ) {
-      const field = newVal.chargeUsers && newVal.chargeUsers.length ? 'chargeUsers' : 'batonUsers';
-      const users = (field === 'chargeUsers' ? newVal.chargeUsers : newVal.batonUsers) as number[];
+      const field = newVal.chargeUsers && newVal.chargeUsers.length ? 'chargeUsers' : 'batonUser';
+      const users = (field === 'chargeUsers' ? newVal.chargeUsers : newVal.batonUser) as number[];
       const userIdList = users.filter((id) => this.projectUsers.find((pu) => pu.userId === id));
       this.checkedAssignedUserIdList = userIdList;
       this.checkedAssignedUserAll = !userIdList.length;

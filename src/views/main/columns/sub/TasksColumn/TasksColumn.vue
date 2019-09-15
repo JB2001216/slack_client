@@ -37,23 +37,25 @@
         </div>
       </div>
       <div class="task_list">
-        <a v-if="!adding" class="task_add" @click.prevent="onInlineTaskAddStart()">
-          <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="m22 13h-19.99999v-2h19.99999z" />
-            <path d="m11 22v-20.00003h2v20.00003z" />
-          </svg>
-          {{$t('views.tasksColumn.addANewTask')}}
-        </a>
-        <div v-if="adding" class="task_add adding">
-          <input
-            ref="addingTaskSubjectInput"
-            class="task_add_input"
-            type="text"
-            v-model="addingTaskSubject"
-            @keydown.esc="adding = false"
-            @blur="onInlineTaskAddEnd()"
-            @change="$event.target.blur()">
-        </div>
+        <template v-if="taskAddable">
+          <a v-if="!adding" class="task_add" @click.prevent="onInlineTaskAddStart()">
+            <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="m22 13h-19.99999v-2h19.99999z" />
+              <path d="m11 22v-20.00003h2v20.00003z" />
+            </svg>
+            {{$t('views.tasksColumn.addANewTask')}}
+          </a>
+          <div v-if="adding" class="task_add adding">
+            <input
+              ref="addingTaskSubjectInput"
+              class="task_add_input"
+              type="text"
+              v-model="addingTaskSubject"
+              @keydown.esc="adding = false"
+              @blur="onInlineTaskAddEnd()"
+              @change="$event.target.blur()">
+          </div>
+        </template>
         <div
           class="taskListContainer"
           :class="{dropHoverRoot: !currentSort.droppableBetween && dragData && dropHover && dropHover.position !== 'child'}"
@@ -63,7 +65,6 @@
             :tasks="tasks"
             :status-options="statusOptions"
             :fetch-tasks="fetchTasks"
-            item-draggable
             :item-droppable-between="currentSort.droppableBetween"
             :drag-data="dragData"
             @drag-data-change="dragData = $event"
@@ -123,6 +124,7 @@ import { BasicError } from '@/lib/errors';
 import { ProjectStatusCategory } from '@/consts';
 import { toSnakeCase } from '@/lib/utils/string-util';
 import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent, DropItemPosition, FilterFormValue } from './types';
+import { Perm } from '@/lib/permissions';
 
 type SearchScrollType = 'next' | 'prev';
 type SearchOrderField = 'priority' | 'limitedAt' | 'status';
@@ -200,6 +202,10 @@ export default class TasksColumn extends Vue {
 
   get activeFilter() {
     return !!Object.keys(this.filter).length;
+  }
+
+  get taskAddable() {
+    return this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.ADD_TASK);
   }
 
   async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
@@ -290,7 +296,7 @@ export default class TasksColumn extends Vue {
 
   async favorite(favorite: boolean) {
     this.changeCondition({
-      filter: Object.assign(this.conditions.filter, { favorite }),
+      filter: Object.assign({}, this.conditions.filter, { favorite }),
       order: this.conditions.order,
     });
   }
@@ -473,6 +479,10 @@ export default class TasksColumn extends Vue {
 
   async onFilterInput(filter: this['filter']) {
     this.filter = filter;
+    this.changeCondition({
+      filter: Object.assign({ favorite: this.isFavorite }, this.filter),
+      order: this.conditions.order,
+    });
   }
 
   onWindowMouseDownUseCapture(ev: MouseEvent) {

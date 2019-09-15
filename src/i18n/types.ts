@@ -29,8 +29,8 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     };
     projectRole: {
       PROJECT_ADMIN: string;
-      USER_WRITABLE: string;
-      USER_READONLY: string;
+      PROJECT_USER: string;
+      // USER_READONLY: string;
     };
     alreadyLoggedIn: string;
   };

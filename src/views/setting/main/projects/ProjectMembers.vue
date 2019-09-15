@@ -36,13 +36,13 @@
       </table>
       <!-- メンバーが少ない場合 -->
       <!--
-          <div class="option_spaceMember_addButton">
+          <div v-if="projectUserAddable" class="option_spaceMember_addButton">
           <button @click="$store.mutations.settingRouter.to('project-member-add')">{{$t('views.setting.main.projectMembers.addMember')}}</button>
           </div>
           -->
     </div>
     <!-- メンバーが多い場合 -->
-    <div class="option_spaceMember_addBar">
+    <div v-if="projectUserAddable" class="option_spaceMember_addBar">
       <button @click="$store.mutations.settingRouter.to('project-member-add')">{{$t('views.setting.main.projectMembers.addMember')}}</button>
     </div>
 
@@ -93,6 +93,10 @@ export default class SpaceMembers extends Vue {
 
   get myProjectRole() {
     return this.$store.getters.activeUser.activeProjectMyRole!;
+  }
+
+  get projectUserAddable() {
+    return this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.ADD_PROJECT_USER);
   }
 
   async onInfinite($state: StateChanger) {
@@ -182,9 +186,7 @@ export default class SpaceMembers extends Vue {
   }
 
   getRemovable(puser: ProjectUserWithCurrentRole) {
-    if (!this.mySpaceRole.perms.includes(Perm.DELETE_PROJECT_USER) &&
-        !(this.mySpaceRole.settableProjectRole && this.myProjectRole && this.myProjectRole.perms.includes(Perm.DELETE_PROJECT_USER))
-    ) {
+    if (!this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.DELETE_PROJECT_USER)) {
       return false;
     }
     if (puser.currentSpaceRole.joinAllProjects) {

@@ -21,8 +21,7 @@ const struct: LocaleStruct = {
       },
       projectRole: {
         PROJECT_ADMIN: 'プロジェクト管理者',
-        USER_WRITABLE: 'ユーザー(書込可)',
-        USER_READONLY: 'ユーザー(閲覧のみ)',
+        PROJECT_USER: 'ユーザー',
       },
       alreadyLoggedIn: '既にログイン済です',
     },

@@ -22,7 +22,6 @@ export enum Perm {
   DELETE_MY_FILE,
   DELETE_ALL_FILE,
   // タスク
-  EDIT_TASK_STATUS,
   ADD_TASK,
   UPDATE_MY_TASK,
   UPDATE_ALL_TASK,
@@ -40,7 +39,6 @@ export enum Perm {
   UPDATE_ALL_NOTE,
   DELETE_MY_NOTE,
   DELETE_ALL_NOTE,
-  EDIT_NOTE_STATUS,
 }
 
 function getPerms(options: { ignore?: Perm[] } = {}) {
@@ -159,7 +157,6 @@ export class ProjectRoles {
     Perm.DELETE_MY_FILE,
     Perm.DELETE_ALL_FILE,
 
-    Perm.EDIT_TASK_STATUS,
     Perm.ADD_TASK,
     Perm.UPDATE_MY_TASK,
     Perm.UPDATE_ALL_TASK,
@@ -177,17 +174,15 @@ export class ProjectRoles {
     Perm.UPDATE_ALL_NOTE,
     Perm.DELETE_MY_NOTE,
     Perm.DELETE_ALL_NOTE,
-    Perm.EDIT_NOTE_STATUS,
   ]);
 
-  static readonly USER_WRITABLE = new ProjectRole(10101, 10101, 'USER_WRITABLE', [
+  static readonly PROJECT_USER = new ProjectRole(10101, 10101, 'PROJECT_USER', [
     Perm.ADD_FILE,
     Perm.UPDATE_MY_FILE,
     Perm.DELETE_MY_FILE,
 
     Perm.ADD_TASK,
     Perm.UPDATE_MY_TASK,
-    Perm.DELETE_MY_TASK,
 
     Perm.ADD_TASK_COMMENT,
     Perm.UPDATE_MY_TASK_COMMENT,
@@ -198,13 +193,18 @@ export class ProjectRoles {
     Perm.DELETE_MY_NOTE,
   ]);
 
+  /*
   static readonly USER_READONLY = new ProjectRole(10102, 10102, 'USER_READONLY', [
+    Perm.ADD_TASK_COMMENT,
+    Perm.UPDATE_MY_TASK_COMMENT,
+    Perm.DELETE_MY_TASK_COMMENT,
   ]);
+  */
 
   static * all() {
     yield this.PROJECT_ADMIN;
-    yield this.USER_WRITABLE;
-    yield this.USER_READONLY;
+    yield this.PROJECT_USER;
+    // yield this.USER_READONLY;
   }
 
   static get(id: number) {
@@ -222,7 +222,7 @@ export class ProjectRoles {
         yield r;
       }
     }
-    if (myProjectRole && mySpaceRole.perms.includes(Perm.UPDATE_PROJECT_USER)) {
+    if (myProjectRole && (mySpaceRole.perms.includes(Perm.UPDATE_PROJECT_USER) || myProjectRole.perms.includes(Perm.UPDATE_PROJECT_USER))) {
       for (const r of this.all()) {
         if (myProjectRole.checkSelectable(r)) {
           yield r;

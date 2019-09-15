@@ -8,7 +8,7 @@
         dragging: dragData,
         dragCurrent: dragData && dragData.task === t,
       }"
-      :draggable="itemDraggable"
+      :draggable="allTaskUpdatable"
       @dragstart.stop="onItemDragStart($event, t)"
       @dragend.stop.prevent="onItemDragEnd($event, t)"
     >
@@ -58,9 +58,10 @@
         </div>
         <template v-if="!editingTask || editingTask.id !== t.id">
           <div class="task_item_name" @dblclick="onInlineTaskEditStart(t)">{{t.subject}}</div>
-          <a class="task_item_add" href="#" @click.stop.prevent="onInlineTaskAddStart(t)" />
+          <a v-if="taskAddable" class="task_item_add" href="#" @click.stop.prevent="onInlineTaskAddStart(t)" />
           <my-date-range-input
             :value="t.limitedAt ? {start: t.startedAt, end: t.limitedAt} : null"
+            :disabled="!getTaskUpdatable(t)"
             @input="onDateRangeChange(t, $event)"
             class="task_item_date" />
           <my-project-status class="task_item_status" :option="getStatusOption(t.status)" />
@@ -76,7 +77,7 @@
             @change="$event.target.blur()">
         </template>
       </div>
-      <div v-if="addingParentTask && addingParentTask.id === t.id" class="nestedList_add_item">
+      <div v-if="taskAddable && addingParentTask && addingParentTask.id === t.id" class="nestedList_add_item">
         <input
           ref="addingTaskSubjectInputs"
           type="text"
@@ -123,6 +124,8 @@
     cursor: pointer
     padding-left: 5px
     background: transparent
+    .task_item_date.disabled
+      display: none
     &:not(:hover)
       .task_item_date
         .myDateRangeInput_view_icon
@@ -175,6 +178,7 @@ import {
 } from '@/lib/api';
 import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent } from './types';
 import { ProjectStatusCategory } from '@/consts';
+import { Perm } from '@/lib/permissions';
 
 @Component({
   name: 'nested-list',
@@ -214,6 +218,24 @@ export default class NestedList extends Vue {
   addingTaskSubject = '';
   editingTask: TaskWithChilds | null = null;
   editingTaskSubject = '';
+
+  get myUser() {
+    return this.$store.state.activeUser.myUser!;
+  }
+  get myPerms() {
+    return this.$store.getters.activeUser.activeProjectMyPerms!;
+  }
+
+  get taskAddable() {
+    return this.myPerms.includes(Perm.ADD_TASK);
+  }
+  get allTaskUpdatable() {
+    return this.myPerms.includes(Perm.UPDATE_ALL_TASK);
+  }
+  getTaskUpdatable(task: Task) {
+    return this.myPerms.includes(Perm.UPDATE_ALL_TASK) ||
+      (task.writeUser === this.myUser.id && this.myPerms.includes(Perm.UPDATE_MY_TASK));
+  }
 
   getStatusOption(optionId: number | null) {
     if (!optionId || !this.statusOptions) {
@@ -285,7 +307,7 @@ export default class NestedList extends Vue {
   }
 
   async onInlineTaskEditStart(task: Task) {
-    if (this.editingTask || this.saving) return;
+    if (!this.getTaskUpdatable(task) || this.editingTask || this.saving) return;
     this.editingTask = task;
     this.editingTaskSubject = task.subject;
     await this.$nextTick();

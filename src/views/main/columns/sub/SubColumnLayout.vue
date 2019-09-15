@@ -13,7 +13,7 @@
           </a>
         </template>
         <template v-slot:items>
-          <li @click="$store.mutations.settingRouter.to('project-member-add')"><span>{{$t(`views.subColumn.projectMenu.addMembers`)}}</span></li>
+          <li v-if="projectUserAddable" @click="$store.mutations.settingRouter.to('project-member-add')"><span>{{$t(`views.subColumn.projectMenu.addMembers`)}}</span></li>
           <li @click="$store.mutations.settingRouter.to('project-members')"><span>{{$t(`views.subColumn.projectMenu.projectSettings`)}}</span></li>
         </template>
       </my-simple-menu>
@@ -53,6 +53,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Perm } from '@/lib/permissions';
 
 enum SubColumnTabNames {
   task = 'task',
@@ -82,6 +83,10 @@ export default class SubColumnLayout extends Vue {
 
   get project() {
     return this.$store.getters.activeUser.activeProject;
+  }
+
+  get projectUserAddable() {
+    return this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.ADD_PROJECT_USER);
   }
 }
 </script>

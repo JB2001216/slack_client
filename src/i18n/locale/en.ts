@@ -20,8 +20,7 @@ const struct: LocaleStruct = {
       },
       projectRole: {
         PROJECT_ADMIN: 'Project Administrator',
-        USER_WRITABLE: 'User (Writable)',
-        USER_READONLY: 'User (Readonly)',
+        PROJECT_USER: 'User',
       },
       alreadyLoggedIn: 'Already logged in',
     },

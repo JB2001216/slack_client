@@ -26,5 +26,5 @@ export interface FilterFormValue {
   status?: number[];
   tags?: string[];
   chargeUsers?: number[];
-  batonUsers?: number[];
+  batonUser?: number[];
 }
