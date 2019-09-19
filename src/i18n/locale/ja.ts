@@ -164,6 +164,18 @@ const struct: LocaleStruct = {
             addMembers: 'メンバーを追加する',
             addedMessage: 'メンバーの追加に成功しました',
           },
+          statusFlow: {
+            title: {
+              task: 'タスクフローの設定',
+              note: 'ノートフローの設定',
+            },
+            flow: 'フロー',
+            others: 'その他',
+            addAnEntryField: '枠を追加する',
+            save: '保存',
+            updatedMessage: '更新しました',
+            blankItemExists: '空欄の項目があります',
+          },
         },
       },
 

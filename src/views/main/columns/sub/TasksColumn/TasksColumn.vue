@@ -181,8 +181,6 @@ export default class TasksColumn extends Vue {
   limit = 30;
   infiniteId = +new Date();
 
-  statusOptions: TaskStatus[] | null = null;
-
   initialized = false;
   saving = false;
   adding = false;
@@ -208,6 +206,10 @@ export default class TasksColumn extends Vue {
     return this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.ADD_TASK);
   }
 
+  get statusOptions() {
+    return this.$store.state.activeUser.taskStatusList;
+  }
+
   async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
     const cond = this.conditions;
     const user = this.$store.state.activeUser.myUser!;
@@ -230,13 +232,6 @@ export default class TasksColumn extends Vue {
     }
 
     return tasksApi.tasksGet(req);
-  }
-
-  async fetchStatusOptions() {
-    const myUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const tasksApi = apiRegistry.load(TasksApi, myUser.token);
-    this.statusOptions = await tasksApi.tasksStatusGet({ spaceId: myUser.space.id, projectId });
   }
 
   async onInfinite($state: StateChanger) {
@@ -468,7 +463,7 @@ export default class TasksColumn extends Vue {
 
   async init(to: Route, from: Route) {
     if (to.name === 'tasks' || !from || from.params.projectId !== to.params.projectId) {
-      await this.fetchStatusOptions();
+      await this.$store.actions.activeUser.fetchTaskStatus();
       if (this.initialized) {
         this.changeCondition(this.initialConditions);
       } else {

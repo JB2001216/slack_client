@@ -1,48 +1,9 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import * as api from '@/lib/api';
-import { SpaceRoles, ProjectRoles } from '@/lib/permissions';
+import { SpaceRoles, ProjectRoles, Perm } from '@/lib/permissions';
 
 interface LoggedInUser extends api.MyUser {
   token: string;
-}
-
-type SearchScrollType = 'next' | 'prev';
-type SearchOrderType = 'asc' | 'desc';
-
-interface NotesGetConditions {
-  filter?: Pick<api.NotesGetRequest, 'subject' | 'status' | 'batonUser' | 'writeUser' | 'favorite'>;
-  order?: {
-    field: 'updatedAt';
-    type: SearchOrderType;
-  };
-}
-function _createNotesGetRequest(user: api.MyUser, project: api.Project, cond: Required<NotesGetConditions>) {
-  const req: api.NotesGetRequest = Object.assign({
-    spaceId: user.space.id,
-    projectId: project.id,
-  }, cond.filter);
-  req.ordering = [cond.order.field, 'id']
-    .map((f) => cond.order.type === 'asc' ? f : `-${f}`)
-    .join(',');
-  return req;
-}
-
-interface FilesGetConditions {
-  filter?: Pick<api.FilesGetRequest, 'name'>;
-  order?: {
-    field: 'updatedAt';
-    type: SearchOrderType;
-  };
-}
-function _createFilesGetRequest(user: api.MyUser, project: api.Project, cond: Required<FilesGetConditions>) {
-  const req: api.FilesGetRequest = Object.assign({
-    spaceId: user.space.id,
-    projectId: project.id,
-  }, cond.filter);
-  req.ordering = [cond.order.field, 'id']
-    .map((f) => cond.order.type === 'asc' ? f : `-${f}`)
-    .join(',');
-  return req;
 }
 
 async function _fetchProjects(user: LoggedInUser) {
@@ -56,15 +17,8 @@ class ActiveUserState {
   projects: api.Project[] | null = null;
   activeProjectData: { id: number; user: api.ProjectUser | null } | null = null
   spaceUsers: api.SpaceUser[] = [];
-
-  // notes
-  notes: api.Note[] | null = null;
-  notesGetConditions: Required<NotesGetConditions> | null = null;
-  noteStatusOptions: api.NoteStatus[] | null = null;
-
-  // files
-  files: api.FileRecord[] | null = null;
-  filesGetConditions: Required<FilesGetConditions> | null = null;
+  taskStatusList: api.TaskStatus[] | null = null;
+  noteStatusList: api.NoteStatus[] | null = null;
 }
 
 class ActiveUserGetters extends Getters<ActiveUserState>() {
@@ -98,6 +52,28 @@ class ActiveUserGetters extends Getters<ActiveUserState>() {
     }
     return this.mySpaceRole.perms.concat(this.activeProjectMyRole.perms);
   }
+
+  taskUpdatable(task: api.Task) {
+    if (!this.state.myUser) return false;
+    return this.activeProjectMyPerms.includes(Perm.UPDATE_ALL_TASK) ||
+      (
+        this.activeProjectMyPerms.includes(Perm.UPDATE_MY_TASK) &&
+        (
+          task.writeUser === this.state.myUser.id ||
+          task.batonUser === this.state.myUser.id ||
+          task.chargeUsers.includes(this.state.myUser.id)
+        )
+      );
+  }
+
+  taskDeletable(task: api.Task) {
+    if (!this.state.myUser) return false;
+    return this.activeProjectMyPerms.includes(Perm.DELETE_ALL_TASK) ||
+      (
+        this.activeProjectMyPerms.includes(Perm.DELETE_MY_TASK) &&
+        task.writeUser === this.state.myUser.id
+      );
+  }
 }
 
 class ActiveUserMutations extends Mutations<ActiveUserState>() {
@@ -128,14 +104,11 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
   setActiveProjectData(value: ActiveUserState['activeProjectData']) {
     if (!value || !this.state.projects || !this.state.projects.find((p) => p.id === value.id)) {
       this.state.activeProjectData = null;
+      this.state.taskStatusList = null;
+      this.state.noteStatusList = null;
     } else {
       this.state.activeProjectData = value;
     }
-    this.state.notes = null;
-    this.state.notesGetConditions = null;
-    this.state.noteStatusOptions = null;
-    this.state.files = null;
-    this.state.filesGetConditions = null;
   }
 
   addProject(project: api.Project) {
@@ -145,80 +118,12 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     this.state.projects.push(project);
   }
 
-  fetchedNotes(notes: api.Note[], cond: Required<NotesGetConditions>) {
-    this.state.notes = notes;
-    this.state.notesGetConditions = cond;
+  setTaskStatusList(statusList: api.TaskStatus[]) {
+    this.state.taskStatusList = statusList;
   }
 
-  fetchedNoteStatusOptions(noteStatusOptions: api.NoteStatus[]) {
-    this.state.noteStatusOptions = noteStatusOptions;
-  }
-
-  scrolledNotes(addNotes: api.Note[], type: SearchScrollType) {
-    const notes = this.state.notes!.concat();
-    addNotes.forEach((an) => {
-      const i = notes.findIndex((n) => an.id === n.id);
-      if (i >= 0) {
-        notes.splice(i, 1);
-      }
-    });
-    if (type === 'prev') {
-      this.state.notes = addNotes.reverse().concat(notes);
-    } else {
-      this.state.notes = notes.concat(addNotes);
-    }
-  }
-
-  replaceInNotes(note: api.Note) {
-    if (!this.state.notes) return;
-    const index = this.state.notes.findIndex((n) => n.id === note.id);
-    if (index >= 0) {
-      this.state.notes.splice(index, 1, note);
-    }
-  }
-
-  deleteNote(id: number) {
-    if (!this.state.notes) return;
-    const index = this.state.notes.findIndex((n) => n.id === id);
-    if (index >= 0) {
-      this.state.notes.splice(index, 1);
-    }
-  }
-
-  fetchedFiles(files: api.FileRecord[], cond: Required<FilesGetConditions>) {
-    this.state.files = files;
-    this.state.filesGetConditions = cond;
-  }
-
-  scrolledFiles(addFiles: api.FileRecord[], type: SearchScrollType) {
-    const files = this.state.files!.concat();
-    addFiles.forEach((af) => {
-      const i = files.findIndex((f) => af.id === f.id);
-      if (i >= 0) {
-        files.splice(i, 1);
-      }
-    });
-    if (type === 'prev') {
-      this.state.files = addFiles.reverse().concat(files);
-    } else {
-      this.state.files = files.concat(addFiles);
-    }
-  }
-
-  replaceInFiles(file: api.FileRecord) {
-    if (!this.state.files) return;
-    const index = this.state.files.findIndex((f) => f.id === file.id);
-    if (index >= 0) {
-      this.state.files.splice(index, 1, file);
-    }
-  }
-
-  deleteFile(id: string) {
-    if (!this.state.files) return;
-    const index = this.state.files.findIndex((f) => f.id === id);
-    if (index >= 0) {
-      this.state.files.splice(index, 1);
-    }
+  setNoteStatusList(statusList: api.NoteStatus[]) {
+    this.state.noteStatusList = statusList;
   }
 }
 
@@ -299,162 +204,30 @@ class ActiveUserActions extends Actions<ActiveUserState, ActiveUserGetters, Acti
     }
   }
 
-  async fetchNotes(conditions: NotesGetConditions = {}) {
-    const cond: Required<NotesGetConditions> = Object.assign({
-      filter: {},
-      order: { field: 'updatedAt', type: 'desc' },
-    }, conditions);
-    const user = this.state.myUser;
-    const project = this.getters.activeProject;
-    if (!user || !project) {
-      return;
-    }
-    const notesApi = api.apiRegistry.load(api.NotesApi, user.token);
-    const req = _createNotesGetRequest(user, project, cond);
-    const notes = await notesApi.notesGet(req);
-    this.mutations.fetchedNotes(notes.results, cond);
-  }
-
-  async fetchNoteStatusOptions() {
-    const user = this.state.myUser;
-    const project = this.getters.activeProject;
-    if (!user || !project) {
-      return;
-    }
-    const notesApi = api.apiRegistry.load(api.NotesApi, user.token);
-    const noteStatusOptions = await notesApi.notesStatusGet({
-      spaceId: user.space.id,
-      projectId: project.id,
+  async fetchTaskStatus(force = false) {
+    if (!force && this.state.taskStatusList) return;
+    const myUser = this.state.myUser;
+    const activeProjectData = this.state.activeProjectData;
+    if (!myUser || !activeProjectData) return;
+    const tasksApi = api.apiRegistry.load(api.TasksApi, myUser.token);
+    const statusList = await tasksApi.tasksStatusGet({
+      spaceId: myUser.space.id,
+      projectId: activeProjectData.id,
     });
-    this.mutations.fetchedNoteStatusOptions(noteStatusOptions);
+    this.mutations.setTaskStatusList(statusList);
   }
 
-  async scrollNotes(type: SearchScrollType) {
-    const user = this.state.myUser;
-    const project = this.getters.activeProject;
-    if (!user || !project || !this.state.notes) {
-      return;
-    }
-    const notes = this.state.notes;
-    if (!notes.length) {
-      await this.fetchNotes(this.state.notesGetConditions!);
-      return;
-    }
-    const cond = this.state.notesGetConditions!;
-    const notesApi = api.apiRegistry.load(api.NotesApi, user.token);
-    const req = _createNotesGetRequest(user, project, cond);
-    const current = type === 'next' ? notes[notes.length - 1] : notes[0];
-    const d = (
-      (cond.order.type === 'asc' && type === 'next') ||
-      (cond.order.type === 'desc' && type === 'prev')
-    ) ? 'higher' : 'lower';
-    const idGtLt = d === 'higher' ? 'idGt' : 'idLt';
-    const field = cond.order.field;
-    const fieldGtLt = d === 'higher' ? `${field}Gt` : `${field}Lt`;
-    const ordering = [field, 'id'].map((f) => d === 'higher' ? f : `-${f}`).join(',');
-    const limit = 30;
-
-    const res1 = await notesApi.notesGet(Object.assign({
-      [idGtLt]: current.id,
-      [field]: current[field],
-      limit,
-      ordering,
-    }, req));
-    const addNotes = res1.results;
-    if (addNotes.length < limit) {
-      const res2 = await notesApi.notesGet(Object.assign({
-        [fieldGtLt]: current[field],
-        limit: limit - addNotes.length,
-        ordering,
-      }, req));
-      addNotes.push(...res2.results);
-    }
-
-    this.mutations.scrolledNotes(addNotes, type);
-  }
-
-  async replaceInNotes(note: api.Note) {
-    if (!note || !this.state.notes) {
-      return;
-    }
-    const index = this.state.notes.findIndex((n) => n.id === note.id);
-    if (index < 0) {
-      await this.fetchNotes(this.state.notesGetConditions || undefined);
-    } else {
-      this.mutations.replaceInNotes(note);
-    }
-  }
-
-  async fetchFiles(conditions: FilesGetConditions = {}) {
-    const cond: Required<FilesGetConditions> = Object.assign({
-      filter: {},
-      order: { field: 'updatedAt', type: 'desc' },
-    }, conditions);
-    const user = this.state.myUser;
-    const project = this.getters.activeProject;
-    if (!user || !project) {
-      return;
-    }
-    const filesApi = api.apiRegistry.load(api.FilesApi, user.token);
-    const req = _createFilesGetRequest(user, project, cond);
-    const files = await filesApi.filesGet(req);
-    this.mutations.fetchedFiles(files.results, cond);
-  }
-
-  async scrollFiles(type: SearchScrollType) {
-    const user = this.state.myUser;
-    const project = this.getters.activeProject;
-    if (!user || !project || !this.state.files) {
-      return;
-    }
-    const files = this.state.files;
-    if (!files.length) {
-      await this.fetchFiles(this.state.filesGetConditions!);
-      return;
-    }
-    const cond = this.state.filesGetConditions!;
-    const filesApi = api.apiRegistry.load(api.FilesApi, user.token);
-    const req = _createFilesGetRequest(user, project, cond);
-    const current = type === 'next' ? files[files.length - 1] : files[0];
-    const d = (
-      (cond.order.type === 'asc' && type === 'next') ||
-      (cond.order.type === 'desc' && type === 'prev')
-    ) ? 'higher' : 'lower';
-    const idGtLt = d === 'higher' ? 'idGt' : 'idLt';
-    const field = cond.order.field;
-    const fieldGtLt = d === 'higher' ? `${field}Gt` : `${field}Lt`;
-    const ordering = [field, 'id'].map((f) => d === 'higher' ? f : `-${f}`).join(',');
-    const limit = 30;
-
-    const res1 = await filesApi.filesGet(Object.assign({
-      [idGtLt]: current.id,
-      [field]: current[field],
-      limit,
-      ordering,
-    }, req));
-    const addFiles = res1.results;
-    if (addFiles.length < limit) {
-      const res2 = await filesApi.filesGet(Object.assign({
-        [fieldGtLt]: current[field],
-        limit: limit - addFiles.length,
-        ordering,
-      }, req));
-      addFiles.push(...res2.results);
-    }
-
-    this.mutations.scrolledFiles(addFiles, type);
-  }
-
-  async replaceInFiles(file: api.FileRecord) {
-    if (!file || !this.state.files) {
-      return;
-    }
-    const index = this.state.files.findIndex((f) => f.id === file.id);
-    if (index < 0) {
-      await this.fetchFiles(this.state.filesGetConditions || undefined);
-    } else {
-      this.mutations.replaceInFiles(file);
-    }
+  async fetchNoteStatus(force = false) {
+    if (!force && this.state.noteStatusList) return;
+    const myUser = this.state.myUser;
+    const activeProjectData = this.state.activeProjectData;
+    if (!myUser || !activeProjectData) return;
+    const notesApi = api.apiRegistry.load(api.NotesApi, myUser.token);
+    const statusList = await notesApi.notesStatusGet({
+      spaceId: myUser.space.id,
+      projectId: activeProjectData.id,
+    });
+    this.mutations.setNoteStatusList(statusList);
   }
 }
 

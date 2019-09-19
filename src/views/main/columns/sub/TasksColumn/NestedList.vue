@@ -222,6 +222,7 @@ export default class NestedList extends Vue {
   get myUser() {
     return this.$store.state.activeUser.myUser!;
   }
+
   get myPerms() {
     return this.$store.getters.activeUser.activeProjectMyPerms!;
   }
@@ -229,12 +230,13 @@ export default class NestedList extends Vue {
   get taskAddable() {
     return this.myPerms.includes(Perm.ADD_TASK);
   }
+
   get allTaskUpdatable() {
     return this.myPerms.includes(Perm.UPDATE_ALL_TASK);
   }
+
   getTaskUpdatable(task: Task) {
-    return this.myPerms.includes(Perm.UPDATE_ALL_TASK) ||
-      (task.writeUser === this.myUser.id && this.myPerms.includes(Perm.UPDATE_MY_TASK));
+    return this.$store.getters.activeUser.taskUpdatable(task);
   }
 
   getStatusOption(optionId: number | null) {

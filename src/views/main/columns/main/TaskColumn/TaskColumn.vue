@@ -277,20 +277,15 @@ import * as api from '@/lib/api';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import TaskComment from './TaskComment.vue';
-import { Perm } from '@/lib/permissions';
 
-async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'statusOptions' | 'task'>>> {
+async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'task'>>> {
   const loginUser = store.state.activeUser.myUser!;
   const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
   const spaceId = loginUser.space.id;
   const projectId = store.getters.activeUser.activeProjectId;
-  const statusOptionsPromise = tasksApi.tasksStatusGet({
-    spaceId: store.state.activeUser.myUser!.space.id,
-    projectId: store.getters.activeUser.activeProjectId!,
-  });
 
-  const [statusOptions, task, resFavorite] = await Promise.all([
-    statusOptionsPromise,
+  const [_, task, resFavorite] = await Promise.all([
+    store.actions.activeUser.fetchTaskStatus(),
     tasksApi.tasksTaskIdGet({
       spaceId: store.state.activeUser.myUser!.space.id,
       projectId: store.getters.activeUser.activeProjectId!,
@@ -305,7 +300,6 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite
   task.tags = task.tags || [];
   return {
     isFavorite: resFavorite.value,
-    statusOptions,
     task,
   };
 }
@@ -327,7 +321,6 @@ export default class TaskColumn extends Vue {
   };
 
   task: api.Task | null = null;
-  statusOptions: api.TaskStatus[] = null as any;
   isFavorite = false;
   editDetail: Pick<api.Task, 'subject' | 'body'> | null = null;
   saving = false;
@@ -339,15 +332,18 @@ export default class TaskColumn extends Vue {
     return this.$store.getters.activeUser.activeProjectMyPerms!;
   }
 
+  get statusOptions() {
+    return this.$store.state.activeUser.taskStatusList;
+  }
+
   get updatable() {
     if (!this.task) return false;
-    return this.myPerms.includes(Perm.UPDATE_ALL_TASK) ||
-      (this.task.writeUser === this.myUser.id && this.myPerms.includes(Perm.UPDATE_MY_TASK));
+    return this.$store.getters.activeUser.taskUpdatable(this.task);
   }
+
   get deletable() {
     if (!this.task) return false;
-    return this.myPerms.includes(Perm.DELETE_ALL_TASK) ||
-      (this.task.writeUser === this.myUser.id && this.myPerms.includes(Perm.DELETE_MY_TASK));
+    return this.$store.getters.activeUser.taskDeletable(this.task);
   }
 
   get fullMainColumn() {

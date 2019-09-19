@@ -173,6 +173,18 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           addMembers: string;
           addedMessage: string;
         };
+        statusFlow: {
+          title: {
+            task: string;
+            note: string;
+          };
+          flow: string;
+          others: string;
+          addAnEntryField: string;
+          save: string;
+          updatedMessage: string;
+          blankItemExists: string;
+        };
       };
     };
 

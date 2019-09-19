@@ -1,0 +1,297 @@
+<template>
+  <div class="option_mainColumn setting_main_statusFlow">
+    <h3 class="option_mainColumn_title">{{$t(`views.setting.main.statusFlow.title.${category}`)}}</h3>
+    <div class="option_spaceProjectsTask">
+      <dl class="option_commonColumn clearfix">
+        <dd>
+          <h3 class="option_commonColumn_title">{{$t('views.setting.main.statusFlow.flow')}}</h3>
+          <ul class="option_commonColumn_list">
+            <li v-for="(s, $index) in progressStatusList" :key="s.id">
+              <table>
+                <tr>
+                  <td class="option_commonColumn_list_number">{{$index+1}}</td>
+                  <td class="option_commonColumn_list_input">
+                    <div class="option_commonColumn_list_input_parts">
+                      <my-color-picker
+                        v-model="s.color"
+                        :custom-colors="customColors"
+                        v-slot="{opened, open, close}"
+                        class="option_commonColumn_list_input_parts_color"
+                        :style="{background: s.color}"
+                      >
+                        <div @click.stop="opened ? close() : open()" class="option_commonColumn_list_input_parts_color_content" />
+                      </my-color-picker>
+                      <div class="option_commonColumn_list_input_parts_toggle">
+                        <span/>
+                        <span/>
+                        <span/>
+                      </div>
+                      <input type="text" v-model="s.name">
+                    </div>
+                  </td>
+                  <td class="option_commonColumn_list_button">
+                    <button v-if="progressStatusList.length > 1" @click="deleteRow(s)" />
+                  </td>
+                </tr>
+              </table>
+            </li>
+          </ul>
+          <div class="option_commonColumn_addButton">
+            <button @click="addProgressRow()">{{$t('views.setting.main.statusFlow.addAnEntryField')}}</button>
+          </div>
+        </dd>
+        <dd>
+          <h3 class="option_commonColumn_title">{{$t('views.setting.main.statusFlow.others')}}</h3>
+          <ul class="option_commonColumn_list">
+            <li v-for="(s, $index) in etcStatusList" :key="s.id">
+              <table>
+                <tr>
+                  <td class="option_commonColumn_list_number">{{$index+1}}</td>
+                  <td class="option_commonColumn_list_input">
+                    <div class="option_commonColumn_list_input_parts">
+                      <my-color-picker
+                        v-model="s.color"
+                        :custom-colors="customColors"
+                        v-slot="{opened, open, close}"
+                        class="option_commonColumn_list_input_parts_color"
+                        :style="{background: s.color}"
+                        @click.stop="opened ? close() : open()"
+                      />
+                      <div class="option_commonColumn_list_input_parts_toggle">
+                        <span/>
+                        <span/>
+                        <span/>
+                      </div>
+                      <input type="text" v-model="s.name">
+                    </div>
+                  </td>
+                  <td class="option_commonColumn_list_button">
+                    <button @click="deleteRow(s)" />
+                  </td>
+                </tr>
+              </table>
+            </li>
+          </ul>
+          <div class="option_commonColumn_addButton">
+            <button @click="addEtcRow()">{{$t('views.setting.main.statusFlow.addAnEntryField')}}</button>
+          </div>
+        </dd>
+      </dl>
+
+      <div class="option_commonColumn_bottomButtons">
+        <button type="submit" class="option_commonColumn_bottomButtons_button" @click="save()">{{$t('views.setting.main.statusFlow.save')}}</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<style lang="stylus">
+.setting_main_statusFlow
+  .myColorPicker_pop
+    left: -20px
+    top: 20px
+  .option_commonColumn_list_input_parts_color_content
+    width: 100%
+    height: 100%
+  .option_commonColumn_bottomButtons
+    margin-top: 20px
+    &_button
+      float: right
+      display: block
+      min-width: 160px
+      height: 40px
+      padding: 9px
+      background: #007ff5
+      border: none
+      border-radius: 20px
+      cursor: pointer
+      outline: none
+      color: #fff
+      font-size: 14px
+      font-weight: bold
+      line-height: 20px
+      text-align: center
+</style>
+
+
+<script lang="ts">
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { apiRegistry, TasksApi, NotesApi } from '@/lib/api';
+import MyColorPicker from '@/components/MyColorPicker.vue';
+import { colorPickerDefaultColors, ProjectStatusCategory } from '@/consts';
+
+interface Status {
+  id?: number;
+  category: number;
+  name: string;
+  color: string | null;
+  sort: number;
+}
+interface StatusPostRequest {
+  items: Status[];
+}
+type StatusGet = () => Promise<Status[]>;
+type StatusPost = (req: StatusPostRequest) => Promise<Status[]>;
+
+@Component({
+  components: {
+    MyColorPicker,
+  },
+})
+export default class StatusFlow extends Vue {
+  saving = false;
+  statusList: Status[] = [];
+
+  get customColors() {
+    const customColors: string[] = [];
+    this.statusList.forEach((s) => {
+      if (s.color && !customColors.includes(s.color) && !colorPickerDefaultColors.includes(s.color)) {
+        customColors.push(s.color);
+      }
+    });
+    return customColors;
+  }
+
+  get myUser() {
+    return this.$store.state.activeUser.myUser!;
+  }
+
+  get category() {
+    if (this.$store.state.settingRouter.name === 'task-status') {
+      return 'task';
+    }
+    if (this.$store.state.settingRouter.name === 'note-status') {
+      return 'note';
+    }
+    return undefined;
+  }
+
+  get progressStatusList() {
+    return this.statusList.filter((o) => this.isProgress(o))
+      .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
+  }
+
+  get etcStatusList() {
+    return this.statusList.filter((o) => this.isEtc(o))
+      .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
+  }
+
+  get api(): { fetch: StatusGet; update: StatusPost } | undefined {
+    if (this.category === 'task') {
+      const tasksApi = apiRegistry.load(TasksApi, this.myUser.token);
+      return {
+        fetch: () => tasksApi.tasksStatusGet({
+          spaceId: this.myUser.space.id,
+          projectId: this.$store.state.activeUser.activeProjectData!.id,
+        }),
+        update: async(req: StatusPostRequest) => {
+          const statusList = await tasksApi.tasksStatusPost({
+            spaceId: this.myUser.space.id,
+            projectId: this.$store.state.activeUser.activeProjectData!.id,
+            tasksStatusPostRequestBodyItem: req.items,
+          });
+          this.$store.mutations.activeUser.setTaskStatusList(statusList);
+          return statusList;
+        },
+      };
+    }
+    if (this.category === 'note') {
+      const notesApi = apiRegistry.load(NotesApi, this.myUser.token);
+      return {
+        fetch: () => notesApi.notesStatusGet({
+          spaceId: this.myUser.space.id,
+          projectId: this.$store.state.activeUser.activeProjectData!.id,
+        }),
+        update: async(req: StatusPostRequest) => {
+          const statusList = await notesApi.notesStatusPost({
+            spaceId: this.myUser.space.id,
+            projectId: this.$store.state.activeUser.activeProjectData!.id,
+            tasksStatusPostRequestBodyItem: req.items,
+          });
+          this.$store.mutations.activeUser.setNoteStatusList(statusList);
+          return statusList;
+        },
+      };
+    }
+    return undefined;
+  }
+
+  isProgress(o: Status | null) {
+    return o && o.category === ProjectStatusCategory.Progress;
+  }
+
+  isEtc(o: Status | null) {
+    return o && o.category === ProjectStatusCategory.Etc;
+  }
+
+  addProgressRow() {
+    this.statusList.push({
+      name: '',
+      category: ProjectStatusCategory.Progress,
+      color: colorPickerDefaultColors[0],
+      sort: (this.progressStatusList.length ? Math.max(...this.progressStatusList.map((s) => s.sort)) : 0) + 1,
+    });
+  }
+
+  addEtcRow() {
+    this.statusList.push({
+      name: '',
+      category: ProjectStatusCategory.Etc,
+      color: colorPickerDefaultColors[colorPickerDefaultColors.length - 1],
+      sort: (this.etcStatusList.length ? Math.max(...this.etcStatusList.map((s) => s.sort)) : 0) + 1,
+    });
+  }
+
+  deleteRow(status: Status) {
+    if (status.category === ProjectStatusCategory.Progress &&
+        this.progressStatusList.length <= 1
+    ) {
+      return;
+    }
+    const index = this.statusList.findIndex((s) => status === s);
+    if (index >= 0) {
+      this.statusList.splice(index, 1);
+    }
+  }
+
+  async fetch() {
+    if (!this.api) return;
+    this.statusList = await this.api.fetch();
+  }
+
+  validate() {
+    for (let s of this.statusList) {
+      if (s.name.trim() === '') {
+        this.$flash(this.$t('views.setting.main.statusFlow.blankItemExists').toString(), 'error');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  async save() {
+    if (!this.api || this.saving) return;
+    if (!this.validate()) return;
+
+    try {
+      this.saving = true;
+      await this.api.update({ items: this.statusList });
+      this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
+    } catch (err) {
+      this.$appEmit('error', { err });
+    } finally {
+      this.saving = false;
+    }
+  }
+
+  async beforeMount() {
+    await this.fetch();
+  }
+
+  @Watch('category')
+  async onCategoryChange(newVal: this['category']) {
+    await this.fetch();
+  }
+}
+</script>

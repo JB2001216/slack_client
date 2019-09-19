@@ -163,6 +163,18 @@ const struct: LocaleStruct = {
             addMembers: 'Add Members',
             addedMessage: 'Member added successfully',
           },
+          statusFlow: {
+            title: {
+              task: 'Task flow Settings',
+              note: 'Note flow Settings',
+            },
+            flow: 'Flow',
+            others: 'Others',
+            addAnEntryField: 'Add an entry field',
+            save: 'Save',
+            updatedMessage: 'Updated.',
+            blankItemExists: 'Black item exists.',
+          },
         },
       },
 

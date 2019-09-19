@@ -19,6 +19,7 @@ import SpaceMemberInvite from './main/spaces/SpaceMemberInvite.vue';
 import ProjectsSub from './sub/ProjectsSub.vue';
 import ProjectMembers from './main/projects/ProjectMembers.vue';
 import ProjectMemberAdd from './main/projects/ProjectMemberAdd.vue';
+import StatusFlow from './main/projects/StatusFlow.vue';
 import { TranslateResult } from 'vue-i18n';
 import i18n from '@/i18n';
 
@@ -59,6 +60,16 @@ export default class SettingRouterView extends Vue {
     'project-member-add': {
       sub: null,
       main: ProjectMemberAdd,
+    },
+    'task-status': {
+      title: () => i18n.t('views.setting.sub.projects.title'),
+      sub: ProjectsSub,
+      main: StatusFlow,
+    },
+    'note-status': {
+      title: () => i18n.t('views.setting.sub.projects.title'),
+      sub: ProjectsSub,
+      main: StatusFlow,
     },
   };
 

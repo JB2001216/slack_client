@@ -29,7 +29,7 @@ export interface NoteStatus {
      * @type {number}
      * @memberof NoteStatus
      */
-    projectId?: number;
+    projectId: number;
     /**
      * 
      * @type {number}
@@ -67,7 +67,7 @@ export function NoteStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     return {
         
         'id': json['id'],
-        'projectId': !exists(json, 'projectId') ? undefined : json['projectId'],
+        'projectId': json['projectId'],
         'category': json['category'],
         'name': json['name'],
         'color': json['color'],

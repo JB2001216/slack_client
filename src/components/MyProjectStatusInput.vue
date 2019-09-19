@@ -28,6 +28,7 @@
         >{{o.name}}</div>
       </div>
     </dd>
+    <dd v-else style="display:none;" />
   </dl>
 </template>
 

@@ -23,6 +23,12 @@ export interface TasksStatusPostRequestBodyItem {
      * @type {number}
      * @memberof TasksStatusPostRequestBodyItem
      */
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TasksStatusPostRequestBodyItem
+     */
     category: number;
     /**
      * 
@@ -54,6 +60,7 @@ export function TasksStatusPostRequestBodyItemFromJSONTyped(json: any, ignoreDis
     }
     return {
         
+        'id': !exists(json, 'id') ? undefined : json['id'],
         'category': json['category'],
         'name': json['name'],
         'color': !exists(json, 'color') ? undefined : json['color'],
@@ -70,6 +77,7 @@ export function TasksStatusPostRequestBodyItemToJSON(value?: TasksStatusPostRequ
     }
     return {
         
+        'id': value.id,
         'category': value.category,
         'name': value.name,
         'color': value.color,

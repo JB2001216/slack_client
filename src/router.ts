@@ -110,13 +110,6 @@ const router = new Router({
                   },
                   children: [
                     {
-                      path: 'add',
-                      name: 'note-add',
-                      components: {
-                        mainColumn: NoteColumn,
-                      },
-                    },
-                    {
                       path: ':noteId',
                       name: 'note',
                       components: {

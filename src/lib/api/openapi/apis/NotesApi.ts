@@ -499,7 +499,7 @@ export class NotesApi extends runtime.BaseAPI {
 
     /**
      */
-    async notesStatusPostRaw(requestParameters: NotesStatusPostRequest): Promise<runtime.ApiResponse<NoteStatus>> {
+    async notesStatusPostRaw(requestParameters: NotesStatusPostRequest): Promise<runtime.ApiResponse<Array<NoteStatus>>> {
         if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
             throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling notesStatusPost.');
         }
@@ -530,12 +530,12 @@ export class NotesApi extends runtime.BaseAPI {
             body: requestParameters.tasksStatusPostRequestBodyItem.map(TasksStatusPostRequestBodyItemToJSON),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => NoteStatusFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(NoteStatusFromJSON));
     }
 
    /**
     */
-    async notesStatusPost(requestParameters: NotesStatusPostRequest): Promise<NoteStatus> {
+    async notesStatusPost(requestParameters: NotesStatusPostRequest): Promise<Array<NoteStatus>> {
         const response = await this.notesStatusPostRaw(requestParameters);
         return await response.value();
     }
