@@ -59,7 +59,7 @@ export interface NotesNoteIdPutRequestBody {
      * @type {number}
      * @memberof NotesNoteIdPutRequestBody
      */
-    parentNote?: number | null;
+    parent?: number | null;
 }
 
 export function NotesNoteIdPutRequestBodyFromJSON(json: any): NotesNoteIdPutRequestBody {
@@ -78,7 +78,7 @@ export function NotesNoteIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscrimi
         'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
         'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
         'chargeUsers': !exists(json, 'chargeUsers') ? undefined : json['chargeUsers'],
-        'parentNote': !exists(json, 'parentNote') ? undefined : json['parentNote'],
+        'parent': !exists(json, 'parent') ? undefined : json['parent'],
     };
 }
 
@@ -97,7 +97,7 @@ export function NotesNoteIdPutRequestBodyToJSON(value?: NotesNoteIdPutRequestBod
         'batonUser': value.batonUser,
         'writeUser': value.writeUser,
         'chargeUsers': value.chargeUsers,
-        'parentNote': value.parentNote,
+        'parent': value.parent,
     };
 }
 

@@ -26,6 +26,9 @@ import {
     NotesNoteIdFavoritePostRequestBody,
     NotesNoteIdFavoritePostRequestBodyFromJSON,
     NotesNoteIdFavoritePostRequestBodyToJSON,
+    NotesNoteIdPriorityPostRequestBody,
+    NotesNoteIdPriorityPostRequestBodyFromJSON,
+    NotesNoteIdPriorityPostRequestBodyToJSON,
     NotesNoteIdPutRequestBody,
     NotesNoteIdPutRequestBodyFromJSON,
     NotesNoteIdPutRequestBodyToJSON,
@@ -46,6 +49,8 @@ export interface NotesGetRequest {
     page?: number;
     limit?: number;
     id?: number;
+    parent?: number;
+    root?: boolean;
     idGt?: number;
     idLt?: number;
     subject?: string;
@@ -82,6 +87,13 @@ export interface NotesNoteIdGetRequest {
     spaceId: number;
     projectId: number;
     noteId: number;
+}
+
+export interface NotesNoteIdPriorityPostRequest {
+    spaceId: number;
+    projectId: number;
+    noteId: number;
+    notesNoteIdPriorityPostRequestBody: NotesNoteIdPriorityPostRequestBody;
 }
 
 export interface NotesNoteIdPutRequest {
@@ -136,6 +148,14 @@ export class NotesApi extends runtime.BaseAPI {
 
         if (requestParameters.id !== undefined) {
             queryParameters['id'] = requestParameters.id;
+        }
+
+        if (requestParameters.parent !== undefined) {
+            queryParameters['parent'] = requestParameters.parent;
+        }
+
+        if (requestParameters.root !== undefined) {
+            queryParameters['root'] = requestParameters.root;
         }
 
         if (requestParameters.idGt !== undefined) {
@@ -369,6 +389,52 @@ export class NotesApi extends runtime.BaseAPI {
     async notesNoteIdGet(requestParameters: NotesNoteIdGetRequest): Promise<Note> {
         const response = await this.notesNoteIdGetRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     */
+    async notesNoteIdPriorityPostRaw(requestParameters: NotesNoteIdPriorityPostRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling notesNoteIdPriorityPost.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling notesNoteIdPriorityPost.');
+        }
+
+        if (requestParameters.noteId === null || requestParameters.noteId === undefined) {
+            throw new runtime.RequiredError('noteId','Required parameter requestParameters.noteId was null or undefined when calling notesNoteIdPriorityPost.');
+        }
+
+        if (requestParameters.notesNoteIdPriorityPostRequestBody === null || requestParameters.notesNoteIdPriorityPostRequestBody === undefined) {
+            throw new runtime.RequiredError('notesNoteIdPriorityPostRequestBody','Required parameter requestParameters.notesNoteIdPriorityPostRequestBody was null or undefined when calling notesNoteIdPriorityPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/priority/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: NotesNoteIdPriorityPostRequestBodyToJSON(requestParameters.notesNoteIdPriorityPostRequestBody),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+   /**
+    */
+    async notesNoteIdPriorityPost(requestParameters: NotesNoteIdPriorityPostRequest): Promise<void> {
+        await this.notesNoteIdPriorityPostRaw(requestParameters);
     }
 
     /**

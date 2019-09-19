@@ -59,7 +59,7 @@ export interface NotesPostRequestBody {
      * @type {number}
      * @memberof NotesPostRequestBody
      */
-    parentNote?: number | null;
+    parent?: number | null;
 }
 
 export function NotesPostRequestBodyFromJSON(json: any): NotesPostRequestBody {
@@ -78,7 +78,7 @@ export function NotesPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator
         'batonUser': !exists(json, 'batonUser') ? undefined : json['batonUser'],
         'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
         'chargeUsers': json['chargeUsers'],
-        'parentNote': !exists(json, 'parentNote') ? undefined : json['parentNote'],
+        'parent': !exists(json, 'parent') ? undefined : json['parent'],
     };
 }
 
@@ -97,7 +97,7 @@ export function NotesPostRequestBodyToJSON(value?: NotesPostRequestBody): any {
         'batonUser': value.batonUser,
         'writeUser': value.writeUser,
         'chargeUsers': value.chargeUsers,
-        'parentNote': value.parentNote,
+        'parent': value.parent,
     };
 }
 

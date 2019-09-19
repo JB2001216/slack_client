@@ -35,6 +35,12 @@ export interface Note {
      * @type {number}
      * @memberof Note
      */
+    parent?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Note
+     */
     writeUser: number | null;
     /**
      * 
@@ -71,6 +77,18 @@ export interface Note {
      * @type {number}
      * @memberof Note
      */
+    priority?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Note
+     */
+    hasChilds?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof Note
+     */
     parentNote: number | null;
     /**
      * 
@@ -98,12 +116,15 @@ export function NoteFromJSONTyped(json: any, ignoreDiscriminator: boolean): Note
         
         'id': json['id'],
         'project': json['project'],
+        'parent': !exists(json, 'parent') ? undefined : json['parent'],
         'writeUser': json['writeUser'],
         'subject': json['subject'],
         'body': json['body'],
         'status': json['status'],
         'batonUser': json['batonUser'],
         'chargeUsers': json['chargeUsers'],
+        'priority': !exists(json, 'priority') ? undefined : json['priority'],
+        'hasChilds': !exists(json, 'hasChilds') ? undefined : json['hasChilds'],
         'parentNote': json['parentNote'],
         'createdAt': new Date(json['createdAt']),
         'updatedAt': new Date(json['updatedAt']),
@@ -121,12 +142,15 @@ export function NoteToJSON(value?: Note): any {
         
         'id': value.id,
         'project': value.project,
+        'parent': value.parent,
         'writeUser': value.writeUser,
         'subject': value.subject,
         'body': value.body,
         'status': value.status,
         'batonUser': value.batonUser,
         'chargeUsers': value.chargeUsers,
+        'priority': value.priority,
+        'hasChilds': value.hasChilds,
         'parentNote': value.parentNote,
         'createdAt': value.createdAt.toISOString(),
         'updatedAt': value.updatedAt.toISOString(),
