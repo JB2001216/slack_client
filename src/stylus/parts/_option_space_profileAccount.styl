@@ -1,0 +1,171 @@
+.option{
+  &_spaceProfileAccount{
+    // 共通ボタン
+    &_button{
+      display: block;
+      min-width: 145px;
+      height: 40px;
+      padding: 9px;
+      background: #007FF5;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      outline: none;
+      color: #FFFFFF;
+      font-family: "Noto Sans CJK JP";
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 20px;
+      text-align: center;
+    }
+    h3{
+      margin-top: 45px;
+      &:first-child{
+        margin-top: 0;
+      }
+    }
+    &_description{
+      margin-top: 25px;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.5;
+      strong{
+        font-weight: 700;
+      }
+    }
+    &_subTitle{
+      margin-top: 15px;
+      font-weight: 700;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    &_text{
+      margin-top: 15px;
+      p{
+        margin-top: 15px;
+        color: #666666;
+        font-family: "Noto Sans CJK JP";
+        font-size: 14px;
+        line-height: 21px;
+      }
+    }
+    &_email{
+      max-width: 465px;
+      input[type=text]{
+        float: left;
+        width: calc(100% - 160px);
+        padding: 7px 15px;
+        margin-top: 15px;
+        margin-right: 15px;
+        border: 1px solid #c4c4c4;
+        border-radius: 4px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #333333;
+        font-family: "Noto Sans CJK JP";
+        font-size: 16px;
+        line-height: 1.5;
+        &::placeholder{
+          color: #ccc;
+        }
+      }
+      button{
+        float: left;
+        margin-top: 15px;
+      }
+    }
+    &_tel{
+      max-width: 400px;
+      margin-top: 10px;
+      input[type=text]{
+        float: left;
+        width: calc(100% - 200px);
+        padding: 7px 15px;
+        margin-top: 15px;
+        margin-right: 15px;
+        border: 1px solid #c4c4c4;
+        border-radius: 4px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #333333;
+        font-family: "Noto Sans CJK JP";
+        font-size: 16px;
+        line-height: 1.5;
+        &::placeholder{
+          color: #ccc;
+        }
+      }
+      button{
+        float: left;
+        min-width: 185px;
+        margin-top: 15px;
+      }
+    }
+    &_password{
+      max-width: 200px;
+      margin-top: 15px;
+      input[type=text]{
+        float: left;
+        width: 100%;
+        padding: 7px 15px;
+        border: 1px solid #c4c4c4;
+        border-radius: 4px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #333333;
+        font-family: "Noto Sans CJK JP";
+        font-size: 16px;
+        line-height: 1.5;
+        &::placeholder{
+          color: #ccc;
+        }
+      }
+    }
+    &_addButton{
+      margin-top: 50px;
+      button{
+        float: left;
+      }
+    }
+    &_sent{
+      width: 400px;
+      padding: 25px 70px 25px 25px;
+      background: #EBF0F5;
+      border-radius: 8px;
+      cursor: pointer;
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      &:before,
+      &:after{
+        content: "";
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: #2F80ED;
+        position: absolute;
+        top: 0;
+        right: 22px;
+        bottom: 0;
+        margin: auto;
+      }
+      &:before{
+        transform: rotate(315deg);
+      }
+      &:after{
+        transform: rotate(-315deg);
+      }
+      p{
+        color: #2F80ED;
+        font-family: "Noto Sans CJK JP";
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1.5;
+      }
+    }
+  }
+}
