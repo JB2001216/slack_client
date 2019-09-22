@@ -147,6 +147,10 @@ const struct: LocaleStruct = {
             accountSample: 'taro_yamada',
             invitedMessage: '招待メールを送信しました',
           },
+          projectGeneral: {
+            title: 'プロジェクト名',
+            save: '変更を保存する'
+          },
           projectMembers: {
             memberList: 'メンバー一覧',
             email: 'メールアドレス',

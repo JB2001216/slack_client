@@ -28,7 +28,7 @@ export default class ProjectsSub extends Vue {
     {
       title: () => i18n.t('views.setting.sub.projects.general'),
       showable: () => this.projectUpdatable,
-      routeName: '',
+      routeName: 'project-general',
     },
     {
       title: () => i18n.t('views.setting.sub.projects.members'),

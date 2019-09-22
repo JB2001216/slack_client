@@ -146,6 +146,10 @@ const struct: LocaleStruct = {
             accountSample: 'john_smith',
             invitedMessage: 'Invitation email sent successfully',
           },
+          projectGeneral: {
+            title: 'Project name',
+            save: 'Save changes',
+          },
           projectMembers: {
             memberList: 'Member List',
             email: 'Email',
