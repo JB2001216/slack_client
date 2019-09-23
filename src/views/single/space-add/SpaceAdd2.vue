@@ -4,7 +4,7 @@
       <h2>Ernie</h2>
     </div>
     <div class="columnWrap_right">
-      <h3>{{$t('views.spaceAdd.addANewWorkspace')}}</h3>
+      <h3>{{$t('views.spaceAdd.addANewSpace')}}</h3>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
           <my-text-input

@@ -201,7 +201,7 @@ const struct: LocaleStruct = {
         login: 'Login',
         enterTheEmail: 'Enter the email',
         theRegistrationURLHasBeenSent: 'The registration URL has been sent.',
-        addANewspace: 'Add a new space',
+        addANewSpace: 'Add a new space',
         spaceName: 'Space Name (Alphanumeric only)',
         userName: 'User Name (Alphanumeric only)',
       },
