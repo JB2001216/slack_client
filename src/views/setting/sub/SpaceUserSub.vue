@@ -26,6 +26,10 @@ export default class SpaceUserSub extends Vue {
       title: () => i18n.t('views.setting.sub.spaces.userProfile'),
       routeName: 'space-user-profile',
     },
+    {
+      title: () => i18n.t('views.setting.sub.spaces.userAccount'),
+      routeName: 'space-user-account',
+    },
   ];
 
   get currentRouterName() {

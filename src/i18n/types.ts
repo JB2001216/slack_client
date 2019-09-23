@@ -127,6 +127,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           members: string;
           profileAndAccount: string;
           userProfile: string;
+          userAccount: string;
         };
         projects: {
           title: string;
