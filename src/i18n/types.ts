@@ -188,6 +188,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           updatedMessage: string;
           blankItemExists: string;
         };
+        userAccount: {
+          title: string;
+          emailDescription: string;
+        }
       };
     };
 
