@@ -15,7 +15,7 @@
               {{myUser.displayName || myUser.account}}
             </div>
           </li>
-          <li @click="$store.mutations.settingRouter.to('space-user-profile')"><span>{{$t(`views.projectColumn.spaceMenu.profileAndAccount`)}}</span></li>
+          <li @click="$store.mutations.settingRouter.to('space-user-account')"><span>{{$t(`views.projectColumn.spaceMenu.profileAndAccount`)}}</span></li>
           <li v-if="spaceUserAddable" @click="$store.mutations.settingRouter.to('space-member-invite')"><span>{{$t(`views.projectColumn.spaceMenu.inviteMembers`)}}</span></li>
           <li v-if="spaceUserListable" @click="$store.mutations.settingRouter.to('space-members')"><span>{{$t(`views.projectColumn.spaceMenu.spaceSettings`)}}</span></li>
         </template>
