@@ -178,6 +178,10 @@ const struct: LocaleStruct = {
             updatedMessage: 'Updated.',
             blankItemExists: 'Black item exists.',
           },
+          userAccount: {
+            title: 'Email address',
+            emailDescription: 'Your email address is',
+          }
         },
       },
 

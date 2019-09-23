@@ -179,6 +179,10 @@ const struct: LocaleStruct = {
             updatedMessage: '更新しました',
             blankItemExists: '空欄の項目があります',
           },
+          userAccount: {
+            title: 'メールアドレス',
+            emailDescription: 'あなたのメールアドレスは',
+          }
         },
       },
 
