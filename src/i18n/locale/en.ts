@@ -115,6 +115,8 @@ const struct: LocaleStruct = {
             title: 'Space Settings',
             general: 'General',
             members: 'Members',
+            profileAndAccount: 'Profile & Account',
+            userProfile: 'Profile Settings',
           },
           projects: {
             title: 'Project Settings',

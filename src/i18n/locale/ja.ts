@@ -116,6 +116,8 @@ const struct: LocaleStruct = {
             title: 'スペース設定',
             general: '基本設定',
             members: 'メンバー設定',
+            profileAndAccount: 'プロフィール＆アカウント',
+            userProfile: 'プロフィール設定',
           },
           projects: {
             title: 'プロジェクト設定',
