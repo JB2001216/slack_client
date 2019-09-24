@@ -181,6 +181,12 @@ const struct: LocaleStruct = {
           userAccount: {
             title: 'Email address',
             emailDescription: 'Your email address is',
+            subTitle: 'New email address',
+            sendEmailBtn: 'Send email',
+            phoneNumber: 'Phone number',
+            sendPassBtn: 'Send password',
+            temporaryPassPlaceholder: 'Temporary password',
+            text: 'As a remedy in case you forget your email address or forget it SMS registration is recommended. It is private to non-persons.',
           }
         },
       },
