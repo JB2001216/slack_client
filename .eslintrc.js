@@ -44,6 +44,8 @@ module.exports = {
     'vue/component-name-in-template-casing': ['error', 'kebab-case'],
     'vue/comma-dangle': ['error', 'always-multiline'],
     'vue/no-unused-components': 'error',
+    'vue/v-bind-style': ['error', 'shorthand'],
+    'vue/v-on-style': ['error', 'shorthand'],
 
     // typescript
     '@typescript-eslint/indent': ['error', 2, { 'SwitchCase': 1 }],
