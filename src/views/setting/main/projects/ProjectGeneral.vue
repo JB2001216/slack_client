@@ -8,8 +8,8 @@
       <div class="option_spaceProjectsGeneral_addButton">
         <button class="option_spaceProjectsGeneral_button"
                 type="button"
-                v-bind:disabled="activeProject && activeProject.displayName === inputName || !inputName || saving"
-                v-on:click="save"
+                :disabled="activeProject && activeProject.displayName === inputName || !inputName || saving"
+                @click="save"
         >{{$t('views.setting.main.projectGeneral.save')}}</button>
       </div>
     </div>
