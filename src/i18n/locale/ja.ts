@@ -182,6 +182,12 @@ const struct: LocaleStruct = {
           userAccount: {
             title: 'メールアドレス',
             emailDescription: 'あなたのメールアドレスは',
+            subTitle: '新しいメールアドレス',
+            sendEmailBtn: '確認メールを送信',
+            phoneNumber: '電話番号',
+            sendPassBtn: '変更用パスワードを送信',
+            temporaryPassPlaceholder: 'ワンタイムパスワード',
+            text: 'メールアドレスが利用出来ない、忘れてしまった場合の救済措置として SMS登録をおすすめします。本人以外には非公開です。',
           }
         },
       },

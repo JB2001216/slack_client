@@ -191,6 +191,12 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         userAccount: {
           title: string;
           emailDescription: string;
+          subTitle: string;
+          sendEmailBtn: string;
+          phoneNumber: string;
+          sendPassBtn: string;
+          temporaryPassPlaceholder: string;
+          text: string;
         }
       };
     };
