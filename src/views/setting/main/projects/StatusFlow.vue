@@ -6,12 +6,12 @@
         <dd>
           <h3 class="option_commonColumn_title">{{$t('views.setting.main.statusFlow.flow')}}</h3>
           <ul class="option_commonColumn_list">
-            <li v-for="(s, $index) in progressStatusList" :key="s.id">
+            <li v-for="(s, $index) in progressStatusList" :key="s.id" :class="{dragging: s === draggingItem}" @dragenter="onDragEnter($event, s)">
               <table>
                 <tr>
                   <td class="option_commonColumn_list_number">{{$index+1}}</td>
                   <td class="option_commonColumn_list_input">
-                    <div class="option_commonColumn_list_input_parts">
+                    <div :class="{[itemClassName]: true}">
                       <my-color-picker
                         v-model="s.color"
                         :custom-colors="customColors"
@@ -21,7 +21,12 @@
                       >
                         <div @click.stop="opened ? close() : open()" class="option_commonColumn_list_input_parts_color_content" />
                       </my-color-picker>
-                      <div class="option_commonColumn_list_input_parts_toggle">
+                      <div
+                        draggable="true"
+                        @dragstart="onDragStart($event, s)"
+                        @dragend="onDragEnd($event, s)"
+                        class="option_commonColumn_list_input_parts_toggle"
+                      >
                         <span/>
                         <span/>
                         <span/>
@@ -30,7 +35,7 @@
                     </div>
                   </td>
                   <td class="option_commonColumn_list_button">
-                    <button v-if="progressStatusList.length > 1" @click="deleteRow(s)" />
+                    <button v-if="progressStatusList.length > minimumProgressRowCount" @click="deleteRow(s)" />
                   </td>
                 </tr>
               </table>
@@ -43,7 +48,7 @@
         <dd>
           <h3 class="option_commonColumn_title">{{$t('views.setting.main.statusFlow.others')}}</h3>
           <ul class="option_commonColumn_list">
-            <li v-for="(s, $index) in etcStatusList" :key="s.id">
+            <li v-for="(s, $index) in etcStatusList" :key="s.id" :class="{dragging: s === draggingItem}" @dragenter="onDragEnter($event, s)">
               <table>
                 <tr>
                   <td class="option_commonColumn_list_number">{{$index+1}}</td>
@@ -57,7 +62,12 @@
                         :style="{background: s.color}"
                         @click.stop="opened ? close() : open()"
                       />
-                      <div class="option_commonColumn_list_input_parts_toggle">
+                      <div
+                        class="option_commonColumn_list_input_parts_toggle"
+                        draggable="true"
+                        @dragstart="onDragStart($event, s)"
+                        @dragend="onDragEnd($event, s)"
+                      >
                         <span/>
                         <span/>
                         <span/>
@@ -91,27 +101,31 @@
   .myColorPicker_pop
     left: -20px
     top: 20px
-  .option_commonColumn_list_input_parts_color_content
-    width: 100%
-    height: 100%
-  .option_commonColumn_bottomButtons
-    margin-top: 20px
-    &_button
-      float: right
-      display: block
-      min-width: 160px
-      height: 40px
-      padding: 9px
-      background: #007ff5
-      border: none
-      border-radius: 20px
-      cursor: pointer
-      outline: none
-      color: #fff
-      font-size: 14px
-      font-weight: bold
-      line-height: 20px
-      text-align: center
+  .option_commonColumn
+    &_list
+      > li.dragging
+        opacity: 0.2
+      &_input_parts_color_content
+        width: 100%
+        height: 100%
+    &_bottomButtons
+      margin-top: 20px
+      &_button
+        float: right
+        display: block
+        min-width: 160px
+        height: 40px
+        padding: 9px
+        background: #007ff5
+        border: none
+        border-radius: 20px
+        cursor: pointer
+        outline: none
+        color: #fff
+        font-size: 14px
+        font-weight: bold
+        line-height: 20px
+        text-align: center
 </style>
 
 
@@ -142,6 +156,9 @@ type StatusPost = (req: StatusPostRequest) => Promise<Status[]>;
 export default class StatusFlow extends Vue {
   saving = false;
   statusList: Status[] = [];
+  minimumProgressRowCount = 2;
+  itemClassName = 'option_commonColumn_list_input_parts';
+  draggingItem: Status | null = null;
 
   get customColors() {
     const customColors: string[] = [];
@@ -225,6 +242,42 @@ export default class StatusFlow extends Vue {
     return o && o.category === ProjectStatusCategory.Etc;
   }
 
+  onDragStart(ev: DragEvent, o: Status) {
+    this.draggingItem = o;
+    const el = (ev.target as HTMLElement).closest(`.${this.itemClassName}`)!;
+    const rect = el.getBoundingClientRect();
+    ev.dataTransfer!.setDragImage(el, rect.width - 20, rect.height / 2);
+  }
+
+  async onDragEnter(ev: DragEvent, targetItem: Status) {
+    if (!this.draggingItem ||
+        targetItem === this.draggingItem ||
+        targetItem.category !== this.draggingItem.category
+    ) {
+      return;
+    }
+
+    const list = (
+      this.draggingItem.category === ProjectStatusCategory.Progress
+        ? this.progressStatusList : this.etcStatusList
+    ).concat();
+    const oldIndex = list.indexOf(this.draggingItem);
+    const newIndex = list.indexOf(targetItem);
+    list.splice(oldIndex, 1);
+    if (newIndex < list.length) {
+      list.splice(newIndex, 0, this.draggingItem);
+    } else {
+      list.push(this.draggingItem);
+    }
+    list.forEach((s, i) => {
+      s.sort = i + 1;
+    });
+  }
+
+  onDragEnd(ev: DragEvent, target: Status) {
+    this.draggingItem = null;
+  }
+
   addProgressRow() {
     this.statusList.push({
       name: '',
@@ -245,7 +298,7 @@ export default class StatusFlow extends Vue {
 
   deleteRow(status: Status) {
     if (status.category === ProjectStatusCategory.Progress &&
-        this.progressStatusList.length <= 1
+        this.progressStatusList.length <= this.minimumProgressRowCount
     ) {
       return;
     }
