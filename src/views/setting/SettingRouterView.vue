@@ -14,6 +14,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Constructor as VueConstructor } from 'vue-property-decorator';
 import SpacesSub from './sub/SpacesSub.vue';
+import SpaceGeneral from './main/spaces/SpaceGeneral.vue';
 import SpaceMembers from './main/spaces/SpaceMembers.vue';
 import SpaceMemberInvite from './main/spaces/SpaceMemberInvite.vue';
 import ProjectsSub from './sub/ProjectsSub.vue';
@@ -26,6 +27,7 @@ import i18n from '@/i18n';
 @Component({
   components: {
     SpacesSub,
+    SpaceGeneral,
     SpaceMembers,
     SpaceMemberInvite,
     ProjectsSub,
@@ -42,6 +44,11 @@ export default class SettingRouterView extends Vue {
       main: VueConstructor;
     };
   } = {
+    'space-general': {
+      title: () => i18n.t('views.setting.sub.spaces.title'),
+      sub: SpacesSub,
+      main: SpaceGeneral,
+    },
     'space-members': {
       title: () => i18n.t('views.setting.sub.spaces.title'),
       sub: SpacesSub,
