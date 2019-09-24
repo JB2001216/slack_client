@@ -223,6 +223,21 @@ electron.ipcRenderer.on('open-url', async(ev: any, urlraw: string) => {
         }
       }
     }
+
+    if(method === 'update_email') {
+      const newEmailToken = sparams.get('token')!;
+      const usersApi = apiRegistry.load(UsersApi);
+
+      try {
+        await usersApi.usersMeEmailPut({
+          usersMeEmailPutRequestBody: { token: newEmailToken }
+        });
+        appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name' : 'success' });
+      } catch (err) {
+        appEventBus.emit('error', { err });
+      }
+    }
+
   }
 });
 
