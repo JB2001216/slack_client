@@ -130,7 +130,8 @@ const struct: LocaleStruct = {
             title: 'スペースアイコン',
             uploadBtn: '画像をアップロード',
             uploadDescription: 'スペースアイコンはドラッグアンドドロップで変更できます',
-            saveBtn: '変更内容を保存'
+            title2: 'スペース表示名',
+            saveBtn: '変更内容を保存',
           },
           spaceMembers: {
             memberList: 'メンバー一覧',

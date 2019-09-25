@@ -129,7 +129,8 @@ const struct: LocaleStruct = {
             title: 'Space icon',
             uploadBtn: 'Upload image',
             uploadDescription: 'Space icon can be changed by drag and drop',
-            saveBtn: 'Save changes'
+            title2: 'Space display name',
+            saveBtn: 'Save changes',
           },
           spaceMembers: {
             memberList: 'Member List',
