@@ -46,6 +46,7 @@ module.exports = {
     'vue/no-unused-components': 'error',
     'vue/v-bind-style': ['error', 'shorthand'],
     'vue/v-on-style': ['error', 'shorthand'],
+    'vue/attribute-hyphenation': ['error', 'always'],
 
     // typescript
     '@typescript-eslint/indent': ['error', 2, { 'SwitchCase': 1 }],
