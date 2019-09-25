@@ -27,9 +27,9 @@
 
       <div class="option_spaceGeneral_input">
         <h3 class="option_mainColumn_title">
-          {{$t('views.setting.main.spaceGeneral.title')}}
+          {{$t('views.setting.main.spaceGeneral.title2')}}
         </h3>
-        <input type="text" value="Ernie,Inc.">
+        <input type="text" v-model="displayName">
       </div>
 
       <div class="option_spaceGeneral_addButton clearfix">
@@ -50,6 +50,15 @@ export default class SpaceGeneral extends Vue {
 
   url: string = '';
   file: any;
+
+  displayName: string = '';
+
+  get myUser() {
+    const myUser = this.$store.state.activeUser.myUser!;
+    this.displayName = myUser.displayName ? myUser.displayName : '';
+
+    return myUser;
+  }
 
   async inputFileChange(event: any) {
 
