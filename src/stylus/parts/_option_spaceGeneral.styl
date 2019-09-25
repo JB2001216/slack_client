@@ -42,6 +42,39 @@
         line-height: 21px;
       }
     }
+    &_img_thumbnail,
+    &_uploadButton {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      input[type=file]{
+        position: absolute;
+        top: 15px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: 4px;
+        width: 100%;
+        opacity: 0;
+        &:before{
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          cursor: pointer;
+        }
+      }
+    }
+    &_img_thumbnail{
+      img{
+        width: 160px;
+        height: 160px;
+        border-radius: 4px;
+        border: 1px solid #c4c4c4;
+      }
+    }
     &_input{
       margin-top: 50px;
       input[type=text]{
