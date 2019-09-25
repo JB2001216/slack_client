@@ -69,7 +69,7 @@ export interface SpacesSpaceIdGetRequest {
 export interface SpacesSpaceIdPutRequest {
     spaceId: number;
     displayName?: string | null;
-    avator?: Blob | null;
+    avatar?: Blob | null;
 }
 
 export interface SpacesSpaceIdUsersGetRequest {
@@ -292,8 +292,8 @@ export class SpacesApi extends runtime.BaseAPI {
             formData.append('displayName', requestParameters.displayName as any);
         }
 
-        if (requestParameters.avator !== undefined) {
-            formData.append('avator', requestParameters.avator as any);
+        if (requestParameters.avatar !== undefined) {
+            formData.append('avator', requestParameters.avatar as any);
         }
 
         const response = await this.request({
