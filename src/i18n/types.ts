@@ -215,7 +215,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       login: string;
       enterTheEmail: string;
       theRegistrationURLHasBeenSent: string;
-      addANewspace: string;
+      addANewSpace: string;
       spaceName: string;
       userName: string;
     };

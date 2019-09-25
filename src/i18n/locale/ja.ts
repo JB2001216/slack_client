@@ -206,7 +206,7 @@ const struct: LocaleStruct = {
         login: 'ログインする',
         enterTheEmail: 'メールアドレスを入力',
         theRegistrationURLHasBeenSent: '登録用URLを送信しました。',
-        addANewspace: 'スペース作成',
+        addANewSpace: 'スペース作成',
         spaceName: 'スペース名(英数字のみ)',
         userName: 'ユーザー名(英数字のみ)"',
       },
