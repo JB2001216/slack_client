@@ -184,7 +184,7 @@ const struct: LocaleStruct = {
             subTitle: 'New email address',
             sendEmailBtn: 'Send email',
             phoneNumber: 'Phone number',
-            sendPassBtn: 'Send password',
+            sendPassBtn: 'Send pincode',
             temporaryPassPlaceholder: 'Temporary password',
             text: 'As a remedy in case you forget your email address or forget it SMS registration is recommended. It is private to non-persons.',
           }
