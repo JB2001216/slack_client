@@ -8,6 +8,7 @@ export * from './Note';
 export * from './NoteStatus';
 export * from './NotesGetResponse';
 export * from './NotesNoteIdFavoritePostRequestBody';
+export * from './NotesNoteIdPatchRequestBody';
 export * from './NotesNoteIdPriorityPostRequestBody';
 export * from './NotesNoteIdPutRequestBody';
 export * from './NotesPostRequestBody';

@@ -26,6 +26,9 @@ import {
     NotesNoteIdFavoritePostRequestBody,
     NotesNoteIdFavoritePostRequestBodyFromJSON,
     NotesNoteIdFavoritePostRequestBodyToJSON,
+    NotesNoteIdPatchRequestBody,
+    NotesNoteIdPatchRequestBodyFromJSON,
+    NotesNoteIdPatchRequestBodyToJSON,
     NotesNoteIdPriorityPostRequestBody,
     NotesNoteIdPriorityPostRequestBodyFromJSON,
     NotesNoteIdPriorityPostRequestBodyToJSON,
@@ -87,6 +90,13 @@ export interface NotesNoteIdGetRequest {
     spaceId: number;
     projectId: number;
     noteId: number;
+}
+
+export interface NotesNoteIdPatchRequest {
+    spaceId: number;
+    projectId: number;
+    noteId: number;
+    notesNoteIdPatchRequestBody: NotesNoteIdPatchRequestBody;
 }
 
 export interface NotesNoteIdPriorityPostRequest {
@@ -388,6 +398,53 @@ export class NotesApi extends runtime.BaseAPI {
     */
     async notesNoteIdGet(requestParameters: NotesNoteIdGetRequest): Promise<Note> {
         const response = await this.notesNoteIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async notesNoteIdPatchRaw(requestParameters: NotesNoteIdPatchRequest): Promise<runtime.ApiResponse<Note>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling notesNoteIdPatch.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling notesNoteIdPatch.');
+        }
+
+        if (requestParameters.noteId === null || requestParameters.noteId === undefined) {
+            throw new runtime.RequiredError('noteId','Required parameter requestParameters.noteId was null or undefined when calling notesNoteIdPatch.');
+        }
+
+        if (requestParameters.notesNoteIdPatchRequestBody === null || requestParameters.notesNoteIdPatchRequestBody === undefined) {
+            throw new runtime.RequiredError('notesNoteIdPatchRequestBody','Required parameter requestParameters.notesNoteIdPatchRequestBody was null or undefined when calling notesNoteIdPatch.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: NotesNoteIdPatchRequestBodyToJSON(requestParameters.notesNoteIdPatchRequestBody),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => NoteFromJSON(jsonValue));
+    }
+
+   /**
+    */
+    async notesNoteIdPatch(requestParameters: NotesNoteIdPatchRequest): Promise<Note> {
+        const response = await this.notesNoteIdPatchRaw(requestParameters);
         return await response.value();
     }
 
