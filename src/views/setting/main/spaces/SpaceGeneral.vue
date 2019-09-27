@@ -33,7 +33,7 @@
       </div>
 
       <div class="option_spaceGeneral_addButton clearfix">
-        <button class="option_spaceGeneral_button" :disabled="saving || (!file && !displayName)" @click="save">
+        <button class="option_spaceGeneral_button" :disabled="saving" @click="save">
           {{$t('views.setting.main.spaceGeneral.saveBtn')}}
         </button>
       </div>
@@ -46,18 +46,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi } from '@/lib/api';
 
-interface SpaceIdPutRequest {
-  displayName: string | null;
-  avatar: Blob | null;
-}
-
-type SpaceIdPut = (req: SpaceIdPutRequest) => Promise<any>;
-
 @Component
 export default class SpaceGeneral extends Vue {
 
   avatarUrl: string = '';
-  file: any = null;
+  file: File | null = null;
 
   displayName: string = '';
 
@@ -67,28 +60,15 @@ export default class SpaceGeneral extends Vue {
     return this.$store.state.activeUser.myUser!;
   }
 
-  get api(): { update: SpaceIdPut } {
-    const spaceApi = apiRegistry.load(SpacesApi, this.myUser.token);
-    return {
-      update: async(req: SpaceIdPutRequest) => {
-        await spaceApi.spacesSpaceIdPut({
-          spaceId: this.myUser.space.id,
-          displayName: req.displayName,
-          avatar: req.avatar,
-        });
-      },
-    };
-  }
-
-  created() {
+  beforeMount() {
     const spaceInfo = this.myUser.space;
     this.avatarUrl = spaceInfo.avatarUrl ? spaceInfo.avatarUrl : '';
     this.displayName = spaceInfo.displayName ? spaceInfo.displayName : '';
   }
 
   async inputFileChange(event: any) {
-    const target = event.target;
-    if (target.files.length === 0) {
+    const target = event.target as HTMLInputElement;
+    if (!target.files || target.files.length === 0) {
       this.avatarUrl = '';
       this.file = null;
       return;
@@ -102,17 +82,24 @@ export default class SpaceGeneral extends Vue {
   }
 
   async save() {
-    if (!this.api) return;
+    if (this.saving) return;
+
     try {
       this.saving = true;
-      await this.api.update({ avatar: this.file, displayName: this.displayName });
+      const spaceApi = apiRegistry.load(SpacesApi, this.myUser.token);
+      const space = await spaceApi.spacesSpaceIdPut({
+        spaceId: this.myUser.space.id,
+        displayName: this.displayName,
+        avatar: this.file,
+      });
+      this.$store.mutations.editSpace(space);
       this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
+
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
       this.saving = false;
     }
   }
-
 }
 </script>
