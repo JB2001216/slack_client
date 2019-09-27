@@ -29,7 +29,7 @@ export interface SpacesSpaceIdPutRequestBody {
      * @type {Blob}
      * @memberof SpacesSpaceIdPutRequestBody
      */
-    avator?: Blob | null;
+    avatar?: Blob | null;
 }
 
 export function SpacesSpaceIdPutRequestBodyFromJSON(json: any): SpacesSpaceIdPutRequestBody {
@@ -43,7 +43,7 @@ export function SpacesSpaceIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
-        'avator': !exists(json, 'avator') ? undefined : json['avator'],
+        'avatar': !exists(json, 'avatar') ? undefined : json['avatar'],
     };
 }
 
@@ -57,7 +57,7 @@ export function SpacesSpaceIdPutRequestBodyToJSON(value?: SpacesSpaceIdPutReques
     return {
         
         'displayName': value.displayName,
-        'avator': value.avator,
+        'avatar': value.avatar,
     };
 }
 

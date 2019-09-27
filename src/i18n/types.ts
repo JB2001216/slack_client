@@ -135,6 +135,13 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         };
       };
       main: {
+        spaceGeneral: {
+          title: string;
+          uploadBtn: string;
+          uploadDescription: string;
+          title2: string;
+          saveBtn: string;
+        },
         spaceMembers: {
           memberList: string;
           email: string;

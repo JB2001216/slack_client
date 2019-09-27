@@ -126,6 +126,13 @@ const struct: LocaleStruct = {
           },
         },
         main: {
+          spaceGeneral: {
+            title: 'スペースアイコン',
+            uploadBtn: '画像をアップロード',
+            uploadDescription: 'スペースアイコンはドラッグアンドドロップで変更できます',
+            title2: 'スペース表示名',
+            saveBtn: '変更内容を保存',
+          },
           spaceMembers: {
             memberList: 'メンバー一覧',
             email: 'メールアドレス',
