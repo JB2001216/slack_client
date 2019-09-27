@@ -91,6 +91,14 @@ const struct: LocaleStruct = {
           priorityOrder: '優先度順',
           statusOrder: 'ステータス順',
         },
+        filterForm: {
+          all: 'すべて',
+          notClosed: '{closedName}以外',
+          status: 'ステータス',
+          assignedUsers: '担当者',
+          assignedUser: '担当になっている人',
+          batonHolder: 'バトンを持っている人',
+        },
       },
 
       // main
@@ -104,6 +112,8 @@ const struct: LocaleStruct = {
       },
       noteColumn: {
         save: '編集を終了',
+        enterDetails: '詳細を入力',
+        detailsAreEmpty: '詳細は未入力です',
         enterWideScreen: '全画面表示',
         exitWideScreen: 'デフォルト表示',
         markdownHelp: 'Markdownヘルプ',

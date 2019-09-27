@@ -231,8 +231,7 @@ export default class NestedList extends Vue {
   }
 
   getNoteUpdatable(note: Note) {
-    //    return this.$store.getters.activeUser.noteUpdatable(note);
-    return this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.UPDATE_MY_NOTE);
+    return this.$store.getters.activeUser.noteUpdatable(note);
   }
 
   getStatusOption(optionId: number | null) {

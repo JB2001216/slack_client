@@ -74,6 +74,28 @@ class ActiveUserGetters extends Getters<ActiveUserState>() {
         task.writeUser === this.state.myUser.id
       );
   }
+
+  noteUpdatable(note: api.Note) {
+    if (!this.state.myUser) return false;
+    return this.activeProjectMyPerms.includes(Perm.UPDATE_ALL_NOTE) ||
+      (
+        this.activeProjectMyPerms.includes(Perm.UPDATE_MY_NOTE) &&
+        (
+          note.writeUser === this.state.myUser.id ||
+          note.batonUser === this.state.myUser.id ||
+          note.chargeUsers.includes(this.state.myUser.id)
+        )
+      );
+  }
+
+  noteDeletable(note: api.Note) {
+    if (!this.state.myUser) return false;
+    return this.activeProjectMyPerms.includes(Perm.DELETE_ALL_NOTE) ||
+      (
+        this.activeProjectMyPerms.includes(Perm.DELETE_MY_NOTE) &&
+        note.writeUser === this.state.myUser.id
+      );
+  }
 }
 
 class ActiveUserMutations extends Mutations<ActiveUserState>() {
