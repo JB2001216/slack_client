@@ -8,7 +8,7 @@
       <div class="option_spaceProjectsGeneral_addButton">
         <button class="option_spaceProjectsGeneral_button"
                 type="button"
-                :disabled="!activeProject"
+                :disabled="!activeProject || saving"
                 @click="save"
         >{{$t('views.setting.main.projectGeneral.save')}}</button>
       </div>

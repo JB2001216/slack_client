@@ -1,7 +1,7 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import i18n, { Locale, loadLocale, defaultLocale } from '@/i18n';
 import localStorage from '@/lib/local-storage';
-import { apiRegistry, UsersApi, MyUser } from '@/lib/api';
+import { apiRegistry, UsersApi, MyUser, Space } from '@/lib/api';
 import activeUser from './modules/active-user';
 import settingRouter from './modules/setting-router';
 
@@ -73,6 +73,14 @@ class RootMutations extends Mutations<RootState>() {
 
   setFullMainColumn(v: boolean) {
     this.state.fullMainColumn = v;
+  }
+
+  editSpace(space: Space) {
+    this.state.loggedInUsers.forEach((u) => {
+      if (u.space.id === space.id) {
+        u.space = Object.assign({}, space);
+      }
+    });
   }
 }
 
