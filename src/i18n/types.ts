@@ -163,6 +163,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           accountSample: string;
           invitedMessage: string;
         };
+        projectGeneral: {
+          title: string;
+          save: string;
+        };
         projectMembers: {
           memberList: string;
           email: string;
