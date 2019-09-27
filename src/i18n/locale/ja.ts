@@ -156,7 +156,7 @@ const struct: LocaleStruct = {
           },
           projectGeneral: {
             title: 'プロジェクト名',
-            save: '変更を保存する'
+            save: '変更を保存する',
           },
           projectMembers: {
             memberList: 'メンバー一覧',
