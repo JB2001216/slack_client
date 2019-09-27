@@ -100,6 +100,14 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         priorityOrder: string;
         statusOrder: string;
       };
+      filterForm: {
+        all: string;
+        notClosed: string;
+        status: string;
+        assignedUsers: string;
+        assignedUser: string;
+        batonHolder: string;
+      };
     };
 
     // main
@@ -113,6 +121,8 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     };
     noteColumn: {
       save: string;
+      enterDetails: string;
+      detailsAreEmpty: string;
       enterWideScreen: string;
       exitWideScreen: string;
       markdownHelp: string;

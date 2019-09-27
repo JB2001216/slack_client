@@ -7,6 +7,9 @@ export interface AppEventMap {
   'task-added': { task: api.Task };
   'task-edited': { task: api.Task };
   'task-deleted': { taskId: number };
+  'note-added': { note: api.Note };
+  'note-edited': { note: api.Note };
+  'note-deleted': { noteId: number };
 }
 
 export interface AppEventBus {
