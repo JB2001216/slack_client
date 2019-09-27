@@ -8,14 +8,16 @@
 
       <div class="option_spaceGeneral_img">
         <div class="option_spaceGeneral_img_thumbnail">
-          <input type="file" accept="image/png, .jpeg, .jpg"
+          <input type="file" :accept="avatarInputAccept"
+                 ref="avatarInput1"
                  @change="inputFileChange">
-          <img v-if="avatarUrl" :src="avatarUrl" alt="pic">
+          <img v-if="avatarUrl" :src="avatarUrl" ref="avatarImage" alt="pic">
           <img v-else src="~@/assets/images/parts/img_option_space_sample.jpg" alt="pic">
         </div>
         <div/><!-- separator -->
         <div class="option_spaceGeneral_uploadButton">
-          <input type="file" accept="image/png, .jpeg, .jpg"
+          <input type="file" :accept="avatarInputAccept"
+                 ref="avatarInput2"
                  @drop.prevent
                  @change="inputFileChange">
           <button>
@@ -42,15 +44,31 @@
   </div>
 </template>
 
+
+<style lang="stylus">
+.option_spaceGeneral
+  &_img_thumbnail
+    img
+      object-fit: cover
+
+</style>
+
+
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { apiRegistry, SpacesApi } from '@/lib/api';
+import { apiRegistry, SpacesApi, SpacesSpaceIdAvatarPostRequest } from '@/lib/api';
 
 @Component
 export default class SpaceGeneral extends Vue {
+  $refs!: {
+    avatarInput1: HTMLInputElement;
+    avatarInput2: HTMLInputElement;
+    avatarImage: HTMLImageElement;
+  };
 
-  avatarUrl: string = '';
-  file: File | null = null;
+  avatarUrl: string | null = null;
+  avatar: File | null = null;
+  avatarInputAccept = 'image/png,image/jpeg,image/gif';
 
   displayName: string = '';
 
@@ -60,25 +78,40 @@ export default class SpaceGeneral extends Vue {
     return this.$store.state.activeUser.myUser!;
   }
 
-  beforeMount() {
-    const spaceInfo = this.myUser.space;
-    this.avatarUrl = spaceInfo.avatarUrl ? spaceInfo.avatarUrl : '';
-    this.displayName = spaceInfo.displayName ? spaceInfo.displayName : '';
+  clearAvatarInput() {
+    this.$refs.avatarInput1.value = '';
+    this.$refs.avatarInput2.value = '';
   }
 
-  async inputFileChange(event: any) {
-    const target = event.target as HTMLInputElement;
+  beforeMount() {
+    this.avatarUrl = this.myUser.space.avatarUrl;
+    this.displayName = this.myUser.space.displayName || this.myUser.space.account;
+  }
+
+  async inputFileChange(ev: any) {
+    const target = ev.target as HTMLInputElement;
     if (!target.files || target.files.length === 0) {
-      this.avatarUrl = '';
-      this.file = null;
+      this.avatarUrl = this.myUser.space.avatarUrl;
+      this.avatar = null;
       return;
     }
-    this.file = target.files[0];
+
     const myReader: FileReader = new FileReader();
-    myReader.onloadend = (event: any) => {
-      this.avatarUrl = event.target.result;
-    };
-    myReader.readAsDataURL(this.file);
+    try {
+      myReader.onloadend = () => {
+        if (myReader.result) {
+          this.avatar = target.files![0];
+          this.avatarUrl = myReader.result as string;
+        }
+        myReader.onloadend = null;
+        this.clearAvatarInput();
+      };
+      myReader.readAsDataURL(target.files[0]);
+
+    } catch {
+      myReader.onloadend = null;
+      this.clearAvatarInput();
+    }
   }
 
   async save() {
@@ -90,8 +123,26 @@ export default class SpaceGeneral extends Vue {
       const space = await spaceApi.spacesSpaceIdPut({
         spaceId: this.myUser.space.id,
         displayName: this.displayName,
-        avatar: this.file,
       });
+      if (this.avatar && this.$refs.avatarImage) {
+        const image = this.$refs.avatarImage;
+        const clip: Pick<SpacesSpaceIdAvatarPostRequest, 'left' | 'top' | 'width' | 'height'> = image.naturalWidth <= image.naturalHeight ? {
+          left: 0,
+          width: image.naturalWidth,
+          top: Math.floor((image.naturalHeight - image.naturalWidth) / 2),
+          height: image.naturalWidth,
+        } : {
+          top: 0,
+          height: image.naturalHeight,
+          left: Math.floor((image.naturalWidth - image.naturalHeight) / 2),
+          width: image.naturalHeight,
+        };
+        space.avatarUrl = (await spaceApi.spacesSpaceIdAvatarPost(Object.assign(clip, {
+          spaceId: this.myUser.space.id,
+          avatar: this.avatar,
+        }))).avatarUrl || null;
+        this.clearAvatarInput();
+      }
       this.$store.mutations.editSpace(space);
       this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
 
