@@ -14,7 +14,7 @@
         </template>
         <template v-slot:items>
           <li v-if="projectUserAddable" @click="$store.mutations.settingRouter.to('project-member-add')"><span>{{$t(`views.subColumn.projectMenu.addMembers`)}}</span></li>
-          <li @click="$store.mutations.settingRouter.to('project-members')"><span>{{$t(`views.subColumn.projectMenu.projectSettings`)}}</span></li>
+          <li @click="$store.mutations.settingRouter.to(projectUpdatable ? 'project-general' : 'project-members')"><span>{{$t(`views.subColumn.projectMenu.projectSettings`)}}</span></li>
         </template>
       </my-simple-menu>
     </div>
@@ -83,6 +83,10 @@ export default class SubColumnLayout extends Vue {
 
   get project() {
     return this.$store.getters.activeUser.activeProject;
+  }
+
+  get projectUpdatable() {
+    return this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.UPDATE_PROJECT);
   }
 
   get projectUserAddable() {

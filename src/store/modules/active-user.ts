@@ -118,6 +118,15 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     this.state.projects.push(project);
   }
 
+  editProject(project: api.Project) {
+    if (!this.state.myUser || !this.state.projects) return;
+    if (this.state.myUser.space.id !== project.spaceId) return;
+    const index = this.state.projects.findIndex((p) => p.id === project.id);
+    if (index >= 0) {
+      this.state.projects.splice(index, 1, project);
+    }
+  }
+
   setTaskStatusList(statusList: api.TaskStatus[]) {
     this.state.taskStatusList = statusList;
   }
