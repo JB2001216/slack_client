@@ -17,7 +17,7 @@
           </li>
           <li><span>{{$t(`views.projectColumn.spaceMenu.profileAndAccount`)}}</span></li>
           <li v-if="spaceUserAddable" @click="$store.mutations.settingRouter.to('space-member-invite')"><span>{{$t(`views.projectColumn.spaceMenu.inviteMembers`)}}</span></li>
-          <li v-if="spaceUserListable" @click="$store.mutations.settingRouter.to('space-members')"><span>{{$t(`views.projectColumn.spaceMenu.spaceSettings`)}}</span></li>
+          <li v-if="spaceUserListable" @click="$store.mutations.settingRouter.to('space-general')"><span>{{$t(`views.projectColumn.spaceMenu.spaceSettings`)}}</span></li>
         </template>
       </my-simple-menu>
     </div>
