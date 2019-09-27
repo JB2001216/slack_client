@@ -90,6 +90,14 @@ const struct: LocaleStruct = {
           priorityOrder: 'Priority order',
           statusOrder: 'Status order',
         },
+        filterForm: {
+          all: 'All',
+          notClosed: 'Not {closedName}',
+          status: 'Status',
+          assignedUsers: 'Assigned users',
+          assignedUser: 'Assigned user',
+          batonHolder: 'Baton holder',
+        },
       },
 
       // main
@@ -103,6 +111,8 @@ const struct: LocaleStruct = {
       },
       noteColumn: {
         save: 'save',
+        enterDetails: 'Enter details',
+        detailsAreEmpty: 'Details are empty.',
         enterWideScreen: 'Enter wide screen',
         exitWideScreen: 'Exit wide screen',
         markdownHelp: 'Markdown Help',
