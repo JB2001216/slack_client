@@ -137,10 +137,12 @@ export default class SpaceGeneral extends Vue {
           left: Math.floor((image.naturalWidth - image.naturalHeight) / 2),
           width: image.naturalHeight,
         };
-        space.avatarUrl = (await spaceApi.spacesSpaceIdAvatarPost(Object.assign(clip, {
+        const avatarPostResponse = await spaceApi.spacesSpaceIdAvatarPost(Object.assign(clip, {
           spaceId: this.myUser.space.id,
           avatar: this.avatar,
-        }))).avatarUrl || null;
+        }));
+        space.avatarUrl = avatarPostResponse.avatarUrl;
+        space.avatarSmallUrl = avatarPostResponse.avatarSmallUrl;
         this.clearAvatarInput();
       }
       this.$store.mutations.editSpace(space);
