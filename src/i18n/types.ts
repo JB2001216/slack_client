@@ -135,6 +135,9 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           title: string;
           general: string;
           members: string;
+          profileAndAccount: string;
+          userProfile: string;
+          userAccount: string;
         };
         projects: {
           title: string;
@@ -206,6 +209,16 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           updatedMessage: string;
           blankItemExists: string;
         };
+        userAccount: {
+          title: string;
+          emailDescription: string;
+          subTitle: string;
+          sendEmailBtn: string;
+          phoneNumber: string;
+          sendPassBtn: string;
+          temporaryPassPlaceholder: string;
+          text: string;
+        }
       };
     };
 

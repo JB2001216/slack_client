@@ -125,6 +125,9 @@ const struct: LocaleStruct = {
             title: 'Space Settings',
             general: 'General',
             members: 'Members',
+            profileAndAccount: 'Profile & Account',
+            userProfile: 'Profile Settings',
+            userAccount: 'Account Settings',
           },
           projects: {
             title: 'Project Settings',
@@ -196,6 +199,16 @@ const struct: LocaleStruct = {
             updatedMessage: 'Updated.',
             blankItemExists: 'Black item exists.',
           },
+          userAccount: {
+            title: 'Email address',
+            emailDescription: 'Your email address is',
+            subTitle: 'New email address',
+            sendEmailBtn: 'Send email',
+            phoneNumber: 'Phone number',
+            sendPassBtn: 'Send pincode',
+            temporaryPassPlaceholder: 'Temporary password',
+            text: 'As a remedy in case you forget your email address or forget it SMS registration is recommended. It is private to non-persons.',
+          }
         },
       },
 
