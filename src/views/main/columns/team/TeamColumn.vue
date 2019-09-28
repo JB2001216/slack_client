@@ -3,9 +3,13 @@
     <ul class="teamColumn_nav">
       <li v-for="u in loggedInUsers" :key="u.id">
         <router-link
+          class="teamColumn_nav_item"
           :class="{active: activeUserId === u.id}"
           :to="{ name: 'user', params: { userId: u.id }}"
-        />
+        >
+          <img v-if="u.space.avatarSmallUrl" :src="u.space.avatarSmallUrl">
+          <span v-else>{{(u.space.displayName || u.space.account).slice(0,1)}}</span>
+        </router-link>
       </li>
       <li>
         <router-link class="teamColumn_add" :to="{name: 'space-add1'}">
@@ -18,6 +22,27 @@
     </ul>
   </div>
 </template>
+
+
+<style lang="stylus">
+.teamColumn
+  &_nav
+    &_item
+      overflow: hidden
+      text-decoration: none
+      text-align: center
+      img
+        width: 100%
+        transition: opacity 0.5s
+      span
+        font-size: 26px
+        color: #666
+        font-weight: bold
+      &:not(.active):not(:hover)
+        img
+          opacity: 0.2
+</style>
+
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';

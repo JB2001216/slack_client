@@ -207,7 +207,6 @@ export default class TasksColumn extends Vue {
   }
 
   get statusOptions() {
-    console.log(this.$store.state.activeUser.taskStatusList);
     return this.$store.state.activeUser.taskStatusList;
   }
 

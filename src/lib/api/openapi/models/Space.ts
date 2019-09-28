@@ -42,6 +42,12 @@ export interface Space {
      * @memberof Space
      */
     avatarUrl: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    avatarSmallUrl: string | null;
 }
 
 export function SpaceFromJSON(json: any): Space {
@@ -58,6 +64,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         'account': json['account'],
         'displayName': json['displayName'],
         'avatarUrl': json['avatarUrl'],
+        'avatarSmallUrl': json['avatarSmallUrl'],
     };
 }
 
@@ -74,6 +81,7 @@ export function SpaceToJSON(value?: Space): any {
         'account': value.account,
         'displayName': value.displayName,
         'avatarUrl': value.avatarUrl,
+        'avatarSmallUrl': value.avatarSmallUrl,
     };
 }
 
