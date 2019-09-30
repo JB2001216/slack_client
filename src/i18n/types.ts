@@ -218,7 +218,14 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           sendPassBtn: string;
           temporaryPassPlaceholder: string;
           text: string;
-        }
+        };
+        userProfile: {
+          uploadBtn: string;
+          uploadDescription: string;
+          userAvatar: string;
+          userName: string;
+          saveBtn: string;
+        };
       };
     };
 

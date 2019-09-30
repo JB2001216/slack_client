@@ -8,14 +8,13 @@
         <template v-slot:items>
           <li @click.prevent.stop class="projectColumn_spaceMenu_profile notHover">
             <div class="projectColumn_spaceMenu_profile_avatar">
-              <img v-if="myUser.avatarUrl" :src="myUser.avatarUrl" alt="">
-              <img v-else src="~@/assets/images/parts/img_option_space_member_01.jpg" alt="">
+              <my-space-user-avatar :user="myUser" :size="40" shape="roundedSquare" />
             </div>
             <div class="projectColumn_spaceMenu_profile_name">
               {{myUser.displayName || myUser.account}}
             </div>
           </li>
-          <li @click="$store.mutations.settingRouter.to('space-user-account')"><span>{{$t(`views.projectColumn.spaceMenu.profileAndAccount`)}}</span></li>
+          <li @click="$store.mutations.settingRouter.to('space-user-profile')"><span>{{$t(`views.projectColumn.spaceMenu.profileAndAccount`)}}</span></li>
           <li v-if="spaceUserAddable" @click="$store.mutations.settingRouter.to('space-member-invite')"><span>{{$t(`views.projectColumn.spaceMenu.inviteMembers`)}}</span></li>
           <li v-if="spaceUserListable" @click="$store.mutations.settingRouter.to('space-general')"><span>{{$t(`views.projectColumn.spaceMenu.spaceSettings`)}}</span></li>
         </template>

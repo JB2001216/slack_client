@@ -62,6 +62,7 @@ export * from './UsersLoginPostResponse';
 export * from './UsersMeEmailConfirmPostRequestBody';
 export * from './UsersMeEmailGetResponse';
 export * from './UsersMeEmailPutRequestBody';
+export * from './UsersMePatchRequestBody';
 export * from './UsersMePutRequestBody';
 export * from './UsersMeSmsConfirmPostRequestBody';
 export * from './UsersMeSmsGetResponse';

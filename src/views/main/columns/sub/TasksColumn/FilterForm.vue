@@ -27,6 +27,7 @@
         <label for="human_all" class="checkbox">{{$t('views.tasksColumn.filterForm.all')}}</label>
       </dd>
       <my-space-user tag="dd" v-for="pu in projectUsers" :key="pu.userId" :user-id="pu.userId" v-slot="{user}">
+        <my-space-user-avatar :user="user" :size="24" shape="circle"/>
         <input v-model="checkedAssignedUserIdList" @change="onCheckedAssignedUserIdListChange($event, pu.userId)" type="checkbox" name="human" :value="pu.userId" :id="`human_${pu.userId}`">
         <label :for="`human_${pu.userId}`" class="checkbox">{{user ? (user.displayName || user.account) : 'unknown'}}</label>
       </my-space-user>
@@ -59,8 +60,14 @@
   background: #fff
   z-index: 2
   .searchWrap_humanBox
-    dd.searchWrap_humanBox_item_all
+    dd
       background: none
+      position: relative
+      .mySpaceUserAvatar
+        position: absolute
+        left: 12px
+        top: 9px
+    dd.searchWrap_humanBox_item_all
       label
         padding-left: 13px
 </style>
