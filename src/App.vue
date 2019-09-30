@@ -71,7 +71,7 @@ export default class App extends Vue {
 
   async onError(ev: AppEventMap['error']) {
     if (typeof ev.flash === 'undefined' || ev.flash) {
-      const message = await getErrorMessage(ev.flash, this.$i18n);
+      const message = await getErrorMessage(ev.err, this.$i18n, ev.options);
       this.$flash(message, 'error');
     }
   }

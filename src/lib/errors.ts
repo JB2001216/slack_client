@@ -41,7 +41,7 @@ export class BasicError extends BaseError<undefined> {
 /**
  * Errorオブジェクトからエラーメッセージを取得
  */
-export async function getErrorMessage(err: any, i18n: VueI18n): Promise<string> {
+export async function getErrorMessage(err: any, i18n: VueI18n, options: { firstMessageOnValidationError?: boolean } = {}): Promise<string> {
   if (err instanceof RouteError) {
     err = err.data;
   }
@@ -50,6 +50,12 @@ export async function getErrorMessage(err: any, i18n: VueI18n): Promise<string> 
     const json = await getJsonFromResponse(err);
     if (json && json.error) {
       if (ApiErrors.ValidationError === json.error) {
+        if (options.firstMessageOnValidationError) {
+          const m = getFirstMessageOfValidationError(json.data);
+          if (m) {
+            return m;
+          }
+        }
         return i18n.t('common.invalidInput').toString();
       }
       if (json.data && typeof json.data.detail === 'string') {
@@ -65,4 +71,21 @@ export async function getErrorMessage(err: any, i18n: VueI18n): Promise<string> 
   }
 
   return i18n.t('common.anErrorHasOccurred').toString();
+}
+
+function getFirstMessageOfValidationError(data: any) {
+  if (Array.isArray(data) && data.length) {
+    data = data[0];
+  }
+  if (!Array.isArray(data) && typeof data === 'object') {
+    for (const [k, v] of Object.entries(data)) {
+      if (typeof v === 'string') {
+        return v;
+      }
+      if (Array.isArray(v) && v.length && typeof v[0] === 'string') {
+        return v[0];
+      }
+    }
+  }
+  return undefined;
 }

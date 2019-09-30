@@ -226,16 +226,23 @@ electron.ipcRenderer.on('open-url', async(ev: any, urlraw: string) => {
 
     if (method === 'update_email') {
       const emailToken = sparams.get('token')!;
-      const userToken = store.state.activeUser.myUser!.token;
-      const usersApi = apiRegistry.load(UsersApi, userToken);
-      try {
-        await usersApi.usersMeEmailPut({ usersMeEmailPutRequestBody: { token: emailToken } });
-        appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' });
-      } catch (err) {
-        appEventBus.emit('error', { err });
+      const userIdStr = sparams.get('uid')!;
+      if (emailToken && userIdStr && isFinite(userIdStr as any)) {
+        const userId = parseInt(userIdStr);
+        const myUser = store.state.loggedInUsers.find((u) => u.id === userId);
+        if (myUser) {
+          try {
+            const usersApi = apiRegistry.load(UsersApi, myUser.token);
+            const res = await usersApi.usersMeEmailPut({ usersMeEmailPutRequestBody: { token: emailToken } });
+            const newMyUser = Object.assign({}, myUser, { email: res.email });
+            appEventBus.emit('my-user-edited', { myUser: newMyUser });
+            appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' });
+          } catch (err) {
+            appEventBus.emit('error', { err });
+          }
+        }
       }
     }
-
   }
 });
 
