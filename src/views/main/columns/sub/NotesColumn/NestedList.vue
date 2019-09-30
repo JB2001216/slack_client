@@ -53,9 +53,9 @@
           <span v-if="t.childs && t.childs.length" @click.stop="onContractChilds(t)">▼</span>
           <span v-else @click.stop="onExpandChilds(t)">＞</span>
         </template>
-        <div class="note_item_image">
-          <img src="~@/assets/images/subColumn/note_user.svg" alt="">
-        </div>
+        <my-space-user tag="div" class="task_item_image" :user-id="t.writeUser" v-slot="{user}">
+          <my-space-user-avatar :user="user" :size="24" shape="circle"/>
+        </my-space-user>
         <template v-if="!editingNote || editingNote.id !== t.id">
           <div class="note_item_name" @dblclick="onInlineNoteEditStart(t)">{{t.subject}}</div>
           <a v-if="noteAddable" class="note_item_add" href="#" @click.stop.prevent="onInlineNoteAddStart(t)" />

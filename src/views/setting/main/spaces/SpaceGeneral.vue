@@ -122,7 +122,7 @@ export default class SpaceGeneral extends Vue {
       const spaceApi = apiRegistry.load(SpacesApi, this.myUser.token);
       const space = await spaceApi.spacesSpaceIdPut({
         spaceId: this.myUser.space.id,
-        displayName: this.displayName,
+        displayName: this.displayName.trim() === '' ? null : this.displayName.trim(),
       });
       if (this.avatar && this.$refs.avatarImage) {
         const image = this.$refs.avatarImage;

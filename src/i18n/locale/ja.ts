@@ -209,7 +209,14 @@ const struct: LocaleStruct = {
             sendPassBtn: '変更用パスワードを送信',
             temporaryPassPlaceholder: 'ワンタイムパスワード',
             text: 'メールアドレスが利用出来ない、忘れてしまった場合の救済措置として SMS登録をおすすめします。本人以外には非公開です。',
-          }
+          },
+          userProfile: {
+            uploadBtn: '画像をアップロード',
+            uploadDescription: 'プロフィール画像はドラッグ&ドロップで変更できます。',
+            userAvatar: 'プロフィール画像',
+            userName: 'ユーザー名',
+            saveBtn: '変更を保存する',
+          },
         },
       },
 

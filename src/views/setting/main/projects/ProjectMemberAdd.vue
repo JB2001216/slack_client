@@ -16,7 +16,7 @@
           @mousedown="onSearchUserSelect(user)"
         >
           <div class="option_spaceMemberAdd_input_autocomplete_item_avatar">
-            <img src="~@/assets/images/parts/img_option_space_member_01.jpg" alt="">
+            <my-space-user-avatar :user="user" :size="30" shape="roundedSquare"/>
           </div>
           <div class="option_spaceMemberAdd_input_autocomplete_item_name">{{user.displayName || user.account}}（{{user.email}}）</div>
         </div>
@@ -34,7 +34,7 @@
         <tr v-for="data in users" :key="data.user.id">
           <td>
             <div class="option_spaceMember_table_img">
-              <img src="~@/assets/images/parts/img_option_space_member_01.jpg" alt="">
+              <my-space-user-avatar :user="data.user" :size="40" shape="roundedSquare"/>
             </div>
           </td>
           <td>{{data.user.email}}</td>

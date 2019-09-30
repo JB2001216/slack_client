@@ -149,6 +149,12 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     }
   }
 
+  editMyUser(user: api.MyUser) {
+    if (!this.state.myUser || this.state.myUser.id !== user.id) return;
+    const loggedInUser: LoggedInUser = Object.assign({}, user, { token: this.state.myUser.token });
+    this.state.myUser = loggedInUser;
+  }
+
   setTaskStatusList(statusList: api.TaskStatus[]) {
     this.state.taskStatusList = statusList;
   }

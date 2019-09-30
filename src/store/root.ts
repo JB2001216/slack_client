@@ -82,6 +82,12 @@ class RootMutations extends Mutations<RootState>() {
       }
     });
   }
+
+  editMyUser(user: MyUser) {
+    const index = this.state.loggedInUsers.findIndex((u) => u.id === user.id);
+    const loggedInUser: LoggedInUser = Object.assign({}, user, { token: this.state.loggedInUsers[index].token });
+    this.state.loggedInUsers.splice(index, 1, loggedInUser);
+  }
 }
 
 class RootActions extends Actions<RootState, RootGetters, RootMutations>() {

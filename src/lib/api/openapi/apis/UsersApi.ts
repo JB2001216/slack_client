@@ -41,6 +41,9 @@ import {
     UsersMeEmailPutRequestBody,
     UsersMeEmailPutRequestBodyFromJSON,
     UsersMeEmailPutRequestBodyToJSON,
+    UsersMePatchRequestBody,
+    UsersMePatchRequestBodyFromJSON,
+    UsersMePatchRequestBodyToJSON,
     UsersMePutRequestBody,
     UsersMePutRequestBodyFromJSON,
     UsersMePutRequestBodyToJSON,
@@ -82,6 +85,10 @@ export interface UsersMeEmailConfirmPostRequest {
 
 export interface UsersMeEmailPutRequest {
     usersMeEmailPutRequestBody: UsersMeEmailPutRequestBody;
+}
+
+export interface UsersMePatchRequest {
+    usersMePatchRequestBody: UsersMePatchRequestBody;
 }
 
 export interface UsersMePutRequest {
@@ -337,6 +344,43 @@ export class UsersApi extends runtime.BaseAPI {
     */
     async usersMeGet(): Promise<MyUser> {
         const response = await this.usersMeGetRaw();
+        return await response.value();
+    }
+
+    /**
+     * 自身のユーザー情報を更新
+     */
+    async usersMePatchRaw(requestParameters: UsersMePatchRequest): Promise<runtime.ApiResponse<MyUser>> {
+        if (requestParameters.usersMePatchRequestBody === null || requestParameters.usersMePatchRequestBody === undefined) {
+            throw new runtime.RequiredError('usersMePatchRequestBody','Required parameter requestParameters.usersMePatchRequestBody was null or undefined when calling usersMePatch.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/users/me/`,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UsersMePatchRequestBodyToJSON(requestParameters.usersMePatchRequestBody),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MyUserFromJSON(jsonValue));
+    }
+
+   /**
+    * 自身のユーザー情報を更新
+    */
+    async usersMePatch(requestParameters: UsersMePatchRequest): Promise<MyUser> {
+        const response = await this.usersMePatchRaw(requestParameters);
         return await response.value();
     }
 

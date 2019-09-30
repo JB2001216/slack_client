@@ -208,7 +208,14 @@ const struct: LocaleStruct = {
             sendPassBtn: 'Send pincode',
             temporaryPassPlaceholder: 'Temporary password',
             text: 'As a remedy in case you forget your email address or forget it SMS registration is recommended. It is private to non-persons.',
-          }
+          },
+          userProfile: {
+            uploadBtn: 'Upload image',
+            uploadDescription: 'User Avatar can be changed by drag and drop',
+            userAvatar: 'User Avatar',
+            userName: 'User Name',
+            saveBtn: 'Save changes',
+          },
         },
       },
 

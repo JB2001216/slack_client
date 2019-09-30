@@ -12,8 +12,7 @@
         <my-space-user tag="tr" v-for="puser in pusers" :key="puser.userId" :user-id="puser.userId"  v-slot="{user}">
           <td>
             <div class="option_spaceMember_table_img">
-              <img v-if="user && user.avatarUrl" :src="user.avatarUrl" alt="">
-              <img v-else src="~@/assets/images/parts/img_option_space_member_01.jpg" alt="">
+              <my-space-user-avatar :user="user" :size="40" shape="roundedSquare"/>
             </div>
           </td>
           <td>{{user ? user.email : ''}}</td>
