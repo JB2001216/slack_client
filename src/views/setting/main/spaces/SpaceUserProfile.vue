@@ -170,8 +170,7 @@ export default class SpaceUserProfile extends Vue {
         user.avatarUrl = avatarPostResponse.avatarUrl;
         user.avatarSmallUrl = avatarPostResponse.avatarSmallUrl;
       }
-      this.$store.mutations.editMyUser(user);
-      this.$store.mutations.activeUser.editMyUser(user);
+      this.$appEmit('my-user-edited', { myUser: user });
       this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
       this.init();
 

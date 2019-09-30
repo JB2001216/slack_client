@@ -28,7 +28,7 @@
       </h3>
 
       <div class="option_spaceProfileAccount_tel">
-        <input type="tel" placeholder="09011112222"
+        <input type="tel" placeholder="+819011112222"
                minlength="3"
                v-model="phoneNumber"
                @keyup="validatePhoneNumber">
@@ -66,24 +66,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { apiRegistry, UsersApi } from '@/lib/api';
-
-interface UsersEmailConfirmPostRequest {
-  newEmail: string;
-}
-
-interface UsersSmsConfirmPostRequest {
-  sms: string;
-}
-
-interface UsersSmsPutRequest {
-  token: string;
-  pin: string;
-}
-
-type UsersEmailConfirmPost = (req: UsersEmailConfirmPostRequest) => Promise<any>;
-type UsersSmsConfirmPost = (req: UsersSmsConfirmPostRequest) => Promise<any>;
-type UsersSmsPut = (req: UsersSmsPutRequest) => Promise<any>;
+import { apiRegistry, UsersApi, UsersMeEmailConfirmPostRequestBody, UsersMeSmsConfirmPostRequestBody, UsersMeSmsPutRequestBody } from '@/lib/api';
 
 @Component
 export default class SpaceUserAccount extends Vue {
@@ -111,38 +94,30 @@ export default class SpaceUserAccount extends Vue {
     return this.$store.state.activeUser.myUser!;
   }
 
-  get api(): { updateEmail: UsersEmailConfirmPost;
-    confirmSMS: UsersSmsConfirmPost;
-    updateSMS: UsersSmsPut; } {
-
+  get api() {
     const usersApi = apiRegistry.load(UsersApi, this.myUser.token);
 
     return {
-
-      updateEmail: async(req: UsersEmailConfirmPostRequest) => {
+      updateEmail: async(req: UsersMeEmailConfirmPostRequestBody) => {
         await usersApi.usersMeEmailConfirmPost({
-          usersMeEmailConfirmPostRequestBody: { email: req.newEmail },
+          usersMeEmailConfirmPostRequestBody: req,
         });
       },
 
-      confirmSMS: async(req: UsersSmsConfirmPostRequest) => {
-        const sms = await usersApi.usersMeSmsConfirmPost({
-          usersMeSmsConfirmPostRequestBody: { sms: req.sms },
+      confirmSMS: async(req: UsersMeSmsConfirmPostRequestBody) => {
+        const res = await usersApi.usersMeSmsConfirmPost({
+          usersMeSmsConfirmPostRequestBody: req,
         });
-        return sms;
+        return res;
       },
 
-      updateSMS: async(req: UsersSmsPutRequest) => {
-        await usersApi.usersMeSmsPut({
-          usersMeSmsPutRequestBody: {
-            token: req.token,
-            pin: req.pin,
-          },
+      updateSMS: async(req: UsersMeSmsPutRequestBody) => {
+        const res = await usersApi.usersMeSmsPut({
+          usersMeSmsPutRequestBody: req,
         });
+        return res;
       },
-
     };
-
   }
 
   validateNewEmail(event: any) {
@@ -162,11 +137,11 @@ export default class SpaceUserAccount extends Vue {
 
     try {
       this.savingEmail = true;
-      await this.api.updateEmail({ newEmail: this.newEmailInput });
+      await this.api.updateEmail({ email: this.newEmailInput });
       this.showNotifForEmail = true;
       this.isNewEmailValid = false;
     } catch (err) {
-      this.$appEmit('error', { err });
+      this.$appEmit('error', { err, options: { firstMessageOnValidationError: true } });
     } finally {
       this.savingEmail = false;
     }
@@ -182,7 +157,7 @@ export default class SpaceUserAccount extends Vue {
       this.showPinHiddenInput = true;
       this.isPhoneNumberValid = false;
     } catch (err) {
-      this.$appEmit('error', { err });
+      this.$appEmit('error', { err, options: { firstMessageOnValidationError: true } });
     } finally {
       this.savingConfirmSMS = false;
     }
@@ -193,7 +168,7 @@ export default class SpaceUserAccount extends Vue {
     try {
       this.showNotifForSMS = false;
       this.savingSMS = true;
-      await this.api.updateSMS({ token: this.smsToken, pin: this.pin });
+      const res = await this.api.updateSMS({ token: this.smsToken, pin: this.pin });
       this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
     } catch (err) {
       this.$appEmit('error', { err });

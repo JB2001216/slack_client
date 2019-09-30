@@ -1,7 +1,7 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import i18n, { Locale, loadLocale, defaultLocale } from '@/i18n';
 import localStorage from '@/lib/local-storage';
-import { apiRegistry, UsersApi, MyUser, Space } from '@/lib/api';
+import { apiRegistry, UsersApi, MyUser, Space, SpaceUser } from '@/lib/api';
 import activeUser from './modules/active-user';
 import settingRouter from './modules/setting-router';
 
