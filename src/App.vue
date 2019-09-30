@@ -17,7 +17,6 @@
 
 
 <style lang="stylus">
-@import '../node_modules/vue-flash-message/dist/vue-flash-message.min.css'
 @import './stylus/_fixed/full'
 
 .fade-enter-active, .fade-leave-active
@@ -74,6 +73,11 @@ export default class App extends Vue {
       const message = await getErrorMessage(ev.err, this.$i18n, ev.options);
       this.$flash(message, 'error');
     }
+  }
+
+  mounted() {
+    this.$flash('success', 'success', { timeout: 0 });
+    this.$flash('error', 'error', { timeout: 0 });
   }
 
   beforeMount() {
