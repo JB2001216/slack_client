@@ -75,11 +75,6 @@ export default class App extends Vue {
     }
   }
 
-  mounted() {
-    this.$flash('success', 'success', { timeout: 0 });
-    this.$flash('error', 'error', { timeout: 0 });
-  }
-
   beforeMount() {
     this.$appOn('flash', this.onFlash);
     this.$appOn('error', this.onError);
