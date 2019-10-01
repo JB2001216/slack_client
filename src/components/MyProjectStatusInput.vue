@@ -74,8 +74,8 @@ interface ProjectStatusOption {
 
 @Component
 export default class MyProjectStatusInput extends Vue {
-  @Prop({ type: Array, required: true })
-  options!: ProjectStatusOption[];
+  @Prop({ required: true })
+  options!: ProjectStatusOption[] | null;
 
   @Prop({ type: Boolean, default: false })
   disabled!: boolean;
@@ -88,16 +88,19 @@ export default class MyProjectStatusInput extends Vue {
   defaultColor = '#6FCF97';
 
   get progressOptions() {
+    if (!this.options) return [];
     return this.options.filter((o) => this.isProgress(o))
       .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
   }
 
   get etcOptions() {
+    if (!this.options) return [];
     return this.options.filter((o) => this.isEtc(o))
       .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
   }
 
   get selectedOption() {
+    if (!this.options) return null;
     if (this.value) {
       const option = this.options.find((o) => o.id === this.value);
       if (option) {
