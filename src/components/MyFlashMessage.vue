@@ -13,10 +13,10 @@
     .flash__message
         min-width: 300px
         max-width: 500px
-        padding: 25px 60px 25px 25px
+        padding: 20px 60px 20px 20px
         border: none
         border-radius: 8px
-        font-size: 16px
+        font-size: 14px
         font-weight: bold
         line-height: 1.5
         transition: opacity .4s, transform .4s
