@@ -5,8 +5,8 @@
       v-else
       class="mySpaceUserAvatar_initials"
       :style="{
-        'font-size':`${size * (nameInitials.length === 1 ? 0.5 : 0.35)}px`,
-        'line-height':`${size * (nameInitials.length === 1 ? 0.5 : 0.35)}px`,
+        'font-size':`${nameInitialSize}px`,
+        'line-height':`${nameInitialSize}px`,
       }"
     >
       <span>{{nameInitials}}</span>
@@ -36,6 +36,8 @@
     display: flex
     justify-content: center
     align-items: center
+    font-weight: bold
+    white-space: nowrap
 </style>
 
 
@@ -66,8 +68,19 @@ export default class MySpaceUserAvatar extends Vue {
     if (splits.length < 2) {
       return splits[0].slice(0, 1);
     } else {
-      return splits[0].slice(0, 1) + '.' + splits[1].slice(0, 1);
+      return splits[0].slice(0, 1) + splits[1].slice(0, 1);
     }
+  }
+
+  get nameInitialSize() {
+    const initials = this.nameInitials;
+    if (initials.length <= 1) {
+      return this.size * 0.67;
+    }
+    if (initials.match(/^[a-zA-Z0-9]+$/)) {
+      return this.size * 0.56;
+    }
+    return this.size * 0.42;
   }
 }
 </script>
