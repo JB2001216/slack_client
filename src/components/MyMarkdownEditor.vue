@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import marked from 'marked';
+import marked from '@/lib/marked';
 import highlight from 'highlight.js';
 
 @Component
@@ -49,7 +49,7 @@ export default class MyMarkdownEditor extends Vue {
 
   // computed
   get compiledValue() {
-    return marked(this.filterForItalicAndBold(this.value) || '', {
+    return marked(this.value || '', {
       langPrefix: '',
       breaks: true,
       highlight(code, lang) {
