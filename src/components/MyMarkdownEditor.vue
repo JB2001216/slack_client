@@ -49,13 +49,15 @@ export default class MyMarkdownEditor extends Vue {
 
   // computed
   get compiledValue() {
-    return marked(this.value || '', {
+    var value = marked(this.value || '', {
       langPrefix: '',
       breaks: true,
       highlight(code, lang) {
         return highlight.highlightAuto(code, [lang]).value;
       },
     });
+    console.log(value);
+    return value;
   }
 
   filterForItalicAndBold(text: string | null) {
