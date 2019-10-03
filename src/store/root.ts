@@ -5,7 +5,7 @@ import { apiRegistry, UsersApi, MyUser, Space, SpaceUser } from '@/lib/api';
 import activeUser from './modules/active-user';
 import settingRouter from './modules/setting-router';
 
-interface LoggedInUser extends MyUser{
+export interface LoggedInUser extends MyUser {
   token: string;
 }
 

@@ -66,7 +66,7 @@ export interface TasksTaskIdPatchRequestBody {
      * @type {number}
      * @memberof TasksTaskIdPatchRequestBody
      */
-    batonUser?: number;
+    batonUser?: number | null;
     /**
      *
      * @type {Array<number>}

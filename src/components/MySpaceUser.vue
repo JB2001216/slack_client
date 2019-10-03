@@ -1,5 +1,11 @@
 <template>
-  <div :is="tag">
+  <div
+    :is="tag"
+    :class="tagClass"
+    @click="$emit('click', $event)"
+    @mouseenter="$emit('mouseenter', $event)"
+    @mouseleave="$emit('mouseleave', $event)"
+  >
     <slot :user="user" />
   </div>
 </template>
@@ -18,6 +24,9 @@ export default class MySpaceUser extends Vue {
 
   @Prop({ type: Number, default: null })
   userId!: number | null;
+
+  @Prop({ default: '' })
+  tagClass!: string | {[key: string]: boolean}
 
   get user(): SpaceUser | null {
     if (!this.userId) return null;
