@@ -34,6 +34,17 @@ const struct: LocaleStruct = {
       myProjectStatusInput: {
         others: 'Others',
       },
+      myChargerInput: {
+        baton: 'Baton',
+      },
+      myChargerDialog: {
+        title: 'Member list',
+        baton: 'Baton',
+      },
+      mySpaceUserSearchInput: {
+        notfound: 'No users found that match the condition',
+        searchTextPlaceholder: 'Search by name or email address',
+      },
     },
 
     views: {
@@ -108,6 +119,9 @@ const struct: LocaleStruct = {
         '_name_HasCreatedTask': '{name} has created a task.',
         enterAComment: 'Enter a comment',
         commentSyncFailed: 'Comment sync failed',
+        addedChargeUser: '{name} was added to the member list.',
+        deletedChargeUser: '{name} was deleted from the member list.',
+        chargerDialogTitle: 'Task member list',
       },
       noteColumn: {
         save: 'save',
@@ -116,6 +130,9 @@ const struct: LocaleStruct = {
         enterWideScreen: 'Enter wide screen',
         exitWideScreen: 'Exit wide screen',
         markdownHelp: 'Markdown Help',
+        addedChargeUser: '{name} was added to the member list.',
+        deletedChargeUser: '{name} was deleted from the member list.',
+        chargerDialogTitle: 'Note member list',
       },
 
       // setting
@@ -180,7 +197,6 @@ const struct: LocaleStruct = {
           },
           projectMemberAdd: {
             title: 'Add members to {projectName}',
-            searchTextPlaceholder: 'Search by name or email address',
             email: 'Email',
             name: 'Name',
             role: 'Role',

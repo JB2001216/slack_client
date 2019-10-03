@@ -1,28 +1,13 @@
 <template>
   <div class="option_spaceMemberAdd">
     <h3 class="option_spaceMemberAdd_title">{{$t('views.setting.main.projectMemberAdd.title', {projectName: activeProject.displayName})}}</h3>
-    <div class="option_spaceMemberAdd_input">
-      <input
-        type="text"
-        :value="searchText"
-        @input="onSearchTextInput($event)"
-        :placeholder="$t('views.setting.main.projectMemberAdd.searchTextPlaceholder')"
-      >
-      <div :class="{hide: searchNextTimeId || !searchedUsersWithoutSelected.length}" class="option_spaceMemberAdd_input_autocomplete">
-        <div
-          v-for="user in searchedUsersWithoutSelected"
-          :key="user.id"
-          class="option_spaceMemberAdd_input_autocomplete_item"
-          @mousedown="onSearchUserSelect(user)"
-        >
-          <div class="option_spaceMemberAdd_input_autocomplete_item_avatar">
-            <my-space-user-avatar :user="user" :size="30" shape="roundedSquare"/>
-          </div>
-          <div class="option_spaceMemberAdd_input_autocomplete_item_name">{{user.displayName || user.account}}（{{user.email}}）</div>
-        </div>
-        <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
-      </div>
-    </div>
+    <my-space-user-search-input
+      class="option_spaceMemberAdd_search"
+      :my-user="myUser"
+      :project-id-not-exact="activeProject.id"
+      :selected-user-ids="selectedUserIds"
+      @select="onSearchUserSelect"
+    />
     <div v-if="users.length" class="option_spaceMemberAdd_table">
       <table>
         <tr>
@@ -61,52 +46,16 @@
 
 
 <style lang="stylus">
-@import '../../../../stylus/_fixed/base/_theme'
-
 .option_spaceMemberAdd
-  .infinite-loading-container
-    min-height: 20px
-  &_input
-    position: relative
-    input:not(:focus) + .option_spaceMemberAdd_input_autocomplete,
-    .option_spaceMemberAdd_input_autocomplete.hide
-      opacity: 0
-      pointer-events: none
-    &_autocomplete
-      position: absolute
-      top: 52px
-      width: 100%
-      max-height: 200px
-      background: #fff
-      z-index: 2
-      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16)
-      border: 1px solid #E0E0E0
-      border-radius: 4px
-      overflow-y: scroll
-      padding: 16px 0 0
-      &_item
-        font-size: 14px
-        padding: 0 24px
-        height: 40px
-        display: flex
-        align-items: center
-        cursor: pointer
-        &:hover
-          @extends .themeMenuItemHover
-        &_avatar
-          width: 30px
-          height: 30px
-          overflow: hidden
-          img
-            width: 30px
-        &_name
-          padding-left: 15px
+  &_search
+    margin-top: 25px
+    padding-bottom: 40px
+    border-bottom: 1px solid #e0e0e0
 </style>
 
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { StateChanger } from 'vue-infinite-loading';
 import { apiRegistry, SpacesApi, ProjectsApi, ApiErrors, getJsonFromResponse, SpaceUser, ProjectsProjectIdUsersPostRequestBody } from '@/lib/api';
 import { SpaceRoles, SpaceRole, ProjectRoles } from '@/lib/permissions';
 import MyProjectRoleSelect from '@/components/MyProjectRoleSelect.vue';
@@ -122,14 +71,21 @@ export default class ProjectMemberAdd extends Vue {
   limit = 10;
   infiniteId = +new Date();
   searchText = '';
-  searchTextFocused = false;
   searchedUsers: SpaceUser[] = [];
   searchNextTimeId: NodeJS.Timeout | null = null;
   searchIntervalMsec = 1000;
   saving = false;
 
+  get myUser() {
+    return this.$store.state.activeUser.myUser!;
+  }
+
   get activeProject() {
     return this.$store.getters.activeUser.activeProject;
+  }
+
+  get selectedUserIds() {
+    return this.users.map((d) => d.user.id);
   }
 
   get searchedUsersWithoutSelected() {
@@ -155,19 +111,6 @@ export default class ProjectMemberAdd extends Vue {
 
   getSpaceRole(spaceRoleId: number) {
     return SpaceRoles.get(spaceRoleId);
-  }
-
-  onSearchTextInput(ev: Event) {
-    this.searchText = (ev.target! as HTMLInputElement).value;
-    if (this.searchNextTimeId) {
-      clearTimeout(this.searchNextTimeId);
-    }
-    this.searchNextTimeId = setTimeout(() => {
-      this.page = 1;
-      this.searchedUsers = [];
-      this.infiniteId = +new Date();
-      this.searchNextTimeId = null;
-    }, this.searchIntervalMsec);
   }
 
   onSearchUserSelect(user: SpaceUser) {
@@ -219,40 +162,6 @@ export default class ProjectMemberAdd extends Vue {
 
     this.users = errorUsers;
     this.saving = false;
-  }
-
-  async onInfinite($state: StateChanger) {
-    const myUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
-    const keyword = this.searchText.trim() === '' ? undefined : this.searchText.trim();
-
-    try {
-      const res = await spacesApi.spacesSpaceIdUsersGet({
-        spaceId: myUser.space.id,
-        projectIdNotExact: projectId,
-        keyword,
-        page: this.page,
-        limit: this.limit,
-      });
-      if (res.results.length) {
-        this.$store.mutations.activeUser.addSpaceUser(...res.results);
-      }
-      const addData: SpaceUser[] = res.results.filter((r) => !this.searchedUsers.find((u) => u.id === r.id));
-      if (addData.length) {
-        this.searchedUsers.push(...addData);
-      }
-
-      if (res.next) {
-        this.page += 1;
-        $state.loaded();
-      } else {
-        $state.complete();
-      }
-
-    } catch (err) {
-      this.$appEmit('error', { err });
-    }
   }
 }
 </script>

@@ -20,6 +20,7 @@
   box-sizing: border-box
   overflow: hidden
   display: inline-block
+  user-select: none
   &.shape-circle
     border-radius: 50%
   &.shape-roundedSquare

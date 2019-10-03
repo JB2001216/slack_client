@@ -35,6 +35,17 @@ const struct: LocaleStruct = {
       myProjectStatusInput: {
         others: 'Others',
       },
+      myChargerInput: {
+        baton: '担当',
+      },
+      myChargerDialog: {
+        title: 'メンバーの管理',
+        baton: '担当',
+      },
+      mySpaceUserSearchInput: {
+        notfound: '条件に一致するユーザーは見つかりませんでした',
+        searchTextPlaceholder: '名前またはメールアドレスで検索',
+      },
     },
 
     views: {
@@ -109,6 +120,9 @@ const struct: LocaleStruct = {
         '_name_HasCreatedTask': '{name} がタスクを作成しました。',
         enterAComment: 'コメントを追加',
         commentSyncFailed: 'コメントの取得に失敗しました',
+        addedChargeUser: 'タスクメンバーに{name}を追加しました。',
+        deletedChargeUser: 'タスクメンバーから{name}を除外しました。',
+        chargerDialogTitle: 'タスクメンバー管理',
       },
       noteColumn: {
         save: '編集を終了',
@@ -117,6 +131,9 @@ const struct: LocaleStruct = {
         enterWideScreen: '全画面表示',
         exitWideScreen: 'デフォルト表示',
         markdownHelp: 'Markdownヘルプ',
+        addedChargeUser: 'ノートメンバーに{name}を追加しました。',
+        deletedChargeUser: 'ノートメンバーから{name}を除外しました。',
+        chargerDialogTitle: 'ノートメンバー管理',
       },
 
       // setting
@@ -181,7 +198,6 @@ const struct: LocaleStruct = {
           },
           projectMemberAdd: {
             title: '{projectName}にメンバーを追加する',
-            searchTextPlaceholder: '名前またはメールアドレスで検索',
             email: 'メールアドレス',
             name: '名前',
             role: '権限',

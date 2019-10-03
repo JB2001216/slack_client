@@ -89,6 +89,7 @@ export interface SpacesSpaceIdUsersGetRequest {
     limit?: number;
     account?: string;
     displayName?: string;
+    projectIdExact?: number;
     projectIdNotExact?: number;
     keyword?: string;
 }
@@ -428,6 +429,10 @@ export class SpacesApi extends runtime.BaseAPI {
 
         if (requestParameters.displayName !== undefined) {
             queryParameters['display_name'] = requestParameters.displayName;
+        }
+
+        if (requestParameters.projectIdExact !== undefined) {
+            queryParameters['project_id__exact'] = requestParameters.projectIdExact;
         }
 
         if (requestParameters.projectIdNotExact !== undefined) {
