@@ -53,20 +53,33 @@ export default class MyMarkdownEditor extends Vue {
 
   // computed
   get compiledValue() {
-    return marked(
+    const value = marked(
       sanitizeHtml(this.value || '', {
-        allowedTags: false,
-        allowedAttributes: false,
+        allowedTags: [],
+        allowedAttributes: {},
       }),
       {
         langPrefix: '',
         breaks: true,
-        sanitize: true,
         highlight(code, lang) {
           return highlight.highlightAuto(code, [lang]).value;
         },
       }
     );
+    return sanitizeHtml(value, {
+      allowedTags: [
+        'em', 'strong', 'strike',
+        'p', 'a', 'div', 'span', 'blockquote', 'pre', 'code',
+        'ul', 'ol', 'li', 'nl', 'dl', 'dt', 'dd',
+        'br', 'hr',
+        'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td',
+      ],
+      allowedAttributes: {
+        '*': ['class'],
+        a: ['href', 'name', 'target'],
+        img: ['src'],
+      },
+    });
   }
 
   get previewPlaceholderHtml() {
