@@ -56,35 +56,7 @@ export default class MyMarkdownEditor extends Vue {
         return highlight.highlightAuto(code, [lang]).value;
       },
     });
-    console.log(value);
     return value;
-  }
-
-  filterForItalicAndBold(text: string | null) {
-    if (text === null) {
-      return null;
-    }
-    // **** several asterisks
-    text = text.replace(/\*+\*/g, function(match, group) {
-      return '\\*'.repeat(match.length);
-    });
-    // \*text* -> \*text\*
-    text = text.replace(/\\\*([^*\n]+[^\\\n]+)\*/g, function(match, group) {
-      return match.replace(/.$/, '\\*');
-    });
-    // *text\* -> \*text\*
-    text = text.replace(/([^\\*\n]+|^)\*([^*\n]+)\\\*/g, function(match, group) {
-      return match.replace('*', '\\*'); // affects only the first character
-    });
-    // *text* -> **text**
-    text = text.replace(/\*([^*\n]*[^\\\n])\*/g, function(match, group) {
-      return '**' + group + '**';
-    });
-    // _text_ -> *text*
-    text = text.replace(/_([^_\n]+)_/g, function(match, group) {
-      return '*' + group + '*';
-    });
-    return text;
   }
 
   get previewPlaceholderHtml() {
