@@ -3,7 +3,7 @@
     <div :class="editorClass" v-if="!hideEditor">
       <textarea ref="textarea" :value="value" @input="onInput" :placeholder="editorPlaceholder" />
     </div>
-    <div :class="previewClass" v-html="compiledValue !== '' ? compiledValue : previewPlaceholderHtml" />
+    <div class="markdownEditor_preview" :class="previewClass" v-html="compiledValue !== '' ? compiledValue : previewPlaceholderHtml" />
   </div>
 </template>
 
@@ -13,14 +13,18 @@
   textarea
     width: 100%
     height: 100%
-  &_previewPlaceholder
-    color: #C4C4C4
+  &_preview
+    &_placeholder
+      color: #C4C4C4
+    pre
+      white-space: pre-wrap !important
 </style>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import marked from '@/lib/marked';
 import highlight from 'highlight.js';
+import sanitizeHtml from 'sanitize-html';
 
 @Component
 export default class MyMarkdownEditor extends Vue {
@@ -49,21 +53,27 @@ export default class MyMarkdownEditor extends Vue {
 
   // computed
   get compiledValue() {
-    var value = marked(this.value || '', {
-      langPrefix: '',
-      breaks: true,
-      highlight(code, lang) {
-        return highlight.highlightAuto(code, [lang]).value;
-      },
-    });
-    return value;
+    return marked(
+      sanitizeHtml(this.value || '', {
+        allowedTags: false,
+        allowedAttributes: false,
+      }),
+      {
+        langPrefix: '',
+        breaks: true,
+        sanitize: true,
+        highlight(code, lang) {
+          return highlight.highlightAuto(code, [lang]).value;
+        },
+      }
+    );
   }
 
   get previewPlaceholderHtml() {
     if (!this.previewPlaceholder || this.previewPlaceholder === '') {
       return '';
     }
-    return `<span class="markdownEditor_previewPlaceholder">${this.previewPlaceholder}</span>`;
+    return `<span class="markdownEditor_preview_placeholder">${this.previewPlaceholder}</span>`;
   }
 
   // methods
