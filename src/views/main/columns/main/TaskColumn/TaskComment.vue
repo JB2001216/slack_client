@@ -10,9 +10,9 @@
           <tbody ref="boardTableBody">
             <infinite-loading direction="top" :identifier="infiniteId" @infinite="onInfinite" />
             <tr v-for="c in comments" :key="c.id">
-              <th class="dashboardWrap_post_board_user">
-                <img src="@/assets/images/mainColumn/icn_post-user-heavyGreen.svg" alt="">
-              </th>
+              <my-space-user tag="th" :user-id="c.writeUser" v-slot="{user}" class="dashboardWrap_post_board_user">
+                <my-space-user-avatar :user="user" :size="40" shape="circle"/>
+              </my-space-user>
               <td class="dashboardWrap_post_board_text">
                 <my-space-user tag="h3" :user-id="c.writeUser" v-slot="{user}">
                   <template v-if="user">{{user.displayName || user.account}}</template>

@@ -12,8 +12,7 @@
         <tr v-for="user in users" :key="user.id">
           <td>
             <div class="option_spaceMember_table_img">
-              <img v-if="user.avatarUrl" :src="user.avatarUrl" alt="">
-              <img v-else src="~@/assets/images/parts/img_option_space_member_01.jpg" alt="">
+              <my-space-user-avatar :user="user" :size="40" shape="roundedSquare"/>
             </div>
           </td>
           <td>{{user.email}}</td>

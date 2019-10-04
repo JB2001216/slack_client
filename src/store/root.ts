@@ -1,11 +1,11 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import i18n, { Locale, loadLocale, defaultLocale } from '@/i18n';
 import localStorage from '@/lib/local-storage';
-import { apiRegistry, UsersApi, MyUser, Space } from '@/lib/api';
+import { apiRegistry, UsersApi, MyUser, Space, SpaceUser } from '@/lib/api';
 import activeUser from './modules/active-user';
 import settingRouter from './modules/setting-router';
 
-interface LoggedInUser extends MyUser{
+export interface LoggedInUser extends MyUser {
   token: string;
 }
 
@@ -81,6 +81,12 @@ class RootMutations extends Mutations<RootState>() {
         u.space = Object.assign({}, space);
       }
     });
+  }
+
+  editMyUser(user: MyUser) {
+    const index = this.state.loggedInUsers.findIndex((u) => u.id === user.id);
+    const loggedInUser: LoggedInUser = Object.assign({}, user, { token: this.state.loggedInUsers[index].token });
+    this.state.loggedInUsers.splice(index, 1, loggedInUser);
   }
 }
 

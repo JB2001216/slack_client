@@ -23,13 +23,13 @@ export interface SpacesSpaceIdAvatarPostResponse {
      * @type {string}
      * @memberof SpacesSpaceIdAvatarPostResponse
      */
-    avatarUrl?: string;
+    avatarUrl: string | null;
     /**
      * 
      * @type {string}
      * @memberof SpacesSpaceIdAvatarPostResponse
      */
-    thumbnailAvatarUrl?: string;
+    avatarSmallUrl: string | null;
 }
 
 export function SpacesSpaceIdAvatarPostResponseFromJSON(json: any): SpacesSpaceIdAvatarPostResponse {
@@ -42,8 +42,8 @@ export function SpacesSpaceIdAvatarPostResponseFromJSONTyped(json: any, ignoreDi
     }
     return {
         
-        'avatarUrl': !exists(json, 'avatarUrl') ? undefined : json['avatarUrl'],
-        'thumbnailAvatarUrl': !exists(json, 'thumbnailAvatarUrl') ? undefined : json['thumbnailAvatarUrl'],
+        'avatarUrl': json['avatarUrl'],
+        'avatarSmallUrl': json['avatarSmallUrl'],
     };
 }
 
@@ -57,7 +57,7 @@ export function SpacesSpaceIdAvatarPostResponseToJSON(value?: SpacesSpaceIdAvata
     return {
         
         'avatarUrl': value.avatarUrl,
-        'thumbnailAvatarUrl': value.thumbnailAvatarUrl,
+        'avatarSmallUrl': value.avatarSmallUrl,
     };
 }
 

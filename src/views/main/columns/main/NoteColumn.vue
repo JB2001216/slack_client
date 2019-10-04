@@ -50,73 +50,14 @@
       <div class="mainColumn_body">
         <div class="dashboardWrap">
           <div class="dashboardWrap_list">
-            <dl class="dashboardWrap_list_user">
-              <dd class="active">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
-                    <rect width="32" height="32" rx="16" fill="#E2E2E2"/>
-                  </mask>
-                  <g mask="url(#mask0)">
-                    <rect width="32" height="32" rx="16" fill="#6FCF97"/>
-                    <rect x="10" y="4" width="12" height="12" rx="6" fill="white"/>
-                    <rect x="1" y="17" width="31" height="31" rx="15.5" fill="white"/>
-                  </g>
-                </svg>
-              </dd>
-              <dd>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
-                    <rect width="32" height="32" rx="16" fill="#E2E2E2"/>
-                  </mask>
-                  <g mask="url(#mask0)">
-                    <rect width="32" height="32" rx="16" fill="#56CCF2"/>
-                    <rect x="10" y="4" width="12" height="12" rx="6" fill="white"/>
-                    <rect x="1" y="17" width="31" height="31" rx="15.5" fill="white"/>
-                  </g>
-                </svg>
-              </dd>
-              <dd>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
-                    <rect width="32" height="32" rx="16" fill="#E2E2E2"/>
-                  </mask>
-                  <g mask="url(#mask0)">
-                    <rect width="32" height="32" rx="16" fill="#4F9589"/>
-                    <rect x="10" y="4" width="12" height="12" rx="6" fill="white"/>
-                    <rect x="1" y="17" width="31" height="31" rx="15.5" fill="white"/>
-                  </g>
-                </svg>
-              </dd>
-              <dd>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
-                    <rect width="32" height="32" rx="16" fill="#E2E2E2"/>
-                  </mask>
-                  <g mask="url(#mask0)">
-                    <rect width="32" height="32" rx="16" fill="#DE6868"/>
-                    <rect x="10" y="4" width="12" height="12" rx="6" fill="white"/>
-                    <rect x="1" y="17" width="31" height="31" rx="15.5" fill="white"/>
-                  </g>
-                </svg>
-              </dd>
-              <dd>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
-                    <rect width="32" height="32" rx="16" fill="#E2E2E2"/>
-                  </mask>
-                  <g mask="url(#mask0)">
-                    <rect width="32" height="32" rx="16" fill="#BB6BD9"/>
-                    <rect x="10" y="4" width="12" height="12" rx="6" fill="white"/>
-                    <rect x="1" y="17" width="31" height="31" rx="15.5" fill="white"/>
-                  </g>
-                </svg>
-              </dd>
-              <dd class="dots">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M6.61537 12.3077C6.61537 13.5822 5.58219 14.6154 4.30769 14.6154C3.03319 14.6154 2 13.5822 2 12.3077C2 11.0332 3.03319 10 4.30769 10C5.58219 10 6.61537 11.0332 6.61537 12.3077ZM14.3078 12.3077C14.3078 13.5822 13.2746 14.6154 12.0001 14.6154C10.7256 14.6154 9.69242 13.5822 9.69242 12.3077C9.69242 11.0332 10.7256 10 12.0001 10C13.2746 10 14.3078 11.0332 14.3078 12.3077ZM19.6924 14.6154C20.9669 14.6154 22.0001 13.5822 22.0001 12.3077C22.0001 11.0332 20.9669 10 19.6924 10C18.4179 10 17.3847 11.0332 17.3847 12.3077C17.3847 13.5822 18.4179 14.6154 19.6924 14.6154Z" fill="#333333"/>
-                </svg>
-              </dd>
-            </dl>
+            <my-charger-input
+              :value="{batonUser: note.batonUser, chargeUsers: note.chargeUsers}"
+              :disabled="!updatable"
+              :my-user="myUser"
+              :project-id-exact="activeProjectId"
+              :dialog-title="$t('views.noteColumn.chargerDialogTitle')"
+              @change="onChargerChange"
+            />
             <dl class="dashboardWrap_list_menu">
               <dd>
                 <svg @click="favorite(!isFavorite)" class="favoriteIcon" :class="{active: isFavorite}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -237,6 +178,7 @@ import { Location, Route, NavigationGuard } from 'vue-router';
 import * as api from '@/lib/api';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
+import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 
 async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'note'>>> {
   const loginUser = store.state.activeUser.myUser!;
@@ -289,6 +231,9 @@ export default class NoteColumn extends Vue {
   get myPerms() {
     return this.$store.getters.activeUser.activeProjectMyPerms!;
   }
+  get activeProjectId() {
+    return this.$store.state.activeUser.activeProjectData!.id;
+  }
 
   get statusOptions() {
     return this.$store.state.activeUser.noteStatusList;
@@ -310,7 +255,7 @@ export default class NoteColumn extends Vue {
 
   async save(data: api.NotesNoteIdPatchRequestBody) {
     if (this.saving) {
-      return;
+      return false;
     }
     const loginUser = store.state.activeUser.myUser!;
     const projectId = store.getters.activeUser.activeProjectId!;
@@ -324,6 +269,7 @@ export default class NoteColumn extends Vue {
         notesNoteIdPatchRequestBody: data,
       });
       this.$appEmit('note-edited', { note });
+      return true;
 
     } catch (err) {
       this.$appEmit('error', { err });
@@ -395,6 +341,22 @@ export default class NoteColumn extends Vue {
     await this.save({
       status,
     });
+  }
+
+  async onChargerChange(ev: MyChargerInputChangeEvent) {
+    if (!ev.value) return;
+    const targetUser = ev.target && ev.target.from === 'dialog' ? (await this.$store.actions.activeUser.getSpaceUser(ev.target.id)) : null;
+    const result = await this.save({
+      batonUser: ev.value.batonUser,
+      chargeUsers: ev.value.chargeUsers,
+    });
+    if (result && targetUser) {
+      if (ev.target!.action === 'add') {
+        this.$flash(this.$t('views.noteColumn.addedChargeUser', { name: targetUser.displayName || targetUser.account }).toString(), 'success');
+      } else if (ev.target!.action === 'delete') {
+        this.$flash(this.$t('views.noteColumn.deletedChargeUser', { name: targetUser.displayName || targetUser.account }).toString(), 'success');
+      }
+    }
   }
 
   startEditDetail() {

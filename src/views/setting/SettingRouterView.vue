@@ -17,6 +17,9 @@ import SpacesSub from './sub/SpacesSub.vue';
 import SpaceGeneral from './main/spaces/SpaceGeneral.vue';
 import SpaceMembers from './main/spaces/SpaceMembers.vue';
 import SpaceMemberInvite from './main/spaces/SpaceMemberInvite.vue';
+import SpaceUserSub from './sub/SpaceUserSub.vue';
+import SpaceUserProfile from './main/spaces/SpaceUserProfile.vue';
+import SpaceUserAccount from './main/spaces/SpaceUserAccount.vue';
 import ProjectsSub from './sub/ProjectsSub.vue';
 import ProjectGeneral from './main/projects/ProjectGeneral.vue';
 import ProjectMembers from './main/projects/ProjectMembers.vue';
@@ -35,6 +38,9 @@ import i18n from '@/i18n';
     ProjectGeneral,
     ProjectMembers,
     ProjectMemberAdd,
+    SpaceUserSub,
+    SpaceUserProfile,
+    SpaceUserAccount,
   },
 })
 export default class SettingRouterView extends Vue {
@@ -84,6 +90,16 @@ export default class SettingRouterView extends Vue {
       title: () => i18n.t('views.setting.sub.projects.title'),
       sub: ProjectsSub,
       main: StatusFlow,
+    },
+    'space-user-profile': {
+      title: () => i18n.t('views.setting.sub.spaces.profileAndAccount'),
+      sub: SpaceUserSub,
+      main: SpaceUserProfile,
+    },
+    'space-user-account': {
+      title: () => i18n.t('views.setting.sub.spaces.profileAndAccount'),
+      sub: SpaceUserSub,
+      main: SpaceUserAccount,
     },
   };
 
