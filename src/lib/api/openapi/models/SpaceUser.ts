@@ -54,6 +54,18 @@ export interface SpaceUser {
      * @memberof SpaceUser
      */
     spaceRoleId: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpaceUser
+     */
+    avatarUrl: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpaceUser
+     */
+    avatarSmallUrl: string | null;
 }
 
 export function SpaceUserFromJSON(json: any): SpaceUser {
@@ -72,6 +84,8 @@ export function SpaceUserFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'email': json['email'],
         'spaceId': json['spaceId'],
         'spaceRoleId': json['spaceRoleId'],
+        'avatarUrl': json['avatarUrl'],
+        'avatarSmallUrl': json['avatarSmallUrl'],
     };
 }
 
@@ -90,6 +104,8 @@ export function SpaceUserToJSON(value?: SpaceUser): any {
         'email': value.email,
         'spaceId': value.spaceId,
         'spaceRoleId': value.spaceRoleId,
+        'avatarUrl': value.avatarUrl,
+        'avatarSmallUrl': value.avatarSmallUrl,
     };
 }
 

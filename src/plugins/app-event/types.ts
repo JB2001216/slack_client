@@ -3,7 +3,9 @@ import VueFlashMessage from 'vue-flash-message';
 
 export interface AppEventMap {
   'flash': { message: string; name: VueFlashMessage.MessageType; options?: VueFlashMessage.MessageOptions };
-  'error': { err: any; flash?: boolean };
+  'error': { err: any; flash?: boolean; options?: { firstMessageOnValidationError?: boolean } };
+  'my-user-edited': { myUser: api.MyUser };
+  'space-user-edited': { spaceUser: api.SpaceUser };
   'task-added': { task: api.Task };
   'task-edited': { task: api.Task };
   'task-deleted': { taskId: number };

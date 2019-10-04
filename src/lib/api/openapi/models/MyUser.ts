@@ -61,6 +61,18 @@ export interface MyUser {
     spaceRoleId: number;
     /**
      * 
+     * @type {string}
+     * @memberof MyUser
+     */
+    avatarUrl: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MyUser
+     */
+    avatarSmallUrl: string | null;
+    /**
+     * 
      * @type {Locale}
      * @memberof MyUser
      */
@@ -94,6 +106,8 @@ export function MyUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): My
         'displayName': json['displayName'],
         'email': json['email'],
         'spaceRoleId': json['spaceRoleId'],
+        'avatarUrl': json['avatarUrl'],
+        'avatarSmallUrl': json['avatarSmallUrl'],
         'locale': LocaleFromJSON(json['locale']),
         'timezone': json['timezone'],
         'space': SpaceFromJSON(json['space']),
@@ -114,6 +128,8 @@ export function MyUserToJSON(value?: MyUser): any {
         'displayName': value.displayName,
         'email': value.email,
         'spaceRoleId': value.spaceRoleId,
+        'avatarUrl': value.avatarUrl,
+        'avatarSmallUrl': value.avatarSmallUrl,
         'locale': LocaleToJSON(value.locale),
         'timezone': value.timezone,
         'space': SpaceToJSON(value.space),

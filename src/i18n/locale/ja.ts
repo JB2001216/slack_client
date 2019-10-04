@@ -35,6 +35,17 @@ const struct: LocaleStruct = {
       myProjectStatusInput: {
         others: 'Others',
       },
+      myChargerInput: {
+        baton: '担当',
+      },
+      myChargerDialog: {
+        title: 'メンバーの管理',
+        baton: '担当',
+      },
+      mySpaceUserSearchInput: {
+        notfound: '条件に一致するユーザーは見つかりませんでした',
+        searchTextPlaceholder: '名前またはメールアドレスで検索',
+      },
     },
 
     views: {
@@ -109,6 +120,9 @@ const struct: LocaleStruct = {
         '_name_HasCreatedTask': '{name} がタスクを作成しました。',
         enterAComment: 'コメントを追加',
         commentSyncFailed: 'コメントの取得に失敗しました',
+        addedChargeUser: 'タスクメンバーに{name}を追加しました。',
+        deletedChargeUser: 'タスクメンバーから{name}を除外しました。',
+        chargerDialogTitle: 'タスクメンバー管理',
       },
       noteColumn: {
         save: '編集を終了',
@@ -117,6 +131,9 @@ const struct: LocaleStruct = {
         enterWideScreen: '全画面表示',
         exitWideScreen: 'デフォルト表示',
         markdownHelp: 'Markdownヘルプ',
+        addedChargeUser: 'ノートメンバーに{name}を追加しました。',
+        deletedChargeUser: 'ノートメンバーから{name}を除外しました。',
+        chargerDialogTitle: 'ノートメンバー管理',
       },
 
       // setting
@@ -126,6 +143,9 @@ const struct: LocaleStruct = {
             title: 'スペース設定',
             general: '基本設定',
             members: 'メンバー設定',
+            profileAndAccount: 'プロフィール＆アカウント',
+            userProfile: 'プロフィール設定',
+            userAccount: 'アカウント設定',
           },
           projects: {
             title: 'プロジェクト設定',
@@ -178,7 +198,6 @@ const struct: LocaleStruct = {
           },
           projectMemberAdd: {
             title: '{projectName}にメンバーを追加する',
-            searchTextPlaceholder: '名前またはメールアドレスで検索',
             email: 'メールアドレス',
             name: '名前',
             role: '権限',
@@ -196,6 +215,23 @@ const struct: LocaleStruct = {
             save: '保存',
             updatedMessage: '更新しました',
             blankItemExists: '空欄の項目があります',
+          },
+          userAccount: {
+            title: 'メールアドレス',
+            emailDescription: 'あなたのメールアドレスは',
+            subTitle: '新しいメールアドレス',
+            sendEmailBtn: '確認メールを送信',
+            phoneNumber: '電話番号',
+            sendPassBtn: '変更用パスワードを送信',
+            temporaryPassPlaceholder: 'ワンタイムパスワード',
+            text: 'メールアドレスが利用出来ない、忘れてしまった場合の救済措置として SMS登録をおすすめします。本人以外には非公開です。',
+          },
+          userProfile: {
+            uploadBtn: '画像をアップロード',
+            uploadDescription: 'プロフィール画像はドラッグ&ドロップで変更できます。',
+            userAvatar: 'プロフィール画像',
+            userName: 'ユーザー名',
+            saveBtn: '変更を保存する',
           },
         },
       },

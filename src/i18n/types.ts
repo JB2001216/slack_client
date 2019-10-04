@@ -44,6 +44,17 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     myProjectStatusInput: {
       others: string;
     };
+    myChargerInput: {
+      baton: string;
+    };
+    myChargerDialog: {
+      title: string;
+      baton: string;
+    };
+    mySpaceUserSearchInput: {
+      notfound: string;
+      searchTextPlaceholder: string;
+    };
   };
 
   views: {
@@ -118,6 +129,9 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       '_name_HasCreatedTask': string;
       enterAComment: string;
       commentSyncFailed: string;
+      addedChargeUser: string;
+      deletedChargeUser: string;
+      chargerDialogTitle: string;
     };
     noteColumn: {
       save: string;
@@ -126,6 +140,9 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       enterWideScreen: string;
       exitWideScreen: string;
       markdownHelp: string;
+      addedChargeUser: string;
+      deletedChargeUser: string;
+      chargerDialogTitle: string;
     };
 
     // setting
@@ -135,6 +152,9 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           title: string;
           general: string;
           members: string;
+          profileAndAccount: string;
+          userProfile: string;
+          userAccount: string;
         };
         projects: {
           title: string;
@@ -187,7 +207,6 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         };
         projectMemberAdd: {
           title: string;
-          searchTextPlaceholder: string;
           email: string;
           name: string;
           role: string;
@@ -205,6 +224,23 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           save: string;
           updatedMessage: string;
           blankItemExists: string;
+        };
+        userAccount: {
+          title: string;
+          emailDescription: string;
+          subTitle: string;
+          sendEmailBtn: string;
+          phoneNumber: string;
+          sendPassBtn: string;
+          temporaryPassPlaceholder: string;
+          text: string;
+        };
+        userProfile: {
+          uploadBtn: string;
+          uploadDescription: string;
+          userAvatar: string;
+          userName: string;
+          saveBtn: string;
         };
       };
     };

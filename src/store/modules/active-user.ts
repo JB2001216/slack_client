@@ -149,6 +149,20 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     }
   }
 
+  editMyUser(user: api.MyUser) {
+    if (!this.state.myUser || this.state.myUser.id !== user.id) return;
+    const loggedInUser: LoggedInUser = Object.assign({}, user, { token: this.state.myUser.token });
+    this.state.myUser = loggedInUser;
+  }
+
+  editSpaceUser(user: api.SpaceUser) {
+    if (!this.state.myUser || this.state.myUser.space.id !== user.spaceId) return;
+    const index = this.state.spaceUsers.findIndex((su) => su.id === user.id);
+    if (index >= 0) {
+      this.state.spaceUsers.splice(index, 1, user);
+    }
+  }
+
   setTaskStatusList(statusList: api.TaskStatus[]) {
     this.state.taskStatusList = statusList;
   }
