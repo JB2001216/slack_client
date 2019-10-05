@@ -16,6 +16,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@juggle/resize-observer": "^2.3.0",
     "ajv": "^6.10.2",
     "highlight.js": "^9.15.10",
     "marked": "^0.7.0",
