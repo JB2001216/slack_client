@@ -218,6 +218,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
             task: string;
             note: string;
           };
+          preview: string;
           flow: string;
           others: string;
           addAnEntryField: string;

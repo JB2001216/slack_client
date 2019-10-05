@@ -208,6 +208,7 @@ const struct: LocaleStruct = {
               task: 'Task flow Settings',
               note: 'Note flow Settings',
             },
+            preview: 'Preview',
             flow: 'Flow',
             others: 'Others',
             addAnEntryField: 'Add an entry field',

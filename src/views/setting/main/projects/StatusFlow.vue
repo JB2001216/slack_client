@@ -2,6 +2,9 @@
   <div class="option_mainColumn setting_main_statusFlow">
     <h3 class="option_mainColumn_title">{{$t(`views.setting.main.statusFlow.title.${category}`)}}</h3>
     <div class="option_spaceProjectsTask">
+      <div class="setting_main_statusFlow_preview">
+        <div class="setting_main_statusFlow_preview_title">{{$t('views.setting.main.statusFlow.preview')}}</div>
+        <my-project-status-input v-model="previewStatus" :options="previewStatusList" /></div>
       <dl class="option_commonColumn clearfix">
         <dd>
           <h3 class="option_commonColumn_title">{{$t('views.setting.main.statusFlow.flow')}}</h3>
@@ -98,6 +101,19 @@
 
 <style lang="stylus">
 .setting_main_statusFlow
+  &_preview
+    box-sizing: border-box
+    border: 1px solid #E0E0E0
+    border-radius: 8px
+    background-color: #F5F5F5
+    padding: 16px
+    margin-top: 24px
+    &_title
+      margin-bottom: 8px
+      color: #999999
+      font-size: 14px
+      font-weight: bold
+      line-height: 20px
   .myColorPicker_pop
     left: -20px
     top: 20px
@@ -133,6 +149,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { apiRegistry, TasksApi, NotesApi } from '@/lib/api';
 import MyColorPicker from '@/components/MyColorPicker.vue';
+import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import { colorPickerDefaultColors, ProjectStatusCategory } from '@/consts';
 
 interface Status {
@@ -151,6 +168,7 @@ type StatusPost = (req: StatusPostRequest) => Promise<Status[]>;
 @Component({
   components: {
     MyColorPicker,
+    MyProjectStatusInput,
   },
 })
 export default class StatusFlow extends Vue {
@@ -159,6 +177,18 @@ export default class StatusFlow extends Vue {
   minimumProgressRowCount = 2;
   itemClassName = 'option_commonColumn_list_input_parts';
   draggingItem: Status | null = null;
+  previewStatus: number | null = null;
+
+  get previewStatusList() {
+    const list = this.statusList.concat();
+    let current = Math.max(...list.filter((o) => o.id).map((o) => o.id!)) || 0;
+    list.forEach((o, i) => {
+      if (!o.id) {
+        o.id = ++current;
+      }
+    });
+    return list;
+  }
 
   get customColors() {
     const customColors: string[] = [];
@@ -272,6 +302,7 @@ export default class StatusFlow extends Vue {
     list.forEach((s, i) => {
       s.sort = i + 1;
     });
+    this.setLastPreviewStatus();
   }
 
   onDragEnd(ev: DragEvent, target: Status) {
@@ -285,6 +316,7 @@ export default class StatusFlow extends Vue {
       color: colorPickerDefaultColors[0],
       sort: (this.progressStatusList.length ? Math.max(...this.progressStatusList.map((s) => s.sort)) : 0) + 1,
     });
+    this.setLastPreviewStatus();
   }
 
   addEtcRow() {
@@ -294,6 +326,7 @@ export default class StatusFlow extends Vue {
       color: colorPickerDefaultColors[colorPickerDefaultColors.length - 1],
       sort: (this.etcStatusList.length ? Math.max(...this.etcStatusList.map((s) => s.sort)) : 0) + 1,
     });
+    this.setLastPreviewStatus();
   }
 
   deleteRow(status: Status) {
@@ -305,12 +338,22 @@ export default class StatusFlow extends Vue {
     const index = this.statusList.findIndex((s) => status === s);
     if (index >= 0) {
       this.statusList.splice(index, 1);
+      this.setLastPreviewStatus();
+    }
+  }
+
+  setLastPreviewStatus() {
+    const list = this.previewStatusList.filter((o) => this.isProgress(o))
+      .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
+    if (list.length) {
+      this.previewStatus = list[list.length - 1].id!;
     }
   }
 
   async fetch() {
     if (!this.api) return;
     this.statusList = await this.api.fetch();
+    this.setLastPreviewStatus();
   }
 
   validate() {

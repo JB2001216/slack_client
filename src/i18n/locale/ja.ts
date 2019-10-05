@@ -209,6 +209,7 @@ const struct: LocaleStruct = {
               task: 'タスクフローの設定',
               note: 'ノートフローの設定',
             },
+            preview: 'プレビュー',
             flow: 'フロー',
             others: 'その他',
             addAnEntryField: '枠を追加する',
