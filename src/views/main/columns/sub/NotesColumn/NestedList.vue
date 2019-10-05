@@ -53,7 +53,7 @@
           <span v-if="t.childs && t.childs.length" @click.stop="onContractChilds(t)">▼</span>
           <span v-else @click.stop="onExpandChilds(t)">＞</span>
         </template>
-        <my-space-user tag="div" class="task_item_image" :user-id="t.writeUser" v-slot="{user}">
+        <my-space-user tag="div" class="task_item_image" :user-id="t.batonUser" v-slot="{user}">
           <my-space-user-avatar :user="user" :size="24" shape="circle"/>
         </my-space-user>
         <template v-if="!editingNote || editingNote.id !== t.id">
