@@ -36,6 +36,7 @@ const struct: LocaleStruct = {
       },
       myChargerInput: {
         baton: 'Baton',
+        notSet: 'not set',
       },
       myChargerDialog: {
         title: 'Member list',

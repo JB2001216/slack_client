@@ -1,9 +1,10 @@
 <template>
   <div class="myChargerInput" :class="{disabled}">
-    <div v-if="value && value.batonUser" class="myChargerInput_batonUser">
+    <div v-if="value" class="myChargerInput_batonUser">
       <my-space-user tag="div" :user-id="value.batonUser" v-slot="{user}" class="myChargerInput_batonUser_item">
         <my-space-user-avatar class="myChargerInput_batonUser_item_avatar" :user="user" :size="32" shape="circle" />
         <span class="myChargerInput_batonUser_item_name" v-if="user">{{user.displayName || user.account}}</span>
+        <span class="myChargerInput_batonUser_item_name" v-else-if="!value.batonUser">{{$t('components.myChargerInput.notSet')}}</span>
         <span class="myChargerInput_batonUser_item_badge">{{$t('components.myChargerInput.baton')}}</span>
       </my-space-user>
     </div>
