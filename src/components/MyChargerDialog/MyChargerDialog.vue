@@ -202,7 +202,7 @@ export default class MyChargerDialog extends Vue {
     if (this.value!.chargeUsers.includes(id)) return;
     this.emitInput(
       {
-        batonUser: this.value!.batonUser,
+        batonUser: this.value!.batonUser ? this.value!.batonUser : id,
         chargeUsers: this.value!.chargeUsers.concat([id]),
       },
       { id, action: 'add' }
@@ -231,10 +231,11 @@ export default class MyChargerDialog extends Vue {
     if (this.originalBatonUser === id) {
       this.originalBatonUser = null;
     }
+    const chargeUsers = this.value!.chargeUsers.filter((cid) => cid !== id);
     this.emitInput(
       {
-        batonUser: this.value!.batonUser === id ? null : this.value!.batonUser,
-        chargeUsers: this.value!.chargeUsers.filter((cid) => cid !== id),
+        batonUser: this.value!.batonUser === id ? (chargeUsers.length ? chargeUsers[0] : null) : this.value!.batonUser,
+        chargeUsers,
       },
       { id, action: 'delete' }
     );

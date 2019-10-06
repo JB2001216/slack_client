@@ -37,6 +37,7 @@ const struct: LocaleStruct = {
       },
       myChargerInput: {
         baton: '担当',
+        notSet: '未設定',
       },
       myChargerDialog: {
         title: 'メンバーの管理',
