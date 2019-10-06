@@ -97,6 +97,7 @@
         line-height: 28px
         overflow: hidden
         white-space: nowrap
+        text-overflow: ellipsis
         transition: max-width 0.2s, min-width 0.2s
       &_arrow,
       &_arrowBorder
