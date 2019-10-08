@@ -6,11 +6,14 @@
     <router-view/>
 
     <!-- TODO: 暫定的に言語切替をここに入れる -->
-    <div style="background:rgba(0,0,0,0.5); border-radius:6px; padding:5px 8px; position:fixed; left:2px; bottom:10px; z-index:1; color:#fff;">
+    <div style="background:rgba(0,0,0,0.5); border-radius:6px; padding:5px 8px; position:fixed; left:2px; bottom:30px; z-index:1; color:#fff;">
       <template v-for="(locale, i) in loadableLocales">
         <span v-if="i !== 0" :key="i" style="padding: 0 4px;">|</span>
         <span :key="locale" @click.prevent="$store.actions.setLocale(locale)" style="cursor:pointer;">{{locale}}</span>
       </template>
+    </div>
+    <div style="background:rgba(0,0,0,0.5); border-radius:6px; padding:5px 8px; position:fixed; left:2px; bottom:0px; z-index:1; color:#fff;">
+      <span>{{version}}</span>
     </div>
   </div>
 </template>
@@ -39,13 +42,14 @@ import { getErrorMessage } from '@/lib/errors';
 import SettingRouterView from '@/views/setting/SettingRouterView.vue';
 import { loadableLocales } from '@/i18n';
 import { AppEventMap } from '@/plugins/app-event';
+import { remote } from 'electron';
 
 const components: { [key: string]: SyncComponent<any, any, any, any> | AsyncComponent<any, any, any, any> } = {
   MyFlashMessage,
   SettingRouterView,
 };
 
-const enableDebugTool = process.env.NODE_ENV !== 'production';
+const enableDebugTool = !!process.env.WEBPACK_DEV_SERVER_URL;
 if (enableDebugTool) {
   components['MyDebugTool'] = () => import(/* webpackChunkName: "plugins/debug/MyDebugTool" */ './plugins/debug/MyDebugTool.vue');
 }
@@ -62,6 +66,10 @@ export default class App extends Vue {
 
   get loadableLocales() {
     return loadableLocales;
+  }
+
+  get version() {
+    return remote.app.getVersion();
   }
 
   onFlash(ev: AppEventMap['flash']) {
