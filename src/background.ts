@@ -37,6 +37,9 @@ if (!process.env.WEBPACK_DEV_SERVER_URL) {
     sendStatusToWindow('Update downloaded');
   });
   app.on('ready', () => {
+    autoUpdater.allowDowngrade = false;
+    autoUpdater.autoDownload = true;
+    autoUpdater.autoInstallOnAppQuit = true;
     autoUpdater.checkForUpdatesAndNotify();
   });
 }
@@ -79,7 +82,7 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
   // CustomURLSchemeをOSに登録(Windowsの場合はレジストリに登録される)
-  if (process.env.NODE_ENV === 'production') {
+  if (!process.env.WEBPACK_DEV_SERVER_URL) {
     // OSXはinfo.plistに自動追加してくれるので除外
     if (process.platform !== 'darwin') {
       if (!app.isDefaultProtocolClient(urlScheme)) {

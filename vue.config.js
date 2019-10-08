@@ -5,7 +5,7 @@ const builderOptions = {
     {
       name: 'Ernie',
       schemes: [
-        'erniepjm',
+        process.env.VUE_APP_URL_SCHEME,
       ],
     },
   ],
@@ -18,6 +18,9 @@ const builderOptions = {
     target: 'appImage',
     category: 'ProjectManagement',
     icon: 'build/icon.ico',
+    desktop: {
+      MimeType: `x-scheme-handler/${process.env.VUE_APP_URL_SCHEME};`,
+    },
   },
   win: {
     target: {
@@ -35,7 +38,7 @@ if (process.env.NODE_ENV === 'development') {
     protocols: [{
       name: 'Ernie(dev)',
       schemes: [
-        'erniepjm',
+        process.env.VUE_APP_URL_SCHEME,
       ],
     },
     ],
