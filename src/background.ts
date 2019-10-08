@@ -1,8 +1,46 @@
 import { app, protocol, shell, BrowserWindow, Tray, Menu, ipcMain } from 'electron';
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
+import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
 import path from 'path';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const urlScheme = process.env.VUE_APP_URL_SCHEME;
+
+log.transports.file.level = 'info';
+log.info('App starting...');
+function sendStatusToWindow(text: string) {
+  log.info(text);
+}
+
+// autoUpdater
+if (!process.env.WEBPACK_DEV_SERVER_URL) {
+  autoUpdater.logger = log;
+  autoUpdater.on('checking-for-update', () => {
+    sendStatusToWindow('Checking for update...');
+  });
+  autoUpdater.on('update-available', (info) => {
+    sendStatusToWindow('Update available.');
+  });
+  autoUpdater.on('update-not-available', (info) => {
+    sendStatusToWindow('Update not available.');
+  });
+  autoUpdater.on('error', (err) => {
+    sendStatusToWindow('Error in auto-updater. ' + err);
+  });
+  autoUpdater.on('download-progress', (progressObj) => {
+    let message = 'Download speed: ' + progressObj.bytesPerSecond;
+    message = message + ' - Downloaded ' + progressObj.percent + '%';
+    message = message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
+    sendStatusToWindow(message);
+  });
+  autoUpdater.on('update-downloaded', (info) => {
+    sendStatusToWindow('Update downloaded');
+  });
+  app.on('ready', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+}
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
