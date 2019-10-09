@@ -76,11 +76,11 @@ export default class SpaceAdd2 extends Vue {
 
     if (userId) {
       return {
-        path: 'user',
+        name: 'user',
         params: { userId: userId.toString() },
       };
     } else {
-      return { path: 'space-add1' };
+      return { name: 'space-add1' };
     }
   }
 
