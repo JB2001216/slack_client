@@ -1,16 +1,17 @@
 <template>
   <div class="columnWrap">
     <div class="columnWrap_right">
-      <h3><strong>{{$t('views.projectAddColumn.addANewProject')}}</strong></h3>
+      <h3><strong>{{ $t('views.projectAddColumn.addANewProject') }}</strong></h3>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
           <my-text-input
             v-model="displayName"
             :message="displayNameMessage"
             type="text"
-            :placeholder="$t('views.projectAddColumn.projectName')" />
+            :placeholder="$t('views.projectAddColumn.projectName')"
+          />
         </div>
-        <button type="submit" v-show="false" />
+        <button v-show="false" type="submit" />
       </form>
     </div>
   </div>

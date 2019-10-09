@@ -20,7 +20,9 @@
         columnWrap_right_inputText_container_blue: message.type === 'success',
         columnWrap_right_inputText_container_red: message.type === 'error',
       }"
-    >{{typeof message.text === 'string' ? message.text : message.text[0]}}</p>
+    >
+      {{ typeof message.text === 'string' ? message.text : message.text[0] }}
+    </p>
   </div>
 </template>
 

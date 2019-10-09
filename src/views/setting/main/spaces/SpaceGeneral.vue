@@ -1,45 +1,49 @@
 <template>
   <div class="option_mainColumn">
     <div class="option_spaceGeneral">
-
       <h3 class="option_mainColumn_title">
-        {{$t('views.setting.main.spaceGeneral.title')}}
+        {{ $t('views.setting.main.spaceGeneral.title') }}
       </h3>
 
       <div class="option_spaceGeneral_img">
         <div class="option_spaceGeneral_img_thumbnail">
-          <input type="file" :accept="avatarInputAccept"
-                 ref="avatarInput1"
-                 @change="inputFileChange">
-          <img v-if="avatarUrl" :src="avatarUrl" ref="avatarImage" alt="pic">
+          <input
+            ref="avatarInput1"
+            type="file"
+            :accept="avatarInputAccept"
+            @change="inputFileChange"
+          >
+          <img v-if="avatarUrl" ref="avatarImage" :src="avatarUrl" alt="pic">
           <img v-else src="~@/assets/images/parts/img_option_space_sample.jpg" alt="pic">
         </div>
-        <div/><!-- separator -->
+        <div /><!-- separator -->
         <div class="option_spaceGeneral_uploadButton">
-          <input type="file" :accept="avatarInputAccept"
-                 ref="avatarInput2"
-                 @drop.prevent
-                 @change="inputFileChange">
+          <input
+            ref="avatarInput2"
+            type="file"
+            :accept="avatarInputAccept"
+            @drop.prevent
+            @change="inputFileChange"
+          >
           <button>
-            {{$t('views.setting.main.spaceGeneral.uploadBtn')}}
+            {{ $t('views.setting.main.spaceGeneral.uploadBtn') }}
           </button>
         </div>
-        <p>{{$t('views.setting.main.spaceGeneral.uploadDescription')}}</p>
+        <p>{{ $t('views.setting.main.spaceGeneral.uploadDescription') }}</p>
       </div>
 
       <div class="option_spaceGeneral_input">
         <h3 class="option_mainColumn_title">
-          {{$t('views.setting.main.spaceGeneral.title2')}}
+          {{ $t('views.setting.main.spaceGeneral.title2') }}
         </h3>
-        <input type="text" v-model="displayName">
+        <input v-model="displayName" type="text">
       </div>
 
       <div class="option_spaceGeneral_addButton clearfix">
         <button class="option_spaceGeneral_button" :disabled="saving" @click="save">
-          {{$t('views.setting.main.spaceGeneral.saveBtn')}}
+          {{ $t('views.setting.main.spaceGeneral.saveBtn') }}
         </button>
       </div>
-
     </div>
   </div>
 </template>

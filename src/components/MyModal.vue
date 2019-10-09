@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="myModal" v-if="value" @mousedown="onClose()">
+    <div v-if="value" class="myModal" @mousedown="onClose()">
       <div class="myModal_content" :class="contentClass" @mousedown.stop>
         <slot />
       </div>

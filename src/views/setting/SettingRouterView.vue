@@ -1,10 +1,12 @@
 <template>
-  <div class="optionWrap" v-if="currentRoute">
+  <div v-if="currentRoute" class="optionWrap">
     <div class="option">
-      <h2 class="option_title" :class="{noShadow: !currentRoute.title}">{{currentRoute.title ? currentRoute.title() : ''}}<button @click="$store.mutations.settingRouter.close()"/></h2>
+      <h2 class="option_title" :class="{noShadow: !currentRoute.title}">
+        {{ currentRoute.title ? currentRoute.title() : '' }}<button @click="$store.mutations.settingRouter.close()" />
+      </h2>
       <div class="option_container clearfix">
-        <component v-if="currentRoute.main" :is="currentRoute.main"/>
-        <component v-if="currentRoute.sub" :is="currentRoute.sub"/>
+        <component :is="currentRoute.main" v-if="currentRoute.main" />
+        <component :is="currentRoute.sub" v-if="currentRoute.sub" />
       </div>
     </div>
   </div>

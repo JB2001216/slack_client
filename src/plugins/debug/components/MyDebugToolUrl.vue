@@ -1,10 +1,10 @@
 <template>
   <form class="debugToolUrl" @click="onCoverClick" @submit.prevent="onSubmit">
     <my-text-input
-      class="debugToolUrl_input"
       ref="input"
-      placeholder="URL"
       v-model="url"
+      class="debugToolUrl_input"
+      placeholder="URL"
       @click.stop
     />
   </form>

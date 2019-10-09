@@ -4,14 +4,16 @@
       class="mySpaceUserSearchInput_input"
       type="text"
       :value="searchText"
+      :placeholder="$t('components.mySpaceUserSearchInput.searchTextPlaceholder')"
       @input="onSearchTextInput($event)"
       @focus="showedSelect = true"
       @blur="showedSelect = false"
-      :placeholder="$t('components.mySpaceUserSearchInput.searchTextPlaceholder')"
     >
     <transition name="fade">
       <div v-if="showedSelect && !searchNextTimeId" class="mySpaceUserSearchInput_select">
-        <div class="mySpaceUserSearchInput_select_notfound" v-if="!searchedUsersWithoutSelected.length">{{$t('components.mySpaceUserSearchInput.notfound')}}</div>
+        <div v-if="!searchedUsersWithoutSelected.length" class="mySpaceUserSearchInput_select_notfound">
+          {{ $t('components.mySpaceUserSearchInput.notfound') }}
+        </div>
         <div
           v-for="user in searchedUsersWithoutSelected"
           :key="user.id"
@@ -19,9 +21,11 @@
           @mousedown="onSearchUserSelect(user)"
         >
           <div class="mySpaceUserSearchInput_select_item_avatar">
-            <my-space-user-avatar :user="user" :size="30" shape="roundedSquare"/>
+            <my-space-user-avatar :user="user" :size="30" shape="roundedSquare" />
           </div>
-          <div class="mySpaceUserSearchInput_select_item_name">{{user.displayName || user.account}}（{{user.email}}）</div>
+          <div class="mySpaceUserSearchInput_select_item_name">
+            {{ user.displayName || user.account }}（{{ user.email }}）
+          </div>
         </div>
         <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
       </div>

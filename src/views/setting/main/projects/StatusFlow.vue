@@ -1,40 +1,49 @@
 <template>
   <div class="option_mainColumn setting_main_statusFlow">
-    <h3 class="option_mainColumn_title">{{$t(`views.setting.main.statusFlow.title.${category}`)}}</h3>
+    <h3 class="option_mainColumn_title">
+      {{ $t(`views.setting.main.statusFlow.title.${category}`) }}
+    </h3>
     <div class="option_spaceProjectsTask">
       <div class="setting_main_statusFlow_preview">
-        <div class="setting_main_statusFlow_preview_title">{{$t('views.setting.main.statusFlow.preview')}}</div>
-        <my-project-status-input v-model="previewStatus" :options="previewStatusList" /></div>
+        <div class="setting_main_statusFlow_preview_title">
+          {{ $t('views.setting.main.statusFlow.preview') }}
+        </div>
+        <my-project-status-input v-model="previewStatus" :options="previewStatusList" />
+      </div>
       <dl class="option_commonColumn clearfix">
         <dd>
-          <h3 class="option_commonColumn_title">{{$t('views.setting.main.statusFlow.flow')}}</h3>
+          <h3 class="option_commonColumn_title">
+            {{ $t('views.setting.main.statusFlow.flow') }}
+          </h3>
           <ul class="option_commonColumn_list">
             <li v-for="(s, $index) in progressStatusList" :key="s.id" :class="{dragging: s === draggingItem}" @dragenter="onDragEnter($event, s)">
               <table>
                 <tr>
-                  <td class="option_commonColumn_list_number">{{$index+1}}</td>
+                  <td class="option_commonColumn_list_number">
+                    {{ $index+1 }}
+                  </td>
                   <td class="option_commonColumn_list_input">
                     <div :class="{[itemClassName]: true}">
                       <my-color-picker
                         v-model="s.color"
-                        :custom-colors="customColors"
                         v-slot="{opened, open, close}"
+                        :custom-colors="customColors"
                         class="option_commonColumn_list_input_parts_color"
                         :style="{background: s.color}"
                       >
-                        <div @click.stop="opened ? close() : open()" class="option_commonColumn_list_input_parts_color_content" />
+                        <div class="option_commonColumn_list_input_parts_color_content" @click.stop="opened ? close() : open()" />
                       </my-color-picker>
                       <div
                         draggable="true"
+                        class="option_commonColumn_list_input_parts_toggle"
                         @dragstart="onDragStart($event, s)"
                         @dragend="onDragEnd($event, s)"
-                        class="option_commonColumn_list_input_parts_toggle"
                       >
-                        <span/>
-                        <span/>
-                        <span/>
+                        <span />
+                        <span />
+                        <span />
                       </div>
-                      <input type="text" v-model="s.name">
+                      <input v-model="s.name" type="text">
                     </div>
                   </td>
                   <td class="option_commonColumn_list_button">
@@ -45,22 +54,28 @@
             </li>
           </ul>
           <div class="option_commonColumn_addButton">
-            <button @click="addProgressRow()">{{$t('views.setting.main.statusFlow.addAnEntryField')}}</button>
+            <button @click="addProgressRow()">
+              {{ $t('views.setting.main.statusFlow.addAnEntryField') }}
+            </button>
           </div>
         </dd>
         <dd>
-          <h3 class="option_commonColumn_title">{{$t('views.setting.main.statusFlow.others')}}</h3>
+          <h3 class="option_commonColumn_title">
+            {{ $t('views.setting.main.statusFlow.others') }}
+          </h3>
           <ul class="option_commonColumn_list">
             <li v-for="(s, $index) in etcStatusList" :key="s.id" :class="{dragging: s === draggingItem}" @dragenter="onDragEnter($event, s)">
               <table>
                 <tr>
-                  <td class="option_commonColumn_list_number">{{$index+1}}</td>
+                  <td class="option_commonColumn_list_number">
+                    {{ $index+1 }}
+                  </td>
                   <td class="option_commonColumn_list_input">
                     <div class="option_commonColumn_list_input_parts">
                       <my-color-picker
                         v-model="s.color"
-                        :custom-colors="customColors"
                         v-slot="{opened, open, close}"
+                        :custom-colors="customColors"
                         class="option_commonColumn_list_input_parts_color"
                         :style="{background: s.color}"
                         @click.stop="opened ? close() : open()"
@@ -71,11 +86,11 @@
                         @dragstart="onDragStart($event, s)"
                         @dragend="onDragEnd($event, s)"
                       >
-                        <span/>
-                        <span/>
-                        <span/>
+                        <span />
+                        <span />
+                        <span />
                       </div>
-                      <input type="text" v-model="s.name">
+                      <input v-model="s.name" type="text">
                     </div>
                   </td>
                   <td class="option_commonColumn_list_button">
@@ -86,13 +101,17 @@
             </li>
           </ul>
           <div class="option_commonColumn_addButton">
-            <button @click="addEtcRow()">{{$t('views.setting.main.statusFlow.addAnEntryField')}}</button>
+            <button @click="addEtcRow()">
+              {{ $t('views.setting.main.statusFlow.addAnEntryField') }}
+            </button>
           </div>
         </dd>
       </dl>
 
       <div class="option_commonColumn_bottomButtons">
-        <button type="submit" class="option_commonColumn_bottomButtons_button" @click="save()">{{$t('views.setting.main.statusFlow.save')}}</button>
+        <button type="submit" class="option_commonColumn_bottomButtons_button" @click="save()">
+          {{ $t('views.setting.main.statusFlow.save') }}
+        </button>
       </div>
     </div>
   </div>

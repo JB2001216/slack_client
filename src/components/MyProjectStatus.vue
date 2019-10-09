@@ -1,9 +1,11 @@
 <template>
   <div
-    class="status"
     v-if="option"
+    class="status"
     :style="{'background-color': option.color || defaultColor}"
-  >{{option.name}}</div>
+  >
+    {{ option.name }}
+  </div>
 </template>
 
 <script lang="ts">

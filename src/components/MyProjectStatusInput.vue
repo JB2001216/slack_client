@@ -1,6 +1,6 @@
 <template>
   <div class="myProjectStatusInput" :class="{disabled}">
-    <canvas ref="canvas" class="myProjectStatusInput_canvas"/>
+    <canvas ref="canvas" class="myProjectStatusInput_canvas" />
     <div class="myProjectStatusInput_progress">
       <div
         v-for="(o, i) in progressOptionsWithTextWidth"
@@ -15,23 +15,25 @@
               'max-width': o.textWidthDisplay ? `${o.textWidthDisplay}px` : o.textWidthDisplay,
               'min-width': o.textWidthDisplay ? `${o.textWidthDisplay}px` : o.textWidthDisplay,
             }"
-          >{{o.name}}</div>
+          >
+            {{ o.name }}
+          </div>
         </div>
         <div v-if="i < progressOptions.length - 1" class="myProjectStatusInput_progress_item_ex" />
         <div v-if="i < progressOptions.length - 1" class="myProjectStatusInput_progress_item_arrowBorder" />
         <div v-if="i < progressOptions.length - 1" class="myProjectStatusInput_progress_item_arrow" :style="{'border-left-color': getColor(o)}" />
-        <div class="myProjectStatusInput_progress_item_tip" v-if="o.textWidthDisplay === 0 || (o.textWidthDisplay && o.textWidthDisplay / o.textWidth < 0.99)">
-          <span class="myProjectStatusInput_progress_item_tip_box">{{o.name}}</span>
+        <div v-if="o.textWidthDisplay === 0 || (o.textWidthDisplay && o.textWidthDisplay / o.textWidth < 0.99)" class="myProjectStatusInput_progress_item_tip">
+          <span class="myProjectStatusInput_progress_item_tip_box">{{ o.name }}</span>
         </div>
       </div>
     </div>
     <div
       v-if="etcOptions.length"
-      @click.stop="showOtherDialog()"
       class="myProjectStatusInput_etc"
       :style="{'background-color': isEtc(selectedOption) ? (selectedOption.color || defaultColor) : undefined}"
+      @click.stop="showOtherDialog()"
     >
-      <span class="myProjectStatusInput_etc_text">{{isEtc(selectedOption) ? selectedOption.name : $t('components.myProjectStatusInput.others')}}</span>
+      <span class="myProjectStatusInput_etc_text">{{ isEtc(selectedOption) ? selectedOption.name : $t('components.myProjectStatusInput.others') }}</span>
       <img class="myProjectStatusInput_etc_icon" src="~@/assets/images/icn/pulldown2.svg">
       <transition name="fade">
         <div v-if="selectingEtc" class="myProjectStatusInput_etc_dialog">
@@ -42,7 +44,7 @@
             @click="select(o)"
           >
             <span class="myProjectStatusInput_etc_dialog_item_color" :style="{background: o.color || defaultColor}" />
-            <span class="myProjectStatusInput_etc_dialog_item_text">{{o.name}}</span>
+            <span class="myProjectStatusInput_etc_dialog_item_text">{{ o.name }}</span>
           </div>
         </div>
       </transition>

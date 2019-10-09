@@ -17,31 +17,31 @@
       <form class="option_spaceMemberInvite_table" @submit.prevent="save()">
         <table>
           <tr>
-            <th>{{$t('views.setting.main.spaceMemberInvite.email')}}</th>
-            <th>{{$t('views.setting.main.spaceMemberInvite.account')}}</th>
-            <th>{{$t('views.setting.main.spaceMemberInvite.role')}}</th>
+            <th>{{ $t('views.setting.main.spaceMemberInvite.email') }}</th>
+            <th>{{ $t('views.setting.main.spaceMemberInvite.account') }}</th>
+            <th>{{ $t('views.setting.main.spaceMemberInvite.role') }}</th>
           </tr>
           <template v-for="(r, i) in rows">
             <tr :key="`body_${i}`">
               <td>
-                <input type="email" v-model="r.body.email" :class="{error: r.errors.email || r.errors.nonFieldErrors}" placeholder="sample@gmail.com">
+                <input v-model="r.body.email" type="email" :class="{error: r.errors.email || r.errors.nonFieldErrors}" placeholder="sample@gmail.com">
               </td>
               <td>
-                <input type="text" v-model="r.body.account" :class="{error: r.errors.account}" :placeholder="$t('views.setting.main.spaceMemberInvite.accountSample')">
+                <input v-model="r.body.account" type="text" :class="{error: r.errors.account}" :placeholder="$t('views.setting.main.spaceMemberInvite.accountSample')">
               </td>
               <td class="clearfix">
-                <div class="select" :class="{error: r.errors.spaceRoleId}" >
+                <div class="select" :class="{error: r.errors.spaceRoleId}">
                   <my-space-role-select v-model="r.body.spaceRoleId" :my-role="myRole" />
                 </div>
-                <button v-if="rows.length > 1" @click="deleteRow(i)" type="button" />
+                <button v-if="rows.length > 1" type="button" @click="deleteRow(i)" />
               </td>
             </tr>
-            <tr :key="`errors_${i}`" v-if="r.errors" class="errors">
+            <tr v-if="r.errors" :key="`errors_${i}`" class="errors">
               <td colspan="3">
                 <template v-for="(errors, f) in r.errors">
                   <div v-for="(e, errorIndex) in errors" :key="errorIndex">
-                    <span v-if="errorFields.includes(f)">[{{$t(`views.setting.main.spaceMemberInvite.${f}`)}}] </span>
-                    <span>{{e}}</span>
+                    <span v-if="errorFields.includes(f)">[{{ $t(`views.setting.main.spaceMemberInvite.${f}`) }}] </span>
+                    <span>{{ e }}</span>
                   </div>
                 </template>
               </td>
@@ -49,8 +49,12 @@
           </template>
         </table>
         <div class="option_spaceMemberInvite_addButton clearfix">
-          <button class="option_spaceMemberInvite_addButton_button" @click="addRow()" type="button">{{$t('views.setting.main.spaceMemberInvite.addAnEntryField')}}</button>
-          <button class="option_spaceMemberInvite_button" type="submit">{{$t('views.setting.main.spaceMemberInvite.sendInvitation')}}</button>
+          <button class="option_spaceMemberInvite_addButton_button" type="button" @click="addRow()">
+            {{ $t('views.setting.main.spaceMemberInvite.addAnEntryField') }}
+          </button>
+          <button class="option_spaceMemberInvite_button" type="submit">
+            {{ $t('views.setting.main.spaceMemberInvite.sendInvitation') }}
+          </button>
         </div>
       </form>
     </div>
