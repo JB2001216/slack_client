@@ -1,5 +1,5 @@
 <template>
-  <flash-message class="my-flash-message"/>
+  <flash-message class="my-flash-message" />
 </template>
 
 <style lang="stylus">

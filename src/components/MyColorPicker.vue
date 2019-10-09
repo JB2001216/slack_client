@@ -3,7 +3,13 @@
     <slot :open="onOpen" :close="onClose" :opened="opened" />
     <div v-if="opened" ref="pop" class="myColorPicker_pop">
       <ul class="clearfix myColorPicker_pop_palette">
-        <li v-for="c in defaultColors" :key="c" class="myColorPicker_pop_palette_color" :class="{active: c===value}" @click="onColorSelect(c)">
+        <li
+          v-for="c in defaultColors"
+          :key="c"
+          class="myColorPicker_pop_palette_color"
+          :class="{active: c===value}"
+          @click="onColorSelect(c)"
+        >
           <div class="myColorPicker_pop_palette_color_before" :style="{background: c}" />
         </li>
       </ul>

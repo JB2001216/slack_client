@@ -9,7 +9,7 @@
         'line-height':`${nameInitialSize}px`,
       }"
     >
-      <span>{{nameInitials}}</span>
+      <span>{{ nameInitials }}</span>
     </div>
   </div>
 </template>

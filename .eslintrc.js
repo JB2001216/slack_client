@@ -4,7 +4,7 @@ module.exports = {
     node: true
   },
   'extends': [
-    'plugin:vue/essential',
+    'plugin:vue/recommended',
     '@vue/standard',
     '@vue/typescript'
   ],
@@ -38,7 +38,7 @@ module.exports = {
     'padded-blocks': 'off',
 
     // vue
-    'vue/html-indent': ['error', 2],
+    'vue/html-indent': 'error',
     'vue/html-quotes': ['error', 'double'],
     'vue/html-self-closing': 'error',
     'vue/component-name-in-template-casing': ['error', 'kebab-case'],
@@ -47,6 +47,13 @@ module.exports = {
     'vue/v-bind-style': ['error', 'shorthand'],
     'vue/v-on-style': ['error', 'shorthand'],
     'vue/attribute-hyphenation': ['error', 'always'],
+    'vue/max-attributes-per-line': ['error', {
+      'singleline': 4,
+      'multiline': {
+        'max': 1,
+        'allowFirstLine': false,
+      }
+    }],
 
     // typescript
     '@typescript-eslint/indent': ['error', 2, { 'SwitchCase': 1 }],

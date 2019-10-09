@@ -10,8 +10,14 @@
           </a>
         </div>
         <div class="task_menu_right">
-          <a ref="filterButton" class="task_menu_search" :class="{active: activeFilter}" href="#" @click.prevent="showedFilter = !showedFilter">
-            <span class="t-caption">{{$t('views.tasksColumn.filter')}}</span>
+          <a
+            ref="filterButton"
+            class="task_menu_search"
+            :class="{active: activeFilter}"
+            href="#"
+            @click.prevent="showedFilter = !showedFilter"
+          >
+            <span class="t-caption">{{ $t('views.tasksColumn.filter') }}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="m2.8442 3.00008c-.1103-.00153-.2198.0185-.32215.05893-.10236.04043-.19551.10045-.27406.17658-.07855.07612-.14092.16684-.18349.26686-.04258.10003-.0645.20738-.0645.31581s.02192.21578.0645.31581c.04257.10002.10494.19074.18349.26686.07855.07613.1717.13615.27406.17658.10235.04043.21185.06046.32215.05893h.66653l5.99223 7.36356h4.99404l5.9923-7.36356h.6665c.1103.00153.2198-.0185.3222-.05893.1023-.04043.1955-.10045.274-.17658.0786-.07612.1409-.16684.1835-.26686.0426-.10003.0645-.20738.0645-.31581s-.0219-.21578-.0645-.31581c-.0426-.10002-.1049-.19074-.1835-.26686-.0785-.07613-.1717-.13615-.274-.17658-.1024-.04043-.2119-.06046-.3222-.05893zm6.65876 10.63632v7.3636l4.99404-1.6364v-5.7272z" />
             </svg>
@@ -19,7 +25,7 @@
           <my-simple-menu>
             <template v-slot="{open, close, opened}">
               <a class="task_menu_sort" href="#" @click.stop.prevent="opened ? close() : open()">
-                <span class="t-caption">{{$t(`views.tasksColumn.ordering.${currentSort.i18nKey}`)}}</span>
+                <span class="t-caption">{{ $t(`views.tasksColumn.ordering.${currentSort.i18nKey}`) }}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="m12 20-8.66025-13.5h17.32055z" />
                 </svg>
@@ -27,9 +33,9 @@
             </template>
             <template v-slot:items>
               <li v-for="s in sorts" :key="`${s.field}_${s.type}`" @click="onCurrentSortChange(s)">
-                <span >
+                <span>
                   <template v-if="s === currentSort">→</template>
-                  {{$t(`views.tasksColumn.ordering.${s.i18nKey}`)}}
+                  {{ $t(`views.tasksColumn.ordering.${s.i18nKey}`) }}
                 </span>
               </li>
             </template>
@@ -43,23 +49,24 @@
               <path d="m22 13h-19.99999v-2h19.99999z" />
               <path d="m11 22v-20.00003h2v20.00003z" />
             </svg>
-            {{$t('views.tasksColumn.addANewTask')}}
+            {{ $t('views.tasksColumn.addANewTask') }}
           </a>
           <div v-if="adding" class="task_add adding">
             <input
               ref="addingTaskSubjectInput"
+              v-model="addingTaskSubject"
               class="task_add_input"
               type="text"
-              v-model="addingTaskSubject"
               @keydown.esc="adding = false"
               @blur="onInlineTaskAddEnd()"
-              @change="$event.target.blur()">
+              @change="$event.target.blur()"
+            >
           </div>
         </template>
         <div
+          ref="taskListContainer"
           class="taskListContainer"
           :class="{dropHoverRoot: !currentSort.droppableBetween && dragData && dropHover && dropHover.position !== 'child'}"
-          ref="taskListContainer"
         >
           <nested-list
             :tasks="tasks"
@@ -67,16 +74,23 @@
             :fetch-tasks="fetchTasks"
             :item-droppable-between="currentSort.droppableBetween"
             :drag-data="dragData"
-            @drag-data-change="dragData = $event"
             :drop-hover="dropHover"
+            @drag-data-change="dragData = $event"
             @drop-hover-change="dropHover = $event"
             @drop-task="onDropTask"
-            @item-click="onTaskItemClick" />
+            @item-click="onTaskItemClick"
+          />
           <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
         </div>
       </div>
       <transition name="slide-right">
-        <filter-form v-if="showedFilter" ref="filterForm" :value="filter" @input="onFilterInput" :status-options="statusOptions" />
+        <filter-form
+          v-if="showedFilter"
+          ref="filterForm"
+          :value="filter"
+          :status-options="statusOptions"
+          @input="onFilterInput"
+        />
       </transition>
     </div>
   </sub-column-layout>

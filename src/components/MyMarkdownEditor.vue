@@ -1,7 +1,8 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="markdownEditor" :class="{hideEditor}">
-    <div :class="editorClass" v-if="!hideEditor">
-      <textarea ref="textarea" :value="value" @input="onInput" :placeholder="editorPlaceholder" />
+    <div v-if="!hideEditor" :class="editorClass">
+      <textarea ref="textarea" :value="value" :placeholder="editorPlaceholder" @input="onInput" />
     </div>
     <div class="markdownEditor_preview" :class="previewClass" v-html="compiledValue !== '' ? compiledValue : previewPlaceholderHtml" />
   </div>

@@ -1,47 +1,98 @@
 <template>
   <div class="tasksColumn_filterForm searchWrap">
-    <h2>{{$t('views.tasksColumn.filterForm.status')}}</h2>
-    <dl class="searchWrap_checkBox" v-if="statusOptions">
+    <h2>{{ $t('views.tasksColumn.filterForm.status') }}</h2>
+    <dl v-if="statusOptions" class="searchWrap_checkBox">
       <dd>
-        <input v-model="checkedStatusOptionAll" @change="onCheckedStatusOptionAllChange" type="checkbox" name="status" id="status_all">
-        <label for="status_all" class="checkbox">{{$t('views.tasksColumn.filterForm.all')}}</label>
+        <input
+          id="status_all"
+          v-model="checkedStatusOptionAll"
+          type="checkbox"
+          name="status"
+          @change="onCheckedStatusOptionAllChange"
+        >
+        <label for="status_all" class="checkbox">{{ $t('views.tasksColumn.filterForm.all') }}</label>
       </dd>
       <dd>
-        <input v-model="checkedStatusOptionNotClosed" @change="onCheckedStatusOptionNotClosedChange" type="checkbox" name="status" id="status_not_closed">
-        <label for="status_not_closed" class="checkbox">{{$t('views.tasksColumn.filterForm.notClosed', {closedName: closedStatusOption.name})}}</label>
+        <input
+          id="status_not_closed"
+          v-model="checkedStatusOptionNotClosed"
+          type="checkbox"
+          name="status"
+          @change="onCheckedStatusOptionNotClosedChange"
+        >
+        <label for="status_not_closed" class="checkbox">{{ $t('views.tasksColumn.filterForm.notClosed', {closedName: closedStatusOption.name}) }}</label>
       </dd>
       <dd v-for="s in options" :key="s.id">
-        <input v-model="checkedStatusOptionIdList" @change="onCheckedStatusOptionIdListChange($event, s.id)" type="checkbox" name="status" :value="s.id" :id="`status_${s.id}`">
-        <label :for="`status_${s.id}`" class="checkbox">{{s.name}}</label>
+        <input
+          :id="`status_${s.id}`"
+          v-model="checkedStatusOptionIdList"
+          type="checkbox"
+          name="status"
+          :value="s.id"
+          @change="onCheckedStatusOptionIdListChange($event, s.id)"
+        >
+        <label :for="`status_${s.id}`" class="checkbox">{{ s.name }}</label>
       </dd>
     </dl>
 
-    <h2>{{$t('views.tasksColumn.filterForm.assignedUsers')}}</h2>
+    <h2>{{ $t('views.tasksColumn.filterForm.assignedUsers') }}</h2>
     <ul class="searchWrap_tabBox">
-      <li><a class="open_tab_task" :class="{active: assignedUserField === 'chargeUsers'}" @click.prevent="onUserFieldChange('chargeUsers')" href="#">{{$t('views.tasksColumn.filterForm.assignedUser')}}</a></li>
-      <li><a class="open_tab_file" :class="{active: assignedUserField === 'batonUser'}" @click.prevent="onUserFieldChange('batonUser')" href="#">{{$t('views.tasksColumn.filterForm.batonHolder')}}</a></li>
+      <li><a class="open_tab_task" :class="{active: assignedUserField === 'chargeUsers'}" href="#" @click.prevent="onUserFieldChange('chargeUsers')">{{ $t('views.tasksColumn.filterForm.assignedUser') }}</a></li>
+      <li><a class="open_tab_file" :class="{active: assignedUserField === 'batonUser'}" href="#" @click.prevent="onUserFieldChange('batonUser')">{{ $t('views.tasksColumn.filterForm.batonHolder') }}</a></li>
     </ul>
     <dl class="searchWrap_humanBox">
       <dd class="searchWrap_humanBox_item_all">
-        <input v-model="checkedAssignedUserAll" @change="onCheckedAssignedUserAllChange" type="checkbox" name="human" id="human_all">
-        <label for="human_all" class="checkbox">{{$t('views.tasksColumn.filterForm.all')}}</label>
+        <input
+          id="human_all"
+          v-model="checkedAssignedUserAll"
+          type="checkbox"
+          name="human"
+          @change="onCheckedAssignedUserAllChange"
+        >
+        <label for="human_all" class="checkbox">{{ $t('views.tasksColumn.filterForm.all') }}</label>
       </dd>
-      <my-space-user tag="dd" v-for="pu in projectUsers" :key="pu.userId" :user-id="pu.userId" v-slot="{user}">
-        <my-space-user-avatar :user="user" :size="24" shape="circle"/>
-        <input v-model="checkedAssignedUserIdList" @change="onCheckedAssignedUserIdListChange($event, pu.userId)" type="checkbox" name="human" :value="pu.userId" :id="`human_${pu.userId}`">
-        <label :for="`human_${pu.userId}`" class="checkbox">{{user ? (user.displayName || user.account) : 'unknown'}}</label>
+      <my-space-user
+        v-for="pu in projectUsers"
+        :key="pu.userId"
+        v-slot="{user}"
+        tag="dd"
+        :user-id="pu.userId"
+      >
+        <my-space-user-avatar :user="user" :size="24" shape="circle" />
+        <input
+          :id="`human_${pu.userId}`"
+          v-model="checkedAssignedUserIdList"
+          type="checkbox"
+          name="human"
+          :value="pu.userId"
+          @change="onCheckedAssignedUserIdListChange($event, pu.userId)"
+        >
+        <label :for="`human_${pu.userId}`" class="checkbox">{{ user ? (user.displayName || user.account) : 'unknown' }}</label>
       </my-space-user>
     </dl>
 
-    <h2>{{$t('views.tasksColumn.filterForm.tags')}}</h2>
+    <h2>{{ $t('views.tasksColumn.filterForm.tags') }}</h2>
     <dl class="searchWrap_checkBox">
       <dd>
-        <input v-model="checkedTagAll" @change="onCheckedTagAllChange" type="checkbox" name="tag" id="tag_all">
-        <label for="tag_all" class="checkbox">{{$t('views.tasksColumn.filterForm.all')}}</label>
+        <input
+          id="tag_all"
+          v-model="checkedTagAll"
+          type="checkbox"
+          name="tag"
+          @change="onCheckedTagAllChange"
+        >
+        <label for="tag_all" class="checkbox">{{ $t('views.tasksColumn.filterForm.all') }}</label>
       </dd>
       <dd v-for="t in tags" :key="t.id">
-        <input v-model="checkedTagIdList" @change="onCheckedTagIdListChange" type="checkbox" name="tag" :value="t.id" :id="`tag_${t.id}`">
-        <label :for="`tag_${t.id}`" class="checkbox">{{t.name}}</label>
+        <input
+          :id="`tag_${t.id}`"
+          v-model="checkedTagIdList"
+          type="checkbox"
+          name="tag"
+          :value="t.id"
+          @change="onCheckedTagIdListChange"
+        >
+        <label :for="`tag_${t.id}`" class="checkbox">{{ t.name }}</label>
       </dd>
     </dl>
   </div>

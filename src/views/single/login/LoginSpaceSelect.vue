@@ -3,11 +3,17 @@
     <div class="spaceWrap_container">
       <h2>Ernie</h2>
       <div class="spaceWrap_box">
-        <h3>{{$t('views.loginSpaceSelect.spaceSelection')}}</h3>
+        <h3>{{ $t('views.loginSpaceSelect.spaceSelection') }}</h3>
         <dl>
-          <dd class="clearfix" v-for="u in users" :key="u.id">
-            <input type="checkbox" :id="`user${u.id}`" :value="u.id" v-model="checkedUserIds" v-show="false">
-            <label :for="`user${u.id}`">{{u.space.displayName || u.space.account}} ({{u.displayName || u.account}})</label>
+          <dd v-for="u in users" :key="u.id" class="clearfix">
+            <input
+              v-show="false"
+              :id="`user${u.id}`"
+              v-model="checkedUserIds"
+              type="checkbox"
+              :value="u.id"
+            >
+            <label :for="`user${u.id}`">{{ u.space.displayName || u.space.account }} ({{ u.displayName || u.account }})</label>
           </dd>
         </dl>
         <div class="spaceWrap_box_button">
@@ -17,13 +23,20 @@
             :value="$t('views.loginSpaceSelect.loginToTheSelectedSpace')"
             :class="{active: checkedUserIds.length}"
             :disabled="!checkedUserIds.length"
-            @click.prevent="login()">
+            @click.prevent="login()"
+          >
         </div>
         <div class="spaceWrap_box_back">
           <router-link :to="backTo">
-            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6.66675 13.5997L7.60956 12.6569L1.00989 6.0572L0.0670837 7.00001L6.66675 13.5997Z" fill="#333333"/>
-              <path d="M7.60962 1.34314L6.66681 0.40033L0.0670837 7.00001L1.00995 7.9428L7.60962 1.34314Z" fill="#333333"/>
+            <svg
+              width="8"
+              height="14"
+              viewBox="0 0 8 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M6.66675 13.5997L7.60956 12.6569L1.00989 6.0572L0.0670837 7.00001L6.66675 13.5997Z" fill="#333333" />
+              <path d="M7.60962 1.34314L6.66681 0.40033L0.0670837 7.00001L1.00995 7.9428L7.60962 1.34314Z" fill="#333333" />
             </svg>
             <span>Back</span>
           </router-link>

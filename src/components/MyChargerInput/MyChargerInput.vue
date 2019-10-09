@@ -1,34 +1,34 @@
 <template>
   <div class="myChargerInput" :class="{disabled}">
     <div v-if="value" class="myChargerInput_batonUser">
-      <my-space-user tag="div" :user-id="value.batonUser" v-slot="{user}" class="myChargerInput_batonUser_item">
+      <my-space-user v-slot="{user}" tag="div" :user-id="value.batonUser" class="myChargerInput_batonUser_item">
         <my-space-user-avatar class="myChargerInput_batonUser_item_avatar" :user="user" :size="32" shape="circle" />
-        <span class="myChargerInput_batonUser_item_name" v-if="user">{{user.displayName || user.account}}</span>
-        <span class="myChargerInput_batonUser_item_name" v-else-if="!value.batonUser">{{$t('components.myChargerInput.notSet')}}</span>
-        <span class="myChargerInput_batonUser_item_badge">{{$t('components.myChargerInput.baton')}}</span>
+        <span v-if="user" class="myChargerInput_batonUser_item_name">{{ user.displayName || user.account }}</span>
+        <span v-else-if="!value.batonUser" class="myChargerInput_batonUser_item_name">{{ $t('components.myChargerInput.notSet') }}</span>
+        <span class="myChargerInput_batonUser_item_badge">{{ $t('components.myChargerInput.baton') }}</span>
       </my-space-user>
     </div>
     <div v-if="value" class="myChargerInput_chargeUsers">
       <div class="myChargerInput_chargeUsers_item editButton" @click="showedDialog = true">
         <span>
-          <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m22 13h-19.99999v-2h19.99999z"/><path d="m11 22v-20.00003h2v20.00003z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m22 13h-19.99999v-2h19.99999z" /><path d="m11 22v-20.00003h2v20.00003z" /></svg>
         </span>
       </div>
       <div v-if="chargeUsersWithoutBatonUser.length - displayChargeUsers.length > 0" class="myChargerInput_chargeUsers_item otherCount" @click="showedDialog = true">
-        <span>+{{chargeUsersWithoutBatonUser.length - displayChargeUsers.length}}</span>
+        <span>+{{ chargeUsersWithoutBatonUser.length - displayChargeUsers.length }}</span>
       </div>
       <template>
         <my-space-user
-          tag="div"
           v-for="userId in displayChargeUsersReverse"
           :key="userId"
-          :user-id="userId"
           v-slot="{user}"
+          tag="div"
+          :user-id="userId"
           class="myChargerInput_chargeUsers_item user"
           @click="onChargeUserClick(userId)"
         >
           <div class="myChargerInput_chargeUsers_item_name">
-            <span v-if="user" class="myChargerInput_chargeUsers_item_name_box">{{user.displayName || user.account}}</span>
+            <span v-if="user" class="myChargerInput_chargeUsers_item_name_box">{{ user.displayName || user.account }}</span>
           </div>
           <my-space-user-avatar class="myChargerInput_chargeUsers_item_avatar" :user="user" :size="32" shape="circle" />
           <span v-if="!disabled" class="myChargerInput_chargeUsers_item_delete" @click="onChargeUserDelete(userId)">×</span>

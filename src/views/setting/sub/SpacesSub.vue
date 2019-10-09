@@ -5,7 +5,10 @@
         :key="`item-${$index}-b`"
         :class="{active: item.routeName === currentRouterName}"
         class="option_subColumn_button green"
-        @click="$store.mutations.settingRouter.to(item.routeName)">{{item.title()}}</button>
+        @click="$store.mutations.settingRouter.to(item.routeName)"
+      >
+        {{ item.title() }}
+      </button>
     </template>
   </div>
 </template>

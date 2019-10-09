@@ -8,7 +8,7 @@
           :to="{ name: 'user', params: { userId: u.id }}"
         >
           <img v-if="u.space.avatarSmallUrl" :src="u.space.avatarSmallUrl">
-          <span v-else>{{(u.space.displayName || u.space.account).slice(0,1)}}</span>
+          <span v-else>{{ (u.space.displayName || u.space.account).slice(0,1) }}</span>
         </router-link>
       </li>
       <li>

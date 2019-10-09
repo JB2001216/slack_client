@@ -4,7 +4,7 @@
       <h2>Ernie</h2>
     </div>
     <div class="columnWrap_right">
-      <h3>{{$t('views.spaceAdd.addANewSpace')}}</h3>
+      <h3>{{ $t('views.spaceAdd.addANewSpace') }}</h3>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
           <my-text-input
@@ -30,13 +30,19 @@
             @input="ownerMessages.account = null"
           />
         </div>
-        <button type="submit" v-show="false" />
+        <button v-show="false" type="submit" />
       </form>
-      <div class="columnWrap_right_back" v-if="backTo">
+      <div v-if="backTo" class="columnWrap_right_back">
         <router-link :to="backTo">
-          <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.66675 13.5997L7.60956 12.6569L1.00989 6.0572L0.0670837 7.00001L6.66675 13.5997Z" fill="#333333"/>
-            <path d="M7.60962 1.34314L6.66681 0.40033L0.0670837 7.00001L1.00995 7.9428L7.60962 1.34314Z" fill="#333333"/>
+          <svg
+            width="8"
+            height="14"
+            viewBox="0 0 8 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M6.66675 13.5997L7.60956 12.6569L1.00989 6.0572L0.0670837 7.00001L6.66675 13.5997Z" fill="#333333" />
+            <path d="M7.60962 1.34314L6.66681 0.40033L0.0670837 7.00001L1.00995 7.9428L7.60962 1.34314Z" fill="#333333" />
           </svg>
           <span>Back</span>
         </router-link>

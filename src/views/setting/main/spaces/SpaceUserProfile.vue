@@ -1,35 +1,38 @@
 <template>
   <div class="option_mainColumn option_spaceProfileGeneral">
-    <h3 class="option_mainColumn_title">{{$t('views.setting.main.userProfile.userAvatar')}}</h3>
+    <h3 class="option_mainColumn_title">
+      {{ $t('views.setting.main.userProfile.userAvatar') }}
+    </h3>
     <div class="option_spaceProfileGeneral_img">
       <input
-        type="file"
-        :accept="avatarInputAccept"
         id="avatarInput"
         ref="avatarInput"
-        @change="inputFileChange">
+        type="file"
+        :accept="avatarInputAccept"
+        @change="inputFileChange"
+      >
       <div class="option_spaceProfileGeneral_img_thumbnail">
         <label for="avatarInput">
-          <img v-if="avatarUrl" :src="avatarUrl" ref="avatarImage" alt="pic">
+          <img v-if="avatarUrl" ref="avatarImage" :src="avatarUrl" alt="pic">
           <my-space-user-avatar v-else :user="myUser" :size="160" shape="roundedSquare" />
         </label>
       </div>
       <label class="option_spaceProfileGeneral_uploadButton" for="avatarInput">
         <div class="option_spaceProfileGeneral_uploadButton_button">
-          {{$t('views.setting.main.userProfile.uploadBtn')}}
+          {{ $t('views.setting.main.userProfile.uploadBtn') }}
         </div>
       </label>
-      <p>{{$t('views.setting.main.userProfile.uploadDescription')}}</p>
+      <p>{{ $t('views.setting.main.userProfile.uploadDescription') }}</p>
     </div>
     <div class="option_spaceProfileGeneral_input">
       <h3 class="option_mainColumn_title">
-        {{$t('views.setting.main.userProfile.userName')}}
+        {{ $t('views.setting.main.userProfile.userName') }}
       </h3>
-      <input type="text" v-model="displayName">
+      <input v-model="displayName" type="text">
     </div>
     <div class="option_spaceProfileGeneral_addButton clearfix">
       <button class="option_spaceProfileGeneral_button" :disabled="saving" @click="save">
-        {{$t('views.setting.main.userProfile.saveBtn')}}
+        {{ $t('views.setting.main.userProfile.saveBtn') }}
       </button>
     </div>
   </div>

@@ -1,23 +1,25 @@
 <template>
-  <div class="taskColumn_taskComment" v-if="comments">
+  <div v-if="comments" class="taskColumn_taskComment">
     <div class="dashboardWrap_post">
-      <my-space-user tag="small" :user-id="task.writeUser" v-slot="{user}">
-        {{task.createdAt | dateFormat('YYYY/M/D')}}
-        {{$t('views.taskColumn._name_HasCreatedTask', { name: user ? (user.displayName || user.account) : 'unknown' })}}
+      <my-space-user v-slot="{user}" tag="small" :user-id="task.writeUser">
+        {{ task.createdAt | dateFormat('YYYY/M/D') }}
+        {{ $t('views.taskColumn._name_HasCreatedTask', { name: user ? (user.displayName || user.account) : 'unknown' }) }}
       </my-space-user>
-      <div class="dashboardWrap_post_board" ref="board">
+      <div ref="board" class="dashboardWrap_post_board">
         <table>
           <tbody ref="boardTableBody">
             <infinite-loading direction="top" :identifier="infiniteId" @infinite="onInfinite" />
             <tr v-for="c in comments" :key="c.id">
-              <my-space-user tag="th" :user-id="c.writeUser" v-slot="{user}" class="dashboardWrap_post_board_user">
-                <my-space-user-avatar :user="user" :size="40" shape="circle"/>
+              <my-space-user v-slot="{user}" tag="th" :user-id="c.writeUser" class="dashboardWrap_post_board_user">
+                <my-space-user-avatar :user="user" :size="40" shape="circle" />
               </my-space-user>
               <td class="dashboardWrap_post_board_text">
-                <my-space-user tag="h3" :user-id="c.writeUser" v-slot="{user}">
-                  <template v-if="user">{{user.displayName || user.account}}</template>
+                <my-space-user v-slot="{user}" tag="h3" :user-id="c.writeUser">
+                  <template v-if="user">
+                    {{ user.displayName || user.account }}
+                  </template>
                 </my-space-user>
-                <p>{{c.body}}</p>
+                <p>{{ c.body }}</p>
               </td>
               <td class="dashboardWrap_post_board_log">
                 <!-- <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +28,7 @@
                     <path d="M8 2C3.5816 2 0 5.5816 0 10C0 14.4184 3.5816 18 8 18C12.4184 18 16 14.4184 16 10C16 9.2824 15.8963 8.58973 15.7188 7.92812C15.6179 8.00332 15.5159 8.07778 15.4031 8.15938L14.9359 8.49688L14.3063 8.95C14.3631 9.2924 14.4 9.6416 14.4 10C14.4 13.5344 11.5344 16.4 8 16.4C4.4656 16.4 1.6 13.5344 1.6 10C1.6 6.4656 4.4656 3.6 8 3.6C8.3144 3.6 8.62104 3.631 8.92344 3.675C8.78664 3.1278 8.76867 2.586 8.87187 2.05C8.58547 2.0188 8.2952 2 8 2ZM5.2 6.8C4.53726 6.8 4 7.33726 4 8C4 8.66274 4.53726 9.2 5.2 9.2C5.86274 9.2 6.4 8.66274 6.4 8C6.4 7.33726 5.86274 6.8 5.2 6.8ZM10.8 6.8C10.1373 6.8 9.6 7.33726 9.6 8C9.6 8.66274 10.1373 9.2 10.8 9.2C11.4627 9.2 12 8.66274 12 8C12 7.33726 11.4627 6.8 10.8 6.8ZM3.9125 11.6C4.5525 13.232 6.136 14.4 8 14.4C9.864 14.4 11.4475 13.232 12.0875 11.6H3.9125Z" fill="#333333" fill-opacity="0.72"/>
                   </g>
                 </svg> -->
-                <p>{{c.createdAt | fromNow}}</p>
+                <p>{{ c.createdAt | fromNow }}</p>
               </td>
             </tr>
           </tbody>
@@ -36,17 +38,18 @@
     <div class="dashboardWrap_comment">
       <div v-if="commentAddable" class="dashboardWrap_comment_box">
         <label class="dashboardWrap_comment_box_upload" for="file_upload">
-          <input type="file" id="file">
-          <input type="text" id="file_upload" value="">
+          <input id="file" type="file">
+          <input id="file_upload" type="text" value="">
         </label>
         <textarea
           ref="textarea"
+          v-model="newComment.body"
           type="text"
           class="dashboardWrap_comment_box_content"
           :placeholder="$t('views.taskColumn.enterAComment')"
-          v-model="newComment.body"
           :disabled="saving"
-          @keydown="onTextKeydown($event)" />
+          @keydown="onTextKeydown($event)"
+        />
       </div>
       <div class="dashboardWrap_comment_text show">
         <!-- <p>Satoshi Hashimotoさんが入力中です</p> -->

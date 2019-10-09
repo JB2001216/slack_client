@@ -1,6 +1,8 @@
 <template>
   <div class="option_spaceMemberAdd">
-    <h3 class="option_spaceMemberAdd_title">{{$t('views.setting.main.projectMemberAdd.title', {projectName: activeProject.displayName})}}</h3>
+    <h3 class="option_spaceMemberAdd_title">
+      {{ $t('views.setting.main.projectMemberAdd.title', {projectName: activeProject.displayName}) }}
+    </h3>
     <my-space-user-search-input
       class="option_spaceMemberAdd_search"
       :my-user="myUser"
@@ -11,19 +13,19 @@
     <div v-if="users.length" class="option_spaceMemberAdd_table">
       <table>
         <tr>
-          <th/>
-          <th>{{$t('views.setting.main.projectMemberAdd.email')}}</th>
-          <th>{{$t('views.setting.main.projectMemberAdd.name')}}</th>
-          <th>{{$t('views.setting.main.projectMemberAdd.role')}}</th>
+          <th />
+          <th>{{ $t('views.setting.main.projectMemberAdd.email') }}</th>
+          <th>{{ $t('views.setting.main.projectMemberAdd.name') }}</th>
+          <th>{{ $t('views.setting.main.projectMemberAdd.role') }}</th>
         </tr>
         <tr v-for="data in users" :key="data.user.id">
           <td>
             <div class="option_spaceMember_table_img">
-              <my-space-user-avatar :user="data.user" :size="40" shape="roundedSquare"/>
+              <my-space-user-avatar :user="data.user" :size="40" shape="roundedSquare" />
             </div>
           </td>
-          <td>{{data.user.email}}</td>
-          <td>{{data.user.displayName || data.user.account}}</td>
+          <td>{{ data.user.email }}</td>
+          <td>{{ data.user.displayName || data.user.account }}</td>
           <td class="clearfix">
             <div class="select">
               <my-project-role-select
@@ -38,7 +40,9 @@
         </tr>
       </table>
       <div class="option_spaceMemberAdd_addButton clearfix">
-        <button @click="save()" class="option_spaceMemberAdd_button">{{$t('views.setting.main.projectMemberAdd.addMembers')}}</button>
+        <button class="option_spaceMemberAdd_button" @click="save()">
+          {{ $t('views.setting.main.projectMemberAdd.addMembers') }}
+        </button>
       </div>
     </div>
   </div>

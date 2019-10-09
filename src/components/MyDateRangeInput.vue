@@ -1,15 +1,15 @@
 <template>
-  <div class="myDateRangeInput" :class="{disabled}" ref="container">
+  <div ref="container" class="myDateRangeInput" :class="{disabled}">
     <transition name="fade">
       <div
-        class="myDateRangeInput_pop"
-        ref="pop"
-        @click.stop
         v-if="poped"
+        ref="pop"
+        class="myDateRangeInput_pop"
         :style="{
           left: `${popLeft}px`,
           top: `${popTop}px`,
         }"
+        @click.stop
       >
         <div
           class="myDateRangeInput_pop_arrow"
@@ -19,29 +19,43 @@
             left: `${popArrowLeft}px`,
             top: `${popArrowTop}px`,
             transform: `rotate(${popArrowRotate}deg) translateX(${popArrowTransrateX}px) translateY(${popArrowTransrateY}px)`,
-          }">
+          }"
+        >
           <div class="myDateRangeInput_pop_arrow_outer" />
           <div class="myDateRangeInput_pop_arrow_inner" />
         </div>
         <vc-date-picker
+          v-model="pickerValue"
           mode="range"
           show-caps
-          v-model="pickerValue"
           :columns="2"
           is-inline
           :locale="locale"
         />
-        <button @click="onSaveButtonClick">{{$t('components.myDateRangeInput.save')}}</button>
-        <button @click="onCancelButtonClick">{{$t('components.myDateRangeInput.cancel')}}</button>
-        <button @click="onClearButtonClick">{{$t('components.myDateRangeInput.clear')}}</button>
+        <button @click="onSaveButtonClick">
+          {{ $t('components.myDateRangeInput.save') }}
+        </button>
+        <button @click="onCancelButtonClick">
+          {{ $t('components.myDateRangeInput.cancel') }}
+        </button>
+        <button @click="onClearButtonClick">
+          {{ $t('components.myDateRangeInput.clear') }}
+        </button>
       </div>
     </transition>
     <slot :range="value" :pop="onPop">
       <div class="myDateRangeInput_view" @click.stop="onPop">
-        <svg class="myDateRangeInput_view_icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path class="myDateRangeInput_view_icon_path" d="M6.16667 2V5.33333H7.83333V2H6.16667ZM16.1667 2V5.33333H17.8333V2H16.1667ZM2.83333 4.5C2.37435 4.5 2 4.87435 2 5.33333V7.83333C2 8.29232 2.37435 8.66667 2.83333 8.66667V22H21.1667V8.66667C21.6257 8.66667 22 8.29232 22 7.83333V5.33333C22 4.87435 21.6257 4.5 21.1667 4.5H18.6667V6.16667H15.3333V4.5H8.66667V6.16667H5.33333V4.5H2.83333ZM4.5 8.66667H19.5V20.3333H4.5V8.66667ZM6.16667 10.3333V12H7.83333V10.3333H6.16667ZM9.5 10.3333V12H11.1667V10.3333H9.5ZM12.8333 10.3333V12H14.5V10.3333H12.8333ZM16.1667 10.3333V12H17.8333V10.3333H16.1667ZM6.16667 13.6667V15.3333H7.83333V13.6667H6.16667ZM9.5 13.6667V15.3333H11.1667V13.6667H9.5ZM12.8333 13.6667V15.3333H14.5V13.6667H12.8333ZM16.1667 13.6667V15.3333H17.8333V13.6667H16.1667ZM6.16667 17V18.6667H7.83333V17H6.16667ZM9.5 17V18.6667H11.1667V17H9.5ZM12.8333 17V18.6667H14.5V17H12.8333ZM16.1667 17V18.6667H17.8333V17H16.1667Z" fill="#333333" fill-opacity="0.72"/>
+        <svg
+          class="myDateRangeInput_view_icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path class="myDateRangeInput_view_icon_path" d="M6.16667 2V5.33333H7.83333V2H6.16667ZM16.1667 2V5.33333H17.8333V2H16.1667ZM2.83333 4.5C2.37435 4.5 2 4.87435 2 5.33333V7.83333C2 8.29232 2.37435 8.66667 2.83333 8.66667V22H21.1667V8.66667C21.6257 8.66667 22 8.29232 22 7.83333V5.33333C22 4.87435 21.6257 4.5 21.1667 4.5H18.6667V6.16667H15.3333V4.5H8.66667V6.16667H5.33333V4.5H2.83333ZM4.5 8.66667H19.5V20.3333H4.5V8.66667ZM6.16667 10.3333V12H7.83333V10.3333H6.16667ZM9.5 10.3333V12H11.1667V10.3333H9.5ZM12.8333 10.3333V12H14.5V10.3333H12.8333ZM16.1667 10.3333V12H17.8333V10.3333H16.1667ZM6.16667 13.6667V15.3333H7.83333V13.6667H6.16667ZM9.5 13.6667V15.3333H11.1667V13.6667H9.5ZM12.8333 13.6667V15.3333H14.5V13.6667H12.8333ZM16.1667 13.6667V15.3333H17.8333V13.6667H16.1667ZM6.16667 17V18.6667H7.83333V17H6.16667ZM9.5 17V18.6667H11.1667V17H9.5ZM12.8333 17V18.6667H14.5V17H12.8333ZM16.1667 17V18.6667H17.8333V17H16.1667Z" fill="#333333" fill-opacity="0.72" />
         </svg>
-        <span class="myDateRangeInput_view_value" v-if="value">{{formatedEnd}}</span>
+        <span v-if="value" class="myDateRangeInput_view_value">{{ formatedEnd }}</span>
       </div>
     </slot>
   </div>

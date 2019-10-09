@@ -53,33 +53,37 @@
           <span v-if="t.childs && t.childs.length" @click.stop="onContractChilds(t)">▼</span>
           <span v-else @click.stop="onExpandChilds(t)">＞</span>
         </template>
-        <my-space-user tag="div" class="task_item_image" :user-id="t.batonUser" v-slot="{user}">
-          <my-space-user-avatar :user="user" :size="24" shape="circle"/>
+        <my-space-user v-slot="{user}" tag="div" class="task_item_image" :user-id="t.batonUser">
+          <my-space-user-avatar :user="user" :size="24" shape="circle" />
         </my-space-user>
         <template v-if="!editingNote || editingNote.id !== t.id">
-          <div class="note_item_name" @dblclick="onInlineNoteEditStart(t)">{{t.subject}}</div>
+          <div class="note_item_name" @dblclick="onInlineNoteEditStart(t)">
+            {{ t.subject }}
+          </div>
           <a v-if="noteAddable" class="note_item_add" href="#" @click.stop.prevent="onInlineNoteAddStart(t)" />
           <my-project-status class="note_item_status status status_1" :option="getStatusOption(t.status)" />
         </template>
         <template v-else>
           <input
             ref="editingNoteSubjectInputs"
+            v-model="editingNoteSubject"
             class="note_edit_input"
             type="text"
-            v-model="editingNoteSubject"
             @keydown.esc="editingNote = null"
             @blur="onInlineNoteEditEnd()"
-            @change="$event.target.blur()">
+            @change="$event.target.blur()"
+          >
         </template>
       </div>
       <div v-if="noteAddable && addingParentNote && addingParentNote.id === t.id" class="nestedList_add_item">
         <input
           ref="addingNoteSubjectInputs"
-          type="text"
           v-model="addingNoteSubject"
+          type="text"
           @keydown.esc="addingParentNote = null"
           @blur="onInlineNoteAddEnd()"
-          @change="$event.target.blur()">
+          @change="$event.target.blur()"
+        >
       </div>
       <nested-list
         v-if="t.hasChilds && t.childs && t.childs.length"
@@ -90,8 +94,8 @@
         :item-draggable="itemDraggable"
         :item-droppable-between="itemDroppableBetween"
         :drag-data="dragData"
-        @drag-data-change="emitDragDataChange($event)"
         :drop-hover="dropHover"
+        @drag-data-change="emitDragDataChange($event)"
         @drop-hover-change="emitDropHoverChange($event)"
         @drop-note="emitDropNote($event)"
         @item-click="onItemClick"

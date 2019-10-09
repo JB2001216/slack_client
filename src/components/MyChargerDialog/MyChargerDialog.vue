@@ -1,9 +1,13 @@
 <template>
   <div class="myChargerDialog" @click="onClose()">
     <div class="myChargerDialog_content" @click.stop>
-      <div class="myChargerDialog_content_close" @click="onClose()">×</div>
+      <div class="myChargerDialog_content_close" @click="onClose()">
+        ×
+      </div>
       <div class="myChargerDialog_content_header">
-        <div class="myChargerDialog_content_header_title">{{dialogTitle ? dialogTitle : $t('components.myChargerDialog.title')}}</div>
+        <div class="myChargerDialog_content_header_title">
+          {{ dialogTitle ? dialogTitle : $t('components.myChargerDialog.title') }}
+        </div>
         <my-space-user-search-input
           v-if="!disabled"
           class="myChargerDialog_content_header_search"
@@ -14,40 +18,41 @@
         />
       </div>
       <div class="myChargerDialog_content_body">
-        <table class="myChargerDialog_content_body_list" v-if="chargeUsers.length">
+        <table v-if="chargeUsers.length" class="myChargerDialog_content_body_list">
           <tbody>
             <my-space-user
-              tag="tr"
-              class="myChargerDialog_content_body_list_item"
               v-for="userId in chargeUsers"
               :key="userId"
-              :user-id="userId"
               v-slot="{user}"
+              tag="tr"
+              class="myChargerDialog_content_body_list_item"
+              :user-id="userId"
+              :tag-class="{hover: hoverUser === userId}"
               @mouseenter="hoverUser = userId"
               @mouseleave="hoverUser = null"
               @click="baton(userId)"
-              :tag-class="{hover: hoverUser === userId}"
             >
               <td class="myChargerDialog_content_body_list_item_avatar">
                 <my-space-user-avatar :user="user" :size="40" shape="circle" />
               </td>
               <td class="myChargerDialog_content_body_list_item_info">
                 <template v-if="user">
-                  <span class="myChargerDialog_content_body_list_item_info_name">{{user.displayName || user.account}}</span>
-                  <span class="myChargerDialog_content_body_list_item_info_email">{{user.email}}</span>
+                  <span class="myChargerDialog_content_body_list_item_info_name">{{ user.displayName || user.account }}</span>
+                  <span class="myChargerDialog_content_body_list_item_info_email">{{ user.email }}</span>
                 </template>
               </td>
               <td class="myChargerDialog_content_body_list_item_badge">
                 <span
                   v-if="value.batonUser === userId || (!hoverDeleteUser && hoverUser === userId && !disabled)"
-                  :class="{old: value.batonUser === userId && !hoverDeleteUser && hoverUser && hoverUser !== userId && !disabled}">{{$t('components.myChargerDialog.baton')}}</span>
+                  :class="{old: value.batonUser === userId && !hoverDeleteUser && hoverUser && hoverUser !== userId && !disabled}"
+                >{{ $t('components.myChargerDialog.baton') }}</span>
               </td>
               <td class="myChargerDialog_content_body_list_item_delete">
                 <span
                   v-if="!disabled"
+                  :class="{hover: hoverDeleteUser === userId}"
                   @mouseenter="hoverDeleteUser = userId"
                   @mouseleave="hoverDeleteUser = null"
-                  :class="{hover: hoverDeleteUser === userId}"
                   @click="deleteUser(userId)"
                 >×</span>
               </td>

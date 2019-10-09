@@ -1,19 +1,19 @@
 <template>
   <div id="app" :class="{[theme]: true}">
     <my-debug-tool v-if="enableDebugTool" />
-    <my-flash-message/>
-    <setting-router-view/>
-    <router-view/>
+    <my-flash-message />
+    <setting-router-view />
+    <router-view />
 
     <!-- TODO: 暫定的に言語切替をここに入れる -->
     <div style="background:rgba(0,0,0,0.5); border-radius:6px; padding:5px 8px; position:fixed; left:2px; bottom:30px; z-index:1; color:#fff;">
       <template v-for="(locale, i) in loadableLocales">
         <span v-if="i !== 0" :key="i" style="padding: 0 4px;">|</span>
-        <span :key="locale" @click.prevent="$store.actions.setLocale(locale)" style="cursor:pointer;">{{locale}}</span>
+        <span :key="locale" style="cursor:pointer;" @click.prevent="$store.actions.setLocale(locale)">{{ locale }}</span>
       </template>
     </div>
     <div style="background:rgba(0,0,0,0.5); border-radius:6px; padding:5px 8px; position:fixed; left:2px; bottom:0px; z-index:1; color:#fff;">
-      <span>{{version}}</span>
+      <span>{{ version }}</span>
     </div>
   </div>
 </template>
