@@ -49,7 +49,7 @@ const components: { [key: string]: SyncComponent<any, any, any, any> | AsyncComp
   SettingRouterView,
 };
 
-const enableDebugTool = !!process.env.WEBPACK_DEV_SERVER_URL;
+const enableDebugTool = process.env.NODE_ENV !== 'production';
 if (enableDebugTool) {
   components['MyDebugTool'] = () => import(/* webpackChunkName: "plugins/debug/MyDebugTool" */ './plugins/debug/MyDebugTool.vue');
 }
