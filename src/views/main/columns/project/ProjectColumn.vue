@@ -115,6 +115,14 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Route, NavigationGuard } from 'vue-router';
 import store from '@/store';
 import { Perm } from '@/lib/permissions';
+import { SubColumnTabNames } from '@/consts';
+
+const tabs = {
+  [SubColumnTabNames.task]: 'tasks',
+  [SubColumnTabNames.file]: 'files',
+  [SubColumnTabNames.note]: 'notes',
+  [SubColumnTabNames.ganttChart]: 'notes',
+};
 
 async function beforeRouteChange(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
   if (to.params.projectId) {
@@ -129,10 +137,10 @@ async function beforeRouteChange(to: Route, from: Route, next: Parameters<Naviga
     }
   }
 
-  // タブ未選択の場合タスクを選択
+  // If no tab is selected, select the last selected tab
   if (to.name === 'project') {
     return next({
-      name: 'tasks',
+      name: tabs[store.state.lastSelectedSubColumnTab],
       params: {
         userId: to.params.userId,
         projectId: to.params.projectId,

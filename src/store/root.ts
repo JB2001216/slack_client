@@ -1,9 +1,10 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import i18n, { Locale, loadLocale, defaultLocale } from '@/i18n';
 import localStorage from '@/lib/local-storage';
-import { apiRegistry, UsersApi, MyUser, Space, SpaceUser } from '@/lib/api';
+import { apiRegistry, UsersApi, MyUser, Space } from '@/lib/api';
 import activeUser from './modules/active-user';
 import settingRouter from './modules/setting-router';
+import { SubColumnTabNames } from '@/consts';
 
 export interface LoggedInUser extends MyUser {
   token: string;
@@ -14,6 +15,7 @@ class RootState {
   titleKey?: string = undefined;
   loggedInUsers: LoggedInUser[] = [];
   fullMainColumn = false;
+  lastSelectedSubColumnTab = SubColumnTabNames.task;
 }
 
 class RootGetters extends Getters<RootState>() {
@@ -73,6 +75,10 @@ class RootMutations extends Mutations<RootState>() {
 
   setFullMainColumn(v: boolean) {
     this.state.fullMainColumn = v;
+  }
+
+  setLastSelectedSubColumnTab(tab: SubColumnTabNames) {
+    this.state.lastSelectedSubColumnTab = tab;
   }
 
   editSpace(space: Space) {
