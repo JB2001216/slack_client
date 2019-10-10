@@ -61,15 +61,9 @@
 
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Perm } from '@/lib/permissions';
-
-enum SubColumnTabNames {
-  task = 'task',
-  file = 'file',
-  note = 'note',
-  ganttChart = 'ganttChart',
-}
+import { SubColumnTabNames } from '@/consts';
 
 @Component
 export default class SubColumnLayout extends Vue {
@@ -100,6 +94,21 @@ export default class SubColumnLayout extends Vue {
 
   get projectUserAddable() {
     return this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.ADD_PROJECT_USER);
+  }
+
+  setLastSelectedSubColumnTab() {
+    if (this.activeTab) {
+      this.$store.mutations.setLastSelectedSubColumnTab(this.activeTab);
+    }
+  }
+
+  @Watch('activeTab')
+  onActiveTabChange() {
+    this.setLastSelectedSubColumnTab();
+  }
+
+  mounted() {
+    this.setLastSelectedSubColumnTab();
   }
 }
 </script>

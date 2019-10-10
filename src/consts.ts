@@ -3,6 +3,13 @@ export enum ProjectStatusCategory {
   Etc = 90,
 }
 
+export enum SubColumnTabNames {
+  task = 'task',
+  file = 'file',
+  note = 'note',
+  ganttChart = 'ganttChart',
+}
+
 export const colorPickerDefaultColors: string[] = [
   '#ad1357',
   '#f4501e',
