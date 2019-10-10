@@ -1,13 +1,13 @@
 {
   "name": "erniepjm",
-  "version": "0.1.11",
+  "version": "0.1.10",
   "author": "Ernie inc <info@ernie.co.jp>",
-  "homepage": "http://ernie.co.jp/",
+  "homepage": "https://ernie.co.jp/",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
-    "publish:dev": "vue-cli-service electron:build --mode development -mwl --publish always",
+    "publish:dev": "vue-cli-service electron:build --mode development -mw --publish always",
     "generate-icons": "electron-icon-builder --input=./public/img/icon.png --output=build --flatten",
     "lint": "vue-cli-service lint",
     "postinstall": "electron-builder install-app-deps",
@@ -67,7 +67,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,vue}": [
+    "*.{ts,js,vue}": [
       "vue-cli-service lint",
       "git add"
     ]
