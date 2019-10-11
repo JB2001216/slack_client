@@ -171,6 +171,7 @@ import MyColorPicker from '@/components/MyColorPicker.vue';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import { colorPickerDefaultColors, ProjectStatusCategory } from '@/consts';
 
+
 interface Status {
   id?: number;
   category: number;

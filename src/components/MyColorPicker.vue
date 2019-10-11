@@ -13,11 +13,14 @@
           <div class="myColorPicker_pop_palette_color_before" :style="{background: c}" />
         </li>
       </ul>
+      <chrome-picker v-model="colors" @input="onColorUpdate" />
     </div>
   </div>
 </template>
 
 <style lang="stylus">
+.vc-chrome
+  width: initial;
 .myColorPicker
   position: relative
   *
@@ -66,9 +69,16 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { colorPickerDefaultColors } from '@/consts';
+import { Chrome } from 'vue-color';
 
-@Component
+
+@Component({
+  components: {
+    'chrome-picker': Chrome,
+  },
+})
 export default class MyColorPicker extends Vue {
+
   $refs!: {
     pop: HTMLDivElement;
   }
@@ -80,6 +90,7 @@ export default class MyColorPicker extends Vue {
   customColors!: string[];
 
   opened = false;
+  colors:any = '#194d33';
 
   get defaultColors() {
     return colorPickerDefaultColors;
@@ -94,8 +105,12 @@ export default class MyColorPicker extends Vue {
   }
 
   onColorSelect(color: string) {
+    this.colors = color;
     this.$emit('input', color);
-    this.onClose();
+  }
+
+  onColorUpdate(color: any) {
+    this.$emit('input', this.colors.hex8);
   }
 
   onWindowMouseDownUseCapture(ev: MouseEvent) {
