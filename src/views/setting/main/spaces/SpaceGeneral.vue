@@ -6,29 +6,25 @@
       </h3>
 
       <div class="option_spaceGeneral_img">
+        <input
+          id="avatarInput"
+          ref="avatarInput"
+          type="file"
+          :accept="avatarInputAccept"
+          @change="inputFileChange"
+        >
         <div class="option_spaceGeneral_img_thumbnail">
-          <input
-            ref="avatarInput1"
-            type="file"
-            :accept="avatarInputAccept"
-            @change="inputFileChange"
-          >
-          <img v-if="avatarUrl" ref="avatarImage" :src="avatarUrl" alt="pic">
-          <img v-else src="~@/assets/images/parts/img_option_space_sample.jpg" alt="pic">
+          <label for="avatarInput">
+            <img v-if="avatarUrl" ref="avatarImage" :src="avatarUrl" alt="pic">
+            <img v-else src="~@/assets/images/parts/img_option_space_sample.jpg" alt="pic">
+          </label>
         </div>
         <div /><!-- separator -->
-        <div class="option_spaceGeneral_uploadButton">
-          <input
-            ref="avatarInput2"
-            type="file"
-            :accept="avatarInputAccept"
-            @drop.prevent
-            @change="inputFileChange"
-          >
-          <button>
+        <label class="option_spaceGeneral_uploadButtonContainer" for="avatarInput">
+          <div class="formButtonLight option_spaceGeneral_uploadButton_btn">
             {{ $t('views.setting.main.spaceGeneral.uploadBtn') }}
-          </button>
-        </div>
+          </div>
+        </label>
         <p>{{ $t('views.setting.main.spaceGeneral.uploadDescription') }}</p>
       </div>
 
@@ -40,7 +36,7 @@
       </div>
 
       <div class="option_spaceGeneral_addButton clearfix">
-        <button class="option_spaceGeneral_button" :disabled="saving" @click="save">
+        <button class="commonButtonPrimary wide" :disabled="saving" @click="save">
           {{ $t('views.setting.main.spaceGeneral.saveBtn') }}
         </button>
       </div>
@@ -51,10 +47,24 @@
 
 <style lang="stylus">
 .option_spaceGeneral
+  input[type="file"]
+    display: none
+  label[for="avatarInput"]
+    cursor: pointer
+
   &_img_thumbnail
+    label
+      width: 160px
+      height: 160px
+      display: inline-block
     img
+      width: 100%
+      height: 100%
       object-fit: cover
 
+  &_uploadButton_btn
+    display: inline-block
+    margin-top: 15px
 </style>
 
 
@@ -65,8 +75,7 @@ import { apiRegistry, SpacesApi, SpacesSpaceIdAvatarPostRequest } from '@/lib/ap
 @Component
 export default class SpaceGeneral extends Vue {
   $refs!: {
-    avatarInput1: HTMLInputElement;
-    avatarInput2: HTMLInputElement;
+    avatarInput: HTMLInputElement;
     avatarImage: HTMLImageElement;
   };
 
@@ -83,8 +92,7 @@ export default class SpaceGeneral extends Vue {
   }
 
   clearAvatarInput() {
-    this.$refs.avatarInput1.value = '';
-    this.$refs.avatarInput2.value = '';
+    this.$refs.avatarInput.value = '';
   }
 
   beforeMount() {

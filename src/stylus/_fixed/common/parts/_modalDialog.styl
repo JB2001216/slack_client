@@ -1,0 +1,25 @@
+.modalDialog
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  background: rgba(0,0,0,0.3)
+  z-index: 10000
+  position: fixed
+  left: 0
+  top: 0
+  right: 0
+  bottom: 0
+  &_content
+    min-width: 400px
+    max-width: 600px
+    padding: 30px
+    background: #fff
+    border-radius: 4px
+    color: #333
+    font-family: $body-font-family
+    font-size: 16px
+    font-weight: bold
+    line-height: 24px
+    &_footer
+      margin-top: 30px

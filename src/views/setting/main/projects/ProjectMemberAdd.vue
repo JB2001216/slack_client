@@ -40,7 +40,7 @@
         </tr>
       </table>
       <div class="option_spaceMemberAdd_addButton clearfix">
-        <button class="option_spaceMemberAdd_button" @click="save()">
+        <button class="commonButtonPrimary wide" @click="save()">
           {{ $t('views.setting.main.projectMemberAdd.addMembers') }}
         </button>
       </div>

@@ -109,7 +109,7 @@
       </dl>
 
       <div class="option_commonColumn_bottomButtons">
-        <button type="submit" class="option_commonColumn_bottomButtons_button" @click="save()">
+        <button type="submit" class="option_commonColumn_bottomButtons_button commonButtonPrimary wide" @click="save()">
           {{ $t('views.setting.main.statusFlow.save') }}
         </button>
       </div>
@@ -147,20 +147,6 @@
       margin-top: 20px
       &_button
         float: right
-        display: block
-        min-width: 160px
-        height: 40px
-        padding: 9px
-        background: #007ff5
-        border: none
-        border-radius: 20px
-        cursor: pointer
-        outline: none
-        color: #fff
-        font-size: 14px
-        font-weight: bold
-        line-height: 20px
-        text-align: center
 </style>
 
 

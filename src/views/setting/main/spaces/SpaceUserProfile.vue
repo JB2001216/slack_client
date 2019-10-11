@@ -31,7 +31,7 @@
       <input v-model="displayName" type="text">
     </div>
     <div class="option_spaceProfileGeneral_addButton clearfix">
-      <button class="commonButtonPrimary" :disabled="saving" @click="save">
+      <button class="commonButtonPrimary wide" :disabled="saving" @click="save">
         {{ $t('views.setting.main.userProfile.saveBtn') }}
       </button>
     </div>
@@ -59,10 +59,6 @@
   &_uploadButton_button
     display: inline-block
     margin-top: 15px
-
-  &_button:disabled
-    opacity: 0.3
-    cursor: default
 </style>
 
 
