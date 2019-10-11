@@ -133,6 +133,7 @@ export default class MyColorPicker extends Vue {
   onColorSelect(color: string) {
     this.colors = color;
     this.$emit('input', color);
+    this.onClose();
   }
 
   onColorUpdate(color: any) {
