@@ -13,7 +13,7 @@
         {{ $t('views.setting.main.userAccount.subTitle') }}
       </h4>
 
-      <div class="option_spaceProfileAccount_email">
+      <div class="option_spaceProfileAccount_inputRow option_spaceProfileAccount_inputRowEmail">
         <input
           v-model="newEmailInput"
           type="email"
@@ -21,7 +21,7 @@
           @keyup="validateNewEmail"
         >
         <button
-          class="option_spaceProfileAccount_button"
+          class="commonButtonPrimary option_spaceProfileAccount_inputRow_btn"
           :disabled="!isNewEmailValid || savingEmail"
           @click="submitNewEmail"
         >
@@ -33,7 +33,7 @@
         SMS ({{ $t('views.setting.main.userAccount.phoneNumber') }})
       </h3>
 
-      <div class="option_spaceProfileAccount_tel">
+      <div class="option_spaceProfileAccount_inputRow option_spaceProfileAccount_inputRowTel">
         <input
           v-model="phoneNumber"
           type="tel"
@@ -42,7 +42,7 @@
           @keyup="validatePhoneNumber"
         >
         <button
-          class="option_spaceProfileAccount_button"
+          class="commonButtonPrimary option_spaceProfileAccount_inputRow_btn"
           :disabled="!isPhoneNumberValid || savingConfirmSMS"
           @click="submitForPincode"
         >
@@ -62,26 +62,39 @@
       <div class="option_spaceProfileAccount_text">
         <p>{{ $t('views.setting.main.userAccount.text') }}</p>
       </div>
-
-      <div
-        v-if="showNotifForEmail"
-        class="option_spaceProfileAccount_sent"
-        :style="{ bottom: showNotifForSMS ? '125px' : '30px' }"
-        @click="showNotifForEmail = false"
-      >
-        <p>Confirmation email has been sent.</p>
-      </div>
-
-      <div
-        v-if="showNotifForSMS"
-        class="option_spaceProfileAccount_sent"
-        @click="showNotifForSMS = false"
-      >
-        <p>SMS with pincode has been sent.</p>
-      </div>
     </div>
   </div>
 </template>
+
+
+<style lang="stylus">
+.option_spaceProfileAccount
+  &_inputRow
+    input
+      width: 100%
+      padding: 7px 15px
+      margin-top: 15px
+      margin-right: 15px
+      border: 1px solid #c4c4c4
+      border-radius: 4px
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+      color: #333
+      font-family: "Noto Sans CJK JP"
+      font-size: 16px
+      line-height: 1.5
+    &Email
+      input
+        max-width: 305px
+    &Tel
+      input
+        max-width: 200px
+    &_btn
+      margin-top: 15px
+      vertical-align: top
+</style>
+
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
@@ -96,10 +109,7 @@ export default class SpaceUserAccount extends Vue {
   phoneNumber: string = '';
   isPhoneNumberValid: boolean = false;
 
-  showNotifForEmail: boolean = false;
-
   showPinHiddenInput: boolean = false;
-  showNotifForSMS: boolean = false;
 
   pin: string = '';
 
@@ -157,7 +167,7 @@ export default class SpaceUserAccount extends Vue {
     try {
       this.savingEmail = true;
       await this.api.updateEmail({ email: this.newEmailInput });
-      this.showNotifForEmail = true;
+      this.$flash(this.$t('views.setting.main.userAccount.confirmEmailHasBeenSent').toString(), 'success');
       this.isNewEmailValid = false;
     } catch (err) {
       this.$appEmit('error', { err, options: { firstMessageOnValidationError: true } });
@@ -172,7 +182,7 @@ export default class SpaceUserAccount extends Vue {
       this.savingConfirmSMS = true;
       const smsRes = await this.api.confirmSMS({ sms: this.phoneNumber });
       this.smsToken = smsRes.token;
-      this.showNotifForSMS = true;
+      this.$flash(this.$t('views.setting.main.userAccount.smsWithPincodeHasBeenSent').toString(), 'success');
       this.showPinHiddenInput = true;
       this.isPhoneNumberValid = false;
     } catch (err) {
@@ -185,7 +195,6 @@ export default class SpaceUserAccount extends Vue {
   async submitSmsChange() {
     if (!this.api) return;
     try {
-      this.showNotifForSMS = false;
       this.savingSMS = true;
       const res = await this.api.updateSMS({ token: this.smsToken, pin: this.pin });
       this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');

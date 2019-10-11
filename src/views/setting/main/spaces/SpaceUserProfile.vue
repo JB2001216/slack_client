@@ -18,7 +18,7 @@
         </label>
       </div>
       <label class="option_spaceProfileGeneral_uploadButton" for="avatarInput">
-        <div class="option_spaceProfileGeneral_uploadButton_button">
+        <div class="formButtonLight option_spaceProfileGeneral_uploadButton_button">
           {{ $t('views.setting.main.userProfile.uploadBtn') }}
         </div>
       </label>
@@ -31,7 +31,7 @@
       <input v-model="displayName" type="text">
     </div>
     <div class="option_spaceProfileGeneral_addButton clearfix">
-      <button class="option_spaceProfileGeneral_button" :disabled="saving" @click="save">
+      <button class="commonButtonPrimary" :disabled="saving" @click="save">
         {{ $t('views.setting.main.userProfile.saveBtn') }}
       </button>
     </div>
@@ -58,17 +58,7 @@
 
   &_uploadButton_button
     display: inline-block
-    padding: 10px 15px
     margin-top: 15px
-    background: #fff
-    border: 1px solid #ccc
-    border-radius: 4px
-    cursor: pointer
-    color: #333
-    font-size: 16px
-    font-weight: bold
-    line-height: 24px
-    text-align: center
 
   &_button:disabled
     opacity: 0.3

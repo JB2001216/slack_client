@@ -227,6 +227,8 @@ const struct: LocaleStruct = {
             sendPassBtn: '変更用パスワードを送信',
             temporaryPassPlaceholder: 'ワンタイムパスワード',
             text: 'メールアドレスが利用出来ない、忘れてしまった場合の救済措置として SMS登録をおすすめします。本人以外には非公開です。',
+            confirmEmailHasBeenSent: '確認メールを送信しました。',
+            smsWithPincodeHasBeenSent: 'ワンタイムパスワードを送信しました。',
           },
           userProfile: {
             uploadBtn: '画像をアップロード',
