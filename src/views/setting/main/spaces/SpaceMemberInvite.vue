@@ -52,7 +52,7 @@
           <button class="option_spaceMemberInvite_addButton_button" type="button" @click="addRow()">
             {{ $t('views.setting.main.spaceMemberInvite.addAnEntryField') }}
           </button>
-          <button class="option_spaceMemberInvite_button" type="submit">
+          <button class="commonButtonPrimary wide" type="submit">
             {{ $t('views.setting.main.spaceMemberInvite.sendInvitation') }}
           </button>
         </div>

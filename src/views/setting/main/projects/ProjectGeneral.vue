@@ -9,7 +9,7 @@
       </div>
       <div class="option_spaceProjectsGeneral_addButton">
         <button
-          class="option_spaceProjectsGeneral_button"
+          class="commonButtonPrimary wide"
           type="button"
           :disabled="!activeProject || saving"
           @click="save"
