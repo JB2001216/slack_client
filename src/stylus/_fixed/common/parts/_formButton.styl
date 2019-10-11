@@ -1,0 +1,25 @@
+.formButton
+  font-family: $body-font-family
+  font-size: 16px
+  font-weight: bold
+  height: 40px
+  line-height: 40px
+  box-sizing: border-box
+  padding: 0 12px
+  border-radius: 4px
+  cursor: pointer
+  outline: none
+  border: none
+  &:disabled,
+  &.disabled
+    opacity: 0.3
+    cursor: default
+
+.formButtonLight
+  @extends .formButton
+  color: #333
+  background-color: #fff
+  border: 1px solid #ccc
+  line-height: 38px
+  &:hover
+    background-color: #F5F5F5

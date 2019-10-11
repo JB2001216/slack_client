@@ -1,0 +1,39 @@
+.formBottomButton
+  font-family: $body-font-family
+  font-size: 14px
+  font-weight: normal
+  height: 32px
+  line-height: 32px
+  box-sizing: border-box
+  padding: 0 16px
+  border-radius: 16px
+  cursor: pointer
+  outline: none
+  border: none
+  &:disabled,
+  &.disabled
+    opacity: 0.3
+    cursor: default
+
+.formBottomButtonPrimary
+  @extends .formBottomButton
+  color: #fff
+  background-color: #0074E0
+  &:hover
+    font-weight: bold
+
+.formBottomButtonSecondary
+  @extends .formBottomButton
+  color: #2F80ED
+  background-color: #E3F0FF
+  &:hover
+    font-weight: bold
+
+.formBottomButtonLight
+  @extends .formBottomButton
+  color: #C4C4C4
+  background-color: #fff
+  border: 1px solid #C4C4C4
+  line-height: 30px
+  &:hover
+    background-color: #F5F5F5

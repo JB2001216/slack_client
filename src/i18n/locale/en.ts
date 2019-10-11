@@ -226,6 +226,8 @@ const struct: LocaleStruct = {
             sendPassBtn: 'Send pincode',
             temporaryPassPlaceholder: 'Temporary password',
             text: 'As a remedy in case you forget your email address or forget it SMS registration is recommended. It is private to non-persons.',
+            confirmEmailHasBeenSent: 'Confirmation email has been sent.',
+            smsWithPincodeHasBeenSent: 'SMS with pincode has been sent.',
           },
           userProfile: {
             uploadBtn: 'Upload image',

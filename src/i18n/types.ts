@@ -236,6 +236,8 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           sendPassBtn: string;
           temporaryPassPlaceholder: string;
           text: string;
+          confirmEmailHasBeenSent: string;
+          smsWithPincodeHasBeenSent: string;
         };
         userProfile: {
           uploadBtn: string;

@@ -1,0 +1,42 @@
+.commonButton
+  font-family: $body-font-family
+  font-size: 14px
+  font-weight: bold
+  height: 40px
+  line-height: 40px
+  box-sizing: border-box
+  padding: 0 16px
+  border-radius: 20px
+  cursor: pointer
+  outline: none
+  border: none
+  &:disabled,
+  &.disabled
+    opacity: 0.3
+    cursor: default
+
+.commonButtonPrimary
+  @extends .commonButton
+  color: #fff
+  background-color: #007FF5
+  &:hover
+    background-color: #0074E0
+
+.commonButtonPrimarySuccess
+  @extends .commonButton
+  color: #2F80ED
+  background-color: #EBF0F5
+
+.commonButtonNormal
+  @extends .commonButton
+  color: #fff
+  background-color: #C4C4C4
+  &:hover
+    background-color: #ADADAD
+
+.commonButtonDanger
+  @extends .commonButton
+  color: #fff
+  background-color: #E02D2D;
+  &:hover
+    background-color: #CC2929
