@@ -133,12 +133,10 @@ export default class MyColorPicker extends Vue {
   onColorSelect(color: string) {
     this.colors = color;
     this.$emit('input', color);
-    console.log(this.customColors);
   }
 
   onColorUpdate(color: any) {
     this.$emit('input', this.colors.hex8);
-    console.log(this.customColors);
   }
 
   onWindowMouseDownUseCapture(ev: MouseEvent) {
