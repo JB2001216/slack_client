@@ -2,25 +2,42 @@
   <div class="myColorPicker">
     <slot :open="onOpen" :close="onClose" :opened="opened" />
     <div v-if="opened" ref="pop" class="myColorPicker_pop">
-      <ul class="clearfix myColorPicker_pop_palette">
-        <li
-          v-for="c in defaultColors"
-          :key="c"
-          class="myColorPicker_pop_palette_color"
-          :class="{active: c===value}"
-          @click="onColorSelect(c)"
-        >
-          <div class="myColorPicker_pop_palette_color_before" :style="{background: c}" />
-        </li>
-      </ul>
-      <chrome-picker v-model="colors" @input="onColorUpdate" />
+      <div v-if="!custom">
+        <ul class="clearfix myColorPicker_pop_palette">
+          <li
+            v-for="c in defaultColors"
+            :key="c"
+            class="myColorPicker_pop_palette_color"
+            :class="{active: c===value}"
+            @click="onColorSelect(c)"
+          >
+            <div class="myColorPicker_pop_palette_color_before" :style="{background: c}" />
+          </li>
+        </ul>
+        <hr>
+        <ul class="clearfix myColorPicker_pop_palette">
+          <li
+            v-for="c in customColors"
+            :key="c"
+            class="myColorPicker_pop_palette_color"
+            :class="{active: c===value}"
+            @click="onColorSelect(c)"
+          >
+            <div class="myColorPicker_pop_palette_color_before" :style="{background: c}" />
+          </li>
+          <li class="myColorPicker_pop_palette_color" @click="onCustom()">
+            <div class="myColorPicker_pop_palette_color_before" :style="{lineHeight: 1, border: '1px solid gray', textAlign:'center'}">
+              +
+            </div>
+          </li>
+        </ul>
+      </div>
+      <chrome-picker v-if="custom" v-model="colors" @input="onColorUpdate" />
     </div>
   </div>
 </template>
 
 <style lang="stylus">
-.vc-chrome
-  width: initial;
 .myColorPicker
   position: relative
   *
@@ -63,6 +80,8 @@
         &.active:after,
         &:hover:after
           border: 1px solid #c4c4c4
+  .vc-chrome
+    width: initial
 </style>
 
 
@@ -90,6 +109,7 @@ export default class MyColorPicker extends Vue {
   customColors!: string[];
 
   opened = false;
+  custom = false;
   colors:any = '#194d33';
 
   get defaultColors() {
@@ -98,19 +118,27 @@ export default class MyColorPicker extends Vue {
 
   onOpen() {
     this.opened = true;
+    this.custom = false;
   }
 
   onClose() {
     this.opened = false;
+    this.custom = false;
+  }
+
+  onCustom() {
+    this.custom = true;
   }
 
   onColorSelect(color: string) {
     this.colors = color;
     this.$emit('input', color);
+    console.log(this.customColors);
   }
 
   onColorUpdate(color: any) {
     this.$emit('input', this.colors.hex8);
+    console.log(this.customColors);
   }
 
   onWindowMouseDownUseCapture(ev: MouseEvent) {
