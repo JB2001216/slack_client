@@ -1,4 +1,4 @@
-import { app, protocol, shell, BrowserWindow, Tray, Menu, ipcMain } from 'electron';
+import { app, protocol, shell, BrowserWindow, Tray, Menu, ipcMain, dialog } from 'electron';
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
@@ -33,9 +33,21 @@ if (!process.env.WEBPACK_DEV_SERVER_URL) {
     message = message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
     sendStatusToWindow(message);
   });
-  autoUpdater.on('update-downloaded', (info) => {
+  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     sendStatusToWindow('Update downloaded');
-  });
+    dialog.showMessageBox({
+      type: 'question',
+      buttons: ['Yes', 'No'],
+      defaultId: 0,
+      message: `Version ${releaseName} is available, do you want to install it now?`,
+      title: 'Update available',
+    }, (response) => {
+      if (response === 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
+  }
+  );
   app.on('ready', () => {
     autoUpdater.allowDowngrade = false;
     autoUpdater.autoDownload = true;
