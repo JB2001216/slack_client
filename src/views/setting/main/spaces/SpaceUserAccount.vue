@@ -18,10 +18,11 @@
           v-model="newEmailInput"
           type="email"
           placeholder="sample@gmail.com"
+          class="basicInput"
           @keyup="validateNewEmail"
         >
         <button
-          class="commonButtonPrimary option_spaceProfileAccount_inputRow_btn"
+          class="basicButtonPrimary option_spaceProfileAccount_inputRow_btn"
           :disabled="!isNewEmailValid || savingEmail"
           @click="submitNewEmail"
         >
@@ -39,10 +40,11 @@
           type="tel"
           placeholder="+819011112222"
           minlength="3"
+          class="basicInput"
           @keyup="validatePhoneNumber"
         >
         <button
-          class="commonButtonPrimary option_spaceProfileAccount_inputRow_btn"
+          class="basicButtonPrimary option_spaceProfileAccount_inputRow_btn"
           :disabled="!isPhoneNumberValid || savingConfirmSMS"
           @click="submitForPincode"
         >
@@ -75,15 +77,6 @@
       padding: 7px 15px
       margin-top: 15px
       margin-right: 15px
-      border: 1px solid #c4c4c4
-      border-radius: 4px
-      overflow: hidden
-      white-space: nowrap
-      text-overflow: ellipsis
-      color: #333
-      font-family: "Noto Sans CJK JP"
-      font-size: 16px
-      line-height: 1.5
     &Email
       input
         max-width: 305px

@@ -22,6 +22,8 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     login: string;
     save: string;
     cancel: string;
+    finishEditing: string;
+    markdownHelp: string;
     spaceRole: {
       OWNER: string;
       ADMIN: string;

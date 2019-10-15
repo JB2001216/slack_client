@@ -13,7 +13,7 @@
       </p>
       <form @submit.prevent="login()">
         <div class="columnWrap_right_inputText">
-          <my-text-input v-model="email" :message="emailMessage" type="email" :placeholder="$t('views.login.enterTheEmail')" />
+          <my-single-form-text-input v-model="email" :message="emailMessage" type="email" :placeholder="$t('views.login.enterTheEmail')" />
         </div>
         <button v-show="false" type="submit" />
       </form>
@@ -43,14 +43,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { MyTextInputMessage } from '@/components/MyTextInput';
+import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
 import { apiRegistry, UsersApi, ApiErrors, getJsonFromResponse } from '@/lib/api';
 
 @Component
 export default class Login extends Vue {
   loginning = false;
   email = '';
-  emailMessage: MyTextInputMessage = null;
+  emailMessage: MySingleFormTextInputMessage = null;
 
   get backTo() {
     let userId: number | null = null;

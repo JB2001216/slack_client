@@ -14,6 +14,8 @@ const struct: LocaleStruct = {
       login: 'ログイン',
       save: '保存',
       cancel: 'キャンセル',
+      finishEditing: '編集を終了する',
+      markdownHelp: 'Markdownヘルプ',
       spaceRole: {
         OWNER: 'オーナー',
         ADMIN: '管理者',

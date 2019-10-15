@@ -18,12 +18,16 @@
               :preview-placeholder="$t('views.taskColumn.detailsAreEmpty')"
             />
           </div>
-          <div class="dashboardWrap_submit">
-            <button @click="endEditDetail(true)">
-              {{ $t('common.save') }}
+          <div class="dashboardWrap_footer">
+            <button class="formFooterButtonPrimary wide dashboardWrap_footer_button" @click="endEditDetail(true)">
+              {{ $t('common.finishEditing') }}
             </button>
-            <button @click="endEditDetail()">
+            <!--button class="formFooterButtonSecondary wide dashboardWrap_footer_button" @click="endEditDetail()">
               {{ $t('common.cancel') }}
+            </button-->
+            <button class="formFooterButtonLight dashboardWrap_footer_mdHelpButton">
+              <span class="dashboardWrap_footer_mdHelpButton_iconText">?</span>
+              <span>{{ $t('common.markdownHelp') }}</span>
             </button>
           </div>
         </div>
@@ -177,9 +181,6 @@
   .favoriteIcon
     &.active path
       fill: #EDA62A !important
-  .dashboardWrap_submit button:nth-child(2)
-    background: #e6f0ff
-    color: #2f80ed
   .dashboardWrap_task
     position: relative
     &_editButton
@@ -223,33 +224,25 @@
         font-size: 12px
         padding: 0
         border: none
-  .dashboardWrap_submit
+  .dashboardWrap_footer
     display: block
     width: 100%
     min-height: 60px
     padding: 9px 20px 24px 20px
     background: #fff
     border-top: 2px solid #ededed
-    text-align: center
-    display: inline-block
     position: absolute
     bottom: 0
     left: 0
-    button
-      display: inline-block
-      width: 220px
-      padding: 10px
-      margin: 15px 1.5% 0 1.5%
-      border: none
-      border-radius: 90px
-      cursor: pointer
-      font-family: 'Noto Sans CJK JP'
-      font-size: 14px
-      line-height: 1
-      text-align: center
-      &:first-child
-        background: #2f80ed
-        color: #fff
+    text-align: center
+    &_mdHelpButton
+      position: absolute
+      right: 20px
+      width: 180px
+      &_iconText
+        font-weight: bold
+        padding-right: 6px
+
   .dashboardWrap_detail
     .noteEditWrap_post
       margin-top: 0

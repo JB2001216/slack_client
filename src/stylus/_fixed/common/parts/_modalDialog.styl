@@ -12,14 +12,22 @@
   bottom: 0
   &_content
     min-width: 400px
-    max-width: 600px
+    max-width: 400px
     padding: 30px
     background: #fff
     border-radius: 4px
-    color: #333
     font-family: $body-font-family
     font-size: 16px
-    font-weight: bold
     line-height: 24px
-    &_footer
+    &_title
+      color: #333
+      font-weight: bold
+      margin-bottom: 16px
+    &_description
+      color: #666
+    &_footerButtons
       margin-top: 30px
+      display: flex
+      justify-content: flex-end
+      &_button:not(:last-child)
+        margin-right: 16px

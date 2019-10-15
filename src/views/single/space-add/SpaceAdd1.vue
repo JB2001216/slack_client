@@ -13,7 +13,7 @@
       </p>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
-          <my-text-input
+          <my-single-form-text-input
             v-model="email"
             type="email"
             required
@@ -51,13 +51,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { MyTextInputMessage } from '@/components/MyTextInput';
+import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
 import { apiRegistry, SpacesApi, ApiErrors, getJsonFromResponse } from '@/lib/api';
 
 @Component
 export default class SpaceAdd1 extends Vue {
   email = '';
-  emailMessage: MyTextInputMessage = null;
+  emailMessage: MySingleFormTextInputMessage = null;
   saving = false;
 
   get backTo() {

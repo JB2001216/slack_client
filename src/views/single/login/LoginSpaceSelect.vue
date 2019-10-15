@@ -58,7 +58,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Route, NavigationGuard } from 'vue-router';
-import { MyTextInputMessage } from '@/components/MyTextInput';
+import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
 import { apiRegistry, UsersApi, SpacesPostRequestBody, SelectLoginUser, ApiErrors, getJsonFromResponse } from '@/lib/api';
 import { RouteError } from '@/lib/errors';
 import store from '@/store';

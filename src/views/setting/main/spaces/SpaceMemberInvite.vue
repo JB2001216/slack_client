@@ -24,10 +24,22 @@
           <template v-for="(r, i) in rows">
             <tr :key="`body_${i}`">
               <td>
-                <input v-model="r.body.email" type="email" :class="{error: r.errors.email || r.errors.nonFieldErrors}" placeholder="sample@gmail.com">
+                <input
+                  v-model="r.body.email"
+                  type="email"
+                  class="basicInput"
+                  :class="{error: r.errors.email || r.errors.nonFieldErrors}"
+                  placeholder="sample@gmail.com"
+                >
               </td>
               <td>
-                <input v-model="r.body.account" type="text" :class="{error: r.errors.account}" :placeholder="$t('views.setting.main.spaceMemberInvite.accountSample')">
+                <input
+                  v-model="r.body.account"
+                  type="text"
+                  class="basicInput"
+                  :class="{error: r.errors.account}"
+                  :placeholder="$t('views.setting.main.spaceMemberInvite.accountSample')"
+                >
               </td>
               <td class="clearfix">
                 <div class="select" :class="{error: r.errors.spaceRoleId}">
@@ -49,10 +61,10 @@
           </template>
         </table>
         <div class="option_spaceMemberInvite_addButton clearfix">
-          <button class="option_spaceMemberInvite_addButton_button" type="button" @click="addRow()">
+          <button class="iconButtonPlus" type="button" @click="addRow()">
             {{ $t('views.setting.main.spaceMemberInvite.addAnEntryField') }}
           </button>
-          <button class="commonButtonPrimary wide" type="submit">
+          <button class="basicButtonPrimary wide" type="submit">
             {{ $t('views.setting.main.spaceMemberInvite.sendInvitation') }}
           </button>
         </div>

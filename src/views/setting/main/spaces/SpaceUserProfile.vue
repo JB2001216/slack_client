@@ -9,10 +9,16 @@
         ref="avatarInput"
         type="file"
         :accept="avatarInputAccept"
-        @change="inputFileChange"
+        @change="avatarInputChange"
       >
-      <div class="option_spaceProfileGeneral_img_thumbnail">
-        <label for="avatarInput">
+      <div class="option_spaceProfileGeneral_img_thumbnail" :class="{ avatarFileDragging }">
+        <label
+          for="avatarInput"
+          @dragover.prevent.stop="onAvatarImageDragOver"
+          @dragleave.prevent.stop="avatarFileDragging = false"
+          @dragend.prevent.stop="avatarFileDragging = false"
+          @drop.prevent.stop="onAvatarImageDrop"
+        >
           <img v-if="avatarUrl" ref="avatarImage" :src="avatarUrl" alt="pic">
           <my-space-user-avatar v-else :user="myUser" :size="160" shape="roundedSquare" />
         </label>
@@ -28,10 +34,10 @@
       <h3 class="option_mainColumn_title">
         {{ $t('views.setting.main.userProfile.userName') }}
       </h3>
-      <input v-model="displayName" type="text">
+      <input v-model="displayName" type="text" class="basicInput">
     </div>
     <div class="option_spaceProfileGeneral_addButton clearfix">
-      <button class="commonButtonPrimary wide" :disabled="saving" @click="save">
+      <button class="basicButtonPrimary wide" :disabled="saving" @click="save">
         {{ $t('views.setting.main.userProfile.saveBtn') }}
       </button>
     </div>
@@ -51,10 +57,30 @@
       width: 160px
       height: 160px
       display: inline-block
+      position: relative
     img
       width: 100%
       height: 100%
       object-fit: cover
+      border: 1px solid #c4c4c4;
+      border-radius: 4px
+    &.avatarFileDragging
+      label
+        &:before
+          content: ''
+          display: block
+          position: absolute
+          border: 4px dashed #007FF5
+          border-radius: 4px
+          left: -2px
+          top: -2px
+          right: -2px
+          bottom: -2px
+          box-sizing: border-box
+          pointer-events: none
+        >img,
+        .mySpaceUserAvatar
+          opacity: 0.3
 
   &_uploadButton_button
     display: inline-block
@@ -75,7 +101,8 @@ export default class SpaceUserProfile extends Vue {
 
   avatarUrl: string | null = null;
   avatar: File | null = null;
-  avatarInputAccept = 'image/png,image/jpeg,image/gif';
+  avatarFileMimes = ['image/png', 'image/jpeg', 'image/gif'];
+  avatarFileDragging = false;
 
   displayName: string = '';
 
@@ -83,6 +110,10 @@ export default class SpaceUserProfile extends Vue {
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
+  }
+
+  get avatarInputAccept() {
+    return this.avatarFileMimes.join(',');
   }
 
   clearAvatarInput() {
@@ -100,29 +131,49 @@ export default class SpaceUserProfile extends Vue {
     this.init();
   }
 
-  async inputFileChange(ev: any) {
+  avatarInputChange(ev: any) {
     const target = ev.target as HTMLInputElement;
-    if (!target.files || target.files.length === 0) {
-      this.avatarUrl = this.myUser.avatarUrl;
-      this.avatar = null;
+    if (!target.files) {
+      this.clearAvatarInput();
       return;
     }
+    const files = target.files;
+    this.setAvatarFile(files);
+    this.clearAvatarInput();
+  }
+
+  onAvatarImageDragOver(ev: DragEvent) {
+    this.avatarFileDragging = ev.dataTransfer!.types.includes('Files');
+  }
+
+  onAvatarImageDrop(ev: DragEvent) {
+    this.avatarFileDragging = false;
+    this.setAvatarFile(ev.dataTransfer!.files);
+  }
+
+  setAvatarFile(files: FileList) {
+    let file: File | null = null;
+    for (let i = 0; i < files.length; i++) {
+      if (this.avatarFileMimes.includes(files[i].type)) {
+        file = files[i];
+        break;
+      }
+    }
+    if (!file) return;
 
     const myReader: FileReader = new FileReader();
     try {
       myReader.onloadend = () => {
         if (myReader.result) {
-          this.avatar = target.files![0];
+          this.avatar = file;
           this.avatarUrl = myReader.result as string;
         }
         myReader.onloadend = null;
-        this.clearAvatarInput();
       };
-      myReader.readAsDataURL(target.files[0]);
+      myReader.readAsDataURL(file);
 
     } catch {
       myReader.onloadend = null;
-      this.clearAvatarInput();
     }
   }
 

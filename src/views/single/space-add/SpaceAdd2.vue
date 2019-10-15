@@ -7,13 +7,13 @@
       <h3>{{ $t('views.spaceAdd.addANewSpace') }}</h3>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
-          <my-text-input
+          <my-single-form-text-input
             v-model="data.owner.email"
             type="email"
             required
             readonly
           />
-          <my-text-input
+          <my-single-form-text-input
             v-model="data.account"
             :message="messages.account || null"
             type="text"
@@ -21,7 +21,7 @@
             :placeholder="$t('views.spaceAdd.spaceName')"
             @input="messages.account = null"
           />
-          <my-text-input
+          <my-single-form-text-input
             v-model="data.owner.account"
             :message="ownerMessages.account || null"
             type="text"
@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { MyTextInputMessage } from '@/components/MyTextInput';
+import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
 import { apiRegistry, SpacesApi, SpacesPostRequestBody, ApiErrors, getJsonFromResponse } from '@/lib/api';
 
 @Component
@@ -67,9 +67,9 @@ export default class SpaceAdd2 extends Vue {
       account: '',
     },
   };
-  messages: {[field: string]: MyTextInputMessage} = {
+  messages: {[field: string]: MySingleFormTextInputMessage} = {
   };
-  ownerMessages: {[field: string]: MyTextInputMessage} = {
+  ownerMessages: {[field: string]: MySingleFormTextInputMessage} = {
   };
 
   get backTo() {
@@ -116,8 +116,8 @@ export default class SpaceAdd2 extends Vue {
         const json = await getJsonFromResponse(err);
         if (json && json.error) {
           if (ApiErrors.ValidationError === json.error) {
-            const messages: {[field: string]: MyTextInputMessage} = {};
-            const ownerMessages: {[field: string]: MyTextInputMessage} = {};
+            const messages: {[field: string]: MySingleFormTextInputMessage} = {};
+            const ownerMessages: {[field: string]: MySingleFormTextInputMessage} = {};
             Object.keys(json.data).forEach((k) => {
               if (k === 'owner') {
                 Object.keys(json.data.owner).forEach((k) => {

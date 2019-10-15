@@ -1,0 +1,33 @@
+.iconButtonPlus
+  font-family: $body-font-family
+  font-size: 14px
+  font-weight: normal
+  box-sizing: border-box
+  outline: none
+  border: none
+  color: #007FF5
+  line-height: 20px
+  cursor: pointer
+  display: inline-block
+  user-select: none
+  &:before
+    content: '＋'
+    width: 20px
+    height: 20px
+    line-height: 19px
+    text-align: center
+    font-weight: 200
+    border-radius: 50%
+    color: #fff
+    background: #007FF5
+    display: inline-block
+    margin-right: 8px
+    box-sizing: border-box
+  &:hover
+    color: #0074E0
+    &:before
+      background: #0074E0
+  &:disabled,
+  &.disabled
+    opacity: 0.3
+    cursor: default

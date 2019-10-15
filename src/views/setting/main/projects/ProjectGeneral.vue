@@ -5,11 +5,11 @@
     </h3>
     <div class="option_commonColumn option_spaceProjectsGeneral">
       <div class="option_spaceProjectsGeneral_input">
-        <input v-model="inputName" type="text">
+        <input v-model="inputName" type="text" class="basicInput">
       </div>
       <div class="option_spaceProjectsGeneral_addButton">
         <button
-          class="commonButtonPrimary wide"
+          class="basicButtonPrimary wide"
           type="button"
           :disabled="!activeProject || saving"
           @click="save"

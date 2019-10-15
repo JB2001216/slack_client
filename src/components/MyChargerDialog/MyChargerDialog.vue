@@ -66,6 +66,7 @@
 
 
 <style lang="stylus">
+@import '../../stylus/_fixed/base/themes/_backgroundColor';
 .myChargerDialog
   position: fixed
   left: 0
@@ -136,6 +137,7 @@
             width: 54px
             text-align: center
             span
+              @extends .themeBackgroundColor
               display: inline-block
               line-height: 24px
               width: 48px
@@ -143,7 +145,6 @@
               text-align: center
               font-weight: bold
               font-size: 12px
-              background: #519589
               color: #fff
               &.old
                 opacity: 0.4
