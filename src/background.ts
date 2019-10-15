@@ -39,7 +39,7 @@ if (!process.env.WEBPACK_DEV_SERVER_URL) {
       type: 'question',
       buttons: ['Yes', 'No'],
       defaultId: 0,
-      message: `Version ${releaseName} is available, do you want to install it now?`,
+      message: `The new version has been downloaded. Are you sure you want to restart ${process.env.VUE_APP_TITLE}?`,
       title: 'Update available',
     }, (response) => {
       if (response === 0) {
