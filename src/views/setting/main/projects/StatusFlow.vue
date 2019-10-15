@@ -43,7 +43,7 @@
                         <span />
                         <span />
                       </div>
-                      <input v-model="s.name" type="text">
+                      <input v-model="s.name" type="text" class="basicInput">
                     </div>
                   </td>
                   <td class="option_commonColumn_list_button">
@@ -54,9 +54,9 @@
             </li>
           </ul>
           <div class="option_commonColumn_addButton">
-            <button @click="addProgressRow()">
+            <div class="iconButtonPlus" @click="addProgressRow()">
               {{ $t('views.setting.main.statusFlow.addAnEntryField') }}
-            </button>
+            </div>
           </div>
         </dd>
         <dd>
@@ -90,7 +90,7 @@
                         <span />
                         <span />
                       </div>
-                      <input v-model="s.name" type="text">
+                      <input v-model="s.name" type="text" class="basicInput">
                     </div>
                   </td>
                   <td class="option_commonColumn_list_button">
@@ -101,15 +101,15 @@
             </li>
           </ul>
           <div class="option_commonColumn_addButton">
-            <button @click="addEtcRow()">
+            <div class="iconButtonPlus" @click="addEtcRow()">
               {{ $t('views.setting.main.statusFlow.addAnEntryField') }}
-            </button>
+            </div>
           </div>
         </dd>
       </dl>
 
       <div class="option_commonColumn_bottomButtons">
-        <button type="submit" class="option_commonColumn_bottomButtons_button commonButtonPrimary wide" @click="save()">
+        <button type="submit" class="option_commonColumn_bottomButtons_button basicButtonPrimary wide" @click="save()">
           {{ $t('views.setting.main.statusFlow.save') }}
         </button>
       </div>

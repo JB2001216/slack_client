@@ -58,19 +58,19 @@
     <my-modal
       v-if="removingUser"
       :value="!!removingUser"
-      class="option_modal"
-      content-class="option_modal_dialog"
+      class="modalDialog"
+      content-class="modalDialog_content"
       @input="removingUser = null"
     >
-      <p class="option_modal_dialog_title">
+      <p class="modalDialog_content_title">
         {{ $t('views.setting.main.projectMembers.removeConfirmMessage', { name: removingUser.displayName || removingUser.account, email: removingUser.email }) }}
       </p>
-      <div class="option_modal_dialog_button clearfix">
-        <button class="option_modal_dialog_button_yes" @click="remove()">
-          {{ $t('common.yes') }}
-        </button>
-        <button class="option_modal_dialog_button_no" @click="removingUser = null">
+      <div class="modalDialog_content_footerButtons">
+        <button class="basicButtonNormal modalDialog_content_footerButtons_button" @click="removingUser = null">
           {{ $t('common.no') }}
+        </button>
+        <button class="basicButtonDanger modalDialog_content_footerButtons_button" @click="remove()">
+          {{ $t('common.yes') }}
         </button>
       </div>
     </my-modal>

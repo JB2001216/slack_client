@@ -1,4 +1,4 @@
-.formBottomButton
+.formFooterButton
   font-family: $body-font-family
   font-size: 14px
   font-weight: normal
@@ -10,30 +10,37 @@
   cursor: pointer
   outline: none
   border: none
+  text-align: center
+  user-select: none
+  &.wide
+    width: 220px
   &:disabled,
   &.disabled
     opacity: 0.3
     cursor: default
 
-.formBottomButtonPrimary
-  @extends .formBottomButton
+.formFooterButtonPrimary
+  @extends .formFooterButton
   color: #fff
-  background-color: #0074E0
+  background-color: #007FF5
   &:hover
+    background-color: #0074E0
     font-weight: bold
 
-.formBottomButtonSecondary
-  @extends .formBottomButton
+.formFooterButtonSecondary
+  @extends .formFooterButton
   color: #2F80ED
   background-color: #E3F0FF
   &:hover
     font-weight: bold
 
-.formBottomButtonLight
-  @extends .formBottomButton
-  color: #C4C4C4
+.formFooterButtonLight
+  @extends .formFooterButton
+  /*color: #C4C4C4*/
+  color: #b5b5b5
   background-color: #fff
   border: 1px solid #C4C4C4
   line-height: 30px
+  font-weight: 200
   &:hover
     background-color: #F5F5F5

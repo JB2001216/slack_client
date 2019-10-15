@@ -2,6 +2,7 @@
   <div class="columnWrap_right_inputText_container">
     <input
       ref="input"
+      class="basicInput"
       :value="value"
       :type="type"
       :placeholder="placeholder"
@@ -38,10 +39,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import { MyTextInputMessage } from './types';
+import { MySingleFormTextInputMessage } from './types';
 
 @Component
-export default class MyTextInput extends Vue {
+export default class MySingleFormTextInput extends Vue {
   $refs!: {
     input: HTMLInputElement;
   }
@@ -68,7 +69,7 @@ export default class MyTextInput extends Vue {
   readonly?: boolean;
 
   @Prop({ type: Object, default: null })
-  message!: MyTextInputMessage;
+  message!: MySingleFormTextInputMessage;
 
   active = false;
 

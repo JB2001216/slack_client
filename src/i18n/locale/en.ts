@@ -13,6 +13,8 @@ const struct: LocaleStruct = {
       login: 'Login',
       save: 'Save',
       cancel: 'Cancel',
+      finishEditing: 'Finish editing',
+      markdownHelp: 'Markdown Help',
       spaceRole: {
         OWNER: 'Owner',
         ADMIN: 'Administrator',

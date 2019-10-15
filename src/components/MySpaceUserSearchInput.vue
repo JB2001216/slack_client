@@ -1,7 +1,7 @@
 <template>
   <div class="mySpaceUserSearchInput">
     <input
-      class="mySpaceUserSearchInput_input"
+      class="mySpaceUserSearchInput_input basicInput"
       type="text"
       :value="searchText"
       :placeholder="$t('components.mySpaceUserSearchInput.searchTextPlaceholder')"
@@ -35,7 +35,7 @@
 
 
 <style lang="stylus">
-@import '../stylus/_fixed/base/_theme'
+@import '../stylus/_fixed/base/themes/_backgroundColor'
 
 .mySpaceUserSearchInput
   position: relative
@@ -44,14 +44,6 @@
   &_input
     display: block
     width: 100%
-    height: 45px
-    border-radius: 4px
-    border: 1px solid #c4c4c4
-    font-size: 16px
-    padding: 0 16px
-    &:focus
-      box-shadow: 0 0 0 5px rgba(194, 226, 226, 0.5)
-      border: 1px solid #4A90E2
   &_select
     position: absolute
     top: 42px
@@ -76,7 +68,8 @@
       align-items: center
       cursor: pointer
       &:hover
-        @extends .themeMenuItemHover
+        @extends .themeBackgroundColor
+        color: #fff
       &_avatar
         width: 30px
         height: 30px

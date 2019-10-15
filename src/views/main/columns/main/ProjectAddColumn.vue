@@ -4,7 +4,7 @@
       <h3><strong>{{ $t('views.projectAddColumn.addANewProject') }}</strong></h3>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
-          <my-text-input
+          <my-single-form-text-input
             v-model="displayName"
             :message="displayNameMessage"
             type="text"
@@ -27,13 +27,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { MyTextInputMessage } from '@/components/MyTextInput';
+import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
 import { apiRegistry, ProjectsApi, ApiErrors, getJsonFromResponse } from '@/lib/api';
 
 @Component
 export default class ProjectAddColumn extends Vue {
   displayName = '';
-  displayNameMessage: MyTextInputMessage = null;
+  displayNameMessage: MySingleFormTextInputMessage = null;
   saving = false;
 
   async save() {

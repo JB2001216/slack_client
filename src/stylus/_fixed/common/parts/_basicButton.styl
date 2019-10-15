@@ -1,9 +1,10 @@
-.commonButton
+.basicButton
   font-family: $body-font-family
   font-size: 14px
   font-weight: bold
   height: 40px
   line-height: 40px
+  min-width: 60px
   box-sizing: border-box
   padding: 0 16px
   border-radius: 20px
@@ -11,6 +12,7 @@
   outline: none
   border: none
   text-align: center
+  user-select: none
   &.wide
     min-width: 160px
   &:disabled,
@@ -18,27 +20,27 @@
     opacity: 0.3
     cursor: default
 
-.commonButtonPrimary
-  @extends .commonButton
+.basicButtonPrimary
+  @extends .basicButton
   color: #fff
   background-color: #007FF5
   &:hover
     background-color: #0074E0
 
-.commonButtonPrimarySuccess
-  @extends .commonButton
+.basicButtonPrimarySuccess
+  @extends .basicButton
   color: #2F80ED
   background-color: #EBF0F5
 
-.commonButtonNormal
-  @extends .commonButton
+.basicButtonNormal
+  @extends .basicButton
   color: #fff
   background-color: #C4C4C4
   &:hover
     background-color: #ADADAD
 
-.commonButtonDanger
-  @extends .commonButton
+.basicButtonDanger
+  @extends .basicButton
   color: #fff
   background-color: #E02D2D;
   &:hover
