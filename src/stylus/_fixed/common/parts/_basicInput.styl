@@ -1,3 +1,15 @@
+/*
+Basic Input
+
+Markup:
+<input class="{{modifier_class}}" value="Input">
+
+.basicInput - BasicInput
+.basicInput.disabled - Disabled Option (Same style as :disabled="true")
+.basicInput.readonly - Readonly Option (Same style as :readonly="true")
+
+Styleguide 11.5
+*/
 .basicInput
   font-family: $body-font-family
   padding: 10px 15px
@@ -12,3 +24,13 @@
   &:focus
     box-shadow: 0 0 0 5px rgba(194,226,242,0.5)
     border: 1px solid #4a90e2
+  &:disabled,
+  &.disabled
+    opacity: 0.3
+    cursor: default
+    pointer-events: none
+  &[readonly],
+  &.readonly
+    box-shadow: none
+    border: 1px solid #c4c4c4
+    background: #ddd

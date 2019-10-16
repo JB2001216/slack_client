@@ -1,3 +1,18 @@
+/*
+Basic Button
+
+Markup:
+<button class="{{modifier_class}}">Button</button>
+
+.basicButtonPrimary - Primary
+.basicButtonPrimarySuccess - PrimarySuccess
+.basicButtonNormal - Normal
+.basicButtonDanger - Danger
+.basicButtonPrimary.wide - Wide Option
+.basicButtonPrimary.disabled - Disabled Option (Same style as :disabled="true")
+
+Styleguide 11.1
+*/
 .basicButton
   font-family: $body-font-family
   font-size: 14px
@@ -19,13 +34,14 @@
   &.disabled
     opacity: 0.3
     cursor: default
+    pointer-events: none
 
 .basicButtonPrimary
   @extends .basicButton
   color: #fff
-  background-color: #007FF5
+  background-color: $colors.primaryBlue
   &:hover
-    background-color: #0074E0
+    background-color: $colors.primaryBlueDark
 
 .basicButtonPrimarySuccess
   @extends .basicButton

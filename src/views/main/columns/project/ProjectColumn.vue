@@ -75,8 +75,8 @@
 
 
 <style lang="stylus">
+@import '../../../../stylus/_fixed/base/_theme'
 
-@import '../../../../stylus/_fixed/base/themes/_backgroundColor'
 .projectColumn
   .t-sub
     cursor: pointer
@@ -95,7 +95,7 @@
             cursor: default
             background: transparent
           &:not(.notHover):hover
-            @extends .themeBackgroundColor
+            themeBackgroundColor('active')
             color: #fff
         .projectColumn_spaceMenu_profile
           display: flex
