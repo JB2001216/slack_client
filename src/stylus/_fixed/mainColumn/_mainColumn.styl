@@ -2,3 +2,14 @@
   .mainColumn
     &.fullMainColumn
       grid-column: 2 / 5;
+
+.dashboardWrap
+  &_list
+    &_menu
+      >dd
+        svg
+          path
+            fill: $colors.gray
+          &:hover
+            path
+              fill: $colors.grayDark
