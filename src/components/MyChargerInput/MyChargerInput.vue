@@ -52,8 +52,8 @@
 
 
 <style lang="stylus">
-@import '../../stylus/_fixed/base/themes/_backgroundColor'
-@import '../../stylus/_fixed/base/themes/_borderColor'
+@import '../../stylus/_fixed/base/_variable'
+@import '../../stylus/_fixed/base/_theme'
 
 .myChargerInput
   display: flex
@@ -81,7 +81,7 @@
         white-space: nowrap
         text-overflow: ellipsis
       &_badge
-        @extends .themeBackgroundColor
+        themeBackgroundColor('active')
         display: inline-block
         position: absolute
         top: -7px
@@ -122,7 +122,7 @@
           height: 17px
           width: 17px
           border: 1px solid #FFFFFF
-          background-color: #6C6C6C
+          background-color: $colors.gray
           box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16)
           text-align: center
           font-size: 10px
@@ -175,7 +175,7 @@
         &:hover
           padding: 0 12px
           .myChargerInput_chargeUsers_item_avatar
-            @extends .themeBorderColor
+            themeBorderColor('active')
             border: 2px solid
             transform: scale(1.25, 1.25)
           .myChargerInput_chargeUsers_item_name

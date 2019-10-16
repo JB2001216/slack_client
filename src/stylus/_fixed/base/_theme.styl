@@ -1,0 +1,101 @@
+/*
+Themes
+
+Themes are switched by specifying one of the following classes in the root element.
+
+Currently, it is set to the element of id="app" of App.vue.
+
+- gray_green
+- blueGray_green
+
+Styleguide 10.1
+*/
+
+/*
+Theme Colors
+
+Styleguide 10.2
+*/
+
+/*
+gray_green
+
+main - #2e2e2e
+sub - #484848
+active - #519589
+
+Styleguide 10.2.1
+*/
+
+/*
+blueGray_green
+
+main - #313444
+sub - #434659
+active - #519589
+
+Styleguide 10.2.2
+*/
+$themes := {
+  gray_green: {
+    colors: {
+      main: #2e2e2e,
+      sub: #484848,
+      active: #519589,
+    }
+  },
+  blueGray_green: {
+    colors: {
+      main: #313444,
+      sub: #434659,
+      active: #519589,
+    }
+  },
+}
+
+/*
+Theme Function
+
+```stylus
+// Sample Code
+@import '../../stylus/_fixed/base/_theme.styl'
+.example1
+  .example2
+    themeBackgroundColor('main')
+
+
+// Yielding the following CSS
+.gray_green .example1 .example2 {
+  background-color: #2e2e2e
+}
+.blueGray_green .example1 .example2 {
+  background-color: #313444
+}
+```
+
+themeBackgroundColor($colorName) - Set the theme color to background-color.
+themeColor($colorName) - Set the theme color to color.
+themeBorderColor($colorName) - Set the theme color to border-color.
+themeFill($colorName) - Set the theme color to fill.
+
+Styleguide 10.3
+*/
+themeBackgroundColor($colorName)
+  for $themeName, $theme in $themes
+    .color_{$themeName} &
+      background-color: $theme.colors[$colorName]
+
+themeColor($colorName)
+  for $themeName, $theme in $themes
+    .color_{$themeName} &
+      color: $theme.colors[$colorName]
+
+themeBorderColor($colorName)
+  for $themeName, $theme in $themes
+    .color_{$themeName} &
+      border-color: $theme.colors[$colorName]
+
+themeFill($colorName)
+  for $themeName, $theme in $themes
+    .color_{$themeName} &
+      fill: $theme.colors[$colorName]

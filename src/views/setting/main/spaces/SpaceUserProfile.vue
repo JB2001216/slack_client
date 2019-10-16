@@ -46,6 +46,8 @@
 
 
 <style lang="stylus">
+@import '../../../../stylus/_fixed/base/_variable'
+
 .option_spaceProfileGeneral
   input[type="file"]
     display: none
@@ -70,7 +72,7 @@
           content: ''
           display: block
           position: absolute
-          border: 4px dashed #007FF5
+          border: 4px dashed $colors.primaryBlue
           border-radius: 4px
           left: -2px
           top: -2px

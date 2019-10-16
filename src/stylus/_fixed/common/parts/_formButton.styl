@@ -1,3 +1,14 @@
+/*
+Form Button
+
+Markup:
+<button class="{{modifier_class}}">Upload Image</button>
+
+.formButtonLight - Light
+.formButtonLight.disabled - Disabled Option (Same style as :disabled="true")
+
+Styleguide 11.2
+*/
 .formButton
   font-family: $body-font-family
   font-size: 16px
@@ -15,6 +26,7 @@
   &.disabled
     opacity: 0.3
     cursor: default
+    pointer-events: none
 
 .formButtonLight
   @extends .formButton

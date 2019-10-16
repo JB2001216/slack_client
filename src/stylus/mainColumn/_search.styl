@@ -227,7 +227,8 @@
       }
 
       label:hover {
-        border: 1px solid #4F9589;
+        border: 1px solid;
+        themeBorderColor('active')
       }
 
       label:after {
@@ -267,7 +268,8 @@
       }
 
       input[type=checkbox]:checked + label {
-        border: 1px solid #4F9589;
+        border: 1px solid;
+        themeBorderColor('active')
       }
 
       input[type=checkbox]:checked + label:before {
@@ -275,7 +277,7 @@
       }
 
       input[type=checkbox]:checked + label:after {
-        background: #4F9589;
+        themeBackgroundColor('active')
       }
 
       &:nth-child(7n+1){

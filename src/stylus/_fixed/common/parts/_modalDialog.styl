@@ -1,3 +1,44 @@
+/*
+Modal Dialog
+
+When using this, do not control Style directly, but use MyModel or v-if with <transition> instead.<transition>.
+
+Markup:
+<!-- ModalDialog start -->
+<div class="modalDialog" style="display:none">
+  <div class="modalDialog_content">
+    <div class="modalDialog_content_title">Modal Title</div>
+    <div class="modalDialog_content_description">Modal Description</div>
+    <div class="modalDialog_content_footerButtons">
+      <button class="modalDialog_content_footerButtons_button basicButtonPrimary">Button1</button>
+      <button class="modalDialog_content_footerButtons_button basicButtonNormal">Button2</button>
+    </div>
+  </div>
+</div>
+<!-- ModalDialog end -->
+<button onclick="showModalDialog()">Show</button>
+<script>
+//
+// When using this, do not control Style directly, but use MyModel or v-if with <transition> instead.
+//
+function showModalDialog() {
+  document.getElementsByClassName('modalDialog')[0].style.display = null;
+}
+function closeModalDialog() {
+  document.getElementsByClassName('modalDialog')[0].style.display = 'none';
+}
+document.querySelectorAll('.modalDialog, .modalDialog_content_footerButtons_button').forEach((el) => {
+  el.onclick = closeModalDialog;
+});
+document.querySelectorAll('.modalDialog_content').forEach((el) => {
+  el.onclick = (ev) => {
+    ev.stopPropagation();
+  };
+});
+</script>
+
+Styleguide 11.6
+*/
 .modalDialog
   display: flex
   flex-direction: column

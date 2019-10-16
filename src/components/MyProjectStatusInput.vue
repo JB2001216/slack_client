@@ -55,7 +55,7 @@
 
 
 <style lang="stylus" scoped>
-@import '../stylus/_fixed/base/themes/_backgroundColor'
+@import '../stylus/_fixed/base/_theme'
 
 .myProjectStatusInput
   max-width: 100%
@@ -213,7 +213,7 @@
         margin: 4px 0
         padding: 6px 16px
         &:hover
-          @extends .themeBackgroundColor
+          themeBackgroundColor('active')
           color: #fff
         &_color
           width: 12px

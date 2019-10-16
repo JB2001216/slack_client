@@ -42,7 +42,7 @@
 
 
 <style lang="stylus">
-@import '../../../../stylus/_fixed/base/themes/_backgroundColor'
+@import '../../../../stylus/_fixed/base/_theme'
 .subColumn
   &_head_menuContainer
     .other_status
@@ -56,7 +56,7 @@
           padding: 10px 24px
           white-space: nowrap
           &:hover
-            @extends .themeBackgroundColor
+            themeBackgroundColor('active')
             color: #fff
 </style>
 

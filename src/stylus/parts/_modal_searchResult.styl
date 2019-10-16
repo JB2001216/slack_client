@@ -121,7 +121,7 @@
               line-height: 1;
               text-align: center;
               &.green{
-                background: #4F9589;
+                themeBackgroundColor('active')
               }
               &.yellow{
                 background: #D1BA19;
@@ -152,7 +152,8 @@
               margin-top: 0;
             }
             &.active{
-              border: 1px solid #4F9589;
+              border: 1px solid;
+              themeBorderColor('active')
             }
             h4{
               font-family: Noto Sans CJK JP;
@@ -206,7 +207,8 @@
               margin-top: 0;
             }
             &.active{
-              border: 1px solid #4F9589;
+              border: 1px solid;
+              themeBorderColor('active')
             }
             h4{
               font-family: Noto Sans CJK JP;
@@ -245,7 +247,7 @@
               line-height: 1;
               text-align: center;
               &.green{
-                background: #4F9589;
+                themeBackgroundColor('active')
               }
               &.yellow{
                 background: #D1BA19;
@@ -367,7 +369,7 @@
           cursor: pointer;
           font-family: Noto Sans CJK JP;
           font-size: 12px;
-          color: #4F9589;
+          themeColor('active')
         }
       }
     }

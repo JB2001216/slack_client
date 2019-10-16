@@ -59,16 +59,21 @@
 </template>
 
 <style lang="stylus" scoped>
-.dashboardWrap_post_board
-  tbody
-    tr:last-child
-      .dashboardWrap_post_board_text
-        padding-bottom: 0
-.dashboardWrap_post_board_text
-  white-space: pre-wrap
-  padding-bottom: 30px
-.dashboardWrap_comment_box_content
-  margin-left: 4px
+.taskColumn_taskComment
+  .dashboardWrap_post_board
+    tbody
+      tr:last-child
+        .dashboardWrap_post_board_text
+          padding-bottom: 0
+  .dashboardWrap_post_board_text
+    white-space: pre-wrap
+    padding-bottom: 30px
+    h3
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+  .dashboardWrap_comment_box_content
+    margin-left: 4px
 </style>
 
 <script lang="ts">

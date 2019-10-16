@@ -1,3 +1,14 @@
+/*
+Icon Button
+
+Markup:
+<button class="{{modifier_class}}">Add Button</button>
+
+.iconButtonPlus - Plus
+.iconButtonPlus.disabled - Disabled Option (Same style as :disabled="true")
+
+Styleguide 11.4
+*/
 .iconButtonPlus
   font-family: $body-font-family
   font-size: 14px
@@ -5,7 +16,7 @@
   box-sizing: border-box
   outline: none
   border: none
-  color: #007FF5
+  color: $colors.primaryBlue
   line-height: 20px
   cursor: pointer
   display: inline-block
@@ -14,20 +25,21 @@
     content: '＋'
     width: 20px
     height: 20px
-    line-height: 19px
+    line-height: 20px
     text-align: center
     font-weight: 200
     border-radius: 50%
     color: #fff
-    background: #007FF5
+    background: $colors.primaryBlue
     display: inline-block
     margin-right: 8px
     box-sizing: border-box
   &:hover
-    color: #0074E0
+    color: $colors.primaryBlueDark
     &:before
-      background: #0074E0
+      background: $colors.primaryBlueDark
   &:disabled,
   &.disabled
     opacity: 0.3
     cursor: default
+    pointer-events: none

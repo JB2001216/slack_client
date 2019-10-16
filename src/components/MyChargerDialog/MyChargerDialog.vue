@@ -66,7 +66,9 @@
 
 
 <style lang="stylus">
-@import '../../stylus/_fixed/base/themes/_backgroundColor';
+@import '../../stylus/_fixed/base/_variable'
+@import '../../stylus/_fixed/base/_theme'
+
 .myChargerDialog
   position: fixed
   left: 0
@@ -92,7 +94,7 @@
       top: 20px
       font-size: 24px
       line-height: 24px
-      color: #6c6c6c
+      color: $colors.gray
       cursor: pointer
     &_header
       border-bottom: solid 1px #EDEDED
@@ -137,7 +139,7 @@
             width: 54px
             text-align: center
             span
-              @extends .themeBackgroundColor
+              themeBackgroundColor('active')
               display: inline-block
               line-height: 24px
               width: 48px
@@ -154,7 +156,7 @@
             span
               font-size: 18px
               line-height: 18px
-              color: #6c6c6c
+              color: $colors.gray
               &.hover
                 font-size: 19px
                 line-height: 19px
