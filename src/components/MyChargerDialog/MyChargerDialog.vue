@@ -97,7 +97,7 @@
       color: $colors.gray
       cursor: pointer
     &_header
-      border-bottom: solid 1px #EDEDED
+      border-bottom: solid 1px $colors.lightGray
       padding: 26px
       &_title
         font-size: 20px
@@ -113,13 +113,13 @@
         width: 511px
         margin: auto
         &_item
-          border-bottom: solid 1px #EDEDED
+          border-bottom: solid 1px $colors.lightGray
           height: 72px
           cursor: pointer
           user-select: none
           background: #fff
           &.hover
-            background: #F5F5F5
+            background: $colors.whiteDarken1
           td
             vertical-align: middle
           &_avatar

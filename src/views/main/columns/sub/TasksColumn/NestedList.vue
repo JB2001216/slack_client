@@ -49,10 +49,12 @@
         @dragover.stop.prevent="$event.dataTransfer.dropEffect = 'move'"
         @drop.stop.prevent="onItemDrop($event, t)"
       >
-        <template v-if="t.hasChilds">
-          <span v-if="t.childs && t.childs.length" @click.stop="onContractChilds(t)">▼</span>
-          <span v-else @click.stop="onExpandChilds(t)">＞</span>
-        </template>
+        <div class="task_item_accordionIcon">
+          <template v-if="t.hasChilds">
+            <img v-if="t.childs && t.childs.length" src="~@/assets/images/icn/accordion-expand.svg" @click.stop="onContractChilds(t)">
+            <img v-else src="~@/assets/images/icn/accordion-collapse.svg" @click.stop="onExpandChilds(t)">
+          </template>
+        </div>
         <my-space-user v-slot="{user}" tag="div" class="task_item_image" :user-id="t.batonUser">
           <my-space-user-avatar :user="user" :size="24" shape="circle" />
         </my-space-user>
@@ -60,14 +62,16 @@
           <div class="task_item_name" @dblclick="onInlineTaskEditStart(t)">
             {{ t.subject }}
           </div>
-          <a v-if="taskAddable" class="task_item_add" href="#" @click.stop.prevent="onInlineTaskAddStart(t)" />
+          <a v-if="taskAddable" class="task_item_add" href="#" @click.stop.prevent="onInlineTaskAddStart(t)">
+            <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m22 13h-19.99999v-2h19.99999z" /><path d="m11 22v-20.00003h2v20.00003z" /></svg>
+          </a>
           <my-date-range-input
             :value="t.limitedAt ? {start: t.startedAt, end: t.limitedAt} : null"
             :disabled="!getTaskUpdatable(t)"
             class="task_item_date"
             @input="onDateRangeChange(t, $event)"
           />
-          <my-project-status class="task_item_status" :option="getStatusOption(t.status)" />
+          <my-project-status :option="getStatusOption(t.status)" />
         </template>
         <template v-else>
           <input
@@ -112,6 +116,8 @@
 
 
 <style lang="stylus">
+@import '../../../../../stylus/_fixed/base/_variable'
+
 .nestedList
   .task_itemContaner
     position: relative
@@ -127,8 +133,19 @@
         opacity: 0.3
   .task_item
     cursor: pointer
-    padding-left: 5px
+    padding-left: 4px
     background: transparent
+    border-bottom: solid 1px $colors.lightGray
+    &_accordionIcon
+      width: 10px
+      text-align: center
+      margin-left: 1px
+      margin-right: 5px
+    .task_item_date
+      font-size: 12px
+      .myDateRangeInput_view_icon
+        width: 19px
+        height: 19px
     .task_item_date.disabled
       display: none
     &:not(:hover)

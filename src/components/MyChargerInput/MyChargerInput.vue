@@ -63,7 +63,7 @@
       max-width: 140px
       height: 40px
       border-radius: 20px
-      background-color: #F5F5F5
+      background-color: $colors.whiteDarken1
       position: relative
       padding-right: 8px
       &_avatar
@@ -135,6 +135,8 @@
           transition: opacity 0.7s, transform 0.5s
           transform: scale(0.75, 0.75)
           pointer-events: none
+          &:hover
+            background-color: $colors.grayDarken1
         .myChargerInput_chargeUsers_item_name
           position: absolute
           top: -40px
@@ -184,6 +186,7 @@
             opacity: 1
             transform: scale(1, 1)
             pointer-events: auto
+
       &.otherCount
         span
           display: block
@@ -193,7 +196,7 @@
           border-radius: 50%
           font-size: 12px
           color: #333
-          background: #EDEDED
+          background: $colors.lightGray
           white-space: nowrap
           text-align: center
           box-sizing: content-box
@@ -210,7 +213,7 @@
           border-radius: 50%
           margin-top: 2px
           &:hover
-            background #F5F5F5
+            background $colors.whiteDarken1
           svg
             stroke: #6E6E6E
             fill: #6E6E6E

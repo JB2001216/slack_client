@@ -50,8 +50,8 @@
         @drop.stop.prevent="onItemDrop($event, t)"
       >
         <template v-if="t.hasChilds">
-          <span v-if="t.childs && t.childs.length" @click.stop="onContractChilds(t)">▼</span>
-          <span v-else @click.stop="onExpandChilds(t)">＞</span>
+          <img v-if="t.childs && t.childs.length" src="~@/assets/images/icn/accordion-expand.svg" @click.stop="onContractChilds(t)">
+          <img v-else src="~@/assets/images/icn/accordion-collapse.svg" @click.stop="onExpandChilds(t)">
         </template>
         <my-space-user v-slot="{user}" tag="div" class="task_item_image" :user-id="t.batonUser">
           <my-space-user-avatar :user="user" :size="24" shape="circle" />
@@ -61,7 +61,7 @@
             {{ t.subject }}
           </div>
           <a v-if="noteAddable" class="note_item_add" href="#" @click.stop.prevent="onInlineNoteAddStart(t)" />
-          <my-project-status class="note_item_status status status_1" :option="getStatusOption(t.status)" />
+          <my-project-status :option="getStatusOption(t.status)" />
         </template>
         <template v-else>
           <input
@@ -121,7 +121,7 @@
         opacity: 0.3
   .note_item
     cursor: pointer
-    padding-left: 5px
+    padding-left: 4px
     background: transparent
     .note_item_date.disabled
       display: none

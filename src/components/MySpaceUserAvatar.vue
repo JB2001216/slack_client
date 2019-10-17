@@ -34,7 +34,7 @@
   &_initials
     width: 100%
     height: 100%
-    background: $colors.primaryBlue
+    background: $colors.gray
     color: #fff
     display: flex
     justify-content: center

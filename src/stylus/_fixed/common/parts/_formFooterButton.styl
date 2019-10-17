@@ -39,12 +39,12 @@ Styleguide 11.3
   color: #fff
   background-color: $colors.primaryBlue
   &:hover
-    background-color: $colors.primaryBlueDark
+    background-color: $colors.primaryBlueDarken1
     font-weight: bold
 
 .formFooterButtonSecondary
   @extends .formFooterButton
-  color: #2F80ED
+  themeColor('active')
   background-color: #E3F0FF
   &:hover
     font-weight: bold
@@ -58,4 +58,4 @@ Styleguide 11.3
   line-height: 30px
   font-weight: 200
   &:hover
-    background-color: #F5F5F5
+    background-color: $colors.whiteDarken1

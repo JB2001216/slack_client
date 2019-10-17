@@ -177,6 +177,8 @@
 </template>
 
 <style lang="stylus">
+@import '../../../../../stylus/_fixed/base/_variable'
+
 .taskColumn
   .favoriteIcon
     &.active path
@@ -230,7 +232,7 @@
     min-height: 60px
     padding: 9px 20px 24px 20px
     background: #fff
-    border-top: 2px solid #ededed
+    border-top: 2px solid $colors.lightGray
     position: absolute
     bottom: 0
     left: 0

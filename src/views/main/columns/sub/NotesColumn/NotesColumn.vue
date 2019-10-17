@@ -4,7 +4,7 @@
       <div class="note_menu">
         <div class="note_menu_left">
           <a class="note_menu_favorite" href="#" :class="{active: isFavorite}" @click.prevent="favorite(!isFavorite)">
-            <svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="m12 1.5 2.3574 7.25532h7.6287l-6.1718 4.48408 2.3574 7.2553-6.1717-4.4841-6.17175 4.4841 2.3574-7.2553-6.17174-4.48408h7.62869z" />
             </svg>
           </a>
@@ -97,13 +97,15 @@
 </template>
 
 <style lang="stylus">
+@import '../../../../../stylus/_fixed/base/_theme'
+
 .note_item
   cursor: pointer
 .tab_note
   .note_menu_search.active
-    color: #2f80ed
+    themeColor('active')
     svg
-      fill: #2f80ed
+      themeFill('active')
   .noteListContainer
     max-height: calc(100vh - 225px)
     overflow-y: scroll

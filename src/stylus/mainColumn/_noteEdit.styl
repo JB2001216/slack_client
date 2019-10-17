@@ -32,7 +32,8 @@
             display: block;
             width: 36px;
             height: 36px;
-            border: 2px solid #2F80ED;
+            border: 2px solid;
+            themeBorderColor('active')
             border-radius: 50%;
             position: absolute;
             top: -4px;
@@ -65,7 +66,7 @@
     width: calc(100% + 38px);
     margin-top: 30px;
     margin-left: -19px;
-    border-top: 2px solid #EDEDED;
+    border-top: 2px solid $colors.lightGray
     zoom: 1;
     &:after {
       content: "";
@@ -115,7 +116,7 @@
         code{
           display: inline-block;
           padding: 2px 5px;
-          background: #f5f5f5;
+          background: $colors.whiteDarken1
           border: 1px solid #e0e0e0;
           border-radius: 2px;
           font-family: Noto Sans CJK JP;
@@ -184,7 +185,7 @@
         code{
           display: inline-block;
           padding: 8px 12px;
-          background: #f5f5f5;
+          background: $colors.whiteDarken1
           border: 1px solid #e0e0e0;
           border-radius: 2px;
           font-family: Noto Sans CJK JP;
@@ -205,7 +206,7 @@
             word-break: break-all;
           }
           th{
-            background: #f5f5f5;
+            background: $colors.whiteDarken1
             font-weight: 700;
           }
           td{
@@ -225,7 +226,7 @@
     }
     &_edit{
       background: #FAFAFC;
-      border-right: 2px solid #EDEDED;
+      border-right: 2px solid $colors.lightGray
       box-shadow: inset 0px 0px 8px rgba(51, 51, 51, 0.05);
     }
     &.noEdit{
@@ -243,7 +244,7 @@
     min-height: 60px;
     padding: 9px 20px 24px 20px;
     background: #fff;
-    border-top: 2px solid #EDEDED;
+    border-top: 2px solid $colors.lightGray
     text-align: center;
     display: inline-block;
     position: absolute;
@@ -262,12 +263,12 @@
       line-height: 1;
       text-align: center;
       &:first-child{
-        background: #2F80ED;
+        themeBackgroundColor('active')
         color: #fff;
       }
       &:nth-child(2){
         background: #E6F0FF;
-        color: #2F80ED;
+        themeColor('active')
       }
       &:last-child{
         width: 180px;
