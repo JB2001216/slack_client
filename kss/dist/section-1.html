@@ -47,7 +47,7 @@
                     <li class="kss-nav__item ">
                       <a href="section-1.html#kssref-1-1">
                         <span class="kss-nav__ref">1.1</span>
-                        <span class="kss-nav__name">Color Name</span>
+                        <span class="kss-nav__name">Color Names</span>
                       </a>
                     </li>
                 </ul>
@@ -102,10 +102,22 @@
               <a class="kss-section__permalink" href="#kssref-1-1">
                 <h2 class="kss-section__item kss-section__item--depth-2">
                   <span class="kss-section__ref">1.1</span>
-                  <span class="kss-section__name">Color Name</span>
+                  <span class="kss-section__name">Color Names</span>
                 </h2>
               </a>
 
+                <div class="kss-section__description"><pre class="hljs"><code class="language-stylus"><span class="hljs-comment">// Sample Code</span>
+@import <span class="hljs-string">'../../stylus/_fixed/base/_variable.styl'</span>
+<span class="hljs-selector-class">.example1</span>
+  <span class="hljs-attribute">color</span>: <span class="hljs-variable">$colors</span>.primaryBlue
+
+
+<span class="hljs-comment">// Yielding the following CSS</span>
+<span class="hljs-selector-class">.example1</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#007FF5</span>;
+}
+</code></pre>
+</div>
 
                 <ul class="kss-parameters">
                   <li class="kss-parameters__item">
@@ -127,7 +139,7 @@
                       #0074E0
 
                     </p>
-                    <code class="kss-parameters__name">primaryBlueDark</code>
+                    <code class="kss-parameters__name">primaryBlueDarken1</code>
                   </li>
                   <li class="kss-parameters__item">
                     <p class="kss-parameters__description">
@@ -141,7 +153,28 @@
                       #5C5C5C
 
                     </p>
-                    <code class="kss-parameters__name">grayDark</code>
+                    <code class="kss-parameters__name">grayDarken1</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #EDEDED
+
+                    </p>
+                    <code class="kss-parameters__name">lightGray</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #FFFFFF
+
+                    </p>
+                    <code class="kss-parameters__name">white</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #F5F5F5
+
+                    </p>
+                    <code class="kss-parameters__name">whiteDarken1</code>
                   </li>
                 </ul>
             </article>

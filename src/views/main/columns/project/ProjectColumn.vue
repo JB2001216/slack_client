@@ -95,7 +95,7 @@
             cursor: default
             background: transparent
           &:not(.notHover):hover
-            themeBackgroundColor('active')
+            themeBackgroundColor('accent')
             color: #fff
         .projectColumn_spaceMenu_profile
           display: flex

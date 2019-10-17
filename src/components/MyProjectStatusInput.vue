@@ -213,7 +213,7 @@
         margin: 4px 0
         padding: 6px 16px
         &:hover
-          themeBackgroundColor('active')
+          themeBackgroundColor('accent')
           color: #fff
         &_color
           width: 12px

@@ -49,7 +49,7 @@
       font-size: 34px;
       color: #333333;
       strong{
-        themeColor('active')
+        themeColor('accent')
       }
     }
     &_description{
@@ -66,7 +66,7 @@
         font-family: Noto Sans CJK JP;
         font-size: 14px;
         line-height: 1.57;
-        color: #2F80ED;
+        themeColor('active')
         text-decoration: none;
         &:hover{
           text-decoration: underline;
@@ -104,7 +104,7 @@
           right: 15px;
         }
         &_blue{
-          color: #2F80ED;
+          themeColor('active')
         }
         &_red{
           color: #DE6868;
@@ -126,7 +126,7 @@
         font-family: Noto Sans CJK JP;
         font-size: 14px;
         line-height: 1.57;
-        color: #2F80ED;
+        themeColor('active')
         text-decoration: none;
         &:hover{
           text-decoration: underline;
@@ -158,7 +158,7 @@
           margin-top: 0;
         }
         a{
-          color: #2F80ED;
+          themeColor('active')
           text-decoration: none;
           &:hover{
             text-decoration: underline;
@@ -177,7 +177,7 @@
         margin-top: -7px;
         width: 16px;
         height: 16px;
-        background: #EDEDED;
+        background: $colors.lightGray
         border-radius: 4px;
         content: '';
       }
@@ -207,7 +207,7 @@
       }
 
       input[type=checkbox]:checked + label:after {
-        themeBackgroundColor('active')
+        themeBackgroundColor('accent')
       }
     }
   }

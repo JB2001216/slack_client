@@ -56,7 +56,7 @@
           padding: 10px 24px
           white-space: nowrap
           &:hover
-            themeBackgroundColor('active')
+            themeBackgroundColor('accent')
             color: #fff
 </style>
 

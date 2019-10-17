@@ -152,7 +152,7 @@
         margin-top: -7px;
         width: 16px;
         height: 16px;
-        background: #EDEDED;
+        background: $colors.lightGray
         border-radius: 4px;
         content: '';
       }
@@ -228,7 +228,7 @@
 
       label:hover {
         border: 1px solid;
-        themeBorderColor('active')
+        themeBorderColor('accent')
       }
 
       label:after {
@@ -242,7 +242,7 @@
         margin-top: -7px;
         width: 16px;
         height: 16px;
-        background: #EDEDED;
+        background: $colors.lightGray
         border-radius: 4px;
         content: '';
       }
@@ -269,7 +269,7 @@
 
       input[type=checkbox]:checked + label {
         border: 1px solid;
-        themeBorderColor('active')
+        themeBorderColor('accent')
       }
 
       input[type=checkbox]:checked + label:before {
@@ -277,7 +277,7 @@
       }
 
       input[type=checkbox]:checked + label:after {
-        themeBackgroundColor('active')
+        themeBackgroundColor('accent')
       }
 
       &:nth-child(7n+1){

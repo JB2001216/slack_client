@@ -1,20 +1,39 @@
 $body-font-family := 'Noto Sans CJK JP', sans-serif
 
 /*
-Color Name
+Color Names
+
+```stylus
+// Sample Code
+@import '../../stylus/_fixed/base/_variable.styl'
+.example1
+  color: $colors.primaryBlue
+
+
+// Yielding the following CSS
+.example1 {
+  color: #007FF5;
+}
+```
 
 primaryBlack - #333333
 primaryBlue - #007FF5
-primaryBlueDark - #0074E0
+primaryBlueDarken1 - #0074E0
 gray - #6C6C6C
-grayDark - #5C5C5C
+grayDarken1 - #5C5C5C
+lightGray - #EDEDED
+white - #FFFFFF
+whiteDarken1 - #F5F5F5
 
 Styleguide 1.1
 */
 $colors := {
   primaryBlack: #333333,
   primaryBlue: #007FF5,
-  primaryBlueDark: #0074E0,
-  gray: #6C6C6C
-  grayDark: #5C5C5C
+  primaryBlueDarken1: #0074E0,
+  gray: #6C6C6C,
+  grayDarken1: #5C5C5C,
+  lightGray: #EDEDED,
+  white: #FFFFFF,
+  whiteDarken1: #F5F5F5,
 }

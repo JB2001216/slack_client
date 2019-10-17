@@ -75,6 +75,7 @@
         fill: $colors.gray
     &_value
       vertical-align: middle
+      color: $colors.gray
 
   &_pop
     position: fixed
@@ -113,9 +114,9 @@
     &:hover
       .myDateRangeInput_view_icon
         &_path
-          fill: $colors.grayDark
+          fill: $colors.grayDarken1
       .myDateRangeInput_view_value
-        color: $colors.primaryBlack
+        color: $colors.grayDarken1
   .vc-container
     border: none !important
   .vc-w-full

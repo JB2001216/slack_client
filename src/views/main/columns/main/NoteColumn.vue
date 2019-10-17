@@ -169,13 +169,16 @@
 </template>
 
 <style lang="stylus">
+@import '../../../../stylus/_fixed/base/_variable'
+@import '../../../../stylus/_fixed/base/_theme'
+
 .noteColumn
   .favoriteIcon
     &.active path
       fill: #EDA62A !important
   .dashboardWrap_submit button:nth-child(2)
     background: #e6f0ff
-    color: #2f80ed
+    themeColor('active')
   .dashboardWrap_note
     margin-top: 24px;
     zoom: 1;
@@ -200,7 +203,7 @@
     min-height: 60px
     padding: 9px 20px 24px 20px
     background: #fff
-    border-top: 2px solid #ededed
+    border-top: 2px solid $colors.lightGray
     text-align: center
     display: inline-block
     position: absolute
@@ -219,7 +222,7 @@
       line-height: 1
       text-align: center
       &:first-child
-        background: #2f80ed
+        themeBackgroundColor('active')
         color: #fff
   .dashboardWrap_detail
     .noteEditWrap_post

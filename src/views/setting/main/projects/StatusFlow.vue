@@ -119,12 +119,14 @@
 
 
 <style lang="stylus">
+@import '../../../../stylus/_fixed/base/_variable'
+
 .setting_main_statusFlow
   &_preview
     box-sizing: border-box
     border: 1px solid #E0E0E0
     border-radius: 8px
-    background-color: #F5F5F5
+    background-color: $colors.whiteDarken1
     padding: 16px
     margin-top: 24px
     &_title

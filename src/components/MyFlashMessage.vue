@@ -22,7 +22,7 @@
     transition: opacity .4s, transform .4s
     display: flex
     &.success
-      color: #2f80ed
+      themeColor('active')
       background-color: #ebf0f5
   .flash__close-button
     font-size: 38px

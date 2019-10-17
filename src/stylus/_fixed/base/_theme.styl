@@ -1,5 +1,5 @@
 /*
-Themes
+Theme Names
 
 Themes are switched by specifying one of the following classes in the root element.
 
@@ -22,7 +22,9 @@ gray_green
 
 main - #2e2e2e
 sub - #484848
-active - #519589
+subDarken1 - #414141
+accent - #519589
+active - #2F80ED
 
 Styleguide 10.2.1
 */
@@ -32,7 +34,9 @@ blueGray_green
 
 main - #313444
 sub - #434659
-active - #519589
+subDarken1 - #3C3F50
+accent - #519589
+active - #2F80ED
 
 Styleguide 10.2.2
 */
@@ -41,14 +45,18 @@ $themes := {
     colors: {
       main: #2e2e2e,
       sub: #484848,
-      active: #519589,
+      subDarken1: #484848 - 10%, // #414141
+      accent: #519589,
+      active: #2F80ED,
     }
   },
   blueGray_green: {
     colors: {
       main: #313444,
       sub: #434659,
-      active: #519589,
+      subDarken1: #434659 - 10%, // #3C3F50
+      accent: #519589,
+      active: #2F80ED,
     }
   },
 }
@@ -66,10 +74,10 @@ Theme Function
 
 // Yielding the following CSS
 .gray_green .example1 .example2 {
-  background-color: #2e2e2e
+  background-color: #2e2e2e;
 }
 .blueGray_green .example1 .example2 {
-  background-color: #313444
+  background-color: #313444;
 }
 ```
 
