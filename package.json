@@ -18,6 +18,7 @@
   "main": "background.js",
   "dependencies": {
     "@juggle/resize-observer": "^2.3.0",
+    "@types/vue-color": "^2.4.2",
     "ajv": "^6.10.2",
     "electron-log": "^3.0.8",
     "electron-updater": "^4.1.2",
@@ -29,6 +30,7 @@
     "v-calendar": "1.0.0-beta.16",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
+    "vue-color": "^2.7.0",
     "vue-flash-message": "^0.7.2",
     "vue-i18n": "^8.14.1",
     "vue-infinite-loading": "^2.4.4",
