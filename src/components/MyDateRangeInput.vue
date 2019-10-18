@@ -69,6 +69,7 @@
   &_view
     cursor: pointer
     user-select: none
+    white-space: nowrap;
     &_icon
       vertical-align: middle
       path
@@ -76,7 +77,7 @@
     &_value
       vertical-align: middle
       color: $colors.gray
-
+      white-space: nowrap
   &_pop
     position: fixed
     padding: 10px

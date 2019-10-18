@@ -49,6 +49,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     myChargerInput: {
       baton: string;
       notSet: string;
+      addMembers: string;
     };
     myChargerDialog: {
       title: string;
