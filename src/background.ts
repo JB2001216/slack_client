@@ -33,7 +33,7 @@ if (!process.env.WEBPACK_DEV_SERVER_URL) {
     message = message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
     sendStatusToWindow(message);
   });
-  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  autoUpdater.on('update-downloaded', () => {
     sendStatusToWindow('Update downloaded');
     dialog.showMessageBox({
       type: 'question',
@@ -46,13 +46,12 @@ if (!process.env.WEBPACK_DEV_SERVER_URL) {
         autoUpdater.quitAndInstall();
       }
     });
-  }
-  );
+  });
   app.on('ready', () => {
     autoUpdater.allowDowngrade = false;
     autoUpdater.autoDownload = true;
-    autoUpdater.autoInstallOnAppQuit = true;
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.autoInstallOnAppQuit = false;
+    autoUpdater.checkForUpdates();
   });
 }
 
