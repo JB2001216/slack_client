@@ -30,6 +30,7 @@
                         :custom-colors="customColors"
                         class="option_commonColumn_list_input_parts_color"
                         :style="{background: s.color}"
+                        @close="onColorPickerClose"
                       >
                         <div class="option_commonColumn_list_input_parts_color_content" @click.stop="opened ? close() : open()" />
                       </my-color-picker>
@@ -78,8 +79,10 @@
                         :custom-colors="customColors"
                         class="option_commonColumn_list_input_parts_color"
                         :style="{background: s.color}"
-                        @click.stop="opened ? close() : open()"
-                      />
+                        @close="onColorPickerClose"
+                      >
+                        <div class="option_commonColumn_list_input_parts_color_content" @click.stop="opened ? close() : open()" />
+                      </my-color-picker>
                       <div
                         class="option_commonColumn_list_input_parts_toggle"
                         draggable="true"
@@ -186,6 +189,7 @@ export default class StatusFlow extends Vue {
   itemClassName = 'option_commonColumn_list_input_parts';
   draggingItem: Status | null = null;
   previewStatus: number | null = null;
+  customColors: string[] = [];
 
   get previewStatusList() {
     const list = this.statusList.concat();
@@ -196,16 +200,6 @@ export default class StatusFlow extends Vue {
       }
     });
     return list;
-  }
-
-  get customColors() {
-    const customColors: string[] = [];
-    this.statusList.forEach((s) => {
-      if (s.color && !customColors.includes(s.color) && !colorPickerDefaultColors.includes(s.color)) {
-        customColors.push(s.color);
-      }
-    });
-    return customColors;
   }
 
   get myUser() {
@@ -358,9 +352,24 @@ export default class StatusFlow extends Vue {
     }
   }
 
+  initCustomColors() {
+    const customColors: this['customColors'] = [];
+    this.statusList.forEach((s) => {
+      if (s.color && !customColors.includes(s.color) && !colorPickerDefaultColors.includes(s.color)) {
+        customColors.push(s.color);
+      }
+    });
+    this.customColors = customColors;
+  }
+
+  onColorPickerClose() {
+    this.initCustomColors();
+  }
+
   async fetch() {
     if (!this.api) return;
     this.statusList = await this.api.fetch();
+    this.initCustomColors();
     this.setLastPreviewStatus();
   }
 
