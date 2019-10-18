@@ -10,7 +10,10 @@
     </div>
     <div v-if="value" class="myChargerInput_chargeUsers">
       <div class="myChargerInput_chargeUsers_item editButton" @click="showedDialog = true">
-        <span>
+        <div class="myChargerInput_chargeUsers_item_name">
+          <span class="myChargerInput_chargeUsers_item_name_box">{{ $t('components.myChargerInput.addMembers') }}</span>
+        </div>
+        <span class="editButton_icon">
           <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m22 13h-19.99999v-2h19.99999z" /><path d="m11 22v-20.00003h2v20.00003z" /></svg>
         </span>
       </div>
@@ -60,7 +63,7 @@
   user-select: none
   &_batonUser
     &_item
-      max-width: 140px
+      max-width: 244px
       height: 40px
       border-radius: 20px
       background-color: $colors.whiteDarken1
@@ -71,12 +74,12 @@
         left: 4px
         top: 4px
       &_name
-        font-size: 14px
+        font-size: 13px
         font-weight: bold
         display: block
         width: 100%
         padding-left: 44px
-        padding-top: 9px
+        padding-top: 10px
         overflow: hidden
         white-space: nowrap
         text-overflow: ellipsis
@@ -107,12 +110,50 @@
       cursor: pointer
       transition: all 0.5s
       height: 36px
+      position: relative
       &_avatar
         border: #fff 2px solid
         box-sizing: content-box !important
         transition: transform 0.5s
+      &_name
+        position: absolute
+        top: -40px
+        width: 100%
+        left: 0
+        display: none
+        justify-content: center
+        align-items: center
+        &_box
+          font-size: 12px
+          color: #333
+          background #fff
+          padding: 4px 8px
+          white-space: nowrap
+          border-radius: 4px
+          box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16)
+          z-index: 1
+        &:before
+          content: ''
+          position: absolute
+          top: 100%
+          left: 50%
+          margin-left: -8px
+          border: 8px solid transparent
+          border-top: 8px solid #fff
+          transform: scaleX(0.75)
+          z-index: 2
+        &:after
+          content: ''
+          position: absolute
+          top: 100%
+          left: 50%
+          margin-left: -8px
+          border: 8px solid transparent
+          border-top: 8px solid #fff
+          transform: scaleX(0.75)
+          filter: drop-shadow(0 2px 3px rgba(0,0,0,0.16))
+
       &.user
-        position: relative
         .myChargerInput_chargeUsers_item_delete
           display: flex
           position: absolute
@@ -137,51 +178,14 @@
           pointer-events: none
           &:hover
             background-color: $colors.grayDarken1
-        .myChargerInput_chargeUsers_item_name
-          position: absolute
-          top: -40px
-          width: 100%
-          left: 0
-          display: none
-          justify-content: center
-          align-items: center
-          &_box
-            font-size: 12px
-            color: #333
-            background #fff
-            padding: 4px 8px
-            white-space: nowrap
-            border-radius: 4px
-            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16)
-            z-index: 1
-          &:before
-            content: ''
-            position: absolute
-            top: 100%
-            left: 50%
-            margin-left: -8px
-            border: 8px solid transparent
-            border-top: 8px solid #fff
-            transform: scaleX(0.75)
-            z-index: 2
-          &:after
-            content: ''
-            position: absolute
-            top: 100%
-            left: 50%
-            margin-left: -8px
-            border: 8px solid transparent
-            border-top: 8px solid #fff
-            transform: scaleX(0.75)
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.16))
         &:hover
           padding: 0 12px
+          .myChargerInput_chargeUsers_item_name
+            display: flex
           .myChargerInput_chargeUsers_item_avatar
             themeBorderColor('active')
             border: 2px solid
             transform: scale(1.25, 1.25)
-          .myChargerInput_chargeUsers_item_name
-            display: flex
           .myChargerInput_chargeUsers_item_delete
             opacity: 1
             transform: scale(1, 1)
@@ -203,7 +207,8 @@
           &:hover
             background: #E2E2E2
       &.editButton
-        span
+        margin-left: 6px
+        .editButton_icon
           display: flex
           justify-content: center
           align-items: center
@@ -212,12 +217,15 @@
           border: #E0E0E0 1px dotted
           border-radius: 50%
           margin-top: 2px
-          &:hover
-            background $colors.whiteDarken1
           svg
             stroke: #6E6E6E
             fill: #6E6E6E
             stroke-width: 0.1
+        &:hover
+          .editButton_icon
+            background: $colors.whiteDarken1
+          .myChargerInput_chargeUsers_item_name
+            display: flex
 </style>
 
 

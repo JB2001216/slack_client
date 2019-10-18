@@ -4,6 +4,8 @@
 
 <style lang="stylus">
 @import '../../node_modules/vue-flash-message/dist/vue-flash-message.min.css'
+@import '../stylus/_fixed/base/_theme'
+
 .my-flash-message
   position: fixed
   bottom: 20px;
