@@ -6,6 +6,16 @@ import path from 'path';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const urlScheme = process.env.VUE_APP_URL_SCHEME;
 
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let win: BrowserWindow | null = null;
+let tray: Tray | null = null;
+let quitting = false;
+
+declare var __static: string;
+
+
+// log
 log.transports.file.level = 'info';
 log.info('App starting...');
 function sendStatusToWindow(text: string) {
@@ -14,6 +24,7 @@ function sendStatusToWindow(text: string) {
 
 // autoUpdater
 if (!process.env.WEBPACK_DEV_SERVER_URL) {
+  const checkForUpdatesInterval = 1000 * 60 * 15; // msec
   autoUpdater.logger = log;
   autoUpdater.on('checking-for-update', () => {
     sendStatusToWindow('Checking for update...');
@@ -37,32 +48,30 @@ if (!process.env.WEBPACK_DEV_SERVER_URL) {
     sendStatusToWindow('Update downloaded');
     dialog.showMessageBox({
       type: 'question',
-      buttons: ['Yes', 'No'],
-      defaultId: 0,
-      message: `The new version has been downloaded. Are you sure you want to restart ${process.env.VUE_APP_TITLE}?`,
+      buttons: ['Later', 'Relaunch'],
+      defaultId: 1,
+      message: `The new version has been downloaded. Are you sure you want to relaunch ${process.env.VUE_APP_TITLE}?`,
       title: 'Update available',
     }, (response) => {
-      if (response === 0) {
-        autoUpdater.quitAndInstall();
+      if (response === 1) {
+        setTimeout(() => {
+          quitting = true;
+          autoUpdater.quitAndInstall();
+        }, 1);
       }
     });
   });
   app.on('ready', () => {
     autoUpdater.allowDowngrade = false;
     autoUpdater.autoDownload = true;
-    autoUpdater.autoInstallOnAppQuit = false;
-    autoUpdater.checkForUpdates();
+    const checkForUpdates = () => {
+      autoUpdater.checkForUpdates();
+      setTimeout(checkForUpdates, checkForUpdatesInterval);
+    };
+    checkForUpdates();
   });
 }
 
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let win: BrowserWindow | null = null;
-let tray: Tray | null = null;
-let quitting = false;
-
-declare var __static: string;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
