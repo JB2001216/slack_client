@@ -66,7 +66,7 @@
       width: calc(100% - 51px)
       height: 1px
       background: $colors.lightGray
-      bottom: 0
+      bottom: -1px
       right: 0
     &:hover
       background: $colors.whiteDarken1
@@ -81,11 +81,11 @@
       themeBackgroundColor('activeLighten5')
       &:before
         display: block
-        themeBackgroundColor('active')
+        themeBackgroundColor('activeLighten2')
         z-index: 1
       &:after
         width: 100%
-        themeBackgroundColor('active')
+        themeBackgroundColor('activeLighten2')
         z-index: 1
     &_bar
       display: block
