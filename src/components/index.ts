@@ -1,3 +1,4 @@
+import MyInput from './MyInput.vue';
 import MyModal from './MyModal.vue';
 import MyDateRangeInput from './MyDateRangeInput.vue';
 import MySingleFormTextInput from './MySingleFormTextInput';
@@ -11,6 +12,7 @@ import MyProjectStatus from './MyProjectStatus.vue';
 import MySimpleMenu from './MySimpleMenu.vue';
 
 export {
+  MyInput,
   MyModal,
   MyDateRangeInput,
   MySingleFormTextInput,
