@@ -109,7 +109,6 @@
   .noteListContainer
     max-height: calc(100vh - 225px)
     overflow-y: scroll
-    padding-top: 4px
     position: relative
     &.dropHoverRoot
       outline: solid 3px rgba(125,200,255,0.8)
@@ -119,7 +118,7 @@
   .note_add.adding
     padding: 0 20px;
     .note_add_input
-      margin: 7px 0
+      margin: 6px 0
       padding: 5px
       width: 100%
       box-sizing: border-box
