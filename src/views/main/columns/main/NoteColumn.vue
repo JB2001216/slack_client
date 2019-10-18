@@ -3,7 +3,13 @@
     <template v-if="editDetail">
       <div class="mainColumn_head columnTitle">
         <h2>
-          <input v-model="editDetail.subject" type="text" style="background:none;">
+          <my-input
+            v-model="editDetail.subject"
+            type="text"
+            class="basicInput borderless"
+            placeholder="No Title"
+            auto-resize
+          />
         </h2>
       </div>
       <div class="mainColumn_body">

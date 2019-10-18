@@ -3,7 +3,13 @@
     <template v-if="editDetail">
       <div class="mainColumn_head columnTitle">
         <h2>
-          <input v-model="editDetail.subject" type="text" style="background:none;">
+          <my-input
+            v-model="editDetail.subject"
+            type="text"
+            class="basicInput borderless"
+            placeholder="No Title"
+            auto-resize
+          />
         </h2>
       </div>
       <div class="mainColumn_body">
@@ -37,13 +43,15 @@
     <template v-else>
       <div class="mainColumn_head columnTitle">
         <h2>
-          <input
+          <my-input
             v-if="updatable"
             v-model="task.subject"
             type="text"
-            style="background:none;"
+            class="basicInput borderless"
+            placeholder="No Title"
+            auto-resize
             @change="onSubjectChange"
-          >
+          />
           <span v-else>{{ task.subject }}</span>
         </h2>
 
@@ -244,13 +252,17 @@
       &_iconText
         font-weight: bold
         padding-right: 6px
-
   .dashboardWrap_detail
     .noteEditWrap_post
       margin-top: 0
       &_view,
       &_edit
         height: calc(100vh - 184px)
+
+  &.editDetail
+    .columnTitle
+      h2
+        width: 100%
 </style>
 
 <script lang="ts">
