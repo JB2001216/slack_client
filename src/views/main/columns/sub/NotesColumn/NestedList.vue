@@ -42,25 +42,32 @@
       </div>
       <div
         class="note_item"
-        :class="{dropHover: dropHover && dropHover.position === 'child' && dropHover.note === t}"
+        :class="{
+          active: t.id === activeNoteId,
+          dropHover: dropHover && dropHover.position === 'child' && dropHover.note === t,
+        }"
         @click.stop="onItemClick($event, t)"
         @dragenter.stop.prevent="onItemDragEnter($event, t)"
         @dragleave.stop.prevent="onItemDragLeave($event, t)"
         @dragover.stop.prevent="$event.dataTransfer.dropEffect = 'move'"
         @drop.stop.prevent="onItemDrop($event, t)"
       >
-        <template v-if="t.hasChilds">
-          <img v-if="t.childs && t.childs.length" src="~@/assets/images/icn/accordion-expand.svg" @click.stop="onContractChilds(t)">
-          <img v-else src="~@/assets/images/icn/accordion-collapse.svg" @click.stop="onExpandChilds(t)">
-        </template>
-        <my-space-user v-slot="{user}" tag="div" class="task_item_image" :user-id="t.batonUser">
+        <div class="note_item_accordionIcon">
+          <template v-if="t.hasChilds">
+            <img v-if="t.childs && t.childs.length" src="~@/assets/images/icn/accordion-expand.svg" @click.stop="onContractChilds(t)">
+            <img v-else src="~@/assets/images/icn/accordion-collapse.svg" @click.stop="onExpandChilds(t)">
+          </template>
+        </div>
+        <my-space-user v-slot="{user}" tag="div" class="note_item_image" :user-id="t.batonUser">
           <my-space-user-avatar :user="user" :size="24" shape="circle" />
         </my-space-user>
         <template v-if="!editingNote || editingNote.id !== t.id">
           <div class="note_item_name" @dblclick="onInlineNoteEditStart(t)">
             {{ t.subject }}
           </div>
-          <a v-if="noteAddable" class="note_item_add" href="#" @click.stop.prevent="onInlineNoteAddStart(t)" />
+          <a v-if="noteAddable" class="note_item_add" href="#" @click.stop.prevent="onInlineNoteAddStart(t)">
+            <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m22 13h-19.99999v-2h19.99999z" /><path d="m11 22v-20.00003h2v20.00003z" /></svg>
+          </a>
           <my-project-status :option="getStatusOption(t.status)" />
         </template>
         <template v-else>
@@ -109,6 +116,7 @@
 .nestedList
   .note_itemContaner
     position: relative
+    padding-top: 1px
     &.dragging
       .note_item,
       .note_item_top,
@@ -123,6 +131,16 @@
     cursor: pointer
     padding-left: 4px
     background: transparent
+    &_accordionIcon
+      width: 10px
+      text-align: center
+      margin-left: 1px
+      margin-right: 5px
+    .note_item_date
+      font-size: 12px
+      .myDateRangeInput_view_icon
+        width: 19px
+        height: 19px
     .note_item_date.disabled
       display: none
     &:not(:hover)
@@ -227,11 +245,18 @@ export default class NestedList extends Vue {
   }
 
   get noteAddable() {
-    return this.myPerms.includes(Perm.ADD_TASK);
+    return this.myPerms.includes(Perm.ADD_NOTE);
   }
 
   get allNoteUpdatable() {
-    return this.myPerms.includes(Perm.UPDATE_ALL_TASK);
+    return this.myPerms.includes(Perm.UPDATE_ALL_NOTE);
+  }
+
+  get activeNoteId() {
+    if (this.$route.name === 'note') {
+      return parseInt(this.$route.params.noteId);
+    }
+    return null;
   }
 
   getNoteUpdatable(note: Note) {

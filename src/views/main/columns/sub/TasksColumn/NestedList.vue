@@ -42,7 +42,10 @@
       </div>
       <div
         class="task_item"
-        :class="{dropHover: dropHover && dropHover.position === 'child' && dropHover.task === t}"
+        :class="{
+          active: t.id === activeTaskId,
+          dropHover: dropHover && dropHover.position === 'child' && dropHover.task === t,
+        }"
         @click.stop="onItemClick($event, t)"
         @dragenter.stop.prevent="onItemDragEnter($event, t)"
         @dragleave.stop.prevent="onItemDragLeave($event, t)"
@@ -121,6 +124,7 @@
 .nestedList
   .task_itemContaner
     position: relative
+    padding-top: 1px
     &.dragging
       .task_item,
       .task_item_top,
@@ -135,7 +139,6 @@
     cursor: pointer
     padding-left: 4px
     background: transparent
-    border-bottom: solid 1px $colors.lightGray
     &_accordionIcon
       width: 10px
       text-align: center
@@ -255,6 +258,13 @@ export default class NestedList extends Vue {
 
   get allTaskUpdatable() {
     return this.myPerms.includes(Perm.UPDATE_ALL_TASK);
+  }
+
+  get activeTaskId() {
+    if (this.$route.name === 'task') {
+      return parseInt(this.$route.params.taskId);
+    }
+    return null;
   }
 
   getTaskUpdatable(task: Task) {
