@@ -10,13 +10,15 @@
 
 <style lang="stylus">
 @import '../../node_modules/highlight.js/styles/github.css'
+@import '../stylus/_fixed/base/_variable'
+
 .markdownEditor
   textarea
     width: 100%
     height: 100%
   &_preview
     &_placeholder
-      color: #C4C4C4
+      color: $colors.lightGray
     pre
       white-space: pre-wrap !important
 </style>

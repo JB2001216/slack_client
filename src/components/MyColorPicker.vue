@@ -46,7 +46,7 @@
     box-sizing: border-box
 
   hr
-    border-color: $colors.lightGray
+    border-color: $colors.lightGrayLighten2
     margin: 6px 0
 
   &_pop
@@ -98,7 +98,7 @@
 
         &.active:after,
         &:hover:after
-          border: 1px solid #c4c4c4
+          border: 1px solid $colors.lightGray
   .vc-chrome
     width: initial
 </style>

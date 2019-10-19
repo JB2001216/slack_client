@@ -240,7 +240,7 @@
     min-height: 60px
     padding: 9px 20px 24px 20px
     background: #fff
-    border-top: 2px solid $colors.lightGray
+    border-top: 2px solid $colors.lightGrayLighten2
     position: absolute
     bottom: 0
     left: 0

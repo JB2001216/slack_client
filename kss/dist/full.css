@@ -245,7 +245,7 @@ body .preload {
   height: 100vh;
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: 60px 200px minmax(300px, 0.6fr) minmax(440px, 1fr);
+  grid-template-columns: 68px 200px minmax(300px, 0.6fr) minmax(440px, 1fr);
   grid-gap: 0;
 }
 .home .teamColumn {
@@ -265,30 +265,6 @@ body .preload {
   grid-column: 4/5;
   position: relative;
   max-height: 100vh;
-}
-.columnTitle {
-  padding: 36px 20px 16px;
-  min-height: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.columnTitle h2 {
-  display: block;
-  width: calc(100% - 220px);
-  font-size: 18px;
-}
-.columnTitle input[type=text] {
-  box-sizing: border-box;
-  height: 33px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 8px;
-  max-width: 100%;
-  min-width: 100px;
 }
 .t-hero {
   font-weight: bold;
@@ -2348,12 +2324,6 @@ body .preload {
 .option_commonColumn_list_input_parts input[type=text] {
   width: 100%;
   padding: 10px 40px 10px 30px;
-/*
-            border: 1px solid #C4C4C4;
-            border-radius: 4px;
-            color: #333333;
-            font-family: "Noto Sans CJK JP";
-            */
   font-size: 14px;
   line-height: 20px;
 }
@@ -2490,20 +2460,6 @@ body .preload {
   min-width: 320px;
   padding: 10px 15px;
   margin-top: 25px;
-/*
-        border: 1px solid #c4c4c4;
-        border-radius: 4px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        color: #333333;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        line-height: 1.5;
-        &::placeholder{
-          color: #ccc;
-        }
-        */
 }
 .option_spaceGeneral_addButton {
   margin-top: 50px;
@@ -2766,7 +2722,7 @@ body .preload {
   height: 40px;
   padding: 9px 15px;
 /*
-              border: 1px solid #c4c4c4;
+              border: 1px solid $colors.lightGray
               border-radius: 4px;
               color: #333333;
               font-family: "Noto Sans CJK JP";
@@ -3062,20 +3018,6 @@ body .preload {
 .option_spaceProjectsGeneral_input input[type=text] {
   min-width: 320px;
   padding: 10px 15px;
-/*
-        border: 1px solid #c4c4c4;
-        border-radius: 4px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        color: #333333;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        line-height: 1.5;
-        &::placeholder{
-          color: #ccc;
-        }
-        */
 }
 .option_spaceProjectsGeneral_addButton {
   margin-top: 50px;
@@ -3135,20 +3077,6 @@ body .preload {
   min-width: 320px;
   padding: 10px 15px;
   margin-top: 25px;
-/*
-        border: 1px solid #c4c4c4;
-        border-radius: 4px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        color: #333333;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        line-height: 1.5;
-        &::placeholder{
-          color: #ccc;
-        }
-        */
 }
 .option_spaceProfileGeneral_addButton {
   margin-top: 50px;
@@ -3464,6 +3392,21 @@ body .preload {
   box-sizing: border-box;
   background: #fff;
   border-right: 2px solid #ededed;
+}
+.subColumn .columnTitle {
+  padding: 36px 20px 16px;
+  min-height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.subColumn .columnTitle h2 {
+  display: block;
+  width: calc(100% - 32px);
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .subColumn_tab {
   display: flex;
@@ -3930,6 +3873,30 @@ body .preload {
   width: 14px;
   height: 14px;
   margin-left: 10px;
+}
+.mainColumn .columnTitle {
+  padding: 36px 20px 16px;
+  min-height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mainColumn .columnTitle h2 {
+  display: block;
+  width: calc(100% - 220px);
+  font-size: 18px;
+}
+.mainColumn .columnTitle input[type=text] {
+  box-sizing: border-box;
+  height: 33px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 8px;
+  max-width: 100%;
+  min-width: 100px;
 }
 .dashboardWrap {
   padding: 8px 19px 0 19px;
@@ -5209,7 +5176,6 @@ select:disabled {
   border-color: transparent;
 }
 .basicInput.borderless:hover {
-  box-shadow: 0 0 0 5px rgba(194,226,242,0.5);
   border: 1px solid #4a90e2;
 }
 .basicInput:focus {
@@ -5316,7 +5282,6 @@ select:disabled {
   font-weight: bold;
 }
 .formFooterButtonLight {
-/*color: #C4C4C4*/
   color: #b5b5b5;
   background-color: #fff;
   border: 1px solid #c4c4c4;
