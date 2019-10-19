@@ -64,7 +64,7 @@
       width: 100%
       height: 100%
       object-fit: cover
-      border: 1px solid #c4c4c4;
+      border: 1px solid $colors.lightGray
       border-radius: 4px
     &.avatarFileDragging
       label

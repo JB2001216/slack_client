@@ -5,6 +5,29 @@
   margin-left: 10px;
 }
 
+.mainColumn
+  .columnTitle
+    padding: 36px 20px 16px
+    min-height: 40px
+    display: flex
+    justify-content: space-between
+    align-items: center
+    h2
+      display: block
+      width: calc(100% - 220px)
+      font-size: 18px
+    input[type=text]
+      box-sizing: border-box
+      height: 33px
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+      font-size: 18px
+      font-weight: bold
+      padding: 8px
+      max-width: 100%
+      min-width: 100px
+
 .dashboardWrap{
   padding: 8px 19px 0 19px;
   *{
@@ -103,7 +126,7 @@
       font-size: 14px;
       line-height: 1.57;
       &::placeholder{
-        color:#C4C4C4;
+        color: $colors.lightGray
       }
     }
   }
@@ -112,7 +135,7 @@
     margin-left: -19px;
     padding: 31px 19px 0 19px;
     background: url('~@/assets/images/mainColumn/icn_post-handle.svg') no-repeat top 8px center, #FFF;
-    border-top: 2px solid $colors.lightGray
+    border-top: 2px solid $colors.lightGrayLighten2
     overflow: hidden;
     small{
       display: block;
@@ -195,7 +218,7 @@
       min-height: 44px;
       padding: 10px 10px 10px 20px;
       background: #fff;
-      border: 1px solid #C4C4C4;
+      border: 1px solid $colors.lightGray
       border-radius: 8px;
       margin: auto;
       &_upload{
@@ -222,7 +245,7 @@
         font-size: 14px;
         line-height: 1.57;
         &::placeholder{
-          color: #C4C4C4;
+          color: $colors.lightGray
         }
       }
     }

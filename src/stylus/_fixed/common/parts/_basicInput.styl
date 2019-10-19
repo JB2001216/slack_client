@@ -13,7 +13,7 @@ Styleguide 11.5
 .basicInput
   font-family: $body-font-family
   padding: 10px 15px
-  border: 1px solid #c4c4c4
+  border: 1px solid $colors.lightGray
   border-radius: 4px
   overflow: hidden
   white-space: nowrap
@@ -24,7 +24,6 @@ Styleguide 11.5
   &.borderless
     border-color: transparent
     &:hover
-      box-shadow: 0 0 0 5px rgba(194,226,242,0.5)
       border: 1px solid #4a90e2
   &:focus
     box-shadow: 0 0 0 5px rgba(194,226,242,0.5)
@@ -37,4 +36,4 @@ Styleguide 11.5
   &[readonly],
   &.readonly
     box-shadow: none
-    background: $colors.lightGray
+    background: $colors.lightGrayLighten2

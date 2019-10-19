@@ -97,7 +97,7 @@
       color: $colors.gray
       cursor: pointer
     &_header
-      border-bottom: solid 1px $colors.lightGray
+      border-bottom: solid 1px $colors.lightGrayLighten2
       padding: 26px
       &_title
         font-size: 20px
@@ -113,7 +113,7 @@
         width: 511px
         margin: auto
         &_item
-          border-bottom: solid 1px $colors.lightGray
+          border-bottom: solid 1px $colors.lightGrayLighten2
           height: 72px
           cursor: pointer
           user-select: none

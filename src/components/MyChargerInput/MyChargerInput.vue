@@ -200,7 +200,7 @@
           border-radius: 50%
           font-size: 12px
           color: #333
-          background: $colors.lightGray
+          background: $colors.lightGrayLighten2
           white-space: nowrap
           text-align: center
           box-sizing: content-box
