@@ -22,20 +22,20 @@
     <router-view />
 
     <!-- TODO: 暫定的に設定をここに入れる -->
-    <div style="background:rgba(0,0,0,0.5); border-radius:6px; padding:5px 8px; position:fixed; left:2px; bottom:60px; z-index:1; color:#fff;">
+    <div style="background:rgba(0,0,0,0.5); font-size:12px; border-radius:3px; padding:1px 6px; position:fixed; left:2px; bottom:75px; z-index:1; color:#fff;">
       <template v-for="(t,i) in themes">
         <span v-if="i !== 0" :key="i" style="padding: 0 4px;">|</span>
         <span :key="t" style="cursor:pointer;" @click="theme=t">{{ i+1 }}</span>
       </template>
     </div>
-    <div style="background:rgba(0,0,0,0.5); border-radius:6px; padding:5px 8px; position:fixed; left:2px; bottom:30px; z-index:1; color:#fff;">
+    <div style="background:rgba(0,0,0,0.5); font-size:12px; border-radius:3px; padding:1px 6px; position:fixed; left:2px; bottom:50px; z-index:1; color:#fff;">
       <template v-for="(locale, i) in loadableLocales">
         <span v-if="i !== 0" :key="i" style="padding: 0 4px;">|</span>
         <span :key="locale" style="cursor:pointer;" @click.prevent="$store.actions.setLocale(locale)">{{ locale }}</span>
       </template>
     </div>
-    <div style="background:rgba(0,0,0,0.5); border-radius:6px; padding:5px 8px; position:fixed; left:2px; bottom:0px; z-index:1; color:#fff;">
-      <span>{{ version }}</span>
+    <div style="background:rgba(0,0,0,0.5); font-size:12px; border-radius:3px; padding:1px 6px; position:fixed; left:2px; bottom:25px; z-index:1; color:#fff;">
+      <span>v{{ version }}</span>
     </div>
   </div>
 </template>
