@@ -149,11 +149,15 @@ function createWindow(this: any) {
     minWidth: 1024,
     minHeight: 576,
     icon: path.join(__static, 'img', 'icon.png'),
+    frame: process.platform !== 'win32',
+    titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: false,
     },
   });
+  win.setMenu(null);
+  win.removeMenu();
 
   // 新規ウインドウはアプリ外で起動する
   win.webContents.on('new-window', (e, url) => {

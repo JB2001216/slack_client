@@ -42,7 +42,7 @@
   position: fixed
   right: 0
   top: 0
-  z-index: 10000
+  z-index: 9999999
   &_icon
     width: 20px
     height: 20px
