@@ -2,14 +2,14 @@
   <div class="teamColumn">
     <ul class="teamColumn_nav">
       <li v-for="u in loggedInUsers" :key="u.id">
-        <router-link
+        <a
           class="teamColumn_nav_item"
           :class="{active: activeUserId === u.id}"
-          :to="{ name: 'user', params: { userId: u.id }}"
+          @click.prevent="$router.push(getUserLastLocation(u.id))"
         >
           <img v-if="u.space.avatarSmallUrl" :src="u.space.avatarSmallUrl">
           <span v-else>{{ (u.space.displayName || u.space.account).slice(0,1) }}</span>
-        </router-link>
+        </a>
       </li>
       <li>
         <router-link class="teamColumn_add" :to="{name: 'space-add1'}">
@@ -53,6 +53,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { getUserLastLocation } from '@/router';
 
 @Component
 export default class UserColumn extends Vue {
@@ -63,6 +64,14 @@ export default class UserColumn extends Vue {
   get activeUserId() {
     const userId = this.$route.params.userId;
     return userId ? parseInt(userId) : null;
+  }
+
+  getUserLastLocation(userId: number) {
+    return getUserLastLocation(userId);
+  }
+
+  toUserLastLocation(userId: number) {
+    this.$router.push(getUserLastLocation(userId));
   }
 }
 </script>

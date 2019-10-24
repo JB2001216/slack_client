@@ -103,7 +103,7 @@ export default class SpaceAdd2 extends Vue {
         spacesPostRequestBody: this.data,
       });
 
-      const user = await this.$store.actions.addLoggedInUsers(res.token);
+      const user = await this.$store.actions.addLoggedInUser(res.token);
       this.$router.push({
         name: 'user',
         params: {

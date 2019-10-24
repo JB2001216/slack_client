@@ -96,20 +96,5 @@ export default class SubColumnLayout extends Vue {
   get projectUserAddable() {
     return this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.ADD_PROJECT_USER);
   }
-
-  setLastSelectedSubColumnTab() {
-    if (this.activeTab) {
-      this.$store.mutations.setLastSelectedSubColumnTab(this.activeTab);
-    }
-  }
-
-  @Watch('activeTab')
-  onActiveTabChange() {
-    this.setLastSelectedSubColumnTab();
-  }
-
-  mounted() {
-    this.setLastSelectedSubColumnTab();
-  }
 }
 </script>

@@ -111,7 +111,7 @@ export default class LoginSpaceSelect extends Vue {
 
       const responses = await Promise.all(requests);
       for (let res of responses) {
-        await this.$store.actions.addLoggedInUsers(res.token, true);
+        await this.$store.actions.addLoggedInUser(res.token, true);
       }
       if (!responses.length) {
         this.$router.push(this.backTo);

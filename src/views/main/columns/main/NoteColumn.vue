@@ -1,5 +1,5 @@
 <template>
-  <div v-if="note" class="mainColumn noteColumn" :class="{fullMainColumn, updatable, editDetail}">
+  <div v-if="note && activeProjectId" class="mainColumn noteColumn" :class="{fullMainColumn, updatable, editDetail}">
     <template v-if="editDetail">
       <div class="mainColumn_head columnTitle">
         <h2>
@@ -298,7 +298,7 @@ export default class NoteColumn extends Vue {
     return this.$store.getters.activeUser.activeProjectMyPerms!;
   }
   get activeProjectId() {
-    return this.$store.state.activeUser.activeProjectData!.id;
+    return this.$store.getters.activeUser.activeProjectId;
   }
 
   get statusOptions() {

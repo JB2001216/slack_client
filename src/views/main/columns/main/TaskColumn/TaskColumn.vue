@@ -1,5 +1,5 @@
 <template>
-  <div v-if="task" class="mainColumn taskColumn" :class="{fullMainColumn, updatable, editDetail}">
+  <div v-if="task && activeProjectId" class="mainColumn taskColumn" :class="{fullMainColumn, updatable, editDetail}">
     <template v-if="editDetail">
       <div class="mainColumn_head columnTitle">
         <h2>
@@ -328,7 +328,7 @@ export default class TaskColumn extends Vue {
     return this.$store.getters.activeUser.activeProjectMyPerms!;
   }
   get activeProjectId() {
-    return this.$store.state.activeUser.activeProjectData!.id;
+    return this.$store.getters.activeUser.activeProjectId;
   }
 
   get statusOptions() {
