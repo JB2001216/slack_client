@@ -40,18 +40,12 @@
           </router-link>
         </li>
         <li v-for="p in projects" :key="p.id">
-          <router-link
+          <a
             :class="{active: p.id === activeProjectId}"
-            :to="{
-              name: 'project',
-              params: {
-                userId: myUser.id.toString(),
-                projectId: p.id.toString(),
-              },
-            }"
+            @click.prevent="$router.push(getProjectLastLocation(myUser.id, p.id))"
           >
             {{ p.displayName }}
-          </router-link>
+          </a>
         </li>
       </ul>
     </div>
@@ -118,6 +112,7 @@ import { Route, NavigationGuard } from 'vue-router';
 import store from '@/store';
 import { Perm } from '@/lib/permissions';
 import { SubColumnTabNames } from '@/consts';
+import { getProjectLastLocation } from '@/router';
 
 const tabs = {
   [SubColumnTabNames.task]: 'tasks',
@@ -139,10 +134,10 @@ async function beforeRouteChange(to: Route, from: Route, next: Parameters<Naviga
     }
   }
 
-  // If no tab is selected, select the last selected tab
+  // If no tab is selected, select the task tab
   if (to.name === 'project') {
     return next({
-      name: tabs[store.state.lastSelectedSubColumnTab],
+      name: 'tasks',
       params: {
         userId: to.params.userId,
         projectId: to.params.projectId,
@@ -183,6 +178,11 @@ export default class ProjectColumn extends Vue {
     if (!this.mySpaceRole) return false;
     return this.mySpaceRole.perms.includes(Perm.UPDATE_SPACE_USER) ||
       this.mySpaceRole.perms.includes(Perm.DELETE_SPACE_USER);
+  }
+
+
+  getProjectLastLocation(userId: number, projectId: number) {
+    return getProjectLastLocation(userId, projectId);
   }
 
   async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {

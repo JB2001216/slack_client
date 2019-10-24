@@ -126,11 +126,11 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
   setActiveProjectData(value: ActiveUserState['activeProjectData']) {
     if (!value || !this.state.projects || !this.state.projects.find((p) => p.id === value.id)) {
       this.state.activeProjectData = null;
-      this.state.taskStatusList = null;
-      this.state.noteStatusList = null;
     } else {
       this.state.activeProjectData = value;
     }
+    this.state.taskStatusList = null;
+    this.state.noteStatusList = null;
   }
 
   addProject(project: api.Project) {

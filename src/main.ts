@@ -80,12 +80,11 @@ type ComponentsKey = keyof typeof components;
 });
 
 (async() => {
-  // 初期設定
+  // initialize
   await Promise.all([
-    // 言語
     store.actions.initLocale(),
-    // ログインユーザー
     store.actions.initLoggedInUsers(),
+    store.actions.location.init(),
   ]);
 
   new Vue({

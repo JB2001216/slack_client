@@ -4,7 +4,8 @@ import localStorage from '@/lib/local-storage';
 import { apiRegistry, UsersApi, MyUser, Space } from '@/lib/api';
 import activeUser from './modules/active-user';
 import settingRouter from './modules/setting-router';
-import { SubColumnTabNames } from '@/consts';
+import location from './modules/location';
+
 
 export interface LoggedInUser extends MyUser {
   token: string;
@@ -15,7 +16,6 @@ class RootState {
   titleKey?: string = undefined;
   loggedInUsers: LoggedInUser[] = [];
   fullMainColumn = false;
-  lastSelectedSubColumnTab = SubColumnTabNames.task;
 }
 
 class RootGetters extends Getters<RootState>() {
@@ -77,10 +77,6 @@ class RootMutations extends Mutations<RootState>() {
     this.state.fullMainColumn = v;
   }
 
-  setLastSelectedSubColumnTab(tab: SubColumnTabNames) {
-    this.state.lastSelectedSubColumnTab = tab;
-  }
-
   editSpace(space: Space) {
     this.state.loggedInUsers.forEach((u) => {
       if (u.space.id === space.id) {
@@ -106,15 +102,14 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
   }
 
   async initLoggedInUsers() {
-    await Promise.all(localStorage.tokens.map((t) => {
-      return this.addLoggedInUsers(t, false)
-        .catch((err) => {
-          console.error(err);
-        });
-    }));
+    const tokens = localStorage.tokens;
+    const users = await Promise.all(tokens.map((t) => apiRegistry.load(UsersApi, t).usersMeGet()));
+    for (const [i, user] of users.entries()) {
+      this.mutations.addLoggedInUser(user, tokens[i], false);
+    }
   }
 
-  async addLoggedInUsers(token: string, saveToken = true) {
+  async addLoggedInUser(token: string, saveToken = true) {
     const user = await apiRegistry.load(UsersApi, token).usersMeGet();
     this.mutations.addLoggedInUser(user, token, saveToken);
     return user;
@@ -127,6 +122,7 @@ const root = module({
   mutations: RootMutations,
   actions: RootActions,
 }).child('activeUser', activeUser)
-  .child('settingRouter', settingRouter);
+  .child('settingRouter', settingRouter)
+  .child('location', location);
 
 export default root;
