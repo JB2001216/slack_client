@@ -94,8 +94,10 @@
       top: 20px
       font-size: 24px
       line-height: 24px
-      color: $colors.gray
+      themeColor('icon')
       cursor: pointer
+      &:hover
+        themeColor('iconDarken1')
     &_header
       border-bottom: solid 1px $colors.lightGrayLighten2
       padding: 26px
@@ -156,7 +158,7 @@
             span
               font-size: 18px
               line-height: 18px
-              color: $colors.gray
+              themeColor('icon')
               &.hover
                 font-size: 19px
                 line-height: 19px

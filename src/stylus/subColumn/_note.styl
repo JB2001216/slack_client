@@ -10,9 +10,9 @@
     &_favorite
       transition: 0.5s
       display: flex
-      fill: $colors.gray
+      themeFill('icon')
       &:not(.active):hover
-        fill: $colors.grayDarken1
+        themeFill('iconDarken1')
       &.active:hover
         fill: #EDA62A
     &_right
@@ -129,10 +129,10 @@
       opacity: 0
       transition: 0.25s
       padding: 0
-      margin-right: 10px
+      margin-right: 8px
       margin-left: 4px
-      fill: $colors.gray
+      themeFill('icon')
       &:hover
-        fill: $colors.grayDarken1
+        themeFill('iconDarken1')
     &_date
       padding: 0 8px 0 4px

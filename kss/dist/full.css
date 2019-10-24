@@ -2,43 +2,48 @@
   font-family: 'Noto Sans CJK JP';
   font-style: normal;
   font-weight: 100;
-  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Thin.woff2") format('woff2'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Thin.woff") format('woff'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Thin.otf") format('opentype');
+  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Thin.woff2") format('woff2');
 }
 @font-face {
   font-family: 'Noto Sans CJK JP';
   font-style: normal;
   font-weight: 200;
-  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Light.woff2") format('woff2'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Light.woff") format('woff'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Light.otf") format('opentype');
+  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Light.woff2") format('woff2');
 }
 @font-face {
   font-family: 'Noto Sans CJK JP';
   font-style: normal;
   font-weight: 300;
-  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-DemiLight.woff2") format('woff2'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-DemiLight.woff") format('woff'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-DemiLight.otf") format('opentype');
+  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-DemiLight.woff2") format('woff2');
 }
 @font-face {
   font-family: 'Noto Sans CJK JP';
   font-style: normal;
   font-weight: 400;
-  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Regular.woff2") format('woff2'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Regular.woff") format('woff'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Regular.otf") format('opentype');
+  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Regular.woff2") format('woff2');
 }
 @font-face {
   font-family: 'Noto Sans CJK JP';
   font-style: normal;
   font-weight: 500;
-  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Medium.woff2") format('woff2'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Medium.woff") format('woff'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Medium.otf") format('opentype');
+  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Medium.woff2") format('woff2');
 }
 @font-face {
   font-family: 'Noto Sans CJK JP';
   font-style: normal;
   font-weight: 700;
-  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Bold.woff2") format('woff2'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Bold.woff") format('woff'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Bold.otf") format('opentype');
+  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Bold.woff2") format('woff2');
 }
 @font-face {
   font-family: 'Noto Sans CJK JP';
   font-style: normal;
   font-weight: 900;
-  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Black.woff2") format('woff2'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Black.woff") format('woff'), url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Black.otf") format('opentype');
+  src: url("~@/assets/fonts/noto-sans-jp/NotoSansJP-Black.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'ErnieMDL2Assets';
+  font-style: normal;
+  src: url("~@/assets/fonts/erniemdl2/erniemdl2.woff2") format('woff2');
 }
 .teamColumn {
   color: #fff;
@@ -2306,10 +2311,15 @@ body .preload {
   display: block;
   width: 100%;
   height: 2px;
-  background: #6c6c6c;
   position: absolute;
   left: 0;
   margin: auto;
+}
+.color_gray_green .option_commonColumn_list_input_parts_toggle span {
+  background-color: #666;
+}
+.color_blueGray_green .option_commonColumn_list_input_parts_toggle span {
+  background-color: #666;
 }
 .option_commonColumn_list_input_parts_toggle span:nth-of-type(1) {
   top: 0;
@@ -2575,7 +2585,7 @@ body .preload {
   overflow: hidden;
 }
 .option_spaceMember_table_img.bg_blue {
-  background-color: ;
+  background-color: #0074e0;
 }
 .option_spaceMember_table_img p {
   color: #fff;
@@ -2979,7 +2989,7 @@ body .preload {
   overflow: hidden;
 }
 .option_spaceMemberAdd_table_img.bg_blue {
-  background-color: ;
+  background-color: #0074e0;
 }
 .option_spaceMemberAdd_table_img p {
   color: #fff;
@@ -3260,6 +3270,7 @@ body .preload {
   color: #2f80ed;
 }
 .teamColumn {
+  user-select: none;
   max-height: 100vh;
   overflow-y: auto;
 }
@@ -3295,6 +3306,7 @@ body .preload {
   background: #ededed;
 }
 .projectColumn {
+  user-select: none;
   box-shadow: 8px 0px 32px rgba(0,0,0,0.05);
   position: relative;
 }
@@ -3451,10 +3463,18 @@ body .preload {
 .task_menu_favorite {
   transition: 0.5s;
   display: flex;
-  fill: #6c6c6c;
 }
-.task_menu_favorite:not(.active):hover {
-  fill: #5c5c5c;
+.color_gray_green .task_menu_favorite {
+  fill: #666;
+}
+.color_blueGray_green .task_menu_favorite {
+  fill: #666;
+}
+.color_gray_green .task_menu_favorite:not(.active):hover {
+  fill: #000;
+}
+.color_blueGray_green .task_menu_favorite:not(.active):hover {
+  fill: #000;
 }
 .task_menu_favorite.active:hover {
   fill: #eda62a;
@@ -3607,12 +3627,20 @@ body .preload {
   opacity: 0;
   transition: 0.25s;
   padding: 0;
-  margin-right: 10px;
+  margin-right: 2px;
   margin-left: 4px;
-  fill: #6c6c6c;
 }
-.task_item_add:hover {
-  fill: #5c5c5c;
+.color_gray_green .task_item_add {
+  fill: #666;
+}
+.color_blueGray_green .task_item_add {
+  fill: #666;
+}
+.color_gray_green .task_item_add:hover {
+  fill: #000;
+}
+.color_blueGray_green .task_item_add:hover {
+  fill: #000;
 }
 .task_item_date {
   padding: 0 8px 0 4px;
@@ -3699,10 +3727,18 @@ body .preload {
 .note_menu_favorite {
   transition: 0.5s;
   display: flex;
-  fill: #6c6c6c;
 }
-.note_menu_favorite:not(.active):hover {
-  fill: #5c5c5c;
+.color_gray_green .note_menu_favorite {
+  fill: #666;
+}
+.color_blueGray_green .note_menu_favorite {
+  fill: #666;
+}
+.color_gray_green .note_menu_favorite:not(.active):hover {
+  fill: #000;
+}
+.color_blueGray_green .note_menu_favorite:not(.active):hover {
+  fill: #000;
 }
 .note_menu_favorite.active:hover {
   fill: #eda62a;
@@ -3858,12 +3894,20 @@ body .preload {
   opacity: 0;
   transition: 0.25s;
   padding: 0;
-  margin-right: 10px;
+  margin-right: 8px;
   margin-left: 4px;
-  fill: #6c6c6c;
 }
-.note_item_add:hover {
-  fill: #5c5c5c;
+.color_gray_green .note_item_add {
+  fill: #666;
+}
+.color_blueGray_green .note_item_add {
+  fill: #666;
+}
+.color_gray_green .note_item_add:hover {
+  fill: #000;
+}
+.color_blueGray_green .note_item_add:hover {
+  fill: #000;
 }
 .note_item_date {
   padding: 0 8px 0 4px;
@@ -5135,7 +5179,7 @@ select:disabled {
   background-color: #007ff5;
 }
 .basicButtonPrimary:hover {
-  background-color: ;
+  background-color: #0074e0;
 }
 .basicButtonPrimarySuccess {
   background-color: #ebf0f5;
@@ -5266,7 +5310,7 @@ select:disabled {
   background-color: #007ff5;
 }
 .formFooterButtonPrimary:hover {
-  background-color: ;
+  background-color: #0074e0;
   font-weight: bold;
 }
 .formFooterButtonSecondary {
@@ -5319,10 +5363,10 @@ select:disabled {
   box-sizing: border-box;
 }
 .iconButtonPlus:hover {
-  color: ;
+  color: #0074e0;
 }
 .iconButtonPlus:hover:before {
-  background: ;
+  background: #0074e0;
 }
 .iconButtonPlus:disabled,
 .iconButtonPlus.disabled {
@@ -5416,11 +5460,17 @@ select:disabled {
   float: none;
   flex-shrink: 1;
 }
-.dashboardWrap_list_menu >dd svg path {
-  fill: #6c6c6c;
+.color_gray_green .dashboardWrap_list_menu >dd svg path {
+  fill: #666;
 }
-.dashboardWrap_list_menu >dd svg:hover path {
-  fill: #5c5c5c;
+.color_blueGray_green .dashboardWrap_list_menu >dd svg path {
+  fill: #666;
+}
+.color_gray_green .dashboardWrap_list_menu >dd svg:hover path {
+  fill: #000;
+}
+.color_blueGray_green .dashboardWrap_list_menu >dd svg:hover path {
+  fill: #000;
 }
 .searchWrap_checkBox dd label {
   user-select: none;

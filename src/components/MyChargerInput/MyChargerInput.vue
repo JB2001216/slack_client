@@ -163,7 +163,7 @@
           height: 17px
           width: 17px
           border: 1px solid #FFFFFF
-          background-color: $colors.gray
+          themeBackgroundColor('icon')
           box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16)
           text-align: center
           font-size: 10px
@@ -177,7 +177,7 @@
           transform: scale(0.75, 0.75)
           pointer-events: none
           &:hover
-            background-color: $colors.grayDarken1
+            themeBackgroundColor('iconDarken1')
         &:hover
           padding: 0 12px
           .myChargerInput_chargeUsers_item_name

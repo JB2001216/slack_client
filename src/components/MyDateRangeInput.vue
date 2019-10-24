@@ -63,6 +63,7 @@
 
 <style lang="stylus" scoped>
 @import '../stylus/_fixed/base/_variable'
+@import '../stylus/_fixed/base/_theme'
 
 .myDateRangeInput
   display: inline-block
@@ -73,10 +74,10 @@
     &_icon
       vertical-align: middle
       path
-        fill: $colors.gray
+        themeFill('icon')
     &_value
       vertical-align: middle
-      color: $colors.gray
+      themeColor('icon')
       white-space: nowrap
   &_pop
     position: fixed
@@ -115,9 +116,9 @@
     &:hover
       .myDateRangeInput_view_icon
         &_path
-          fill: $colors.grayDarken1
+          themeFill('iconDarken1')
       .myDateRangeInput_view_value
-        color: $colors.grayDarken1
+        themeColor('iconDarken1')
   .vc-container
     border: none !important
   .vc-w-full
