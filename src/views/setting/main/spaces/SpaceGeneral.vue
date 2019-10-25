@@ -98,7 +98,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi, SpacesSpaceIdAvatarPostRequest } from '@/lib/api';
-import { eventsSub } from '@/events-subscription';
 
 @Component
 export default class SpaceGeneral extends Vue {
@@ -122,15 +121,6 @@ export default class SpaceGeneral extends Vue {
 
   get avatarInputAccept() {
     return this.avatarFileMimes.join(',');
-  }
-
-  created() {
-
-    eventsSub.source.onmessage = (res: any) => {
-      if (res.event !== 'updateSpace') return;
-      this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
-    };
-
   }
 
   clearAvatarInput() {
@@ -218,9 +208,8 @@ export default class SpaceGeneral extends Vue {
         space.avatarUrl = avatarPostResponse.avatarUrl;
         space.avatarSmallUrl = avatarPostResponse.avatarSmallUrl;
       }
-      // - this.$store.mutations.editSpace(space);
-      // - this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
-
+      // this.$store.mutations.editSpace(space); (!!!moved to events-subscriptions.ts)
+      // this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success'); (!!!moved to events-subscriptions.ts)
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
