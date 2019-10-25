@@ -38,7 +38,7 @@ class EventsSubscription {
       switch (resObj.event) {
 
         case 'updateSpace':
-          store.mutations.editSpace(resObj.params);
+          store.mutations.editSpace(resObj.data.params);
           if (this.isFireUser) {
             appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' });
           }
@@ -49,15 +49,21 @@ class EventsSubscription {
           break;
 
         case 'updateMyUser':
-          // DO UPDATE HERE
+          store.mutations.editMyUser(resObj.data.params);
+          if (this.isFireUser) {
+            appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' });
+          }
           break;
 
         case 'createSpaceUser':
-          // DO UPDATE HERE
+          store.mutations.activeUser.addSpaceUser(resObj.data.params);
           break;
 
         case 'updateSpaceUser':
-          // DO UPDATE HERE
+          store.mutations.activeUser.editSpaceUser(resObj.data.params);
+          if (this.isFireUser) {
+            appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' });
+          }
           break;
 
         case 'deleteSpaceUser':
@@ -65,11 +71,14 @@ class EventsSubscription {
           break;
 
         case 'createProject':
-          // DO UPDATE HERE
+          store.mutations.activeUser.addProject(resObj.data.params);
           break;
 
         case 'updateProject':
-          // DO UPDATE HERE
+          store.mutations.activeUser.editProject(resObj.data.params);
+          if (this.isFireUser) {
+            appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' });
+          }
           break;
 
         case 'deleteProject':

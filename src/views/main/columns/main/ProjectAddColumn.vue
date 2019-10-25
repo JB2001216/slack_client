@@ -51,7 +51,9 @@ export default class ProjectAddColumn extends Vue {
           displayName: this.displayName,
         },
       });
-      this.$store.mutations.activeUser.addProject(project);
+
+      // this.$store.mutations.activeUser.addProject(project); (!!! moved to events-subscription.ts)
+
       this.$router.push({
         name: 'project',
         params: {

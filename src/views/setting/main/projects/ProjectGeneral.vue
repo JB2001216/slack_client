@@ -51,9 +51,8 @@ export default class ProjectGeneral extends Vue {
         projectId: this.$store.state.activeUser.activeProjectData!.id,
         projectsProjectIdPutRequestBody: { displayName: this.inputName },
       });
-      this.$store.mutations.activeUser.editProject(project);
-      this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
-
+      // this.$store.mutations.activeUser.editProject(project); (!!! moved to events-subscription.ts)
+      // this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success'); (!!! moved to events-subscription.ts)
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {

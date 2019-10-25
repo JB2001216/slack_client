@@ -190,7 +190,7 @@ export default class SpaceUserAccount extends Vue {
     try {
       this.savingSMS = true;
       const res = await this.api.updateSMS({ token: this.smsToken, pin: this.pin });
-      this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
+      // this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success'); (!!! moved to events-subscription.ts)
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
