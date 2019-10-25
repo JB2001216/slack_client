@@ -6,7 +6,6 @@ import activeUser from './modules/active-user';
 import settingRouter from './modules/setting-router';
 import location from './modules/location';
 
-import { eventsSub } from '@/events-subscription';
 
 export interface LoggedInUser extends MyUser {
   token: string;
@@ -47,7 +46,6 @@ class RootMutations extends Mutations<RootState>() {
     if (!this.state.loggedInUsers.find((u) => u.id === user.id)) {
       const loggedInUser: LoggedInUser = Object.assign(user, { token });
       this.state.loggedInUsers.push(loggedInUser);
-      eventsSub.init(loggedInUser);
     }
     if (saveToken) {
       const tokens = localStorage.tokens;
