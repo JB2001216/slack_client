@@ -111,7 +111,6 @@ import SettingRouterView from '@/views/setting/SettingRouterView.vue';
 import { loadableLocales } from '@/i18n';
 import { AppEventMap } from '@/plugins/app-event';
 import { remote } from 'electron';
-import { eventsSub } from '@/events-subscription';
 
 type Theme = 'color_gray_green' | 'color_blueGray_green';
 
@@ -159,14 +158,6 @@ export default class App extends Vue {
 
   get enabledMdl2Controls() {
     return this.platform === 'win32';
-  }
-
-  get myUser() {
-    return this.$store.state.activeUser.myUser!;
-  }
-
-  created() {
-    eventsSub.init(this.myUser.space.id);
   }
 
   toggleWindowMaximize() {

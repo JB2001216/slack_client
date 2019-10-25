@@ -1,12 +1,19 @@
 class EventsSubscription {
 
   private url: string = 'http://54.224.153.166:3001/notifications/subscribe?space_id=';
+  private spaceId: any;
   source: any;
   initialized: boolean = false;
 
-  init(spaceId: number): void {
+  init(myUser: any): void {
 
-    this.source = new EventSource(this.url + spaceId);
+    if (!myUser || this.spaceId === myUser.space.id) { return; }
+
+    this.spaceId = myUser.space.id;
+
+    if (this.source) { this.source.close(); }
+
+    this.source = new EventSource(this.url + this.spaceId);
 
     this.source.onopen = () => {
       console.log('Server is opened.');
@@ -19,7 +26,6 @@ class EventsSubscription {
         case 'updateSpace':
           // DO UPDATE HERE
           // + this.$store.mutations.editSpace(res.params);
-          // + this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
           break;
 
         default:
