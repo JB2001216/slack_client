@@ -208,8 +208,8 @@ export default class SpaceGeneral extends Vue {
         space.avatarUrl = avatarPostResponse.avatarUrl;
         space.avatarSmallUrl = avatarPostResponse.avatarSmallUrl;
       }
-      this.$store.mutations.editSpace(space);
-      this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
+      // - this.$store.mutations.editSpace(space);
+      // - this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
 
     } catch (err) {
       this.$appEmit('error', { err });
