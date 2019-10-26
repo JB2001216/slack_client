@@ -4,7 +4,7 @@ import i18n from '@/i18n';
 
 class EventsSubscription {
 
-  private url: string = 'http://54.224.153.166:3001/notifications/subscribe?space_id=';
+  private url: string = process.env.VUE_APP_NOTIFICATION_BASE_PATH + '/notifications/subscribe?space_id=';
   private spaceId: any;
   private isFireUser: boolean = false;
   source: any;
