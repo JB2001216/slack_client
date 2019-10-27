@@ -78,12 +78,12 @@
           content: ''
           display: block
           position: absolute
-          border: 4px dashed $colors.primaryBlue
+          border: 2px dashed $colors.primaryBlue
           border-radius: 4px
-          left: -2px
-          top: -2px
-          right: -2px
-          bottom: -2px
+          left: -1px
+          top: -1px
+          right: -1px
+          bottom: -1px
           box-sizing: border-box
           pointer-events: none
         img
