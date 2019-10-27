@@ -340,7 +340,7 @@ body .preload {
 .columnWrap_left {
   vertical-align: top;
   padding: 40px;
-  background: #c4c4c4;
+  background: #ccc;
 }
 .columnWrap_left.signup {
   background: url("~@/assets/images/parts/login-bg-signup.png") no-repeat center center/cover;
@@ -417,7 +417,7 @@ body .preload {
   padding: 18px 15px;
   margin-top: 16px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   font-family: Noto Sans CJK JP;
   font-size: 14px;
@@ -522,7 +522,7 @@ body .preload {
   margin-top: -7px;
   width: 16px;
   height: 16px;
-  background: #ededed;
+  background: #e0e0e0;
   border-radius: 4px;
   content: '';
 }
@@ -671,7 +671,7 @@ body .preload {
   display: block;
   width: 100%;
   padding: 10px;
-  background: #c4c4c4;
+  background: #ccc;
   border: none;
   border-radius: 90px;
   outline: none;
@@ -794,7 +794,7 @@ body .preload {
   background: #fff;
   font-size: 14px;
   color: #333;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   box-sizing: border-box;
   border-radius: 4px;
   font-weight: 700;
@@ -803,7 +803,7 @@ body .preload {
   font-weight: 400;
 }
 .modal_container table tr td input[type=text]::placeholder {
-  color: #c4c4c4;
+  color: #ccc;
 }
 .modal_container table tr td .select {
   position: relative;
@@ -911,7 +911,7 @@ body .preload {
   background: #fff;
   font-size: 14px;
   color: #333;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   box-sizing: border-box;
   border-radius: 4px;
   font-weight: 700;
@@ -920,7 +920,7 @@ body .preload {
   font-weight: 700;
 }
 .join_container table tr td input[type=text]::placeholder {
-  color: #c4c4c4;
+  color: #ccc;
 }
 .join_container table tr td .select {
   position: relative;
@@ -1042,7 +1042,7 @@ body .preload {
   background: #fff;
   cursor: pointer;
   box-shadow: 0px -1px 0px rgba(0,0,0,0), -1px 0px 0px rgba(0,0,0,0), 1px 0px 0px rgba(0,0,0,0);
-  border-bottom: 1px solid #c4c4c4;
+  border-bottom: 1px solid #ccc;
   border-radius: 8px 8px 0px 0px;
 }
 .searchResult_tab dd.active {
@@ -1053,7 +1053,7 @@ body .preload {
 .searchResult_column {
   padding: 20px 32px;
   background: #fafafc;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
 }
 .searchResult_column h3 {
   margin-bottom: 20px;
@@ -1071,7 +1071,7 @@ body .preload {
   padding: 15px 15px 10px 15px;
   margin-top: 8px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
 }
 .searchResult_column_main_task_list dd:first-child {
@@ -1138,7 +1138,7 @@ body .preload {
   padding: 15px 15px 10px 15px;
   margin-top: 8px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
 }
 .searchResult_column_main_file_list dd:first-child {
@@ -1192,7 +1192,7 @@ body .preload {
   padding: 15px 15px 10px 15px;
   margin-top: 8px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
 }
 .searchResult_column_main_note_list dd:first-child {
@@ -1299,7 +1299,7 @@ body .preload {
   display: block;
   width: 100%;
   height: 1px;
-  background: #c4c4c4;
+  background: #ccc;
   position: absolute;
   top: 0;
   left: 0;
@@ -1342,7 +1342,7 @@ body .preload {
   position: absolute;
 }
 .searchResult_column_sub_box_checkBox li label:before {
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   top: 0;
   right: 0;
@@ -1429,7 +1429,7 @@ body .preload {
   background: #fff;
   cursor: pointer;
   box-shadow: 0px -1px 0px rgba(0,0,0,0), -1px 0px 0px rgba(0,0,0,0), 1px 0px 0px rgba(0,0,0,0);
-  border-bottom: 1px solid #c4c4c4;
+  border-bottom: 1px solid #ccc;
   border-radius: 8px 8px 0px 0px;
 }
 .setting_tab dd.active {
@@ -1440,7 +1440,7 @@ body .preload {
 .setting_status {
   padding: 20px 32px 32px 32px;
   background: #fafafc;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   overflow-y: auto;
@@ -1467,7 +1467,7 @@ body .preload {
   min-height: 220px;
   padding-right: 31px;
   margin-left: 15px;
-  border-right: 1px solid #c4c4c4;
+  border-right: 1px solid #ccc;
   position: relative;
   top: 6px;
   left: 0;
@@ -1491,7 +1491,7 @@ body .preload {
   padding: 6px 16px;
   margin-left: 5px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   position: relative;
   top: -6px;
@@ -1523,7 +1523,7 @@ body .preload {
 .setting_status_main_box_list {
   min-height: 220px;
   padding-left: 31px;
-  border-left: 1px solid #c4c4c4;
+  border-left: 1px solid #ccc;
   list-style: none;
   position: relative;
   top: 0;
@@ -1561,7 +1561,7 @@ body .preload {
   padding: 6px 16px;
   margin-left: 5px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   position: relative;
   top: -6px;
@@ -1580,7 +1580,7 @@ body .preload {
 .setting_member {
   padding: 40px 32px 32px 32px;
   background: #fafafc;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   overflow-y: auto;
@@ -1596,7 +1596,7 @@ body .preload {
 .setting_member_link {
   padding: 10px 15px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
 }
 .color_gray_green .setting_member_link {
@@ -1636,7 +1636,7 @@ body .preload {
   height: 52px;
   padding: 15px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   font-family: Noto Sans CJK JP;
   font-size: 14px;
@@ -1705,7 +1705,7 @@ body .preload {
 .setting_general {
   padding: 40px 32px 32px 32px;
   background: #fafafc;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   overflow-y: auto;
@@ -1729,7 +1729,7 @@ body .preload {
   width: calc(100% - 210px);
   padding: 10px 15px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
 }
 .setting_general_input input[type=text] {
@@ -1762,7 +1762,7 @@ body .preload {
   width: 192px;
   padding: 12px;
   margin-left: 16px;
-  background: #c4c4c4;
+  background: #ccc;
   border: none;
   border-radius: 90px;
   cursor: pointer;
@@ -1805,7 +1805,7 @@ body .preload {
   font-size: 14px;
 }
 .assign_search input::placeholder {
-  color: #c4c4c4;
+  color: #ccc;
 }
 .assign_user {
   max-height: 252px;
@@ -2044,7 +2044,7 @@ body .preload {
   background: #e02d2d;
 }
 .option_modal_dialog_button_no {
-  background: #c4c4c4;
+  background: #ccc;
 }
 .option_commonColumn {
   margin-top: 25px;
@@ -2295,7 +2295,7 @@ body .preload {
 }
 .option_commonColumn_list_input_parts_palette ul li:hover:after,
 .option_commonColumn_list_input_parts_palette ul li.active:after {
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
 }
 .option_commonColumn_list_input_parts_toggle {
   width: 16px;
@@ -2461,7 +2461,7 @@ body .preload {
   width: 160px;
   height: 160px;
   border-radius: 4px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
 }
 .option_spaceGeneral_input {
   margin-top: 50px;
@@ -2533,7 +2533,7 @@ body .preload {
   width: 100%;
   height: 40px;
   padding: 9px 35px 9px 15px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   appearance: none;
   color: #333;
@@ -2677,7 +2677,7 @@ body .preload {
 .option_spaceMemberInvite_link table tr th p {
   height: 60px;
   padding: 15px 25px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
   white-space: nowrap;
@@ -2765,7 +2765,7 @@ body .preload {
   width: 100%;
   height: 40px;
   padding: 9px 35px 9px 15px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   appearance: none;
   color: #333;
@@ -2868,7 +2868,7 @@ body .preload {
   width: 100%;
   height: 60px;
   padding: 15px 25px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
   white-space: nowrap;
@@ -2937,7 +2937,7 @@ body .preload {
   width: 100%;
   height: 40px;
   padding: 9px 35px 9px 15px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   appearance: none;
   color: #333;
@@ -3152,7 +3152,7 @@ body .preload {
   padding: 7px 15px;
   margin-top: 15px;
   margin-right: 15px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
   white-space: nowrap;
@@ -3177,7 +3177,7 @@ body .preload {
   padding: 7px 15px;
   margin-top: 15px;
   margin-right: 15px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
   white-space: nowrap;
@@ -3201,7 +3201,7 @@ body .preload {
   width: 100%;
   max-width: 200px;
   padding: 7px 15px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
   white-space: nowrap;
@@ -3287,10 +3287,10 @@ body .preload {
   transition: 0.5s;
 }
 .teamColumn_nav a:hover {
-  background: #ededed;
+  background: #e0e0e0;
 }
 .teamColumn_nav a.active {
-  background: #ededed;
+  background: #e0e0e0;
 }
 .teamColumn_nav a.teamColumn_add {
   display: flex;
@@ -3303,7 +3303,7 @@ body .preload {
 }
 .teamColumn_nav a.teamColumn_add:hover {
   fill: #1f081f;
-  background: #ededed;
+  background: #e0e0e0;
 }
 .projectColumn {
   user-select: none;
@@ -3403,7 +3403,7 @@ body .preload {
 .subColumn {
   box-sizing: border-box;
   background: #fff;
-  border-right: 2px solid #ededed;
+  border-right: 2px solid #e0e0e0;
 }
 .subColumn .columnTitle {
   padding: 36px 20px 16px;
@@ -3457,8 +3457,8 @@ body .preload {
   align-items: center;
   padding: 0 20px;
   background-color: #f5f5f5;
-  border-top: solid 1px #ededed;
-  border-bottom: solid 1px #ededed;
+  border-top: solid 1px #e0e0e0;
+  border-bottom: solid 1px #e0e0e0;
 }
 .task_menu_favorite {
   transition: 0.5s;
@@ -3497,7 +3497,7 @@ body .preload {
   padding: 10px 20px;
   height: 40px;
   box-sizing: border-box;
-  border-bottom: 1px solid #ededed;
+  border-bottom: 1px solid #e0e0e0;
 }
 .color_gray_green .task_add {
   color: #2f80ed;
@@ -3529,7 +3529,7 @@ body .preload {
   position: absolute;
   width: 100%;
   height: 1px;
-  background: #ededed;
+  background: #e0e0e0;
   top: -1px;
   right: 0;
 }
@@ -3539,7 +3539,7 @@ body .preload {
   position: absolute;
   width: calc(100% - 51px);
   height: 1px;
-  background: #ededed;
+  background: #e0e0e0;
   bottom: -1px;
   right: 0;
 }
@@ -3596,7 +3596,7 @@ body .preload {
   width: 2px;
   height: 20px;
   border-radius: 4px;
-  background: #c4c4c4;
+  background: #ccc;
   position: absolute;
   top: 0;
   left: 0;
@@ -3721,8 +3721,8 @@ body .preload {
   align-items: center;
   padding: 0 20px;
   background-color: #f5f5f5;
-  border-top: solid 1px #ededed;
-  border-bottom: solid 1px #ededed;
+  border-top: solid 1px #e0e0e0;
+  border-bottom: solid 1px #e0e0e0;
 }
 .note_menu_favorite {
   transition: 0.5s;
@@ -3761,7 +3761,7 @@ body .preload {
   padding: 10px 20px;
   height: 40px;
   box-sizing: border-box;
-  border-bottom: 1px solid #ededed;
+  border-bottom: 1px solid #e0e0e0;
 }
 .color_gray_green .note_add {
   color: #2f80ed;
@@ -3793,7 +3793,7 @@ body .preload {
   position: absolute;
   width: 100%;
   height: 1px;
-  background: #ededed;
+  background: #e0e0e0;
   top: -1px;
   right: 0;
 }
@@ -3803,7 +3803,7 @@ body .preload {
   position: absolute;
   width: calc(100% - 51px);
   height: 1px;
-  background: #ededed;
+  background: #e0e0e0;
   bottom: -1px;
   right: 0;
 }
@@ -3860,7 +3860,7 @@ body .preload {
   width: 2px;
   height: 20px;
   border-radius: 4px;
-  background: #c4c4c4;
+  background: #ccc;
   position: absolute;
   top: 0;
   left: 0;
@@ -4044,14 +4044,14 @@ body .preload {
   line-height: 1.57;
 }
 .dashboardWrap_task textarea::placeholder {
-  color: #c4c4c4;
+  color: #ccc;
 }
 .dashboardWrap_post {
   width: calc(100% + 38px);
   margin-left: -19px;
   padding: 31px 19px 0 19px;
   background: url("~@/assets/images/mainColumn/icn_post-handle.svg") no-repeat top 8px center, #fff;
-  border-top: 2px solid #ededed;
+  border-top: 2px solid #e0e0e0;
   overflow: hidden;
 }
 .dashboardWrap_post small {
@@ -4136,7 +4136,7 @@ body .preload {
   min-height: 44px;
   padding: 10px 10px 10px 20px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 8px;
   margin: auto;
 }
@@ -4165,7 +4165,7 @@ body .preload {
   line-height: 1.57;
 }
 .dashboardWrap_comment_box_content::placeholder {
-  color: #c4c4c4;
+  color: #ccc;
 }
 .dashboardWrap_comment_text {
   min-height: 42px;
@@ -4325,7 +4325,7 @@ body .preload {
   margin: 0 8px 8px 0;
   padding: 10px 13px 10px 30px;
   border-radius: 4px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   vertical-align: middle;
   cursor: pointer;
   font-family: Noto Sans CJK JP;
@@ -4347,7 +4347,7 @@ body .preload {
   margin-top: -7px;
   width: 16px;
   height: 16px;
-  background: #ededed;
+  background: #e0e0e0;
   border-radius: 4px;
   content: '';
 }
@@ -4405,7 +4405,7 @@ body .preload {
   margin: 0 8px 12px 0;
   padding: 13px 30px 13px 43px;
   border-radius: 4px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   vertical-align: middle;
   cursor: pointer;
   font-family: Noto Sans CJK JP;
@@ -4433,7 +4433,7 @@ body .preload {
   margin-top: -7px;
   width: 16px;
   height: 16px;
-  background: #ededed;
+  background: #e0e0e0;
   border-radius: 4px;
   content: '';
 }
@@ -4566,7 +4566,7 @@ body .preload {
   width: calc(100% + 38px);
   margin-top: 30px;
   margin-left: -19px;
-  border-top: 2px solid #ededed;
+  border-top: 2px solid #e0e0e0;
   zoom: 1;
 }
 .noteEditWrap_post:after {
@@ -4817,7 +4817,7 @@ body .preload {
 }
 .noteEditWrap_post_edit {
   background: #fafafc;
-  border-right: 2px solid #ededed;
+  border-right: 2px solid #e0e0e0;
   box-shadow: inset 0px 0px 8px rgba(51,51,51,0.05);
 }
 .noteEditWrap_post.noEdit .noteEditWrap_post_view {
@@ -4832,7 +4832,7 @@ body .preload {
   min-height: 60px;
   padding: 9px 20px 24px 20px;
   background: #fff;
-  border-top: 2px solid #ededed;
+  border-top: 2px solid #e0e0e0;
   text-align: center;
   display: inline-block;
   position: absolute;
@@ -4873,9 +4873,9 @@ body .preload {
 .noteEditWrap_submit button:last-child {
   width: 180px;
   background: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   box-sizing: border-box;
-  color: #c4c4c4;
+  color: #ccc;
 }
 .noteEditWrap_submit button:last-child svg {
   margin-right: 5px;
@@ -4933,7 +4933,7 @@ body .preload {
   width: 197px;
   padding: 0 10px;
   background: #fff;
-  border: 1px solid #ededed;
+  border: 1px solid #e0e0e0;
   border-top-left-radius: 30px;
   border-bottom-left-radius: 30px;
   position: absolute;
@@ -5001,7 +5001,7 @@ body .preload {
   height: 48px;
   padding: 13px;
   margin: 0 auto;
-  background: #c4c4c4;
+  background: #ccc;
   border-radius: 8px;
   font-family: Noto Sans CJK JP;
   font-weight: 700;
@@ -5014,7 +5014,7 @@ body .preload {
 .mainColumn_file_bottom {
   height: 80px;
   background: #fff;
-  border-top: 2px solid #ededed;
+  border-top: 2px solid #e0e0e0;
   position: relative;
 }
 .mainColumn_file_bottom_download {
@@ -5124,7 +5124,7 @@ button {
 }
 input::placeholder,
 textarea::placeholder {
-  color: #c4c4c4;
+  color: #ccc;
 }
 select {
   cursor: pointer;
@@ -5192,7 +5192,7 @@ select:disabled {
 }
 .basicButtonNormal {
   color: #fff;
-  background-color: #c4c4c4;
+  background-color: #ccc;
 }
 .basicButtonNormal:hover {
   background-color: #adadad;
@@ -5207,7 +5207,7 @@ select:disabled {
 .basicInput {
   font-family: 'Noto Sans CJK JP', sans-serif;
   padding: 10px 15px;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
   white-space: nowrap;
@@ -5235,7 +5235,7 @@ select:disabled {
 .basicInput[readonly],
 .basicInput.readonly {
   box-shadow: none;
-  background: #ededed;
+  background: #e0e0e0;
 }
 .formButton,
 .formButtonLight {
@@ -5328,7 +5328,7 @@ select:disabled {
 .formFooterButtonLight {
   color: #b5b5b5;
   background-color: #fff;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #ccc;
   line-height: 30px;
   font-weight: 200;
 }

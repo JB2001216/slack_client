@@ -35,7 +35,7 @@ const struct: LocaleStruct = {
         clear: 'Clear',
       },
       myProjectStatusInput: {
-        others: 'Others',
+        others: 'その他',
       },
       myChargerInput: {
         baton: '担当',
