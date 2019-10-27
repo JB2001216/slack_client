@@ -20,7 +20,7 @@
           @drop.prevent.stop="onAvatarImageDrop"
         >
           <img v-if="avatarUrl" ref="avatarImage" :src="avatarUrl" alt="pic">
-          <my-space-user-avatar v-else :user="myUser" :size="160" shape="roundedSquare" />
+          <my-space-user-avatar v-else :user="myUser" :size="160" shape="circle" />
         </label>
       </div>
       <label class="option_spaceProfileGeneral_uploadButton" for="avatarInput">
@@ -65,19 +65,19 @@
       height: 100%
       object-fit: cover
       border: 1px solid $colors.lightGray
-      border-radius: 4px
+      border-radius: 50%
     &.avatarFileDragging
       label
         &:before
           content: ''
           display: block
           position: absolute
-          border: 4px dashed $colors.primaryBlue
-          border-radius: 4px
-          left: -2px
-          top: -2px
-          right: -2px
-          bottom: -2px
+          border: 2px dashed $colors.primaryBlue
+          border-radius: 50%
+          left: -1px
+          top: -1px
+          right: -1px
+          bottom: -1px
           box-sizing: border-box
           pointer-events: none
         >img,
