@@ -44,13 +44,13 @@
       <!-- メンバーが少ない場合 -->
       <!--
           <div v-if="projectUserAddable" class="option_spaceMember_addButton">
-          <button @click="$store.mutations.settingRouter.to('project-member-add')">{{$t('views.setting.main.projectMembers.addMember')}}</button>
+          <button @click="$store.actions.settingRouter.to('project-member-add')">{{$t('views.setting.main.projectMembers.addMember')}}</button>
           </div>
           -->
     </div>
     <!-- メンバーが多い場合 -->
     <div v-if="projectUserAddable" class="option_spaceMember_addBar">
-      <button @click="$store.mutations.settingRouter.to('project-member-add')">
+      <button @click="$store.actions.settingRouter.to('project-member-add')">
         {{ $t('views.setting.main.projectMembers.addMember') }}
       </button>
     </div>

@@ -11,23 +11,31 @@
         <button
           class="basicButtonPrimary wide"
           type="button"
-          :disabled="!activeProject || saving"
+          :disabled="!activeProject || !changes || saving"
           @click="save"
         >
           {{ $t('views.setting.main.projectGeneral.save') }}
         </button>
       </div>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
 import store from '@/store';
 import { apiRegistry, ProjectsApi } from '@/lib/api';
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
+
 
 @Component
-export default class ProjectGeneral extends Vue {
+export default class ProjectGeneral extends Mixins(ConfirmChangeDiscardForSettingMixin) {
 
   inputName: string = '';
   saving: boolean = false;
@@ -38,6 +46,10 @@ export default class ProjectGeneral extends Vue {
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
+  }
+
+  get changes() {
+    return !!this.activeProject && this.activeProject.displayName !== this.inputName;
   }
 
   async save() {

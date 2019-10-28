@@ -3,8 +3,8 @@
     <div class="projectColumn_head">
       <my-simple-menu class="projectColumn_spaceMenu">
         <template v-slot="{open, close, opened}">
-          <h1 id="projectColumn_title" class="t-sub" @click.stop="opened ? close() : open()">
-            <span>{{ myUser.space.displayName || myUser.space.account }}</span>
+          <h1 class="projectColumn_head_title t-sub" @click.stop="opened ? close() : open()">
+            <span class="projectColumn_head_title_text">{{ myUser.space.displayName || myUser.space.account }}</span>
           </h1>
         </template>
         <template v-slot:items>
@@ -16,13 +16,13 @@
               {{ myUser.displayName || myUser.account }}
             </div>
           </li>
-          <li @click="$store.mutations.settingRouter.to('space-user-profile')">
+          <li @click="$store.actions.settingRouter.to('space-user-profile')">
             <span>{{ $t(`views.projectColumn.spaceMenu.profileAndAccount`) }}</span>
           </li>
-          <li v-if="spaceUserAddable" @click="$store.mutations.settingRouter.to('space-member-invite')">
+          <li v-if="spaceUserAddable" @click="$store.actions.settingRouter.to('space-member-invite')">
             <span>{{ $t(`views.projectColumn.spaceMenu.inviteMembers`) }}</span>
           </li>
-          <li v-if="spaceUserListable" @click="$store.mutations.settingRouter.to('space-general')">
+          <li v-if="spaceUserListable" @click="$store.actions.settingRouter.to('space-general')">
             <span>{{ $t(`views.projectColumn.spaceMenu.spaceSettings`) }}</span>
           </li>
         </template>
@@ -72,9 +72,8 @@
 @import '../../../../stylus/_fixed/base/_theme'
 
 .projectColumn
-  .t-sub
-    cursor: pointer
   &_spaceMenu.mySimpleMenu
+    display: block
     .other_status
       width: auto
       ul

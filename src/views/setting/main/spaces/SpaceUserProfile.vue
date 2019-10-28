@@ -37,10 +37,16 @@
       <input v-model="displayName" type="text" class="basicInput">
     </div>
     <div class="option_spaceProfileGeneral_addButton clearfix">
-      <button class="basicButtonPrimary wide" :disabled="saving" @click="save">
+      <button class="basicButtonPrimary wide" :disabled="saving || !changes" @click="save">
         {{ $t('views.setting.main.userProfile.saveBtn') }}
       </button>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
@@ -91,11 +97,12 @@
 
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi, UsersApi, SpacesSpaceIdUsersUserIdAvatarPostRequestBody } from '@/lib/api';
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 
 @Component
-export default class SpaceUserProfile extends Vue {
+export default class SpaceUserProfile extends Mixins(ConfirmChangeDiscardForSettingMixin) {
   $refs!: {
     avatarInput: HTMLInputElement;
     avatarImage: HTMLImageElement;
@@ -116,6 +123,13 @@ export default class SpaceUserProfile extends Vue {
 
   get avatarInputAccept() {
     return this.avatarFileMimes.join(',');
+  }
+
+  get changes() {
+    return (
+      !!this.avatar ||
+      this.displayName !== (this.myUser.displayName || this.myUser.account)
+    );
   }
 
   clearAvatarInput() {
@@ -211,6 +225,7 @@ export default class SpaceUserProfile extends Vue {
         }));
         user.avatarUrl = avatarPostResponse.avatarUrl;
         user.avatarSmallUrl = avatarPostResponse.avatarSmallUrl;
+        this.avatar = null;
       }
       this.$appEmit('my-user-edited', { myUser: user });
       this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');

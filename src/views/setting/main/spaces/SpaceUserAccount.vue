@@ -65,6 +65,12 @@
         <p>{{ $t('views.setting.main.userAccount.text') }}</p>
       </div>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
@@ -90,16 +96,19 @@
 
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { apiRegistry, UsersApi, UsersMeEmailConfirmPostRequestBody, UsersMeSmsConfirmPostRequestBody, UsersMeSmsPutRequestBody } from '@/lib/api';
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 
 @Component
-export default class SpaceUserAccount extends Vue {
+export default class SpaceUserAccount extends Mixins(ConfirmChangeDiscardForSettingMixin) {
 
   newEmailInput: string = '';
+  savedNewEmail: string | null = null;
   isNewEmailValid: boolean = false;
 
   phoneNumber: string = '';
+  savedPhoneNumber: string | null = null;
   isPhoneNumberValid: boolean = false;
 
   showPinHiddenInput: boolean = false;
@@ -114,6 +123,19 @@ export default class SpaceUserAccount extends Vue {
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
+  }
+
+  get changes() {
+    if (this.newEmailInput !== '' && this.newEmailInput !== this.myUser.email && (!this.savedNewEmail || this.newEmailInput !== this.savedNewEmail)) {
+      return true;
+    }
+    if (
+      (this.phoneNumber !== '' && (!this.savedPhoneNumber || this.phoneNumber !== this.savedPhoneNumber)) ||
+      this.showPinHiddenInput
+    ) {
+      return true;
+    }
+    return false;
   }
 
   get api() {
@@ -162,6 +184,7 @@ export default class SpaceUserAccount extends Vue {
       await this.api.updateEmail({ email: this.newEmailInput });
       this.$flash(this.$t('views.setting.main.userAccount.confirmEmailHasBeenSent').toString(), 'success');
       this.isNewEmailValid = false;
+      this.savedNewEmail = this.newEmailInput;
     } catch (err) {
       this.$appEmit('error', { err, options: { firstMessageOnValidationError: true } });
     } finally {
@@ -178,6 +201,7 @@ export default class SpaceUserAccount extends Vue {
       this.$flash(this.$t('views.setting.main.userAccount.smsWithPincodeHasBeenSent').toString(), 'success');
       this.showPinHiddenInput = true;
       this.isPhoneNumberValid = false;
+      this.savedPhoneNumber = this.phoneNumber;
     } catch (err) {
       this.$appEmit('error', { err, options: { firstMessageOnValidationError: true } });
     } finally {
@@ -191,6 +215,7 @@ export default class SpaceUserAccount extends Vue {
       this.savingSMS = true;
       const res = await this.api.updateSMS({ token: this.smsToken, pin: this.pin });
       this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
+      this.showPinHiddenInput = false;
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
