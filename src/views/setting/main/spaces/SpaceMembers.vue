@@ -36,13 +36,13 @@
       <!-- メンバーが少ない場合 -->
       <!--
           <div class="option_spaceMember_addButton">
-          <button @click="$store.mutations.settingRouter.to('space-member-invite')">{{$t('views.setting.main.spaceMembers.addMember')}}</button>
+          <button @click="$store.actions.settingRouter.to('space-member-invite')">{{$t('views.setting.main.spaceMembers.addMember')}}</button>
           </div>
           -->
     </div>
     <!-- メンバーが多い場合 -->
     <div class="option_spaceMember_addBar">
-      <button @click="$store.mutations.settingRouter.to('space-member-invite')">
+      <button @click="$store.actions.settingRouter.to('space-member-invite')">
         {{ $t('views.setting.main.spaceMembers.addMember') }}
       </button>
     </div>

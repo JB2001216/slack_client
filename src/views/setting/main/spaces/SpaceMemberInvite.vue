@@ -64,12 +64,18 @@
           <button class="iconButtonPlus" type="button" @click="addRow()">
             {{ $t('views.setting.main.spaceMemberInvite.addAnEntryField') }}
           </button>
-          <button class="basicButtonPrimary wide" type="submit">
+          <button class="basicButtonPrimary wide" type="submit" :disabled="!changes">
             {{ $t('views.setting.main.spaceMemberInvite.sendInvitation') }}
           </button>
         </div>
       </form>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
@@ -89,10 +95,10 @@
 
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Mixins } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi, SpacesSpaceIdUsersInviteByEmailPostRequestBody, ApiErrors, getJsonFromResponse } from '@/lib/api';
 import { SpaceRoles, SpaceRole } from '@/lib/permissions';
-
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 import MySpaceRoleSelect from '@/components/MySpaceRoleSelect.vue';
 
 @Component({
@@ -100,7 +106,7 @@ import MySpaceRoleSelect from '@/components/MySpaceRoleSelect.vue';
     MySpaceRoleSelect,
   },
 })
-export default class SpaceMemberInvite extends Vue {
+export default class SpaceMemberInvite extends Mixins(ConfirmChangeDiscardForSettingMixin) {
   rows: {
     body: SpacesSpaceIdUsersInviteByEmailPostRequestBody;
     errors: {[field: string]: string[]};
@@ -117,6 +123,10 @@ export default class SpaceMemberInvite extends Vue {
 
   get selectableRoles() {
     return [...SpaceRoles.getSelectables(this.myRole)];
+  }
+
+  get changes() {
+    return this.rows.findIndex((r) => r.body.email.trim() !== '' || r.body.account.trim() !== '') >= 0;
   }
 
   addRow() {
@@ -145,7 +155,7 @@ export default class SpaceMemberInvite extends Vue {
       r.errors = {};
     });
 
-    let rows = this.rows.filter((r) => r.body.email.trim() !== '' || r.body.account.trim() !== '');
+    const rows = this.rows.filter((r) => r.body.email.trim() !== '' || r.body.account.trim() !== '');
     if (!rows.length) return;
 
     const myUser = this.$store.state.activeUser.myUser!;
@@ -158,7 +168,8 @@ export default class SpaceMemberInvite extends Vue {
         spacesSpaceIdUsersInviteByEmailPostRequestBody: rows.map((r) => r.body),
       });
       this.$flash(this.$t('views.setting.main.spaceMemberInvite.invitedMessage').toString(), 'success');
-      this.$store.mutations.settingRouter.to('space-members');
+      this.rows = [];
+      await this.$store.actions.settingRouter.to('space-members');
 
     } catch (err) {
       if (err instanceof Response) {

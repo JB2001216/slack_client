@@ -181,6 +181,12 @@
         </div>
       </div>
     </template>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
@@ -266,13 +272,15 @@
 </style>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Mixins, Watch } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
 import * as api from '@/lib/api';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import TaskComment from './TaskComment.vue';
 import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
+import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
+
 
 async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'task'>>> {
   const loginUser = store.state.activeUser.myUser!;
@@ -303,7 +311,6 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite
 Component.registerHooks([
   'beforeRouteEnter',
   'beforeRouteUpdate',
-  'beforeRouteLeave',
 ]);
 @Component({
   components: {
@@ -311,7 +318,7 @@ Component.registerHooks([
     TaskComment,
   },
 })
-export default class TaskColumn extends Vue {
+export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   $refs!: {
     tagInput: HTMLInputElement;
   };
@@ -347,6 +354,13 @@ export default class TaskColumn extends Vue {
 
   get fullMainColumn() {
     return this.$store.state.fullMainColumn;
+  }
+
+  get changes() {
+    return !!this.task && !!this.editDetail && (
+      this.task.subject !== this.editDetail.subject ||
+      this.task.body !== this.editDetail.body
+    );
   }
 
   async addTags() {
@@ -524,11 +538,6 @@ export default class TaskColumn extends Vue {
     next();
   }
 
-  beforeRouteLeave(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
-    store.mutations.setFullMainColumn(false);
-    next();
-  }
-
   beforeMount() {
     this.$appOn('task-edited', this.onTaskEdited);
     this.$appOn('task-deleted', this.onTaskDeleted);
@@ -537,6 +546,13 @@ export default class TaskColumn extends Vue {
   beforeDestroy() {
     this.$appOff('task-edited', this.onTaskEdited);
     this.$appOff('task-deleted', this.onTaskDeleted);
+  }
+
+  @Watch('$route')
+  onRouteChange() {
+    if (name !== 'task') {
+      store.mutations.setFullMainColumn(false);
+    }
   }
 }
 </script>

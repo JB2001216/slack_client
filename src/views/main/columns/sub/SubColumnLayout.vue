@@ -15,10 +15,10 @@
           </a>
         </template>
         <template v-slot:items>
-          <li v-if="projectUserAddable" @click="$store.mutations.settingRouter.to('project-member-add')">
+          <li v-if="projectUserAddable" @click="$store.actions.settingRouter.to('project-member-add')">
             <span>{{ $t(`views.subColumn.projectMenu.addMembers`) }}</span>
           </li>
-          <li @click="$store.mutations.settingRouter.to(projectUpdatable ? 'project-general' : 'project-members')">
+          <li @click="$store.actions.settingRouter.to(projectUpdatable ? 'project-general' : 'project-members')">
             <span>{{ $t(`views.subColumn.projectMenu.projectSettings`) }}</span>
           </li>
         </template>

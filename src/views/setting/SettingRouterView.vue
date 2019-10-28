@@ -2,7 +2,7 @@
   <div v-if="currentRoute" class="optionWrap">
     <div class="option">
       <h2 class="option_title" :class="{noShadow: !currentRoute.title}">
-        {{ currentRoute.title ? currentRoute.title() : '' }}<button @click="$store.mutations.settingRouter.close()" />
+        {{ currentRoute.title ? currentRoute.title() : '' }}<button @click="$store.actions.settingRouter.close()" />
       </h2>
       <div class="option_container clearfix">
         <component :is="currentRoute.main" v-if="currentRoute.main" />
@@ -122,7 +122,7 @@ export default class SettingRouterView extends Vue {
 
   @Watch('$route')
   onRouteChange() {
-    this.$store.mutations.settingRouter.close();
+    this.$store.actions.settingRouter.close();
   }
 }
 </script>

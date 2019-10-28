@@ -43,6 +43,12 @@
   left: 2px
   bottom: 0
   z-index: 9999999
+  padding: 4px
+  border-radius: 50%
+  background: rgba(0,0,0,0.5)
+  height: 26px;
+  width: 26px;
+  box-sizing: border-box
   &_icon
     width: 18px
     height: 18px

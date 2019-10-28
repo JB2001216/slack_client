@@ -112,11 +112,17 @@
       </dl>
 
       <div class="option_commonColumn_bottomButtons">
-        <button type="submit" class="option_commonColumn_bottomButtons_button basicButtonPrimary wide" @click="save()">
+        <button type="submit" class="option_commonColumn_bottomButtons_button basicButtonPrimary wide" :disabled="!changes" @click="save()">
           {{ $t('views.setting.main.statusFlow.save') }}
         </button>
       </div>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
@@ -156,11 +162,12 @@
 
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch, Mixins } from 'vue-property-decorator';
 import { apiRegistry, TasksApi, NotesApi } from '@/lib/api';
 import MyColorPicker from '@/components/MyColorPicker.vue';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import { colorPickerDefaultColors, ProjectStatusCategory } from '@/consts';
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 
 
 interface Status {
@@ -182,8 +189,9 @@ type StatusPost = (req: StatusPostRequest) => Promise<Status[]>;
     MyProjectStatusInput,
   },
 })
-export default class StatusFlow extends Vue {
+export default class StatusFlow extends Mixins(ConfirmChangeDiscardForSettingMixin) {
   saving = false;
+  statusListOriginal: Status[] = [];
   statusList: Status[] = [];
   minimumProgressRowCount = 2;
   itemClassName = 'option_commonColumn_list_input_parts';
@@ -224,6 +232,10 @@ export default class StatusFlow extends Vue {
   get etcStatusList() {
     return this.statusList.filter((o) => this.isEtc(o))
       .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
+  }
+
+  get changes() {
+    return JSON.stringify(this.statusListOriginal) !== JSON.stringify(this.statusList);
   }
 
   get api(): { fetch: StatusGet; update: StatusPost } | undefined {
@@ -366,9 +378,14 @@ export default class StatusFlow extends Vue {
     this.initCustomColors();
   }
 
+  setOriginal() {
+    this.statusListOriginal = JSON.parse(JSON.stringify(this.statusList));
+  }
+
   async fetch() {
     if (!this.api) return;
     this.statusList = await this.api.fetch();
+    this.setOriginal();
     this.initCustomColors();
     this.setLastPreviewStatus();
   }
@@ -391,6 +408,7 @@ export default class StatusFlow extends Vue {
       this.saving = true;
       await this.api.update({ items: this.statusList });
       this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
+      this.setOriginal();
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
@@ -405,6 +423,7 @@ export default class StatusFlow extends Vue {
   @Watch('category')
   async onCategoryChange(newVal: this['category']) {
     await this.fetch();
+    this.onInitForConfirmChangeDiscardDialog();
   }
 }
 </script>
