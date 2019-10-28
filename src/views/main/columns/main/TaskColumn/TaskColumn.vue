@@ -465,6 +465,7 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     const subject = (ev.target as HTMLInputElement).value.trim();
     if (subject !== '') {
       await this.save({ subject });
+      (ev.target as HTMLInputElement).blur();
     }
   }
 
