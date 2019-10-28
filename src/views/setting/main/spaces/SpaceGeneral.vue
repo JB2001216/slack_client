@@ -183,13 +183,12 @@ export default class SpaceGeneral extends Vue {
 
     try {
       this.saving = true;
+
       const spaceApi = apiRegistry.load(SpacesApi, this.myUser.token);
-      const space = await spaceApi.spacesSpaceIdPut({
-        spaceId: this.myUser.space.id,
-        displayName: this.displayName.trim() === '' ? null : this.displayName.trim(),
-      });
+
       if (this.avatar && this.$refs.avatarImage) {
         const image = this.$refs.avatarImage;
+
         const clip: Pick<SpacesSpaceIdAvatarPostRequest, 'left' | 'top' | 'width' | 'height'> = image.naturalWidth <= image.naturalHeight ? {
           left: 0,
           width: image.naturalWidth,
@@ -201,20 +200,24 @@ export default class SpaceGeneral extends Vue {
           left: Math.floor((image.naturalWidth - image.naturalHeight) / 2),
           width: image.naturalHeight,
         };
+
         const avatarPostResponse = await spaceApi.spacesSpaceIdAvatarPost(Object.assign(clip, {
           spaceId: this.myUser.space.id,
           avatar: this.avatar,
         }));
-        space.avatarUrl = avatarPostResponse.avatarUrl;
-        space.avatarSmallUrl = avatarPostResponse.avatarSmallUrl;
       }
-      // this.$store.mutations.editSpace(space); (!!!moved to events-subscriptions.ts)
-      // this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success'); (!!!moved to events-subscriptions.ts)
+
+      await spaceApi.spacesSpaceIdPut({
+        spaceId: this.myUser.space.id,
+        displayName: this.displayName.trim() === '' ? null : this.displayName.trim(),
+      });
+
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
       this.saving = false;
     }
   }
+
 }
 </script>

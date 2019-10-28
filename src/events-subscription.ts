@@ -7,7 +7,6 @@ class EventsSubscription {
 
   private url: string = process.env.VUE_APP_NOTIFICATION_BASE_PATH + '/notifications/subscribe?space_id=';
   private spaceId: any;
-  private isFireUser: boolean = false;
   source: any;
 
   init(myUser: any): void {
@@ -15,32 +14,40 @@ class EventsSubscription {
     // check if myUser is defined and not the same spaceId
     if (!myUser || this.spaceId === myUser.space.id) { return; }
 
+    const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
+
     this.spaceId = myUser.space.id;
 
     // close Event Source if it was already opened
-    if (this.source) { this.source.close(); }
+    if (this.source) {
+      // remove listeners
+      this.source.removeEventListener('updateSpace', updateSpaceTask);
+
+      this.source.close();
+    }
 
     // init Event Source
     this.source = new EventSource(this.url + this.spaceId);
 
-    // open event
-    this.source.onopen = () => {
-      console.log('Server is opened.');
-    };
+    // init listeners
+    this.source.addEventListener('updateSpace', updateSpaceTask);
 
-    // message event
-    this.source.addEventListener('updateSpace', (e: any) => {
-      console.log('updateSpace');
-      const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
+    // tasks
+    function updateSpaceTask(e: any): void {
+
+      const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
+
       spacesApi.spacesSpaceIdGet({
-        spaceId: myUser.space.id,
+        spaceId: data.spaceId,
       }).then((result) => {
-        console.log(result);
         store.mutations.editSpace(result);
-      }).catch((error) => {
-        console.log(error);
+        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' }); }
+      }).catch((err) => {
+        console.log(err);
       });
-    });
+
+    }
 
     this.source.addEventListener('deleteSpace', (e: any) => {
       console.log('deleteSpace');
@@ -208,29 +215,7 @@ class EventsSubscription {
       // DO UPDATE HERE
     });
 
-    this.source.onmessage = (res: any) => {
-
-      const resObj: any = JSON.parse(res);
-
-      // check currect user
-      this.isFireUser = resObj.data.clientId === myUser.id;
-
-      console.log(resObj);
-
-      switch (resObj.event) {
-
-        // case 'updateSpace':
-        //   store.mutations.editSpace(resObj.data.params);
-        //   if (this.isFireUser) {
-        //     appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' });
-        //   }
-        //   break;
-
-      }
-
-    };
-
-    // close event
+    // error event
     this.source.onerror = () => {
       console.error('Something went wrong');
     };
