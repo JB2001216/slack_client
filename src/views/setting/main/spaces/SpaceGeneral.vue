@@ -46,6 +46,11 @@
           {{ $t('views.setting.main.spaceGeneral.saveBtn') }}
         </button>
       </div>
+      <div class="option_spaceGeneral_addButton clearfix">
+        <button class="basicButtonDanger wide" :disabled="deleting" @click="deleteSpace">
+          {{ $t('views.setting.main.spaceGeneral.deleteBtn') }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -114,6 +119,7 @@ export default class SpaceGeneral extends Vue {
   displayName: string = '';
 
   saving: boolean = false;
+  deleting: boolean = false;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
@@ -201,7 +207,7 @@ export default class SpaceGeneral extends Vue {
           width: image.naturalHeight,
         };
 
-        const avatarPostResponse = await spaceApi.spacesSpaceIdAvatarPost(Object.assign(clip, {
+        await spaceApi.spacesSpaceIdAvatarPost(Object.assign(clip, {
           spaceId: this.myUser.space.id,
           avatar: this.avatar,
         }));
@@ -217,6 +223,27 @@ export default class SpaceGeneral extends Vue {
     } finally {
       this.saving = false;
     }
+  }
+
+  async deleteSpace() {
+
+    if (this.deleting) return;
+
+    try {
+      this.deleting = true;
+
+      const spaceApi = apiRegistry.load(SpacesApi, this.myUser.token);
+
+      await spaceApi.spacesSpaceIdDelete({
+        spaceId: this.myUser.space.id,
+      });
+
+    } catch (err) {
+      this.$appEmit('error', { err });
+    } finally {
+      this.deleting = false;
+    }
+
   }
 
 }

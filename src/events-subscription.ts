@@ -2,6 +2,8 @@ import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
 import { apiRegistry, SpacesApi, SpaceUser } from '@/lib/api/';
+import router, { getUserLastLocation } from '@/router';
+
 
 class EventsSubscription {
 
@@ -22,6 +24,7 @@ class EventsSubscription {
     if (this.source) {
       // remove listeners
       this.source.removeEventListener('updateSpace', updateSpaceTask);
+      this.source.removeEventListener('deleteSpace', deleteSpaceTask);
 
       this.source.close();
     }
@@ -31,6 +34,7 @@ class EventsSubscription {
 
     // init listeners
     this.source.addEventListener('updateSpace', updateSpaceTask);
+    this.source.addEventListener('deleteSpace', deleteSpaceTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -40,8 +44,8 @@ class EventsSubscription {
 
       spacesApi.spacesSpaceIdGet({
         spaceId: data.spaceId,
-      }).then((result) => {
-        store.mutations.editSpace(result);
+      }).then((res) => {
+        store.mutations.editSpace(res);
         if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' }); }
       }).catch((err) => {
         console.log(err);
@@ -49,19 +53,25 @@ class EventsSubscription {
 
     }
 
-    this.source.addEventListener('deleteSpace', (e: any) => {
-      console.log('deleteSpace');
-      const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
-      spacesApi.spacesSpaceIdDelete({
-        spaceId: myUser.space.id,
-      }).then((result) => {
-        console.log(result);
-        // DO UPDATE HERE
+    function deleteSpaceTask(e: any): void {
 
-      }).catch((error) => {
-        console.log(error);
-      });
-    });
+      const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
+
+      store.mutations.removeLoggedInUser(data.userId);
+
+      const loggedInUsersArr = store.state.loggedInUsers;
+
+      if (loggedInUsersArr.length > 0) {
+        const loggedInUser = loggedInUsersArr[0];
+        router.push(getUserLastLocation(loggedInUser.id));
+      } else {
+        router.push({ name: 'space-add1' });
+      }
+
+      if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('common.deleted').toString(), 'name': 'success' }); }
+
+    }
 
     this.source.addEventListener('updateMyUser', (e: any) => {
       console.log('updateMyUser');

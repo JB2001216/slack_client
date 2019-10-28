@@ -166,6 +166,7 @@ const struct: LocaleStruct = {
             uploadDescription: 'スペースアイコンはドラッグアンドドロップで変更できます',
             title2: 'スペース表示名',
             saveBtn: '変更内容を保存',
+            deleteBtn: 'スペースを削除する',
           },
           spaceMembers: {
             memberList: 'メンバー一覧',

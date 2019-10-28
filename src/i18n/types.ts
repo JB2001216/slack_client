@@ -175,6 +175,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           uploadDescription: string;
           title2: string;
           saveBtn: string;
+          deleteBtn: string;
         };
         spaceMembers: {
           memberList: string;
