@@ -42,9 +42,7 @@
                 >
               </td>
               <td class="clearfix">
-                <div class="select" :class="{error: r.errors.spaceRoleId}">
-                  <my-space-role-select v-model="r.body.spaceRoleId" :my-role="myRole" />
-                </div>
+                <my-space-role-select v-model="r.body.spaceRoleId" class="select basicSelect" :class="{error: r.errors.spaceRoleId}" :my-role="myRole" />
                 <button v-if="rows.length > 1" type="button" @click="deleteRow(i)" />
               </td>
             </tr>
@@ -83,8 +81,8 @@
 <style lang="stylus">
 .setting_main_spaceMemberInvite
   .option_spaceMemberInvite_table
-    input.error, .select.error select
-      background: #fbeeee
+    input.error, .select.error
+      background-color: #fbeeee
     tr.errors
       td
         padding-top: 0
