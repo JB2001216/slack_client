@@ -11,7 +11,7 @@
   bottom: 20px;
   right: 20px;
   max-height: 400px
-  z-index: 10000
+  z-index: 100000
   .flash__message
     min-width: 300px
     max-width: 500px

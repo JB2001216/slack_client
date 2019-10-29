@@ -23,6 +23,9 @@
       <div class="debugTool_menu_item" @click="activeMenu = 'CustomURLScheme'">
         CustomURLScheme
       </div>
+      <div class="debugTool_menu_item" @click="activeMenu = 'SvgIconList'">
+        SvgIconList
+      </div>
     </div>
     <my-debug-tool-url
       v-if="activeMenu === 'URL'"
@@ -34,6 +37,10 @@
       @success="activeMenu = null; shown = false"
       @close="activeMenu = null"
     />
+    <my-debug-tool-svg-icon-list
+      :value="activeMenu === 'SvgIconList'"
+      @input="activeMenu = null"
+    />
   </div>
 </template>
 
@@ -42,7 +49,7 @@
   position: fixed
   left: 2px
   bottom: 0
-  z-index: 9999999
+  z-index: 99999
   padding: 4px
   border-radius: 50%
   background: rgba(0,0,0,0.5)
@@ -73,15 +80,17 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import MyDebugToolUrl from './components/MyDebugToolUrl.vue';
 import MyDebugToolCustomUrlScheme from './components/MyDebugToolCustomUrlScheme.vue';
+import MyDebugToolSvgIconList from './components/MyDebugToolSvgIconList.vue';
 
 @Component({
   components: {
-    'MyDebugToolUrl': MyDebugToolUrl,
-    'MyDebugToolCustomUrlScheme': MyDebugToolCustomUrlScheme,
+    MyDebugToolUrl,
+    MyDebugToolCustomUrlScheme,
+    MyDebugToolSvgIconList,
   },
 })
 export default class MyDebugTool extends Vue {
   shown = false
-  activeMenu: 'URL' | 'CustomURLScheme' | null = null;
+  activeMenu: 'URL' | 'CustomURLScheme' | 'SvgIconList' | null = null;
 }
 </script>
