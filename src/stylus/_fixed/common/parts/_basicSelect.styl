@@ -1,0 +1,39 @@
+/*
+Basic Select
+
+Markup:
+<select class="{{modifier_class}}" value="1">
+  <option value="1">First</option>
+  <option value="2">Second</option>
+  <option value="3">Third</option>
+</select>
+
+.basicSelect - basicSelect
+.basicSelect.disabled - Disabled Option (Same style as :disabled="true")
+
+Styleguide 11.6
+*/
+.basicSelect
+  display: inline-block
+  max-width: 100%
+  width: 240px
+  height: 40px
+  box-sizing: border-box
+  font-family: $body-font-family
+  color: $colors.primaryBlack
+  border: 1px solid $colors.lightGray
+  border-radius: 4px
+  font-size: 16px
+  appearance: none
+  cursor: pointer
+  padding: 0 34px 0 16px
+  box-sizing: border-box
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cdefs/%3E%3Cpath fill='%23666' fill-rule='nonzero' d='M0 0l6 6 6-6z'/%3E%3C/svg%3E") no-repeat center right 12px
+  background-color: $colors.white
+  &:hover
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cdefs/%3E%3Cpath fill='%23000' fill-rule='nonzero' d='M0 0l6 6 6-6z'/%3E%3C/svg%3E")
+  &:disabled,
+  &.disabled
+    opacity: 0.3
+    cursor: default
+    pointer-events: none

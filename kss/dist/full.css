@@ -806,34 +806,7 @@ body .preload {
   color: #ccc;
 }
 .modal_container table tr td .select {
-  position: relative;
-}
-.modal_container table tr td .select:after {
-  content: '▼';
-  display: block;
-  width: 15px;
-  height: 20px;
-  border: 0px;
-  font-size: 15px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 5px;
-  margin: auto;
-}
-.modal_container table tr td .select:after select {
-  appearance: none;
-  width: 100%;
   height: 40px;
-  background: transparent;
-  position: relative;
-  z-index: 1;
-  padding: 0 40px 0 10px;
-  border: 1px solid #b4b3b3;
-  border-radius: 2px;
-}
-.modal_container table tr td .select:after select::-ms-expand {
-  display: none;
 }
 .modal_container_submit button {
   display: block;
@@ -923,34 +896,7 @@ body .preload {
   color: #ccc;
 }
 .join_container table tr td .select {
-  position: relative;
-}
-.join_container table tr td .select:after {
-  content: '▼';
-  display: block;
-  width: 15px;
-  height: 20px;
-  border: 0px;
-  font-size: 15px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 5px;
-  margin: auto;
-}
-.join_container table tr td .select:after select {
-  appearance: none;
-  width: 100%;
   height: 40px;
-  background: transparent;
-  position: relative;
-  z-index: 1;
-  padding: 0 40px 0 10px;
-  border: 1px solid #b4b3b3;
-  border-radius: 2px;
-}
-.join_container table tr td .select:after select::-ms-expand {
-  display: none;
 }
 .join_container table tr td .button button {
   display: block;
@@ -1915,7 +1861,7 @@ body .preload {
   display: block;
   width: 30px;
   height: 2px;
-  background: #6d6d6d;
+  background: #666;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -1926,6 +1872,10 @@ body .preload {
 }
 .option_title button:after {
   transform: rotate(-315deg);
+}
+.option_title button:hover:before,
+.option_title button:hover:after {
+  background: #000;
 }
 .option_title.noShadow {
   box-shadow: none;
@@ -2514,38 +2464,6 @@ body .preload {
 .option_spaceMember_table table tr td .select {
   float: left;
   width: calc(100% - 40px);
-  position: relative;
-}
-.option_spaceMember_table table tr td .select:after {
-  content: "";
-  display: block;
-  width: 12px;
-  height: 6px;
-  background: url("~@/assets/images/parts/icon_option_space_member_selectArrow.svg") no-repeat top left;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  right: 15px;
-  bottom: 0;
-  margin: auto;
-}
-.option_spaceMember_table table tr td .select select {
-  width: 100%;
-  height: 40px;
-  padding: 9px 35px 9px 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  appearance: none;
-  color: #333;
-  font-family: "Noto Sans CJK JP";
-  font-size: 14px;
-  line-height: 20px;
-}
-.option_spaceMember_table table tr td .select select::-ms-expand {
-  display: none;
-}
-.option_spaceMember_table table tr td .select select::placeholder {
-  color: #ccc;
 }
 .option_spaceMember_table table tr td button {
   float: right;
@@ -2746,38 +2664,6 @@ body .preload {
 .option_spaceMemberInvite_table table tr td .select {
   float: left;
   width: calc(100% - 40px);
-  position: relative;
-}
-.option_spaceMemberInvite_table table tr td .select:after {
-  content: "";
-  display: block;
-  width: 12px;
-  height: 6px;
-  background: url("~@/assets/images/parts/icon_option_space_member_selectArrow.svg") no-repeat top left;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  right: 15px;
-  bottom: 0;
-  margin: auto;
-}
-.option_spaceMemberInvite_table table tr td .select select {
-  width: 100%;
-  height: 40px;
-  padding: 9px 35px 9px 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  appearance: none;
-  color: #333;
-  font-family: "Noto Sans CJK JP";
-  font-size: 16px;
-  line-height: 20px;
-}
-.option_spaceMemberInvite_table table tr td .select select::-ms-expand {
-  display: none;
-}
-.option_spaceMemberInvite_table table tr td .select select::placeholder {
-  color: #ccc;
 }
 .option_spaceMemberInvite_table table tr td button {
   float: right;
@@ -2918,38 +2804,6 @@ body .preload {
 .option_spaceMemberAdd_table table tr td .select {
   float: left;
   width: calc(100% - 40px);
-  position: relative;
-}
-.option_spaceMemberAdd_table table tr td .select:after {
-  content: "";
-  display: block;
-  width: 12px;
-  height: 6px;
-  background: url("~@/assets/images/parts/icon_option_space_member_selectArrow.svg") no-repeat top left;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  right: 15px;
-  bottom: 0;
-  margin: auto;
-}
-.option_spaceMemberAdd_table table tr td .select select {
-  width: 100%;
-  height: 40px;
-  padding: 9px 35px 9px 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  appearance: none;
-  color: #333;
-  font-family: "Noto Sans CJK JP";
-  font-size: 14px;
-  line-height: 20px;
-}
-.option_spaceMemberAdd_table table tr td .select select::-ms-expand {
-  display: none;
-}
-.option_spaceMemberAdd_table table tr td .select select::placeholder {
-  color: #ccc;
 }
 .option_spaceMemberAdd_table table tr td button {
   float: right;
@@ -3285,6 +3139,7 @@ body .preload {
   border-radius: 8px;
   margin: 0 auto 16px;
   transition: 0.5s;
+  cursor: pointer;
 }
 .teamColumn_nav a:hover {
   background: #e0e0e0;
@@ -3317,18 +3172,19 @@ body .preload {
 .projectColumn_head {
   padding: 48px 20px 28px;
 }
-.projectColumn_head h1 {
-  display: inline-block;
+.projectColumn_head_title {
+  display: block;
   cursor: pointer;
   position: relative;
-  padding-right: 20px;
+}
+.projectColumn_head_title_text {
+  display: block;
+  max-width: calc(100% - 20px);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: auto;
-  max-width: calc(100% - 20px);
 }
-.projectColumn_head h1:after {
+.projectColumn_head_title:after {
   content: "";
   display: block;
   width: 5px;
@@ -3364,6 +3220,7 @@ body .preload {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 .projectColumn_body ul a.active {
   font-weight: bold;
@@ -5215,6 +5072,7 @@ select:disabled {
   color: #333;
   font-size: 16px;
   line-height: 24px;
+  box-sizing: border-box;
 }
 .basicInput.borderless {
   border-color: transparent;
@@ -5236,6 +5094,35 @@ select:disabled {
 .basicInput.readonly {
   box-shadow: none;
   background: #e0e0e0;
+}
+.basicSelect {
+  display: inline-block;
+  max-width: 100%;
+  width: 240px;
+  height: 40px;
+  box-sizing: border-box;
+  position: relative;
+  font-family: 'Noto Sans CJK JP', sans-serif;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  padding: 0 34px 0 16px;
+  box-sizing: border-box;
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cdefs/%3E%3Cpath fill='%23666' fill-rule='nonzero' d='M0 0l6 6 6-6z'/%3E%3C/svg%3E") no-repeat center right 12px;
+  background-color: #fff;
+}
+.basicSelect:hover {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cdefs/%3E%3Cpath fill='%23000' fill-rule='nonzero' d='M0 0l6 6 6-6z'/%3E%3C/svg%3E");
+}
+.basicSelect:disabled,
+.basicSelect.disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
 }
 .formButton,
 .formButtonLight {

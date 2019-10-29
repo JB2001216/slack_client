@@ -63,36 +63,6 @@
           input[type=text]::placeholder{
             color: $colors.lightGray
           }
-          .select{
-            position: relative;
-            &:after {
-              content: '▼';
-              display: block;
-              width: 15px;
-              height: 20px;
-              border: 0px;
-              font-size: 15px;
-              position: absolute;
-              top: 0;
-              bottom: 0;
-              right: 5px;
-              margin: auto;
-              select {
-                appearance: none;
-                width: 100%;
-                height: 40px;
-                background: transparent;
-                position: relative;
-                z-index: 1;
-                padding: 0 40px 0 10px;
-                border: 1px solid #b4b3b3;
-                border-radius: 2px;
-                &::-ms-expand {
-                  display: none;
-                }
-              }
-            }
-          }
           .button{
             button{
               display: block;

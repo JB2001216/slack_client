@@ -27,14 +27,13 @@
           <td>{{ data.user.email }}</td>
           <td>{{ data.user.displayName || data.user.account }}</td>
           <td class="clearfix">
-            <div class="select">
-              <my-project-role-select
-                v-model="data.body.projectRoleId"
-                :my-space-role="mySpaceRole"
-                :my-project-role="myProjectRole"
-                :current-space-role="getSpaceRole(data.user.spaceRoleId)"
-              />
-            </div>
+            <my-project-role-select
+              v-model="data.body.projectRoleId"
+              class="select basicSelect"
+              :my-space-role="mySpaceRole"
+              :my-project-role="myProjectRole"
+              :current-space-role="getSpaceRole(data.user.spaceRoleId)"
+            />
             <button @click="onRemove(data.user.id)" />
           </td>
         </tr>

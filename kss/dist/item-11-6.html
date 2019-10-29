@@ -72,92 +72,55 @@
             <header class="kss-section kss-section--depth-2" id="kssref-11-6">
 
             <article class="kss-section__content">
-                <p class="kss-section__source">Source: <span>_fixed/common/parts/_modalDialog.styl</span>, line <span>1</span></p>
+                <p class="kss-section__source">Source: <span>_fixed/common/parts/_basicSelect.styl</span>, line <span>1</span></p>
 
               <a class="kss-section__permalink" href="#kssref-11-6">
                 <h2 class="kss-section__item kss-section__item--depth-2">
                   <span class="kss-section__ref">11.6</span>
-                  <span class="kss-section__name">Modal Dialog</span>
+                  <span class="kss-section__name">Basic Select</span>
                 </h2>
               </a>
 
-                <div class="kss-section__description"><p>When using this, do not control Style directly, but use MyModel or v-if with <transition> instead.<transition>.</p>
-</div>
 
             </article>
 
               <article class="kss-section__modifiers">
-                <h1 class="kss-modifiers__heading">Example</h1>
+                <h1 class="kss-modifiers__heading">Examples</h1>
 
+                  <h2 class="kss-modifiers__name">Default styling</h2>
 
-                <div class="kss-modifiers__example"><!-- ModalDialog start -->
-<div class="modalDialog" style="display:none">
-  <div class="modalDialog_content">
-    <div class="modalDialog_content_title">Modal Title</div>
-    <div class="modalDialog_content_description">Modal Description</div>
-    <div class="modalDialog_content_footerButtons">
-      <button class="modalDialog_content_footerButtons_button basicButtonPrimary">Button1</button>
-      <button class="modalDialog_content_footerButtons_button basicButtonNormal">Button2</button>
-    </div>
-  </div>
-</div>
-<!-- ModalDialog end -->
-<button onclick="showModalDialog()">Show</button>
-<script>
-//
-// When using this, do not control Style directly, but use MyModel or v-if with <transition> instead.
-//
-function showModalDialog() {
-  document.getElementsByClassName('modalDialog')[0].style.display = null;
-}
-function closeModalDialog() {
-  document.getElementsByClassName('modalDialog')[0].style.display = 'none';
-}
-document.querySelectorAll('.modalDialog, .modalDialog_content_footerButtons_button').forEach((el) => {
-  el.onclick = closeModalDialog;
-});
-document.querySelectorAll('.modalDialog_content').forEach((el) => {
-  el.onclick = (ev) => {
-    ev.stopPropagation();
-  };
-});
-</script></div>
+                <div class="kss-modifiers__example"><select class="[modifier class]" value="1">
+  <option value="1">First</option>
+  <option value="2">Second</option>
+  <option value="3">Third</option>
+</select></div>
 
+                  <h2 class="kss-modifiers__name">.basicSelect</h2>
+
+                  <p class="kss-modifiers__description">basicSelect</p>
+
+                  <div class="kss-modifiers__example"><select class="basicSelect" value="1">
+  <option value="1">First</option>
+  <option value="2">Second</option>
+  <option value="3">Third</option>
+</select></div>
+                  <h2 class="kss-modifiers__name">.basicSelect.disabled</h2>
+
+                  <p class="kss-modifiers__description">Disabled Option (Same style as :disabled=&quot;true&quot;)</p>
+
+                  <div class="kss-modifiers__example"><select class="basicSelect disabled" value="1">
+  <option value="1">First</option>
+  <option value="2">Second</option>
+  <option value="3">Third</option>
+</select></div>
               </article>
 
                 <article class="kss-section__markup">
-                  <pre><code class="language-markup">&lt;!-- ModalDialog start --&gt;
-&lt;div class&#x3D;&quot;modalDialog&quot; style&#x3D;&quot;display:none&quot;&gt;
-  &lt;div class&#x3D;&quot;modalDialog_content&quot;&gt;
-    &lt;div class&#x3D;&quot;modalDialog_content_title&quot;&gt;Modal Title&lt;/div&gt;
-    &lt;div class&#x3D;&quot;modalDialog_content_description&quot;&gt;Modal Description&lt;/div&gt;
-    &lt;div class&#x3D;&quot;modalDialog_content_footerButtons&quot;&gt;
-      &lt;button class&#x3D;&quot;modalDialog_content_footerButtons_button basicButtonPrimary&quot;&gt;Button1&lt;/button&gt;
-      &lt;button class&#x3D;&quot;modalDialog_content_footerButtons_button basicButtonNormal&quot;&gt;Button2&lt;/button&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;!-- ModalDialog end --&gt;
-&lt;button onclick&#x3D;&quot;showModalDialog()&quot;&gt;Show&lt;/button&gt;
-&lt;script&gt;
-//
-// When using this, do not control Style directly, but use MyModel or v-if with &lt;transition&gt; instead.
-//
-function showModalDialog() {
-  document.getElementsByClassName(&#x27;modalDialog&#x27;)[0].style.display &#x3D; null;
-}
-function closeModalDialog() {
-  document.getElementsByClassName(&#x27;modalDialog&#x27;)[0].style.display &#x3D; &#x27;none&#x27;;
-}
-document.querySelectorAll(&#x27;.modalDialog, .modalDialog_content_footerButtons_button&#x27;).forEach((el) &#x3D;&gt; {
-  el.onclick &#x3D; closeModalDialog;
-});
-document.querySelectorAll(&#x27;.modalDialog_content&#x27;).forEach((el) &#x3D;&gt; {
-  el.onclick &#x3D; (ev) &#x3D;&gt; {
-    ev.stopPropagation();
-  };
-});
-&lt;/script&gt;</code></pre>
+                  <pre><code class="language-markup">&lt;select class&#x3D;&quot;[modifier class]&quot; value&#x3D;&quot;1&quot;&gt;
+  &lt;option value&#x3D;&quot;1&quot;&gt;First&lt;/option&gt;
+  &lt;option value&#x3D;&quot;2&quot;&gt;Second&lt;/option&gt;
+  &lt;option value&#x3D;&quot;3&quot;&gt;Third&lt;/option&gt;
+&lt;/select&gt;</code></pre>
                 </article>
 
             </header>
