@@ -5,9 +5,11 @@ for (const ruleName of ['normal', 'gfm', 'breaks', 'pedantic']) {
   marked.InlineLexer.rules[ruleName] = Object.assign(marked.InlineLexer.rules[ruleName], {
     strong: /^\*(?!\*)((?:[^\*\n]*?[^\*])?)\*(?!(\*|[^\s?!.]))|^(?!(\*|[^\s?!.]))\*(?!\*)((?:[^\*\n]*?[^\*])?)\*(?!(\*|[^\s?!.]))/,
     em: /^_(?!_)((?:[^_\n]*?[^_])?)_(?!(_|[^\s?!.]))|^(?!(_|[^\s?!.]))_(?!_)((?:[^_\n]*?[^_])?)_(?!(_|[^\s?!.]))/,
+    // del: /^:(?!:)((?:[^:\n]*?[^:])?):(?!(:|[^\s?!.]))|^(?!(:|[^\s?!.])):(?!:)((?:[^:\n]*?[^:])?):(?!(:|[^\s?!.]))/,
+    // del: /:((?:[^:\n]*?[^:\n])?):/,
   });
-  // console.log(marked.I)
-  // marked.Renderer.prototype.paragraph = function(href) {
+  // console.log(marked.InlineLexer.rules[ruleName]);
+  // marked.Renderer.prototype.del = function(href) {
   //   console.log(href);
   //   return `<a href="${href}">${href}</a>`;
   // };
