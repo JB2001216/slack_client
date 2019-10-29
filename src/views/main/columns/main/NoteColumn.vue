@@ -22,6 +22,7 @@
               :editor-placeholder="$t('views.noteColumn.enterDetails')"
               preview-class="noteEditWrap_post_view"
               :preview-placeholder="$t('views.noteColumn.detailsAreEmpty')"
+              :all-notes="allNotes"
             />
           </div>
           <div class="dashboardWrap_submit">
