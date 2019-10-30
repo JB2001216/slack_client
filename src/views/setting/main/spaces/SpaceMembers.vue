@@ -20,7 +20,7 @@
           <td>{{ user.email }}</td>
           <td>{{ user.displayName || user.account }}</td>
           <td class="clearfix">
-            <div class="select">
+            <div class="select" :class="{ disabled: saving }">
               <my-space-role-select
                 :value="user.spaceRoleId"
                 :my-role="myRole"
@@ -71,6 +71,13 @@
     </my-modal>
   </div>
 </template>
+
+<style lang="stylus">
+  .select.disabled
+    pointer-events: none
+    select
+      opacity: 0.3
+</style>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -135,9 +142,13 @@ export default class SpaceMembers extends Vue {
     if (this.saving) return;
 
     try {
+
       this.saving = true;
+
       const myUser = this.$store.state.activeUser.myUser!;
+
       const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
+
       await spacesApi.spacesSpaceIdUsersUserIdPut({
         spaceId: myUser.space.id,
         userId: user.id,
@@ -145,8 +156,7 @@ export default class SpaceMembers extends Vue {
           spaceRoleId,
         },
       });
-      user.spaceRoleId = spaceRoleId;
-      user.currentRole = SpaceRoles.get(spaceRoleId);
+
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {

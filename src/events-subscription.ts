@@ -27,6 +27,7 @@ class EventsSubscription {
       this.source.removeEventListener('updateSpace', updateSpaceTask);
       this.source.removeEventListener('deleteSpace', deleteSpaceTask);
       this.source.removeEventListener('updateMyUser', updateMyUserTask);
+      this.source.removeEventListener('updateSpaceUser', updateSpaceUserTask);
 
       this.source.close();
     }
@@ -38,6 +39,7 @@ class EventsSubscription {
     this.source.addEventListener('updateSpace', updateSpaceTask);
     this.source.addEventListener('deleteSpace', deleteSpaceTask);
     this.source.addEventListener('updateMyUser', updateMyUserTask);
+    this.source.addEventListener('updateSpaceUser', updateSpaceUserTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -107,21 +109,20 @@ class EventsSubscription {
       });
     });
 
-    this.source.addEventListener('updateSpaceUser', (e: any) => {
-      const data = JSON.parse(e.data);
-      const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
-      spacesApi.spacesSpaceIdUsersUserIdGet({
-        spaceId: myUser.space.id,
-        userId: data.params.userId,
-      }).then((result) => {
-        console.log(result);
-        store.mutations.activeUser.addSpaceUser(result);
-        // DO UPDATE HERE
+    function updateSpaceUserTask(e: any): void {
 
-      }).catch((error) => {
-        console.log(error);
-      });
-    });
+      const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
+
+      spacesApi.spacesSpaceIdUsersUserIdGet({
+        spaceId: data.spaceId,
+        userId: data.userId,
+      }).then((res) => {
+        appEventBus.emit('space-user-edited', { spaceUser: res });
+        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' }); }
+      }).catch((error) => { console.log(error); });
+
+    }
 
     this.source.addEventListener('deleteSpaceUser', (e: any) => {
       console.log('deleteSpaceUser');
