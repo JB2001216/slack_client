@@ -85,6 +85,7 @@ import { StateChanger } from 'vue-infinite-loading';
 import { apiRegistry, SpacesApi, SpaceUser } from '@/lib/api';
 import { SpaceRoles, SpaceRole } from '@/lib/permissions';
 import MySpaceRoleSelect from '@/components/MySpaceRoleSelect.vue';
+import { eventsSub } from '@/events-subscription';
 
 interface SpaceUserWithCurrentRole extends SpaceUser {
   currentRole: SpaceRole;
@@ -105,6 +106,23 @@ export default class SpaceMembers extends Vue {
 
   get myRole() {
     return this.$store.getters.activeUser.mySpaceRole!;
+  }
+
+  created() {
+
+    eventsSub.source.addEventListener('deleteSpaceUser', (e: any) => {
+
+      const data = JSON.parse(e.data);
+
+      const index = this.users.findIndex((u) => u.id === data.params.userId);
+      if (index >= 0) {
+        this.users.splice(index, 1);
+      }
+
+      this.removingUser = null;
+
+    });
+
   }
 
   async onInfinite($state: StateChanger) {
@@ -169,25 +187,41 @@ export default class SpaceMembers extends Vue {
     if (!this.removingUser) return;
 
     try {
+
       this.saving = true;
+
       const myUser = this.$store.state.activeUser.myUser!;
+
       const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
+
       await spacesApi.spacesSpaceIdUsersUserIdDelete({
         spaceId: myUser.space.id,
         userId: this.removingUser.id,
       });
-      const index = this.users.findIndex((u) => u === this.removingUser);
-      if (index >= 0) {
-        this.users.splice(index, 1);
-      }
-      this.removingUser = null;
 
     } catch (err) {
       this.$appEmit('error', { err });
-
     } finally {
       this.saving = false;
     }
   }
+
+  destroyed() {
+
+    eventsSub.source.removeEventListener('deleteSpaceUser', (e: any) => {
+
+      const data = JSON.parse(e.data);
+
+      const index = this.users.findIndex((u) => u.id === data.params.userId);
+      if (index >= 0) {
+        this.users.splice(index, 1);
+      }
+
+      this.removingUser = null;
+
+    });
+
+  }
+
 }
 </script>

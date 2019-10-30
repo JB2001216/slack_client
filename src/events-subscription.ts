@@ -29,6 +29,7 @@ class EventsSubscription {
       this.source.removeEventListener('updateMyUser', updateMyUserTask);
       this.source.removeEventListener('createSpaceUser', createSpaceUserTask);
       this.source.removeEventListener('updateSpaceUser', updateSpaceUserTask);
+      this.source.removeEventListener('deleteSpaceUser', deleteSpaceUserTask);
 
       this.source.close();
     }
@@ -42,6 +43,7 @@ class EventsSubscription {
     this.source.addEventListener('updateMyUser', updateMyUserTask);
     this.source.addEventListener('createSpaceUser', createSpaceUserTask);
     this.source.addEventListener('updateSpaceUser', updateSpaceUserTask);
+    this.source.addEventListener('deleteSpaceUser', deleteSpaceUserTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -126,11 +128,17 @@ class EventsSubscription {
 
     }
 
-    this.source.addEventListener('deleteSpaceUser', (e: any) => {
-      console.log('deleteSpaceUser');
+    function deleteSpaceUserTask(e: any): void {
+
       const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+
+      spacesApi.spacesSpaceIdUsersGet({
+        spaceId: data.spaceId,
+      }).then((res) => {
+        store.mutations.activeUser.addSpaceUser(...res.results);
+      }).catch((err) => { console.log(err); });
+
+    }
 
     this.source.addEventListener('createProject', (e: any) => {
       console.log('createProject');
