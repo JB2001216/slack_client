@@ -157,39 +157,52 @@ export default class MyMarkdownEditor extends Vue {
   }
 
   showList(event: Event) {
+    // Calculates the offset X, Y of the list
+    // current caret position from start
     var offset = this.$refs.textarea.selectionStart;
     if (this.input === null) {
       return;
     }
 
+    // gets rows and cols
     let row = this.input.substr(0, offset).split('\n').length + 1;
     let lastIndex = this.input.substr(0, offset).lastIndexOf('\n');
+    // text from line start to caret
     let rowText = this.input.substr(lastIndex, offset);
+    // text block from start to caret in lines
     let colText = this.input.substr(0, lastIndex);
 
+    // create canvas to measure the width of text
     let canvas = document.createElement('canvas');
     let context = canvas.getContext('2d');
     if (context === null) {
       return;
     }
+    // get style of textarea
     let style = window.getComputedStyle(this.$refs.textarea);
     context.font = style.font!;
 
+    // calculates the X of caret
     let offsetX = 0;
     if (style.paddingLeft) {
       offsetX = parseInt(style.paddingLeft.substr(0, style.paddingLeft.length - 2));
     }
+    // offset in the textarea
     offsetX = offsetX + Math.ceil(context.measureText(rowText).width);
+    // adds the textarea left offset
     offsetX = offsetX + this.$refs.textarea.offsetLeft;
 
+    // Calculates the Y of the caret
     let offsetY = 0;
     if (style.fontSize) {
       offsetY = parseInt(style.fontSize.substr(0, style.fontSize.length - 2));
     }
+    // fontSize * line number
     offsetY = offsetY * row;
+    // adds the textarea top offset
     offsetY = offsetY + this.$refs.textarea.offsetTop;
 
-    console.log(offsetX, offsetY);
+    // apply styles
     this.$refs.dropdown.style.left = offsetX.toString() + 'px';
     this.$refs.dropdown.style.top = offsetY.toString() + 'px';
     this.isListAllowed = true;
@@ -197,14 +210,17 @@ export default class MyMarkdownEditor extends Vue {
 
   selectNoteLink(subject: string) {
     this.isListAllowed = false;
+
+    // Apply changes to the value
     var offset = this.$refs.textarea.selectionStart;
-    console.log(offset);
-    let newValue = this.input;
-    if (newValue === null) {
-      return;
+    let newValue = '';
+    if (this.input !== null) {
+      newValue = this.input;
     }
+    // Insert the subject of the note
     newValue = newValue.substring(0, offset) + subject + ':' + newValue.substring(offset);
     this.input = newValue;
+    // Save the changes
     this.emitInput(newValue);
   }
 
