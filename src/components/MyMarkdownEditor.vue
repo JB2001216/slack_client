@@ -7,11 +7,10 @@
         v-model="input"
         :placeholder="editorPlaceholder"
         @input="onInput"
-        @keypress.shift.58="showList"
+        @keypress.shift.58="showList($event)"
       />
-      <div v-if="isListAllowed" class="dropdown">
+      <div ref="dropdown" :class="{ dropdown: true, inactive: !isListAllowed }">
         <ul
-          id="dropdown"
           class="dropdown-menu"
           role="menu"
           aria-labelledby="dropdownMenu"
@@ -19,6 +18,7 @@
           <li
             v-for="note in allNotes"
             :key="note.id"
+            class="noteSubject"
             @click="selectNoteLink(note.subject)"
           >
             {{ note.subject }}
@@ -47,6 +47,22 @@
     position: absolute
     top: 0
     left: 0
+    overflow: scroll
+    height: 200px
+    background: white
+    border: 1px solid gray
+    border-radius: 10px
+    overflow-x: hidden
+  .inactive
+    display: none;
+  .noteSubject
+    &:hover
+      background: gray
+  ::-webkit-scrollbar
+    background: none
+  ::-webkit-scrollbar-thumb
+    background: gray
+    border-radius: 10px
 </style>
 
 <script lang="ts">
@@ -55,11 +71,13 @@ import marked from '@/lib/marked';
 import highlight from 'highlight.js';
 import sanitizeHtml from 'sanitize-html';
 import * as api from '@/lib/api';
+import { Event } from 'electron';
 
 @Component
 export default class MyMarkdownEditor extends Vue {
   $refs!: {
     textarea: HTMLTextAreaElement;
+    dropdown: HTMLDivElement;
   }
 
   isListAllowed = false;
@@ -138,18 +156,43 @@ export default class MyMarkdownEditor extends Vue {
     this.$emit('input', v);
   }
 
-  showList() {
-    this.isListAllowed = true;
+  showList(event: Event) {
     var offset = this.$refs.textarea.selectionStart;
-    console.log(offset);
-    // var offset = sel.anch;
+    if (this.input === null) {
+      return;
+    }
 
-    // //Get the text before and after the caret
-    // var firsttext = this.$refs.textarea.innerHTML.substr(0,sel.baseOffset);
-    // var nexttext = (sel.baseOffset != this.$refs.textarea.length ) ?this.$refs.textarea..innerHTML.substr( sel.baseOffset, this.$refs.textarea.length) : "";
+    let row = this.input.substr(0, offset).split('\n').length + 1;
+    let lastIndex = this.input.substr(0, offset).lastIndexOf('\n');
+    let rowText = this.input.substr(lastIndex, offset);
+    let colText = this.input.substr(0, lastIndex);
 
-    // //Add in @ + dummy, because @ is not in there yet on keydown
-    // this.$refs.textarea..innerHTML = firsttext + subject + nexttext;
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
+    if (context === null) {
+      return;
+    }
+    let style = window.getComputedStyle(this.$refs.textarea);
+    context.font = style.font!;
+
+    let offsetX = 0;
+    if (style.paddingLeft) {
+      offsetX = parseInt(style.paddingLeft.substr(0, style.paddingLeft.length - 2));
+    }
+    offsetX = offsetX + Math.ceil(context.measureText(rowText).width);
+    offsetX = offsetX + this.$refs.textarea.offsetLeft;
+
+    let offsetY = 0;
+    if (style.fontSize) {
+      offsetY = parseInt(style.fontSize.substr(0, style.fontSize.length - 2));
+    }
+    offsetY = offsetY * row;
+    offsetY = offsetY + this.$refs.textarea.offsetTop;
+
+    console.log(offsetX, offsetY);
+    this.$refs.dropdown.style.left = offsetX.toString() + 'px';
+    this.$refs.dropdown.style.top = offsetY.toString() + 'px';
+    this.isListAllowed = true;
   }
 
   selectNoteLink(subject: string) {
@@ -164,5 +207,6 @@ export default class MyMarkdownEditor extends Vue {
     this.input = newValue;
     this.emitInput(newValue);
   }
+
 }
 </script>
