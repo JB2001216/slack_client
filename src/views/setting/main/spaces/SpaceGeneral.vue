@@ -58,7 +58,7 @@
 
 
 <style lang="stylus">
-@import '../../../../stylus/_fixed/base/_variable'
+@import '../../../../stylus/_settings'
 
 .option_spaceGeneral
   input[type="file"]

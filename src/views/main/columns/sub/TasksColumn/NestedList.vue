@@ -119,7 +119,7 @@
 
 
 <style lang="stylus">
-@import '../../../../../stylus/_fixed/base/_variable'
+@import '../../../../../stylus/_settings'
 
 .nestedList
   .task_itemContaner

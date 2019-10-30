@@ -98,7 +98,7 @@
 
 
 <style lang="stylus">
-@import '../../../../../stylus/_fixed/base/_theme'
+@import '../../../../../stylus/_settings'
 
 .tab_task
   .task_menu_search.active

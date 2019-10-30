@@ -5,6 +5,7 @@ import SvgClip from './SvgClip.vue';
 import SvgEmotion from './SvgEmotion.vue';
 import SvgFilter from './SvgFilter.vue';
 import SvgHome from './SvgHome.vue';
+import SvgLink from './SvgLink.vue';
 import SvgMenu from './SvgMenu.vue';
 import SvgPen from './SvgPen.vue';
 import SvgQuestion from './SvgQuestion.vue';
@@ -20,6 +21,7 @@ export default {
   SvgEmotion,
   SvgFilter,
   SvgHome,
+  SvgLink,
   SvgMenu,
   SvgPen,
   SvgQuestion,

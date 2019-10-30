@@ -97,7 +97,7 @@
 </template>
 
 <style lang="stylus">
-@import '../../../../../stylus/_fixed/base/_theme'
+@import '../../../../../stylus/_settings'
 
 .note_item
   cursor: pointer

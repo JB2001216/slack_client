@@ -9,6 +9,6 @@
 
 <style lang="stylus" scoped>
 svg
-  padding-top: calc(var(--my-svg-icon-size, 18px) * 0.04)
-  padding-bottom: calc(var(--my-svg-icon-size, 18px) * 0.02)
+  padding-top: calc(var(--mySvgIconSize, 18px) * 0.04)
+  padding-bottom: calc(var(--mySvgIconSize, 18px) * 0.02)
 </style>

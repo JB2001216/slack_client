@@ -10,7 +10,7 @@
 
 <style lang="stylus">
 @import '../../node_modules/highlight.js/styles/github.css'
-@import '../stylus/_fixed/base/_variable'
+@import '../stylus/_settings'
 
 .markdownEditor
   textarea

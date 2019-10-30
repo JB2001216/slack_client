@@ -4,10 +4,10 @@
   "destination": "./dist",
 
   "title": "ErniePjm Style Guide",
-  "homepage": "./overview.md",
+  "homepage": "./_styleguide/overview.md",
   "builder": "./template/michelangelo",
 
   "css": [
-    "./full.css"
+    "./main.css"
   ]
 }

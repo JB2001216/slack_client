@@ -16,8 +16,7 @@
 
 
 <style lang="stylus">
-@import '../stylus/_fixed/base/_variable'
-@import '../stylus/_fixed/base/_theme'
+@import '../stylus/_settings'
 
 .mySpaceUserAvatar
   box-sizing: border-box

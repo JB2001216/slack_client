@@ -30,7 +30,7 @@
       display: block
       margin-bottom: 4px
     svg
-      --my-svg-icon-size: 30px
+      --mySvgIconSize: 30px
 </style>
 
 <script lang="ts">
@@ -49,7 +49,7 @@ export default class MyDebugToolSvgIconList extends Vue {
   }
 
   onIconClick(name: string) {
-    clipboard.writeText(`<my-svg-icon :name="${name}" />`);
+    clipboard.writeText(`<my-svg-icon name="${name}" />`);
     this.$flash('Copied code to clipboard.', 'success');
   }
 }
