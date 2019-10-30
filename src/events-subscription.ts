@@ -131,11 +131,13 @@ class EventsSubscription {
     function deleteSpaceUserTask(e: any): void {
 
       const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
 
       spacesApi.spacesSpaceIdUsersGet({
         spaceId: data.spaceId,
       }).then((res) => {
         store.mutations.activeUser.addSpaceUser(...res.results);
+        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('common.deleted').toString(), 'name': 'success' }); }
       }).catch((err) => { console.log(err); });
 
     }

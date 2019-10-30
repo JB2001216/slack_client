@@ -110,6 +110,7 @@ export default class SpaceMembers extends Vue {
 
   created() {
 
+    // don't forget about remove listener at the bottom!!!
     eventsSub.source.addEventListener('deleteSpaceUser', (e: any) => {
 
       const data = JSON.parse(e.data);
