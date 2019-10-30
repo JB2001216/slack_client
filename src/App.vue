@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="{[theme]: true, [`platform-${platform}`]: true, frameless, active}">
+  <div id="app" :class="{[`theme__${theme}`]: true, [`platform-${platform}`]: true, frameless, active}">
     <div v-if="frameless" class="appTitlebar" @dblclick="onAppTitlebarDblClick()" />
     <div v-if="enabledMdl2Controls" class="mdl2Controls">
       <div class="mdl2Controls_button minimize" @click="onWindowMinimizeButtonClick()">
@@ -112,7 +112,7 @@ import { loadableLocales } from '@/i18n';
 import { AppEventMap } from '@/plugins/app-event';
 import { remote } from 'electron';
 
-type Theme = 'color_gray_green' | 'color_blueGray_green';
+type Theme = 'gray_green' | 'blueGray_green';
 
 const components: { [key: string]: SyncComponent<any, any, any, any> | AsyncComponent<any, any, any, any> } = {
   MyFlashMessage,
@@ -128,10 +128,10 @@ if (enableDebugTool) {
   components,
 })
 export default class App extends Vue {
-  theme: Theme = 'color_blueGray_green';
+  theme: Theme = 'blueGray_green';
   themes: Theme[] = [
-    'color_gray_green',
-    'color_blueGray_green',
+    'gray_green',
+    'blueGray_green',
   ];
   maximized = false;
   active = true;

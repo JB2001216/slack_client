@@ -1,0 +1,7 @@
+generateThemeStyle()
+  for $themeName, $theme in $themes
+    #app.theme__{$themeName}
+      for $colorName, $color in $theme.colors
+        --themeColor-{$colorName}: $color
+
+generateThemeStyle()

@@ -121,7 +121,7 @@
               line-height: 1;
               text-align: center;
               &.green{
-                themeBackgroundColor('accent')
+                background-color: $themeColors.accent
               }
               &.yellow{
                 background: #D1BA19;
@@ -152,8 +152,7 @@
               margin-top: 0;
             }
             &.active{
-              border: 1px solid;
-              themeBorderColor('accent')
+              border: 1px solid $themeColors.accent;
             }
             h4{
               font-family: $fontFamilyBody;
@@ -207,8 +206,7 @@
               margin-top: 0;
             }
             &.active{
-              border: 1px solid;
-              themeBorderColor('accent')
+              border: 1px solid $themeColors.accent;
             }
             h4{
               font-family: $fontFamilyBody;
@@ -247,7 +245,7 @@
               line-height: 1;
               text-align: center;
               &.green{
-                themeBackgroundColor('accent')
+                background-color: $themeColors.accent
               }
               &.yellow{
                 background: #D1BA19;
@@ -369,7 +367,7 @@
           cursor: pointer;
           font-family: $fontFamilyBody;
           font-size: 12px;
-          themeColor('accent')
+          color: $themeColors.accent
         }
       }
     }

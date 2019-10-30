@@ -103,9 +103,9 @@
   cursor: pointer
 .tab_note
   .note_menu_search.active
-    themeColor('active')
+    color: $themeColors.active
     svg
-      themeFill('active')
+      fill: $themeColors.active
   .noteListContainer
     max-height: calc(100vh - 225px)
     overflow-y: scroll

@@ -23,8 +23,7 @@
             display: block
             width: 36px
             height: 36px
-            border: 2px solid
-            themeBorderColor('active')
+            border: 2px solid $themeColors.active
             border-radius: 50%
             position: absolute
             top: -4px
@@ -212,11 +211,11 @@
       line-height: 1
       text-align: center
       &:first-child
-        themeBackgroundColor('active')
+        background-color: $themeColors.active
         color: #fff
       &:nth-child(2)
         background: #E6F0FF
-        themeColor('active')
+        color: $themeColors.active
       &:last-child
         width: 180px
         background: #fff

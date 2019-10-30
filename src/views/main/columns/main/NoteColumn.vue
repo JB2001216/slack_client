@@ -168,7 +168,7 @@
       fill: #EDA62A !important
   .dashboardWrap_submit button:nth-child(2)
     background: #e6f0ff
-    themeColor('active')
+    color: $themeColors.active
   .dashboardWrap_note
     margin-top: 24px;
     zoom: 1;
@@ -212,7 +212,7 @@
       line-height: 1
       text-align: center
       &:first-child
-        themeBackgroundColor('active')
+        background-color: $themeColors.active
         color: #fff
   .dashboardWrap_detail
     .noteEditWrap_post

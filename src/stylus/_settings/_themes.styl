@@ -14,6 +14,22 @@ Styleguide 10.1
 /*
 Theme Colors
 
+```stylus
+// Sample Code
+@import '../../stylus/_settings'
+.example1
+  color: $themeColors.main
+  background-color: $themeColors.sub
+
+
+// Yielding the following CSS
+// * The color for each theme is automatically set using 'CSS custom properties'
+.example1 {
+  color: var(--themeColor-main, #2e2e2e)
+  background-color: var(--themeColor-sub, #484848)
+}
+```
+
 Styleguide 10.2
 */
 
@@ -77,49 +93,7 @@ $themes := {
   },
 }
 
-/*
-Theme Function
 
-```stylus
-// Sample Code
-@import '../../stylus/_settings'
-.example1
-  .example2
-    themeBackgroundColor('main')
-
-
-// Yielding the following CSS
-.gray_green .example1 .example2 {
-  background-color: #2e2e2e;
-}
-.blueGray_green .example1 .example2 {
-  background-color: #313444;
-}
-```
-
-themeBackgroundColor($colorName) - Set the theme color to background-color.
-themeColor($colorName) - Set the theme color to color.
-themeBorderColor($colorName) - Set the theme color to border-color.
-themeFill($colorName) - Set the theme color to fill.
-
-Styleguide 10.3
-*/
-themeBackgroundColor($colorName)
-  for $themeName, $theme in $themes
-    .color_{$themeName} &
-      background-color: $theme.colors[$colorName]
-
-themeColor($colorName)
-  for $themeName, $theme in $themes
-    .color_{$themeName} &
-      color: $theme.colors[$colorName]
-
-themeBorderColor($colorName)
-  for $themeName, $theme in $themes
-    .color_{$themeName} &
-      border-color: $theme.colors[$colorName]
-
-themeFill($colorName)
-  for $themeName, $theme in $themes
-    .color_{$themeName} &
-      fill: $theme.colors[$colorName]
+$themeColors := {}
+for $colorName, $color in $themes['gray_green'].colors
+  $themeColors[$colorName] = 'var(--themeColor-%s, %s)' % (unquote($colorName) $color)

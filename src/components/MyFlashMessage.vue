@@ -4,6 +4,7 @@
 
 <style lang="stylus">
 @import '../../node_modules/vue-flash-message/dist/vue-flash-message.min.css'
+@import '../stylus/_settings'
 
 .my-flash-message
   position: fixed
@@ -23,7 +24,7 @@
     transition: opacity .4s, transform .4s
     display: flex
     &.success
-      themeColor('active')
+      color: $themeColors.active
       background-color: #ebf0f5
   .flash__close-button
     font-size: 38px

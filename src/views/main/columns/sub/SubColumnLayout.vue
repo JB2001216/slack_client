@@ -73,10 +73,9 @@
       margin: 0 10px
       &.active
         color: #333333
-        border-bottom: 4px solid
-        themeBorderColor('active')
+        border-bottom: 4px solid $themeColors.active
       &:hover
-        themeColor('active')
+        color: $themeColors.active
   &_head
     &_toolbar
       display: flex
@@ -100,7 +99,7 @@
             padding: 10px 24px
             white-space: nowrap
             &:hover
-              themeBackgroundColor('accent')
+              background-color: $themeColors.accent
               color: #fff
 </style>
 

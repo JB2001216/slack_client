@@ -10,9 +10,9 @@
     &_favorite
       transition: 0.5s
       display: flex
-      themeFill('icon')
+      fill: $themeColors.icon
       &:not(.active):hover
-        themeFill('iconDarken1')
+        fill: $themeColors.iconDarken1
       &.active:hover
         fill: #EDA62A
     &_right
@@ -28,7 +28,7 @@
         vertical-align: sub
   &_add
     display: block
-    themeColor('active')
+    color: $themeColors.active
     text-decoration: none
     padding: 10px 20px
     height: 40px
@@ -78,14 +78,14 @@
         opacity: 1
         pointer-events: all
     &.active
-      themeBackgroundColor('activeLighten5')
+      background-color: $themeColors.activeLighten5
       &:before
         display: block
-        themeBackgroundColor('activeLighten2')
+        background-color: $themeColors.activeLighten2
         z-index: 1
       &:after
         width: 100%
-        themeBackgroundColor('activeLighten2')
+        background-color: $themeColors.activeLighten2
         z-index: 1
     &_bar
       display: block
@@ -131,8 +131,8 @@
       padding: 0
       margin-right: 8px
       margin-left: 4px
-      themeFill('icon')
+      fill: $themeColors.icon
       &:hover
-        themeFill('iconDarken1')
+        fill: $themeColors.iconDarken1
     &_date
       padding: 0 8px 0 4px

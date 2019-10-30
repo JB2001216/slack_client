@@ -213,7 +213,7 @@
         margin: 4px 0
         padding: 6px 16px
         &:hover
-          themeBackgroundColor('accent')
+          background-color: $themeColors.accent
           color: #fff
         &_color
           width: 12px

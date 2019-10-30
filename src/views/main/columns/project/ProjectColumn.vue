@@ -70,7 +70,7 @@
 
 .projectColumn
   color: $colors.white;
-  themeBackgroundColor('sub')
+  background-color: $themeColors.sub
   user-select: none
   box-shadow: 8px 0px 32px rgba(0, 0, 0, 0.05)
   position: relative
@@ -125,10 +125,10 @@
         cursor: pointer
         &.active
           font-weight: bold
-          themeBackgroundColor('accent')
+          background-color: $themeColors.accent
           box-shadow: 8px 0px 32px rgba(0, 0, 0, 0.05)
         &:not(.active):hover
-          themeBackgroundColor('subDarken1')
+          background-color: $themeColors.subDarken1
   &_foot
     display: block
     text-align: center
@@ -162,7 +162,7 @@
             cursor: default
             background: transparent
           &:not(.notHover):hover
-            themeBackgroundColor('accent')
+            background-color: $themeColors.accent
             color: $colors.white
         .projectColumn_spaceMenu_profile
           display: flex

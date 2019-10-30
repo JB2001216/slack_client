@@ -93,10 +93,10 @@
       top: 20px
       font-size: 24px
       line-height: 24px
-      themeColor('icon')
+      color: $themeColors.icon
       cursor: pointer
       &:hover
-        themeColor('iconDarken1')
+        color: $themeColors.iconDarken1
     &_header
       border-bottom: solid 1px $colors.lightGrayLighten2
       padding: 26px
@@ -140,7 +140,7 @@
             width: 54px
             text-align: center
             span
-              themeBackgroundColor('active')
+              background-color: $themeColors.active
               display: inline-block
               line-height: 24px
               width: 48px
@@ -157,7 +157,7 @@
             span
               font-size: 18px
               line-height: 18px
-              themeColor('icon')
+              color: $themeColors.icon
               &.hover
                 font-size: 19px
                 line-height: 19px

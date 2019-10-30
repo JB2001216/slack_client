@@ -34,7 +34,7 @@
   &_initials
     width: 100%
     height: 100%
-    themeBackgroundColor('icon')
+    background-color: $themeColors.icon
     color: #fff
     display: flex
     justify-content: center

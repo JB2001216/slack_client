@@ -81,6 +81,21 @@
                 </h2>
               </a>
 
+                <div class="kss-section__description"><pre class="hljs"><code class="language-stylus"><span class="hljs-comment">// Sample Code</span>
+@import <span class="hljs-string">'../../stylus/_settings'</span>
+<span class="hljs-selector-class">.example1</span>
+  <span class="hljs-attribute">color</span>: <span class="hljs-variable">$themeColors</span>.main
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-variable">$themeColors</span>.sub
+
+
+<span class="hljs-comment">// Yielding the following CSS</span>
+<span class="hljs-comment">// * The color for each theme is automatically set using 'CSS custom properties'</span>
+<span class="hljs-selector-class">.example1</span> {
+  <span class="hljs-attribute">color</span>: var(--themeColor-main, <span class="hljs-number">#2e2e2e</span>)
+  <span class="hljs-attribute">background-color</span>: var(--themeColor-sub, <span class="hljs-number">#484848</span>)
+}
+</code></pre>
+</div>
 
             </article>
 
