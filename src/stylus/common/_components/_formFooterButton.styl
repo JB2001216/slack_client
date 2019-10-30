@@ -1,0 +1,60 @@
+/*
+Footer Button
+
+Markup:
+<button class="{{modifier_class}}" style="width:120px">Button</button>
+
+.formFooterButtonPrimary - Primary
+.formFooterButtonSecondary - Secondary
+.formFooterButtonLight - Light
+.formFooterButtonPrimary.wide - Wide Option
+.formFooterButtonPrimary.disabled - Disabled Option (Same style as :disabled="true")
+
+Styleguide 11.3
+*/
+.formFooterButton
+  font-family: $fontFamilyBody
+  font-size: 14px
+  font-weight: normal
+  height: 32px
+  line-height: 30px
+  box-sizing: border-box
+  padding: 0 16px
+  border-radius: 16px
+  cursor: pointer
+  outline: none
+  border: solid 1px transparent
+  text-align: center
+  user-select: none
+  &.wide
+    min-width: 220px
+  &:disabled,
+  &.disabled
+    opacity: 0.3
+    cursor: default
+    pointer-events: none
+
+.formFooterButtonPrimary
+  @extends .formFooterButton
+  color: #fff
+  background-color: $colors.primaryBlue
+  &:hover
+    background-color: $colors.primaryBlueDarken1
+    font-weight: bold
+
+.formFooterButtonSecondary
+  @extends .formFooterButton
+  themeColor('active')
+  background-color: #E3F0FF
+  &:hover
+    font-weight: bold
+
+.formFooterButtonLight
+  @extends .formFooterButton
+  color: $colors.primaryBlack
+  background-color: $colors.white
+  border-color: $colors.lightGray
+  font-weight: bold
+  &:hover
+    color: $colors.primaryBlackDarken5
+    background-color: $colors.whiteDarken1

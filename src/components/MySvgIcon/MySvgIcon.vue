@@ -4,16 +4,16 @@
 
 
 <style lang="stylus">
-@import '../../stylus/_fixed/base/_variable'
+@import '../../stylus/_settings'
 
 .mySvgIcon
   box-sizing: border-box
-  width: var(--my-svg-icon-size, 18px)
-  height: var(--my-svg-icon-size, 18px)
+  width: var(--mySvgIconSize, 18px)
+  height: var(--mySvgIconSize, 18px)
   &_fill
-    fill: var(--my-svg-icon-color, $colors.gray)
+    fill: var(--mySvgIconColor, $colors.gray)
   &_stroke
-    stroke: var(--my-svg-icon-color, $colors.gray)
+    stroke: var(--mySvgIconColor, $colors.gray)
 </style>
 
 

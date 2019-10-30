@@ -1,0 +1,64 @@
+/*
+Basic Button
+
+Markup:
+<button class="{{modifier_class}}">Button</button>
+
+.basicButtonPrimary - Primary
+.basicButtonPrimarySuccess - PrimarySuccess
+.basicButtonNormal - Normal
+.basicButtonDanger - Danger
+.basicButtonPrimary.wide - Wide Option
+.basicButtonPrimary.disabled - Disabled Option (Same style as :disabled="true")
+
+Styleguide 11.1
+*/
+.basicButton
+  font-family: $fontFamilyBody
+  font-size: 14px
+  font-weight: bold
+  height: 40px
+  line-height: 38px
+  min-width: 60px
+  box-sizing: border-box
+  padding: 0 16px
+  border-radius: 20px
+  cursor: pointer
+  outline: none
+  border: solid 1px transparent
+  text-align: center
+  user-select: none
+  &.wide
+    min-width: 160px
+  &:disabled,
+  &.disabled
+    opacity: 0.3
+    cursor: default
+    pointer-events: none
+
+.basicButtonPrimary
+  @extends .basicButton
+  color: #fff
+  background-color: $colors.primaryBlue
+  &:hover
+    background-color: $colors.primaryBlueDarken1
+
+.basicButtonPrimarySuccess
+  @extends .basicButton
+  themeColor('active')
+  background-color: #EBF0F5
+
+.basicButtonNormal
+  @extends .basicButton
+  color: $colors.primaryBlack
+  background-color: $colors.white
+  border-color: $colors.lightGray
+  &:hover
+    background-color: $colors.whiteDarken1
+
+.basicButtonDanger
+  @extends .basicButton
+  color: #fff
+  background-color: $colors.red;
+  &:hover
+    background-color: $colors.redDarken2

@@ -55,8 +55,7 @@
 
 
 <style lang="stylus">
-@import '../../stylus/_fixed/base/_variable'
-@import '../../stylus/_fixed/base/_theme'
+@import '../../stylus/_settings'
 
 .myChargerInput
   display: flex
@@ -125,8 +124,8 @@
         align-items: center
         &_box
           font-size: 12px
-          color: #333
-          background #fff
+          color: $colors.white
+          background $colors.grayDarken3
           padding: 4px 8px
           white-space: nowrap
           border-radius: 4px
@@ -139,7 +138,7 @@
           left: 50%
           margin-left: -8px
           border: 8px solid transparent
-          border-top: 8px solid #fff
+          border-top: 8px solid $colors.grayDarken3
           transform: scaleX(0.75)
           z-index: 2
         &:after
@@ -149,7 +148,7 @@
           left: 50%
           margin-left: -8px
           border: 8px solid transparent
-          border-top: 8px solid #fff
+          border-top: 8px solid $colors.grayDarken3
           transform: scaleX(0.75)
           filter: drop-shadow(0 2px 3px rgba(0,0,0,0.16))
 

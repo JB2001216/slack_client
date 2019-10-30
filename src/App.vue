@@ -42,7 +42,7 @@
 
 
 <style lang="stylus">
-@import './stylus/_fixed/full'
+@import './stylus/main'
 
 #app
   .fade-enter-active, .fade-leave-active
@@ -76,7 +76,7 @@
       top: 0
       right: 0
       height: 20px// 32px
-      font-family: $mdl2-font-family
+      font-family: $fontFamilyMdl2
       font-size: 10px
       color: rgba(0,0,0,0.8)
       z-index: 999999

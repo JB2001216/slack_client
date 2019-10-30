@@ -55,7 +55,7 @@
 
 
 <style lang="stylus" scoped>
-@import '../stylus/_fixed/base/_theme'
+@import '../stylus/_settings'
 
 .myProjectStatusInput
   max-width: 100%
@@ -246,7 +246,7 @@ interface ProjectStatusOptionWithWidth extends ProjectStatusOption {
 }
 
 const styles = {
-  textFontFamily: 'Noto Sans CJK JP',
+  textFontFamily: '"Noto Sans CJK JP", sans-serif',
   textFontSize: 12,
   etcMarginLeft: 8,
   etcPaddingHorizontal: 32,
@@ -285,7 +285,7 @@ export default class MyProjectStatusInput extends Vue {
     if (!this.$refs.canvas) return this.progressOptions;
 
     const ctx = this.$refs.canvas.getContext('2d')!;
-    ctx.font = `bold ${styles.textFontSize}px '${styles.textFontFamily}'`;
+    ctx.font = `bold ${styles.textFontSize}px ${styles.textFontFamily}`;
 
     const progressOptions: ProjectStatusOptionWithWidth[] = this.progressOptions.concat();
     progressOptions.forEach((o) => {
