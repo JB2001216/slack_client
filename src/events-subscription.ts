@@ -1,7 +1,7 @@
 import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
-import { apiRegistry, SpacesApi, SpaceUser } from '@/lib/api/';
+import { apiRegistry, SpacesApi, UsersApi } from '@/lib/api/';
 import router, { getUserLastLocation } from '@/router';
 
 
@@ -17,6 +17,7 @@ class EventsSubscription {
     if (!myUser || this.spaceId === myUser.space.id) { return; }
 
     const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
+    const usersApi = apiRegistry.load(UsersApi, myUser.token);
 
     this.spaceId = myUser.space.id;
 
@@ -25,6 +26,7 @@ class EventsSubscription {
       // remove listeners
       this.source.removeEventListener('updateSpace', updateSpaceTask);
       this.source.removeEventListener('deleteSpace', deleteSpaceTask);
+      this.source.removeEventListener('updateMyUser', updateMyUserTask);
 
       this.source.close();
     }
@@ -35,6 +37,7 @@ class EventsSubscription {
     // init listeners
     this.source.addEventListener('updateSpace', updateSpaceTask);
     this.source.addEventListener('deleteSpace', deleteSpaceTask);
+    this.source.addEventListener('updateMyUser', updateMyUserTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -73,39 +76,21 @@ class EventsSubscription {
 
     }
 
-    this.source.addEventListener('updateMyUser', (e: any) => {
-      console.log('updateMyUser');
-      const data = JSON.parse(e.data);
-      const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
-      // spacesApi.spacesSpaceIdUsersUserIdGet({
-      //   spaceId: myUser.space.id,
-      //   userId: data.params.userId,
-      // }).then((result) => {
-      //   console.log(result);
-      //   store.mutations.editMyUser({
-      //     id: result.id,
-      //     account: result.account,
-      //     displayName: result.displayName,
-      //     email: result.email,
-      //     spaceRoleId: result.spaceRoleId,
-      //     avatarUrl: result.avatarUrl,
-      //     avatarSmallUrl: result.avatarSmallUrl,
-      //     locale: 'en',
-      //     timezone: 'asdfasdfsafdsa',
-      //     space: {
-      //       id: result.spaceId,
-      //       account: result.account,
-      //       displayName: result.displayName,
-      //       avatarUrl: result.avatarUrl,
-      //       avatarSmallUrl: result.avatarSmallUrl,
-      //     },
-      //   });
-      //   // DO UPDATE HERE
+    function updateMyUserTask(e: any): void {
 
-      // }).catch((error) => {
-      //   console.log(error);
-      // });
-    });
+      const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
+
+      if (!isFireUser) { return; }
+
+      usersApi.usersMeGet()
+        .then((res) => {
+          appEventBus.emit('my-user-edited', { myUser: res });
+          appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' });
+        })
+        .catch((err) => { console.log(err); });
+
+    }
 
     this.source.addEventListener('createSpaceUser', (e: any) => {
       console.log('createSpaceUser');
@@ -123,7 +108,6 @@ class EventsSubscription {
     });
 
     this.source.addEventListener('updateSpaceUser', (e: any) => {
-      console.log('updateSpaceUser');
       const data = JSON.parse(e.data);
       const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
       spacesApi.spacesSpaceIdUsersUserIdGet({

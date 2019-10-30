@@ -183,16 +183,16 @@ export default class SpaceUserProfile extends Vue {
     if (this.saving) return;
 
     try {
+
       this.saving = true;
+
       const spacesApi = apiRegistry.load(SpacesApi, this.myUser.token);
       const usersApi = apiRegistry.load(UsersApi, this.myUser.token);
-      const user = await usersApi.usersMePatch({
-        usersMePatchRequestBody: {
-          displayName: this.displayName.trim() === '' ? null : this.displayName.trim(),
-        },
-      });
+
       if (this.avatar && this.$refs.avatarImage) {
+
         const image = this.$refs.avatarImage;
+
         const clip: Pick<SpacesSpaceIdUsersUserIdAvatarPostRequestBody, 'left' | 'top' | 'width' | 'height'> = image.naturalWidth <= image.naturalHeight ? {
           left: 0,
           width: image.naturalWidth,
@@ -204,17 +204,20 @@ export default class SpaceUserProfile extends Vue {
           left: Math.floor((image.naturalWidth - image.naturalHeight) / 2),
           width: image.naturalHeight,
         };
-        const avatarPostResponse = await spacesApi.spacesSpaceIdUsersUserIdAvatarPost(Object.assign(clip, {
+
+        await spacesApi.spacesSpaceIdUsersUserIdAvatarPost(Object.assign(clip, {
           spaceId: this.myUser.space.id,
           userId: this.myUser.id,
           avatar: this.avatar,
         }));
-        user.avatarUrl = avatarPostResponse.avatarUrl;
-        user.avatarSmallUrl = avatarPostResponse.avatarSmallUrl;
+
       }
-      this.$appEmit('my-user-edited', { myUser: user });
-      this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
-      this.init();
+
+      await usersApi.usersMePatch({
+        usersMePatchRequestBody: {
+          displayName: this.displayName.trim() === '' ? null : this.displayName.trim(),
+        },
+      });
 
     } catch (err) {
       this.$appEmit('error', { err });
