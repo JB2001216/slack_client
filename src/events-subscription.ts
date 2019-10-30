@@ -1,7 +1,7 @@
 import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
-import { apiRegistry, SpacesApi, UsersApi } from '@/lib/api/';
+import { apiRegistry, SpacesApi, UsersApi, SpaceUser } from '@/lib/api/';
 import router, { getUserLastLocation } from '@/router';
 
 
@@ -27,6 +27,7 @@ class EventsSubscription {
       this.source.removeEventListener('updateSpace', updateSpaceTask);
       this.source.removeEventListener('deleteSpace', deleteSpaceTask);
       this.source.removeEventListener('updateMyUser', updateMyUserTask);
+      this.source.removeEventListener('createSpaceUser', createSpaceUserTask);
       this.source.removeEventListener('updateSpaceUser', updateSpaceUserTask);
 
       this.source.close();
@@ -39,6 +40,7 @@ class EventsSubscription {
     this.source.addEventListener('updateSpace', updateSpaceTask);
     this.source.addEventListener('deleteSpace', deleteSpaceTask);
     this.source.addEventListener('updateMyUser', updateMyUserTask);
+    this.source.addEventListener('createSpaceUser', createSpaceUserTask);
     this.source.addEventListener('updateSpaceUser', updateSpaceUserTask);
 
     // tasks
@@ -94,20 +96,20 @@ class EventsSubscription {
 
     }
 
-    this.source.addEventListener('createSpaceUser', (e: any) => {
-      console.log('createSpaceUser');
+    function createSpaceUserTask(e: any): void {
+
       const data = JSON.parse(e.data);
-      const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
-      spacesApi.spacesSpaceIdUsersUserIdGet({
-        spaceId: myUser.space.id,
-        userId: data.params.userId,
-      }).then((result) => {
-        console.log(result);
-        store.mutations.activeUser.addSpaceUser(result);
-      }).catch((error) => {
-        console.log(error);
-      });
-    });
+      const isFireUser = data.userId === myUser.id;
+
+      spacesApi.spacesSpaceIdUsersGet({
+        spaceId: data.spaceId,
+      }).then((res) => {
+        store.mutations.activeUser.addSpaceUser(...res.results);
+        store.mutations.settingRouter.to('space-members');
+        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.spaceMemberInvite.invitedMessage').toString(), 'name': 'success' }); }
+      }).catch((err) => { console.log(err); });
+
+    }
 
     function updateSpaceUserTask(e: any): void {
 

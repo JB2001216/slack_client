@@ -152,15 +152,16 @@ export default class SpaceMemberInvite extends Vue {
     const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
 
     try {
+
       this.saving = true;
+
       await spacesApi.spacesSpaceIdUsersInviteByEmailPost({
         spaceId: myUser.space.id,
         spacesSpaceIdUsersInviteByEmailPostRequestBody: rows.map((r) => r.body),
       });
-      this.$flash(this.$t('views.setting.main.spaceMemberInvite.invitedMessage').toString(), 'success');
-      this.$store.mutations.settingRouter.to('space-members');
 
     } catch (err) {
+
       if (err instanceof Response) {
         const json = await getJsonFromResponse(err);
         if (json && json.error) {
@@ -171,6 +172,7 @@ export default class SpaceMemberInvite extends Vue {
           }
         }
       }
+
       this.$appEmit('error', { err });
 
     } finally {
