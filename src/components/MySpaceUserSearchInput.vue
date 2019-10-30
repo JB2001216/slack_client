@@ -68,7 +68,7 @@
       align-items: center
       cursor: pointer
       &:hover
-        themeBackgroundColor('accent')
+        background-color: $themeColors.accent
         color: #fff
       &_avatar
         width: 30px

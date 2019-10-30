@@ -102,9 +102,9 @@
 
 .tab_task
   .task_menu_search.active
-    themeColor('active')
+    color: $themeColors.active
     svg
-      themeFill('active')
+      fill: $themeColors.active
   .taskListContainer
     max-height: calc(100vh - 225px)
     overflow-y: scroll

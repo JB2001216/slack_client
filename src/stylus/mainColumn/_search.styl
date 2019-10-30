@@ -148,8 +148,7 @@
         line-height: 1
 
       label:hover
-        border: 1px solid
-        themeBorderColor('accent')
+        border: 1px solid $themeColors.accent
 
       label:after
         -webkit-transition: background 0.2s linear
@@ -186,11 +185,10 @@
         transform: rotate(45deg)
 
       input[type=checkbox]:checked + label
-        border: 1px solid
-        themeBorderColor('accent')
+        border: 1px solid $themeColors.accent
 
       input[type=checkbox]:checked + label:before
         opacity: 1
 
       input[type=checkbox]:checked + label:after
-        themeBackgroundColor('accent')
+        background-color: $themeColors.accent

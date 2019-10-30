@@ -64,10 +64,10 @@
     &_icon
       vertical-align: middle
       path
-        themeFill('icon')
+        fill: $themeColors.icon
     &_value
       vertical-align: middle
-      themeColor('icon')
+      color: $themeColors.icon
       white-space: nowrap
   &_pop
     position: fixed
@@ -106,9 +106,9 @@
     &:hover
       .myDateRangeInput_view_icon
         &_path
-          themeFill('iconDarken1')
+          fill: $themeColors.iconDarken1
       .myDateRangeInput_view_value
-        themeColor('iconDarken1')
+        color: $themeColors.iconDarken1
   .vc-container
     border: none !important
   .vc-w-full

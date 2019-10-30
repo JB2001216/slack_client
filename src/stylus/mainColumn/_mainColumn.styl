@@ -55,8 +55,7 @@
             display: block
             width: 36px
             height: 36px
-            border: 2px solid
-            themeBorderColor('active')
+            border: 2px solid $themeColors.active
             border-radius: 50%
             position: absolute
             top: -4px
@@ -80,10 +79,10 @@
           margin-left: 0
         svg
           path
-            themeFill('icon')
+            fill: $themeColors.icon
           &:hover
             path
-              themeFill('iconDarken1')
+              fill: $themeColors.iconDarken1
   &_tag
     margin-top: 24px
     zoom: 1

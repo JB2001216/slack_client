@@ -29,7 +29,7 @@
 
 .teamColumn
   color: $colors.white;
-  themeBackgroundColor('main')
+  background-color: $themeColors.main
   user-select: none
   max-height: 100vh
   overflow-y: auto

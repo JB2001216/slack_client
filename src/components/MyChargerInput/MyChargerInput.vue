@@ -83,7 +83,7 @@
         white-space: nowrap
         text-overflow: ellipsis
       &_badge
-        themeBackgroundColor('active')
+        background-color: $themeColors.active
         display: inline-block
         position: absolute
         top: -7px
@@ -162,7 +162,7 @@
           height: 17px
           width: 17px
           border: 1px solid #FFFFFF
-          themeBackgroundColor('icon')
+          background-color: $themeColors.icon
           box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16)
           text-align: center
           font-size: 10px
@@ -176,14 +176,13 @@
           transform: scale(0.75, 0.75)
           pointer-events: none
           &:hover
-            themeBackgroundColor('iconDarken1')
+            background-color: $themeColors.iconDarken1
         &:hover
           padding: 0 12px
           .myChargerInput_chargeUsers_item_name
             display: flex
           .myChargerInput_chargeUsers_item_avatar
-            themeBorderColor('active')
-            border: 2px solid
+            border: 2px solid $themeColors.active
             transform: scale(1.25, 1.25)
           .myChargerInput_chargeUsers_item_delete
             opacity: 1
