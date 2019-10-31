@@ -1,13 +1,14 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="markdownEditor" :class="{hideEditor}">
-    <div v-if="!hideEditor" :class="editorClass">
+    <div v-if="!hideEditor" :class="editorClass" @blur="hideList()">
       <textarea
         ref="textarea"
         v-model="input"
         :placeholder="editorPlaceholder"
-        @input="onInput"
-        @keypress.shift.58="showList($event)"
+        @input="onInput($event)"
+        @click="hideList()"
+        @keydown="onKeyDown($event)"
       />
       <div ref="dropdown" :class="{ dropdown: true, inactive: !isListAllowed }">
         <ul
@@ -16,10 +17,12 @@
           aria-labelledby="dropdownMenu"
         >
           <li
-            v-for="note in allNotes"
+            v-for="(note, i) in allNotes"
+            ref="noteList"
             :key="note.id"
-            class="noteSubject"
-            @click="selectNoteLink(note.subject)"
+            :class="{focused: focusedNote === i}"
+            @click="onNoteSelected(note.subject)"
+            @mousemove="onSetFocus(i)"
           >
             {{ note.subject }}
           </li>
@@ -55,9 +58,8 @@
     overflow-x: hidden
   .inactive
     display: none;
-  .noteSubject
-    &:hover
-      background: gray
+  .focused
+    background: gray
   ::-webkit-scrollbar
     background: none
   ::-webkit-scrollbar-thumb
@@ -71,17 +73,19 @@ import marked from '@/lib/marked';
 import highlight from 'highlight.js';
 import sanitizeHtml from 'sanitize-html';
 import * as api from '@/lib/api';
-import { Event } from 'electron';
+import { Event, BrowserWindow } from 'electron';
 
 @Component
 export default class MyMarkdownEditor extends Vue {
   $refs!: {
     textarea: HTMLTextAreaElement;
     dropdown: HTMLDivElement;
+    noteList: HTMLLIElement[];
   }
 
   isListAllowed = false;
   input: string | null = '';
+  focusedNote: number = 0;
 
   // props
   @Prop({ type: String, default: null })
@@ -148,7 +152,8 @@ export default class MyMarkdownEditor extends Vue {
   }
 
   // methods
-  onInput() {
+  onInput(event: any) {
+    console.log(event);
     this.emitInput(this.$refs.textarea.value);
   }
 
@@ -156,7 +161,41 @@ export default class MyMarkdownEditor extends Vue {
     this.$emit('input', v);
   }
 
-  showList(event: Event) {
+  onKeyDown(event: KeyboardEvent) {
+    console.log(event);
+    switch (event.key) {
+      case ':':
+        this.onShowList();
+        break;
+      case 'ArrowUp':
+        if (this.isListAllowed) {
+          this.onUpList(event);
+        }
+        break;
+      case 'ArrowDown':
+        if (this.isListAllowed) {
+          this.onDownList(event);
+        }
+        break;
+      case 'Enter':
+        if (this.isListAllowed) {
+          this.onEnterList(event);
+        }
+        break;
+      default:
+        this.hideList();
+    }
+  }
+
+  onShowList() {
+    this.setListPosition();
+    // shows list
+    this.isListAllowed = true;
+    // focus the first item
+    this.focusedNote = 0;
+  }
+
+  setListPosition() {
     // Calculates the offset X, Y of the list
     // current caret position from start
     var offset = this.$refs.textarea.selectionStart;
@@ -191,6 +230,8 @@ export default class MyMarkdownEditor extends Vue {
     offsetX = offsetX + Math.ceil(context.measureText(rowText).width);
     // adds the textarea left offset
     offsetX = offsetX + this.$refs.textarea.offsetLeft;
+    // move the list to left 10px
+    offsetX = offsetX - 10;
 
     // Calculates the Y of the caret
     let offsetY = 0;
@@ -201,17 +242,23 @@ export default class MyMarkdownEditor extends Vue {
     offsetY = offsetY * row;
     // adds the textarea top offset
     offsetY = offsetY + this.$refs.textarea.offsetTop;
+    // display the list above the line
+    let height = window.getComputedStyle(this.$refs.dropdown).height;
+    if (height !== null) {
+      offsetY = offsetY - parseInt(height.substr(0, height.length - 2));
+    }
 
     // apply styles
     this.$refs.dropdown.style.left = offsetX.toString() + 'px';
     this.$refs.dropdown.style.top = offsetY.toString() + 'px';
-    console.log(rowText);
-    console.log(offsetX);
-    this.isListAllowed = true;
   }
 
-  selectNoteLink(subject: string) {
+  hideList() {
     this.isListAllowed = false;
+  }
+
+  onNoteSelected(subject: string) {
+    this.hideList();
 
     // Apply changes to the value
     var offset = this.$refs.textarea.selectionStart;
@@ -220,11 +267,37 @@ export default class MyMarkdownEditor extends Vue {
       newValue = this.input;
     }
     // Insert the subject of the note
-    newValue = newValue.substring(0, offset) + subject + ':' + newValue.substring(offset);
-    this.input = newValue;
+    let frontText = newValue.substring(0, offset) + subject + ':';
+    let caretPos = frontText.length;
+    newValue = frontText + newValue.substring(offset);
     // Save the changes
+    this.input = newValue;
     this.emitInput(newValue);
+    // Set Focus
+    this.$nextTick(() => {
+      this.$refs.textarea.focus();
+      this.$refs.textarea.setSelectionRange(caretPos, caretPos);
+    });
   }
 
+  onUpList(event: KeyboardEvent) {
+    event.preventDefault();
+    this.onSetFocus((this.allNotes.length + this.focusedNote - 1) % this.allNotes.length);
+  }
+
+  onDownList(event: KeyboardEvent) {
+    event.preventDefault();
+    this.onSetFocus((this.focusedNote + 1) % this.allNotes.length);
+  }
+
+  onEnterList(event: KeyboardEvent) {
+    event.preventDefault();
+    this.onNoteSelected(this.allNotes[this.focusedNote].subject);
+  }
+
+  onSetFocus(i: number) {
+    this.focusedNote = i;
+    this.$refs.noteList[i].scrollIntoView({ block: 'nearest' });
+  }
 }
 </script>
