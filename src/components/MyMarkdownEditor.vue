@@ -165,12 +165,12 @@ export default class MyMarkdownEditor extends Vue {
     }
 
     // gets rows and cols
-    let row = this.input.substr(0, offset).split('\n').length + 1;
-    let lastIndex = this.input.substr(0, offset).lastIndexOf('\n');
+    let row = this.input.substring(0, offset).split('\n').length + 1;
+    let lastIndex = this.input.substring(0, offset).lastIndexOf('\n');
     // text from line start to caret
-    let rowText = this.input.substr(lastIndex, offset);
+    let rowText = this.input.substring(lastIndex, offset);
     // text block from start to caret in lines
-    let colText = this.input.substr(0, lastIndex);
+    let colText = this.input.substring(0, lastIndex);
 
     // create canvas to measure the width of text
     let canvas = document.createElement('canvas');
@@ -185,7 +185,7 @@ export default class MyMarkdownEditor extends Vue {
     // calculates the X of caret
     let offsetX = 0;
     if (style.paddingLeft) {
-      offsetX = parseInt(style.paddingLeft.substr(0, style.paddingLeft.length - 2));
+      offsetX = parseInt(style.paddingLeft.substring(0, style.paddingLeft.length - 2));
     }
     // offset in the textarea
     offsetX = offsetX + Math.ceil(context.measureText(rowText).width);
@@ -195,7 +195,7 @@ export default class MyMarkdownEditor extends Vue {
     // Calculates the Y of the caret
     let offsetY = 0;
     if (style.fontSize) {
-      offsetY = parseInt(style.fontSize.substr(0, style.fontSize.length - 2));
+      offsetY = parseInt(style.fontSize.substring(0, style.fontSize.length - 2));
     }
     // fontSize * line number
     offsetY = offsetY * row;
@@ -205,6 +205,8 @@ export default class MyMarkdownEditor extends Vue {
     // apply styles
     this.$refs.dropdown.style.left = offsetX.toString() + 'px';
     this.$refs.dropdown.style.top = offsetY.toString() + 'px';
+    console.log(rowText);
+    console.log(offsetX);
     this.isListAllowed = true;
   }
 
