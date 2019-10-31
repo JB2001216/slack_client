@@ -10,14 +10,14 @@
         @click="hideList()"
         @keydown="onKeyDown($event)"
       />
-      <div ref="dropdown" :class="{ dropdown: true, inactive: !isListAllowed }">
+      <div ref="dropdown" :class="{ dropdown: true, inactive: !isAddingNoteLink }">
         <ul
           class="dropdown-menu"
           role="menu"
           aria-labelledby="dropdownMenu"
         >
           <li
-            v-for="(note, i) in allNotes"
+            v-for="(note, i) in filteredNotes"
             ref="noteList"
             :key="note.id"
             :class="{focused: focusedNote === i}"
@@ -52,6 +52,7 @@
     left: 0
     overflow: scroll
     height: 200px
+    width: 240px
     background: white
     border: 1px solid gray
     border-radius: 10px
@@ -83,9 +84,11 @@ export default class MyMarkdownEditor extends Vue {
     noteList: HTMLLIElement[];
   }
 
-  isListAllowed = false;
+  isAddingNoteLink = false;
+  startPos : number = 0;
   input: string | null = '';
   focusedNote: number = 0;
+  filteredNotes: Array<api.Note> = [];
 
   // props
   @Prop({ type: String, default: null })
@@ -153,8 +156,8 @@ export default class MyMarkdownEditor extends Vue {
 
   // methods
   onInput(event: any) {
-    console.log(event);
     this.emitInput(this.$refs.textarea.value);
+    this.onCaretPosChange();
   }
 
   emitInput(v: string) {
@@ -162,37 +165,59 @@ export default class MyMarkdownEditor extends Vue {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    console.log(event);
     switch (event.key) {
       case ':':
         this.onShowList();
         break;
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        this.hideList();
+        break;
       case 'ArrowUp':
-        if (this.isListAllowed) {
+        if (this.isAddingNoteLink) {
           this.onUpList(event);
         }
         break;
       case 'ArrowDown':
-        if (this.isListAllowed) {
+        if (this.isAddingNoteLink) {
           this.onDownList(event);
         }
         break;
       case 'Enter':
-        if (this.isListAllowed) {
+        if (this.isAddingNoteLink) {
           this.onEnterList(event);
         }
         break;
-      default:
-        this.hideList();
+    }
+  }
+
+  onCaretPosChange() {
+    if (this.isAddingNoteLink === false || this.input === null) {
+      return;
+    }
+    let curPos = this.$refs.textarea.selectionStart;
+    if (this.startPos > curPos) {
+      this.filteredNotes = [];
+    }
+    let filter = this.input.substring(this.startPos, curPos);
+    this.filteredNotes = this.allNotes.filter((note) => note.subject.includes(filter));
+    if (this.filteredNotes.length === 0) {
+      this.hideList();
     }
   }
 
   onShowList() {
     this.setListPosition();
     // shows list
-    this.isListAllowed = true;
+    this.isAddingNoteLink = true;
     // focus the first item
     this.focusedNote = 0;
+    // save current cursor position
+    this.startPos = this.$refs.textarea.selectionStart + 1;
+  }
+
+  hideList() {
+    this.isAddingNoteLink = false;
   }
 
   setListPosition() {
@@ -253,23 +278,19 @@ export default class MyMarkdownEditor extends Vue {
     this.$refs.dropdown.style.top = offsetY.toString() + 'px';
   }
 
-  hideList() {
-    this.isListAllowed = false;
-  }
-
   onNoteSelected(subject: string) {
     this.hideList();
 
     // Apply changes to the value
-    var offset = this.$refs.textarea.selectionStart;
+    let curPos = this.$refs.textarea.selectionStart;
     let newValue = '';
     if (this.input !== null) {
       newValue = this.input;
     }
     // Insert the subject of the note
-    let frontText = newValue.substring(0, offset) + subject + ':';
+    let frontText = newValue.substring(0, this.startPos) + subject + ':';
     let caretPos = frontText.length;
-    newValue = frontText + newValue.substring(offset);
+    newValue = frontText + newValue.substring(curPos);
     // Save the changes
     this.input = newValue;
     this.emitInput(newValue);
@@ -282,17 +303,17 @@ export default class MyMarkdownEditor extends Vue {
 
   onUpList(event: KeyboardEvent) {
     event.preventDefault();
-    this.onSetFocus((this.allNotes.length + this.focusedNote - 1) % this.allNotes.length);
+    this.onSetFocus((this.filteredNotes.length + this.focusedNote - 1) % this.filteredNotes.length);
   }
 
   onDownList(event: KeyboardEvent) {
     event.preventDefault();
-    this.onSetFocus((this.focusedNote + 1) % this.allNotes.length);
+    this.onSetFocus((this.focusedNote + 1) % this.filteredNotes.length);
   }
 
   onEnterList(event: KeyboardEvent) {
     event.preventDefault();
-    this.onNoteSelected(this.allNotes[this.focusedNote].subject);
+    this.onNoteSelected(this.filteredNotes[this.focusedNote].subject);
   }
 
   onSetFocus(i: number) {
