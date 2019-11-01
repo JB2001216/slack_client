@@ -111,8 +111,10 @@ class EventsSubscription {
         spaceId: data.spaceId,
       }).then((res) => {
         store.mutations.activeUser.addSpaceUser(...res.results);
-        store.mutations.settingRouter.to('space-members');
-        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.spaceMemberInvite.invitedMessage').toString(), 'name': 'success' }); }
+        if (isFireUser) {
+          store.mutations.settingRouter.to('space-members');
+          appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.spaceMemberInvite.invitedMessage').toString(), 'name': 'success' });
+        }
       }).catch((err) => { console.log(err); });
 
     }
