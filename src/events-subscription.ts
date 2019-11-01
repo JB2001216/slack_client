@@ -1,25 +1,30 @@
 import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
-import { apiRegistry, SpacesApi, UsersApi, SpaceUser } from '@/lib/api/';
+import { apiRegistry, SpacesApi, UsersApi } from '@/lib/api/';
 import router, { getUserLastLocation } from '@/router';
-
 
 class EventsSubscription {
 
   private url: string = process.env.VUE_APP_NOTIFICATION_BASE_PATH + '/notifications/subscribe?space_id=';
-  private spaceId: any;
+  private users: any = [];
   source: any;
 
-  init(myUser: any): void {
+  init(usersArr: any = null): void {
 
-    // check if myUser is defined and not the same spaceId
-    if (!myUser || this.spaceId === myUser.space.id) { return; }
+    // get myUser
+    const myUser = store.state.activeUser.myUser!;
+
+    // get users array
+    if (usersArr && usersArr.length >= 0) { this.users = usersArr; }
+
+    // check if myUser and users is defined and not empty
+    if (!myUser || this.users.length === 0) { return; }
 
     const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
     const usersApi = apiRegistry.load(UsersApi, myUser.token);
 
-    this.spaceId = myUser.space.id;
+    const usersSpaceIds = this.users.map((user: any) => { return user.space.id; }).join('_');
 
     // close Event Source if it was already opened
     if (this.source) {
@@ -35,7 +40,7 @@ class EventsSubscription {
     }
 
     // init Event Source
-    this.source = new EventSource(this.url + this.spaceId);
+    this.source = new EventSource(this.url + usersSpaceIds);
 
     // init listeners
     this.source.addEventListener('updateSpace', updateSpaceTask);
@@ -148,93 +153,95 @@ class EventsSubscription {
 
     }
 
-    this.source.addEventListener('createProject', (e: any) => {
-      console.log('createProject');
-      const data = JSON.parse(e.data);
-      // store.mutations.activeUser.addProject(e);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('createProject', (e: any) => {
+    //   console.log('createProject');
+    //   const data = JSON.parse(e.data);
+    //   // store.mutations.activeUser.addProject(e);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('updateProject', (e: any) => {
-      console.log('updateProject');
-      const data = JSON.parse(e.data);
-      // store.mutations.activeUser.editProject(resObj.data.params);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('updateProject', (e: any) => {
+    //   console.log('updateProject');
+    //   const data = JSON.parse(e.data);
+    //   // store.mutations.activeUser.editProject(resObj.data.params);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('deleteProject', (e: any) => {
-      console.log('deleteProject');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('deleteProject', (e: any) => {
+    //   console.log('deleteProject');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('createProjectUser', (e: any) => {
-      console.log('createProjectUser');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('createProjectUser', (e: any) => {
+    //   console.log('createProjectUser');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('updateProjectUser', (e: any) => {
-      console.log('updateProjectUser');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('updateProjectUser', (e: any) => {
+    //   console.log('updateProjectUser');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('createTask', (e: any) => {
-      console.log('createTask');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('createTask', (e: any) => {
+    //   console.log('createTask');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('updateTask', (e: any) => {
-      console.log('updateTask');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('updateTask', (e: any) => {
+    //   console.log('updateTask');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('createTaskComment', (e: any) => {
-      console.log('createTaskComment');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('createTaskComment', (e: any) => {
+    //   console.log('createTaskComment');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('updateTaskComment', (e: any) => {
-      console.log('updateTaskComment');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('updateTaskComment', (e: any) => {
+    //   console.log('updateTaskComment');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('deleteTaskComment', (e: any) => {
-      console.log('deleteTaskComment');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('deleteTaskComment', (e: any) => {
+    //   console.log('deleteTaskComment');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('createNote', (e: any) => {
-      console.log('createNote');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('createNote', (e: any) => {
+    //   console.log('createNote');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('updateNote', (e: any) => {
-      console.log('updateNote');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('updateNote', (e: any) => {
+    //   console.log('updateNote');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
-    this.source.addEventListener('deleteNote', (e: any) => {
-      console.log('deleteNote');
-      const data = JSON.parse(e.data);
-      // DO UPDATE HERE
-    });
+    // this.source.addEventListener('deleteNote', (e: any) => {
+    //   console.log('deleteNote');
+    //   const data = JSON.parse(e.data);
+    //   // DO UPDATE HERE
+    // });
 
     // error event
-    this.source.onerror = () => {
-      console.error('Something went wrong');
+    this.source.onerror = (err: any) => {
+      console.error(err);
     };
 
   }
 
 }
 
-export const eventsSub = new EventsSubscription();
+const eventsSub = new EventsSubscription();
+
+export default eventsSub;

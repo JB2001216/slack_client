@@ -1,7 +1,7 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import * as api from '@/lib/api';
 import { SpaceRoles, ProjectRoles, Perm } from '@/lib/permissions';
-import { eventsSub } from '@/events-subscription';
+import eventsSub from '@/events-subscription';
 
 interface LoggedInUser extends api.MyUser {
   token: string;
@@ -111,7 +111,7 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     this.clear();
     this.state.myUser = user;
     this.state.projects = projects;
-    eventsSub.init(user);
+    eventsSub.init();
   }
 
   addSpaceUser(...spaceUsers: api.SpaceUser[]) {

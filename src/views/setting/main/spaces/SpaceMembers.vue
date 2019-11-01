@@ -85,7 +85,7 @@ import { StateChanger } from 'vue-infinite-loading';
 import { apiRegistry, SpacesApi, SpaceUser } from '@/lib/api';
 import { SpaceRoles, SpaceRole } from '@/lib/permissions';
 import MySpaceRoleSelect from '@/components/MySpaceRoleSelect.vue';
-import { eventsSub } from '@/events-subscription';
+import eventsSub from '@/events-subscription';
 
 interface SpaceUserWithCurrentRole extends SpaceUser {
   currentRole: SpaceRole;
