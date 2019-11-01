@@ -37,6 +37,7 @@ class EventsSubscription {
       this.source.removeEventListener('updateSpaceUser', updateSpaceUserTask);
       this.source.removeEventListener('deleteSpaceUser', deleteSpaceUserTask);
       this.source.removeEventListener('createProject', createProjectTask);
+      this.source.removeEventListener('updateProject', updateProjectTask);
 
       this.source.close();
     }
@@ -52,6 +53,7 @@ class EventsSubscription {
     this.source.addEventListener('updateSpaceUser', updateSpaceUserTask);
     this.source.addEventListener('deleteSpaceUser', deleteSpaceUserTask);
     this.source.addEventListener('createProject', createProjectTask);
+    this.source.addEventListener('updateProject', updateProjectTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -186,19 +188,23 @@ class EventsSubscription {
 
     }
 
-    // this.source.addEventListener('createProject', (e: any) => {
-    //   console.log('createProject');
-    //   const data = JSON.parse(e.data);
-    //   // store.mutations.activeUser.addProject(e);
-    //   // DO UPDATE HERE
-    // });
+    function updateProjectTask(e: any): void {
 
-    // this.source.addEventListener('updateProject', (e: any) => {
-    //   console.log('updateProject');
-    //   const data = JSON.parse(e.data);
-    //   // store.mutations.activeUser.editProject(resObj.data.params);
-    //   // DO UPDATE HERE
-    // });
+      const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
+
+      projectsApi.projectsProjectIdGet({
+        spaceId: data.spaceId,
+        projectId: data.params.projectId,
+      }).then((res) => {
+
+        store.mutations.activeUser.editProject(res);
+
+        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.projectAddColumn.updateNotification').toString(), 'name': 'success' }); }
+
+      }).catch((err) => { console.log(err); });
+
+    }
 
     // this.source.addEventListener('deleteProject', (e: any) => {
     //   console.log('deleteProject');

@@ -90,6 +90,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       addANewProject: string;
       projectName: string;
       createNotification: string;
+      updateNotification: string;
     };
     tasksColumn: {
       addANewTask: string;

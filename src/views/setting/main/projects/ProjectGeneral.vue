@@ -33,7 +33,7 @@ export default class ProjectGeneral extends Vue {
   saving: boolean = false;
 
   get activeProject() {
-    return this.$store.getters.activeUser.activeProject;
+    return this.$store.getters.activeUser.activeProject!;
   }
 
   get myUser() {
@@ -41,18 +41,22 @@ export default class ProjectGeneral extends Vue {
   }
 
   async save() {
+
     if (this.saving) return;
 
     try {
+
       this.saving = true;
+
       const projectsApi = apiRegistry.load(ProjectsApi, this.myUser.token);
-      const project = await projectsApi.projectsProjectIdPut({
+
+      await projectsApi.projectsProjectIdPut({
         spaceId: this.myUser.space.id,
-        projectId: this.$store.state.activeUser.activeProjectData!.id,
+        projectId: this.activeProject.id,
         projectsProjectIdPutRequestBody: { displayName: this.inputName },
       });
-      // this.$store.mutations.activeUser.editProject(project); (!!! moved to events-subscription.ts)
-      // this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success'); (!!! moved to events-subscription.ts)
+
+
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
@@ -65,5 +69,6 @@ export default class ProjectGeneral extends Vue {
       this.inputName = this.activeProject.displayName;
     }
   }
+
 }
 </script>

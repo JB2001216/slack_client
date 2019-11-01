@@ -80,6 +80,7 @@ const struct: LocaleStruct = {
         addANewProject: 'Add a new Project',
         projectName: 'Project Name',
         createNotification: 'Project Created',
+        updateNotification: 'Project Updated',
       },
       tasksColumn: {
         addANewTask: 'Add a new task',
