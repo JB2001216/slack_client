@@ -1,7 +1,7 @@
 import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
-import { apiRegistry, SpacesApi, UsersApi } from '@/lib/api/';
+import { apiRegistry, SpacesApi, UsersApi, ProjectsApi } from '@/lib/api/';
 import router, { getUserLastLocation } from '@/router';
 
 class EventsSubscription {
@@ -23,6 +23,7 @@ class EventsSubscription {
 
     const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
     const usersApi = apiRegistry.load(UsersApi, myUser.token);
+    const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
 
     const usersSpaceIds = this.users.map((user: any) => { return user.space.id; }).join('_');
 
@@ -35,6 +36,7 @@ class EventsSubscription {
       this.source.removeEventListener('createSpaceUser', createSpaceUserTask);
       this.source.removeEventListener('updateSpaceUser', updateSpaceUserTask);
       this.source.removeEventListener('deleteSpaceUser', deleteSpaceUserTask);
+      this.source.removeEventListener('createProject', createProjectTask);
 
       this.source.close();
     }
@@ -49,6 +51,7 @@ class EventsSubscription {
     this.source.addEventListener('createSpaceUser', createSpaceUserTask);
     this.source.addEventListener('updateSpaceUser', updateSpaceUserTask);
     this.source.addEventListener('deleteSpaceUser', deleteSpaceUserTask);
+    this.source.addEventListener('createProject', createProjectTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -149,6 +152,36 @@ class EventsSubscription {
       }).then((res) => {
         store.mutations.activeUser.addSpaceUser(...res.results);
         if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('common.deleted').toString(), 'name': 'success' }); }
+      }).catch((err) => { console.log(err); });
+
+    }
+
+    function createProjectTask(e: any): void {
+
+      const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
+
+      projectsApi.projectsProjectIdGet({
+        spaceId: data.spaceId,
+        projectId: data.params.projectId,
+      }).then((res) => {
+
+        store.mutations.activeUser.addProject(res);
+
+        if (isFireUser) {
+
+          router.push({
+            name: 'project',
+            params: {
+              userId: myUser.id + '',
+              projectId: res.id + '',
+            },
+          });
+
+          appEventBus.emit('flash', { 'message': i18n.t('views.projectAddColumn.createNotification').toString(), 'name': 'success' });
+
+        }
+
       }).catch((err) => { console.log(err); });
 
     }

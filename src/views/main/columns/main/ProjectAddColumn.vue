@@ -37,32 +37,25 @@ export default class ProjectAddColumn extends Vue {
   saving = false;
 
   async save() {
+
     if (this.saving) return;
 
     const loginUser = this.$store.state.activeUser.myUser!;
     const projectsApi = apiRegistry.load(ProjectsApi, loginUser.token);
 
     try {
+
       this.saving = true;
 
-      const project = await projectsApi.projectsPost({
+      await projectsApi.projectsPost({
         spaceId: loginUser.space.id,
         projectsPostRequestBody: {
           displayName: this.displayName,
         },
       });
 
-      // this.$store.mutations.activeUser.addProject(project); (!!! moved to events-subscription.ts)
-
-      this.$router.push({
-        name: 'project',
-        params: {
-          userId: loginUser.id.toString(),
-          projectId: project.id.toString(),
-        },
-      });
-
     } catch (err) {
+
       if (err instanceof Response) {
         const json = await getJsonFromResponse(err);
         if (json && json.error === ApiErrors.ValidationError) {
@@ -75,7 +68,9 @@ export default class ProjectAddColumn extends Vue {
 
       this.$appEmit('error', { err });
       this.saving = false;
+
     }
   }
+
 }
 </script>
