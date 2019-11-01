@@ -69,9 +69,9 @@ class EventsSubscription {
 
       store.mutations.removeLoggedInUser(data.userId);
 
-      const loggedInUsersArr = store.state.loggedInUsers;
-
       if (isFireUser) {
+
+        const loggedInUsersArr = store.state.loggedInUsers;
 
         if (loggedInUsersArr.length > 0) {
           const loggedInUser = loggedInUsersArr[0];
