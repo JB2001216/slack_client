@@ -71,14 +71,18 @@ class EventsSubscription {
 
       const loggedInUsersArr = store.state.loggedInUsers;
 
-      if (loggedInUsersArr.length > 0) {
-        const loggedInUser = loggedInUsersArr[0];
-        router.push(getUserLastLocation(loggedInUser.id));
-      } else {
-        router.push({ name: 'space-add1' });
-      }
+      if (isFireUser) {
 
-      if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('common.deleted').toString(), 'name': 'success' }); }
+        if (loggedInUsersArr.length > 0) {
+          const loggedInUser = loggedInUsersArr[0];
+          router.push(getUserLastLocation(loggedInUser.id));
+        } else {
+          router.push({ name: 'space-add1' });
+        }
+
+        appEventBus.emit('flash', { 'message': i18n.t('common.deleted').toString(), 'name': 'success' });
+
+      }
 
     }
 
