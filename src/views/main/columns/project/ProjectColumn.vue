@@ -5,6 +5,7 @@
         <template v-slot="{open, close, opened}">
           <h1 class="projectColumn_head_title t-sub" @click.stop="opened ? close() : open()">
             <span class="projectColumn_head_title_text">{{ myUser.space.displayName || myUser.space.account }}</span>
+            <my-svg-icon class="projectColumn_head_title_icon" name="pulldown" />
           </h1>
         </template>
         <template v-slot:items>
@@ -80,29 +81,23 @@
   &_head
     padding: $sizes.windowMarginTop 20px 20px
     &_title
-      display: block
+      display: inline-block
       cursor: pointer
       position: relative
+      max-width: 100%
+      white-space: nowrap
       &_text
-        display: block
-        max-width: calc(100% - 20px)
+        max-width: calc(100% - 18px)
         white-space: nowrap
         overflow: hidden
         text-overflow: ellipsis
-      &:after
-        content: ""
-        display: block
-        width: 5px
-        height: 5px
-        border-top: 2px solid $colors.white
-        border-right: 2px solid $colors.white
-        transform: rotate(135deg)
-        pointer-events: none
-        position: absolute
-        top: 0
-        right: 3px
-        bottom: 0
-        margin: auto
+        display: inline-block
+        padding-right: 10px
+      &_icon
+        vertical-align: top
+        margin-top: 10px
+        --mySvgIconColor: $colors.white
+        --mySvgIconSize: 9px
   &_add
     position: relative
     &_plus
@@ -148,6 +143,7 @@
 
   &_spaceMenu.mySimpleMenu
     display: block
+    height: 28px
     .mySimpleMenu_popup
       width: auto
       ul

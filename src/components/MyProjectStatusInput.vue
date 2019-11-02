@@ -34,7 +34,7 @@
       @click.stop="showOtherDialog()"
     >
       <span class="myProjectStatusInput_etc_text">{{ isEtc(selectedOption) ? selectedOption.name : $t('components.myProjectStatusInput.others') }}</span>
-      <img class="myProjectStatusInput_etc_icon" src="~@/assets/images/icn/pulldown2.svg">
+      <my-svg-icon name="pulldown" class="myProjectStatusInput_etc_icon" />
       <transition name="fade">
         <div v-if="selectingEtc" class="myProjectStatusInput_etc_dialog">
           <div
@@ -185,6 +185,8 @@
       cursor: pointer
     &_icon
       vertical-align: middle
+      --mySvgIconColor: $colors.white
+      --mySvgIconSize: 9px
     &_text
       vertical-align: middle
       display: inline-block
@@ -252,7 +254,7 @@ const styles = {
   etcPaddingHorizontal: 32,
   etcTextMaxWidth: 100,
   etcTextMarginRight: 4,
-  etcIconWidth: 10,
+  etcIconWidth: 9,
   itemPaddingHorizontal: 30,
   itemLastPadding: 14,
 };
