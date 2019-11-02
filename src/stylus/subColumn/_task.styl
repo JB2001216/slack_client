@@ -10,11 +10,15 @@
     &_favorite
       transition: 0.5s
       display: flex
-      fill: $themeColors.icon
-      &:not(.active):hover
-        fill: $themeColors.iconDarken1
+      cursor: pointer
+      --mySvgIconSize: 16px
+      --mySvgIconColor: $themeColors.icon
+      &:hover
+        --mySvgIconColor: $themeColors.iconDarken1
+      &.active
+        --mySvgIconColor: $colors.primaryBlue
       &.active:hover
-        fill: #EDA62A
+        --mySvgIconColor: $colors.primaryBlueDarken1
     &_right
       a
         color: #333
@@ -132,4 +136,4 @@
       &:hover
         fill: $themeColors.iconDarken1
     &_date
-      padding: 0 8px 0 4px
+      padding: 1px 8px 0 4px

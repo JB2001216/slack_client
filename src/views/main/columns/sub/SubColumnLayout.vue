@@ -82,13 +82,13 @@
       &_item
         cursor: pointer
         --mySvgIconSize: 19px
-        --mySvgIconColor: $colors.gray
+        --mySvgIconColor: $themeColors.icon
         &:hover
-          --mySvgIconColor: $colors.grayDarken5
+          --mySvgIconColor: $themeColors.iconDarken1
         &:not(:first-child)
           margin-left: 16px
     &_menuContainer
-      .other_status
+      .mySimpleMenu_popup
         width: auto
         ul
           width: auto

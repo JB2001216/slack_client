@@ -145,10 +145,8 @@
       margin-left: 1px
       margin-right: 5px
     .task_item_date
-      font-size: 12px
-      .myDateRangeInput_view_icon
-        width: 19px
-        height: 19px
+      .myDateRangeInput_view_value
+        font-size: 12px
     .task_item_date.disabled
       display: none
     &:not(:hover)
