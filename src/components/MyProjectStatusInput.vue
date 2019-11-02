@@ -277,7 +277,7 @@ export default class MyProjectStatusInput extends Vue {
   defaultColor = '#6FCF97';
 
   componentWidth: number = 0;
-  resizeObserver: ResizeObserver = new window.ResizeObserver(this.onResize);
+  resizeObserver: ResizeObserver = null as any;
 
   get progressOptionsWithTextWidth(): ProjectStatusOptionWithWidth[] {
     const componentWidth = this.componentWidth;
@@ -443,6 +443,7 @@ export default class MyProjectStatusInput extends Vue {
 
   mounted() {
     document.addEventListener('click', this.onDocumentClick);
+    this.resizeObserver = new window.ResizeObserver(this.onResize);
     this.resizeObserver.observe(this.$el);
   }
 
