@@ -80,7 +80,6 @@ const struct: LocaleStruct = {
         addANewProject: 'Add a new Project',
         projectName: 'Project Name',
         createNotification: 'Project Created',
-        updateNotification: 'Project Updated',
       },
       tasksColumn: {
         addANewTask: 'Add a new task',
@@ -193,6 +192,12 @@ const struct: LocaleStruct = {
           projectGeneral: {
             title: 'Project name',
             save: 'Save changes',
+            delete: 'Delete Project',
+            updateNotification: 'Project Updated',
+            deleteNotification: 'Project Deleted',
+            confirmationMsg: 'Are you sure you want to delete this project ?',
+            confirm: 'Delete',
+            cancel: 'Cancel',
           },
           projectMembers: {
             memberList: 'Member List',

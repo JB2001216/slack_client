@@ -2,7 +2,7 @@ import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
 import { apiRegistry, SpacesApi, UsersApi, ProjectsApi } from '@/lib/api/';
-import router, { getUserLastLocation } from '@/router';
+import router, { getUserLastLocation, getProjectLastLocation } from '@/router';
 
 class EventsSubscription {
 
@@ -38,6 +38,7 @@ class EventsSubscription {
       this.source.removeEventListener('deleteSpaceUser', deleteSpaceUserTask);
       this.source.removeEventListener('createProject', createProjectTask);
       this.source.removeEventListener('updateProject', updateProjectTask);
+      this.source.removeEventListener('deleteProject', deleteProjectTask);
 
       this.source.close();
     }
@@ -54,6 +55,7 @@ class EventsSubscription {
     this.source.addEventListener('deleteSpaceUser', deleteSpaceUserTask);
     this.source.addEventListener('createProject', createProjectTask);
     this.source.addEventListener('updateProject', updateProjectTask);
+    this.source.addEventListener('deleteProject', deleteProjectTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -200,17 +202,38 @@ class EventsSubscription {
 
         store.mutations.activeUser.editProject(res);
 
-        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.projectAddColumn.updateNotification').toString(), 'name': 'success' }); }
+        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectGeneral.updateNotification').toString(), 'name': 'success' }); }
 
       }).catch((err) => { console.log(err); });
 
     }
 
-    // this.source.addEventListener('deleteProject', (e: any) => {
-    //   console.log('deleteProject');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
+    function deleteProjectTask(e: any): void {
+
+      const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
+
+      projectsApi.projectsGet({
+        spaceId: data.spaceId,
+      }).then((res) => {
+
+        store.actions.activeUser.init(myUser);
+
+        if (isFireUser) {
+
+          const projectArr = res.results;
+
+          if (projectArr.length > 0) {
+            router.push(getProjectLastLocation(myUser.id, projectArr[0].id));
+          }
+
+          appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectGeneral.deleteNotification').toString(), 'name': 'success' });
+
+        }
+
+      }).catch((err) => { console.log(err); });
+
+    }
 
     // this.source.addEventListener('createProjectUser', (e: any) => {
     //   console.log('createProjectUser');

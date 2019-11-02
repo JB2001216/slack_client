@@ -81,7 +81,6 @@ const struct: LocaleStruct = {
         addANewProject: 'プロジェクト追加',
         projectName: 'プロジェクト名',
         createNotification: 'プロジェクト作成',
-        updateNotification: 'プロジェクトが更新されました',
       },
       tasksColumn: {
         addANewTask: '新規タスク',
@@ -194,6 +193,12 @@ const struct: LocaleStruct = {
           projectGeneral: {
             title: 'プロジェクト名',
             save: '変更を保存する',
+            delete: 'プロジェクトを削除',
+            updateNotification: 'プロジェクトが更新されました',
+            deleteNotification: 'プロジェクトを削除しました',
+            confirmationMsg: 'このプロジェクトを削除してもよろしいですか？',
+            confirm: '削除する',
+            cancel: 'キャンセル',
           },
           projectMembers: {
             memberList: 'メンバー一覧',
