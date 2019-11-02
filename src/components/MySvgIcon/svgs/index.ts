@@ -8,6 +8,7 @@ import SvgHome from './SvgHome.vue';
 import SvgLink from './SvgLink.vue';
 import SvgMenu from './SvgMenu.vue';
 import SvgPen from './SvgPen.vue';
+import SvgPulldown from './SvgPulldown.vue';
 import SvgQuestion from './SvgQuestion.vue';
 import SvgSearch from './SvgSearch.vue';
 import SvgStar from './SvgStar.vue';
@@ -24,6 +25,7 @@ export default {
   SvgLink,
   SvgMenu,
   SvgPen,
+  SvgPulldown,
   SvgQuestion,
   SvgSearch,
   SvgStar,

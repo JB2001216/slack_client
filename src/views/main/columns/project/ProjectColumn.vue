@@ -148,7 +148,7 @@
 
   &_spaceMenu.mySimpleMenu
     display: block
-    .other_status
+    .mySimpleMenu_popup
       width: auto
       ul
         width: auto

@@ -1,5 +1,5 @@
 <template>
-  <component :is="svgClass" class="mySvgIcon" :class="{[svgName]: true}" />
+  <component :is="svgClass" class="mySvgIcon" :class="{[svgName]: true}" v-on="$listeners" />
 </template>
 
 

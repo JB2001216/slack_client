@@ -62,13 +62,17 @@
     user-select: none
     white-space: nowrap;
     &_icon
-      vertical-align: middle
+      vertical-align: top
+      --mySvgIconSize: 19px
       path
         fill: $themeColors.icon
     &_value
-      vertical-align: middle
+      vertical-align: top
       color: $themeColors.icon
       white-space: nowrap
+      display: inline-block
+      font-size: 13px
+      line-height: 19px
   &_pop
     position: fixed
     padding: 10px
@@ -105,8 +109,7 @@
   &:not(.disabled)
     &:hover
       .myDateRangeInput_view_icon
-        &_path
-          fill: $themeColors.iconDarken1
+        --mySvgIconColor: $themeColors.iconDarken1
       .myDateRangeInput_view_value
         color: $themeColors.iconDarken1
   .vc-container

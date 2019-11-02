@@ -7,14 +7,14 @@
 .mainColumn
   &.fullMainColumn
     grid-column: 2 / 5
-  .columnTitle
+  &_head
     padding: $sizes.windowMarginTop 20px 16px
     display: flex
     justify-content: space-between
     align-items: center
     h2
       display: block
-      width: calc(100% - 220px)
+      width: calc(100% - 230px)
       font-size: 18px
       font-weight: normal
     input[type=text]
@@ -27,6 +27,18 @@
       padding: 8px
       max-width: 100%
       min-width: 100px
+    &_toolbar
+      display: flex
+      align-items: center
+      &_item
+        cursor: pointer
+        --mySvgIconSize: 19px
+        --mySvgIconColor: $themeColors.icon
+        &:hover
+          --mySvgIconColor: $themeColors.iconDarken1
+        &:not(:first-child)
+          margin-left: 16px
+
 
 .dashboardWrap
   padding: 8px 19px 0 19px
@@ -38,53 +50,9 @@
     display: flex
     justify-content: space-between
     align-items: center
-    margin-bottom 24px
-    &_user
-      zoom: 1
-      &:after
-        content: ""
-        clear: both
-        display: block
-      dd
-        float: left
-        margin-right: 8px
-        position: relative
-        &.active
-          &:before
-            content: ""
-            display: block
-            width: 36px
-            height: 36px
-            border: 2px solid $themeColors.active
-            border-radius: 50%
-            position: absolute
-            top: -4px
-            left: -4px
-        &.dots
-          padding: 4px 0
-    &_menu
-      display: flex
-      flex-wrap: nowrap
-      margin-left: 12px
-      zoom: 1
-      &:after
-        content: ""
-        clear: both
-        display: block
-      >dd
-        margin-left: 14px
-        flex-shrink: 1
-        cursor: pointer
-        &:first-child
-          margin-left: 0
-        svg
-          path
-            fill: $themeColors.icon
-          &:hover
-            path
-              fill: $themeColors.iconDarken1
+    margin-bottom 15px
   &_tag
-    margin-top: 24px
+    margin-top: 15px
     zoom: 1
     &:after
       content: ""

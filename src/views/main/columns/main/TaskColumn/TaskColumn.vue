@@ -141,14 +141,16 @@
 
 .taskColumn
   .favoriteIcon
-    &.active path
-      fill: #EDA62A !important
+    &.active
+      --mySvgIconColor: $colors.primaryBlue
+    &.active:hover
+      --mySvgIconColor: $colors.primaryBlueDarken1
   .dashboardWrap_task
     position: relative
     &_editButton
       position: absolute
       right: 0px
-      top: 20px
+      top: 0
     .noteEditWrap_post
       margin-top: 0
       &_view,
