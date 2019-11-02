@@ -225,6 +225,8 @@ class EventsSubscription {
 
           if (projectArr.length > 0) {
             router.push(getProjectLastLocation(myUser.id, projectArr[0].id));
+          } else {
+            router.back();
           }
 
           appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectGeneral.deleteNotification').toString(), 'name': 'success' });
