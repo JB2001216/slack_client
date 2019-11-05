@@ -364,15 +364,20 @@ export default class NoteColumn extends Vue {
     if (markdown === null || markdown === undefined) {
       return markdown;
     }
+    let related : Array<number> = [];
     const noteLink = /:([^:\n]*):/g;
     const raw = markdown.replace(noteLink, (match, data) => {
       const note = this.allNotes.find((note) => note.subject === data);
       if (note === undefined) {
         return match;
       }
+      related.push(note.id);
       return `[[note:${note.id}]${data}]`;
     });
-    return raw;
+    return {
+      body: raw,
+      related: related,
+    };
   }
 
   async save(data: api.NotesNoteIdPatchRequestBody) {
@@ -382,14 +387,15 @@ export default class NoteColumn extends Vue {
     const loginUser = store.state.activeUser.myUser!;
     const projectId = store.getters.activeUser.activeProjectId!;
     const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
-    let newData = Object.assign({}, data, { body: this.noteTitleToId(data.body) });
+    let newData = Object.assign({}, data, this.noteTitleToId(data.body));
+    console.log(newData);
     try {
       this.saving = true;
       const note = await notesApi.notesNoteIdPatch({
         spaceId: loginUser.space.id,
         projectId,
         noteId: parseInt(this.$route.params.noteId),
-        notesNoteIdPatchRequestBody: data,
+        notesNoteIdPatchRequestBody: newData,
       });
       note.body = this.noteIdToTitle(note.body);
       this.$appEmit('note-edited', { note });
