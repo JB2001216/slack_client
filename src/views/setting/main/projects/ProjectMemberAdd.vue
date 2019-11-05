@@ -27,14 +27,13 @@
           <td>{{ data.user.email }}</td>
           <td>{{ data.user.displayName || data.user.account }}</td>
           <td class="clearfix">
-            <div class="select">
-              <my-project-role-select
-                v-model="data.body.projectRoleId"
-                :my-space-role="mySpaceRole"
-                :my-project-role="myProjectRole"
-                :current-space-role="getSpaceRole(data.user.spaceRoleId)"
-              />
-            </div>
+            <my-project-role-select
+              v-model="data.body.projectRoleId"
+              class="select basicSelect"
+              :my-space-role="mySpaceRole"
+              :my-project-role="myProjectRole"
+              :current-space-role="getSpaceRole(data.user.spaceRoleId)"
+            />
             <button @click="onRemove(data.user.id)" />
           </td>
         </tr>
@@ -45,6 +44,12 @@
         </button>
       </div>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
@@ -59,17 +64,18 @@
 
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Mixins } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi, ProjectsApi, ApiErrors, getJsonFromResponse, SpaceUser, ProjectsProjectIdUsersPostRequestBody } from '@/lib/api';
 import { SpaceRoles, SpaceRole, ProjectRoles } from '@/lib/permissions';
 import MyProjectRoleSelect from '@/components/MyProjectRoleSelect.vue';
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 
 @Component({
   components: {
     MyProjectRoleSelect,
   },
 })
-export default class ProjectMemberAdd extends Vue {
+export default class ProjectMemberAdd extends Mixins(ConfirmChangeDiscardForSettingMixin) {
   users: { user: SpaceUser; body: ProjectsProjectIdUsersPostRequestBody }[] = [];
   page = 1;
   limit = 10;
@@ -111,6 +117,10 @@ export default class ProjectMemberAdd extends Vue {
   get defaultRole() {
     const roles = this.selectableRoles;
     return roles[roles.length - 1];
+  }
+
+  get changes() {
+    return !!this.users.length;
   }
 
   getSpaceRole(spaceRoleId: number) {
@@ -160,7 +170,8 @@ export default class ProjectMemberAdd extends Vue {
 
     if (!errorUsers.length) {
       this.$flash(this.$t('views.setting.main.projectMemberAdd.addedMessage').toString(), 'success');
-      this.$store.mutations.settingRouter.to('project-members');
+      this.users = [];
+      this.$store.actions.settingRouter.to('project-members');
       return;
     }
 

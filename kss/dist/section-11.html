@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,300">
     <link rel="stylesheet" href="kss-assets/vendor/prism.css">
     <link rel="stylesheet" href="kss-assets/css/kss.css">
-    <link rel="stylesheet" href="./full.css">
+    <link rel="stylesheet" href="./main.css">
 
   </head>
 
@@ -89,6 +89,12 @@
                     <li class="kss-nav__item ">
                       <a href="section-11.html#kssref-11-6">
                         <span class="kss-nav__ref">11.6</span>
+                        <span class="kss-nav__name">Basic Select</span>
+                      </a>
+                    </li>
+                    <li class="kss-nav__item ">
+                      <a href="section-11.html#kssref-11-7">
+                        <span class="kss-nav__ref">11.7</span>
                         <span class="kss-nav__name">Modal Dialog</span>
                       </a>
                     </li>
@@ -110,7 +116,7 @@
             <header class="kss-section kss-section--depth-1" id="kssref-11">
 
             <article class="kss-section__content">
-                <p class="kss-section__source">Source: <span>_fixed/styleguide/_section.styl</span>, line <span>13</span></p>
+                <p class="kss-section__source">Source: <span>_styleguide/_section.styl</span>, line <span>13</span></p>
 
               <a class="kss-section__permalink" href="#kssref-11">
                 <h1 class="kss-section__item kss-section__item--depth-1">
@@ -127,7 +133,7 @@
             <section class="kss-section kss-section--depth-2" id="kssref-11-1">
 
             <article class="kss-section__content">
-                <p class="kss-section__source">Source: <span>_fixed/common/parts/_basicButton.styl</span>, line <span>1</span></p>
+                <p class="kss-section__source">Source: <span>common/_components/_basicButton.styl</span>, line <span>1</span></p>
 
               <a class="kss-section__permalink" href="#kssref-11-1">
                 <h2 class="kss-section__item kss-section__item--depth-2">
@@ -186,7 +192,7 @@
             <section class="kss-section kss-section--depth-2" id="kssref-11-2">
 
             <article class="kss-section__content">
-                <p class="kss-section__source">Source: <span>_fixed/common/parts/_formButton.styl</span>, line <span>1</span></p>
+                <p class="kss-section__source">Source: <span>common/_components/_formButton.styl</span>, line <span>1</span></p>
 
               <a class="kss-section__permalink" href="#kssref-11-2">
                 <h2 class="kss-section__item kss-section__item--depth-2">
@@ -225,7 +231,7 @@
             <section class="kss-section kss-section--depth-2" id="kssref-11-3">
 
             <article class="kss-section__content">
-                <p class="kss-section__source">Source: <span>_fixed/common/parts/_formFooterButton.styl</span>, line <span>1</span></p>
+                <p class="kss-section__source">Source: <span>common/_components/_formFooterButton.styl</span>, line <span>1</span></p>
 
               <a class="kss-section__permalink" href="#kssref-11-3">
                 <h2 class="kss-section__item kss-section__item--depth-2">
@@ -279,7 +285,7 @@
             <section class="kss-section kss-section--depth-2" id="kssref-11-4">
 
             <article class="kss-section__content">
-                <p class="kss-section__source">Source: <span>_fixed/common/parts/_iconButton.styl</span>, line <span>1</span></p>
+                <p class="kss-section__source">Source: <span>common/_components/_iconButton.styl</span>, line <span>1</span></p>
 
               <a class="kss-section__permalink" href="#kssref-11-4">
                 <h2 class="kss-section__item kss-section__item--depth-2">
@@ -318,7 +324,7 @@
             <section class="kss-section kss-section--depth-2" id="kssref-11-5">
 
             <article class="kss-section__content">
-                <p class="kss-section__source">Source: <span>_fixed/common/parts/_basicInput.styl</span>, line <span>1</span></p>
+                <p class="kss-section__source">Source: <span>common/_components/_basicInput.styl</span>, line <span>1</span></p>
 
               <a class="kss-section__permalink" href="#kssref-11-5">
                 <h2 class="kss-section__item kss-section__item--depth-2">
@@ -362,11 +368,66 @@
             <section class="kss-section kss-section--depth-2" id="kssref-11-6">
 
             <article class="kss-section__content">
-                <p class="kss-section__source">Source: <span>_fixed/common/parts/_modalDialog.styl</span>, line <span>1</span></p>
+                <p class="kss-section__source">Source: <span>common/_components/_basicSelect.styl</span>, line <span>1</span></p>
 
               <a class="kss-section__permalink" href="#kssref-11-6">
                 <h2 class="kss-section__item kss-section__item--depth-2">
                   <span class="kss-section__ref">11.6</span>
+                  <span class="kss-section__name">Basic Select</span>
+                </h2>
+              </a>
+
+
+            </article>
+
+              <article class="kss-section__modifiers">
+                <h1 class="kss-modifiers__heading">Examples</h1>
+
+                  <h2 class="kss-modifiers__name">Default styling</h2>
+
+                <div class="kss-modifiers__example"><select class="[modifier class]" value="1">
+  <option value="1">First</option>
+  <option value="2">Second</option>
+  <option value="3">Third</option>
+</select></div>
+
+                  <h2 class="kss-modifiers__name">.basicSelect</h2>
+
+                  <p class="kss-modifiers__description">basicSelect</p>
+
+                  <div class="kss-modifiers__example"><select class="basicSelect" value="1">
+  <option value="1">First</option>
+  <option value="2">Second</option>
+  <option value="3">Third</option>
+</select></div>
+                  <h2 class="kss-modifiers__name">.basicSelect.disabled</h2>
+
+                  <p class="kss-modifiers__description">Disabled Option (Same style as :disabled=&quot;true&quot;)</p>
+
+                  <div class="kss-modifiers__example"><select class="basicSelect disabled" value="1">
+  <option value="1">First</option>
+  <option value="2">Second</option>
+  <option value="3">Third</option>
+</select></div>
+              </article>
+
+                <article class="kss-section__markup">
+                  <pre><code class="language-markup">&lt;select class&#x3D;&quot;[modifier class]&quot; value&#x3D;&quot;1&quot;&gt;
+  &lt;option value&#x3D;&quot;1&quot;&gt;First&lt;/option&gt;
+  &lt;option value&#x3D;&quot;2&quot;&gt;Second&lt;/option&gt;
+  &lt;option value&#x3D;&quot;3&quot;&gt;Third&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+                </article>
+
+            </section>
+            <section class="kss-section kss-section--depth-2" id="kssref-11-7">
+
+            <article class="kss-section__content">
+                <p class="kss-section__source">Source: <span>common/_components/_modalDialog.styl</span>, line <span>1</span></p>
+
+              <a class="kss-section__permalink" href="#kssref-11-7">
+                <h2 class="kss-section__item kss-section__item--depth-2">
+                  <span class="kss-section__ref">11.7</span>
                   <span class="kss-section__name">Modal Dialog</span>
                 </h2>
               </a>

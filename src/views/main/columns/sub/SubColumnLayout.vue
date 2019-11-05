@@ -2,27 +2,25 @@
   <div class="subColumn">
     <div class="subColumn_head columnTitle">
       <h2>{{ project ? project.displayName : '' }}</h2>
-      <my-simple-menu class="subColumn_head_menuContainer">
-        <template v-slot="{open, close, opened}">
-          <a class="subColumn_head_menu" href="#" @click.stop.prevent="opened ? close() : open()">
-            <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                clip-rule="evenodd"
-                d="m6.61537 12.3077c0 1.2745-1.03318 2.3077-2.30768 2.3077s-2.30769-1.0332-2.30769-2.3077 1.03319-2.3077 2.30769-2.3077 2.30768 1.0332 2.30768 2.3077zm7.69243 0c0 1.2745-1.0332 2.3077-2.3077 2.3077s-2.30768-1.0332-2.30768-2.3077 1.03318-2.3077 2.30768-2.3077 2.3077 1.0332 2.3077 2.3077zm5.3846 2.3077c1.2745 0 2.3077-1.0332 2.3077-2.3077s-1.0332-2.3077-2.3077-2.3077-2.3077 1.0332-2.3077 2.3077 1.0332 2.3077 2.3077 2.3077z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </a>
-        </template>
-        <template v-slot:items>
-          <li v-if="projectUserAddable" @click="$store.mutations.settingRouter.to('project-member-add')">
-            <span>{{ $t(`views.subColumn.projectMenu.addMembers`) }}</span>
-          </li>
-          <li @click="$store.mutations.settingRouter.to(projectUpdatable ? 'project-general' : 'project-members')">
-            <span>{{ $t(`views.subColumn.projectMenu.projectSettings`) }}</span>
-          </li>
-        </template>
-      </my-simple-menu>
+      <div class="subColumn_head_toolbar">
+        <my-svg-icon class="subColumn_head_toolbar_item" name="home" />
+        <my-svg-icon class="subColumn_head_toolbar_item" name="atsign" />
+        <my-svg-icon class="subColumn_head_toolbar_item" name="star" />
+        <my-svg-icon class="subColumn_head_toolbar_item" name="search" />
+        <my-simple-menu class="subColumn_head_toolbar_item subColumn_head_menuContainer">
+          <template v-slot="{open, close, opened}">
+            <my-svg-icon name="menu" @click.stop.prevent="opened ? close() : open()" />
+          </template>
+          <template v-slot:items>
+            <li v-if="projectUserAddable" @click="$store.actions.settingRouter.to('project-member-add')">
+              <span>{{ $t(`views.subColumn.projectMenu.addMembers`) }}</span>
+            </li>
+            <li @click="$store.actions.settingRouter.to(projectUpdatable ? 'project-general' : 'project-members')">
+              <span>{{ $t(`views.subColumn.projectMenu.projectSettings`) }}</span>
+            </li>
+          </template>
+        </my-simple-menu>
+      </div>
     </div>
     <ul class="subColumn_tab">
       <li v-for="t in tabs" :key="t.name">
@@ -42,22 +40,67 @@
 
 
 <style lang="stylus">
-@import '../../../../stylus/_fixed/base/_theme'
+@import '../../../../stylus/_settings'
+
 .subColumn
-  &_head_menuContainer
-    .other_status
-      width: auto
-      ul
+  box-sizing: border-box
+  background: #FFF
+  border-right: 1px solid $colors.lightGrayLighten2
+  .columnTitle
+    padding: $sizes.windowMarginTop 20px 27px
+    display: flex
+    justify-content: space-between
+    align-items: center
+    h2
+      display: block
+      width: calc(100% - 32px)
+      font-size: 18px
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+  &_tab
+    display: flex
+    justify-content: flex-start
+    margin-left: 10px
+    overflow: hidden
+    a
+      box-sizing: border-box
+      display: block
+      color: #999999
+      text-decoration: none
+      white-space: nowrap
+      padding: 0 0 10px
+      margin: 0 10px
+      &.active
+        color: #333333
+        border-bottom: 4px solid $themeColors.active
+      &:hover
+        color: $themeColors.active
+  &_head
+    &_toolbar
+      display: flex
+      &_item
+        cursor: pointer
+        --mySvgIconSize: 19px
+        --mySvgIconColor: $themeColors.icon
+        &:hover
+          --mySvgIconColor: $themeColors.iconDarken1
+        &:not(:first-child)
+          margin-left: 16px
+    &_menuContainer
+      .mySimpleMenu_popup
         width: auto
-        min-width: 220px
-        padding: 14px 0
-        li
-          font-size: 14px
-          padding: 10px 24px
-          white-space: nowrap
-          &:hover
-            themeBackgroundColor('accent')
-            color: #fff
+        ul
+          width: auto
+          min-width: 220px
+          padding: 14px 0
+          li
+            font-size: 14px
+            padding: 10px 24px
+            white-space: nowrap
+            &:hover
+              background-color: $themeColors.accent
+              color: #fff
 </style>
 
 

@@ -38,7 +38,7 @@
 </template>
 
 <style lang="stylus">
-@import '../stylus/_fixed/base/_variable'
+@import '../stylus/_settings'
 
 .myColorPicker
   position: relative

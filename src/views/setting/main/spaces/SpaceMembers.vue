@@ -20,14 +20,13 @@
           <td>{{ user.email }}</td>
           <td>{{ user.displayName || user.account }}</td>
           <td class="clearfix">
-            <div class="select">
-              <my-space-role-select
-                :value="user.spaceRoleId"
-                :my-role="myRole"
-                :current-role="user.currentRole"
-                @input="onSpaceRoleChange($event, user)"
-              />
-            </div>
+            <my-space-role-select
+              class="select basicSelect"
+              :value="user.spaceRoleId"
+              :my-role="myRole"
+              :current-role="user.currentRole"
+              @input="onSpaceRoleChange($event, user)"
+            />
             <button v-if="myRole.checkManageable(user.currentRole)" @click="removingUser = removingUser || user" />
           </td>
         </tr>
@@ -36,13 +35,13 @@
       <!-- メンバーが少ない場合 -->
       <!--
           <div class="option_spaceMember_addButton">
-          <button @click="$store.mutations.settingRouter.to('space-member-invite')">{{$t('views.setting.main.spaceMembers.addMember')}}</button>
+          <button @click="$store.actions.settingRouter.to('space-member-invite')">{{$t('views.setting.main.spaceMembers.addMember')}}</button>
           </div>
           -->
     </div>
     <!-- メンバーが多い場合 -->
     <div class="option_spaceMember_addBar">
-      <button @click="$store.mutations.settingRouter.to('space-member-invite')">
+      <button @click="$store.actions.settingRouter.to('space-member-invite')">
         {{ $t('views.setting.main.spaceMembers.addMember') }}
       </button>
     </div>

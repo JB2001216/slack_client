@@ -3,8 +3,9 @@
     <div class="projectColumn_head">
       <my-simple-menu class="projectColumn_spaceMenu">
         <template v-slot="{open, close, opened}">
-          <h1 id="projectColumn_title" class="t-sub" @click.stop="opened ? close() : open()">
-            <span>{{ myUser.space.displayName || myUser.space.account }}</span>
+          <h1 class="projectColumn_head_title t-sub" @click.stop="opened ? close() : open()">
+            <span class="projectColumn_head_title_text">{{ myUser.space.displayName || myUser.space.account }}</span>
+            <my-svg-icon class="projectColumn_head_title_icon" name="pulldown" />
           </h1>
         </template>
         <template v-slot:items>
@@ -16,13 +17,13 @@
               {{ myUser.displayName || myUser.account }}
             </div>
           </li>
-          <li @click="$store.mutations.settingRouter.to('space-user-profile')">
+          <li @click="$store.actions.settingRouter.to('space-user-profile')">
             <span>{{ $t(`views.projectColumn.spaceMenu.profileAndAccount`) }}</span>
           </li>
-          <li v-if="spaceUserAddable" @click="$store.mutations.settingRouter.to('space-member-invite')">
+          <li v-if="spaceUserAddable" @click="$store.actions.settingRouter.to('space-member-invite')">
             <span>{{ $t(`views.projectColumn.spaceMenu.inviteMembers`) }}</span>
           </li>
-          <li v-if="spaceUserListable" @click="$store.mutations.settingRouter.to('space-general')">
+          <li v-if="spaceUserListable" @click="$store.actions.settingRouter.to('space-general')">
             <span>{{ $t(`views.projectColumn.spaceMenu.spaceSettings`) }}</span>
           </li>
         </template>
@@ -33,10 +34,7 @@
         <li v-if="projectAddable">
           <router-link class="projectColumn_add" :to="{name: 'project-add', params: { userId: myUser.id }}">
             {{ $t('views.projectColumn.project') }}
-            <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="m22 13h-19.99999v-2h19.99999z" />
-              <path d="m11 22v-20.00003h2v20.00003z" />
-            </svg>
+            <span class="projectColumn_add_plus">＋</span>
           </router-link>
         </li>
         <li v-for="p in projects" :key="p.id">
@@ -69,13 +67,84 @@
 
 
 <style lang="stylus">
-@import '../../../../stylus/_fixed/base/_theme'
+@import '../../../../stylus/_settings'
 
 .projectColumn
-  .t-sub
-    cursor: pointer
+  color: $colors.white;
+  background-color: $themeColors.sub
+  user-select: none
+  box-shadow: 8px 0px 32px rgba(0, 0, 0, 0.05)
+  position: relative
+  a
+    color: $colors.white
+    text-decoration: none
+  &_head
+    padding: $sizes.windowMarginTop 20px 20px
+    &_title
+      display: inline-block
+      cursor: pointer
+      position: relative
+      max-width: 100%
+      white-space: nowrap
+      &_text
+        max-width: calc(100% - 18px)
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+        display: inline-block
+        padding-right: 10px
+      &_icon
+        vertical-align: top
+        margin-top: 10px
+        --mySvgIconColor: $colors.white
+        --mySvgIconSize: 9px
+  &_add
+    position: relative
+    &_plus
+      color: $colors.white
+      position: absolute
+      font-size: 16px
+      top: 4px
+      right: 20px
+  &_body
+    max-height: calc(100vh - 150px)
+    overflow-y: auto
+    ul
+      a
+        display: block
+        padding: 6px 20px
+        transition: 0.5s
+        overflow: hidden
+        white-space: nowrap
+        text-overflow: ellipsis
+        cursor: pointer
+        &.active
+          font-weight: bold
+          background-color: $themeColors.accent
+          box-shadow: 8px 0px 32px rgba(0, 0, 0, 0.05)
+        &:not(.active):hover
+          background-color: $themeColors.subDarken1
+  &_foot
+    display: block
+    text-align: center
+    position: absolute
+    bottom: 8px
+    left: 0
+    right: 0
+    padding: 8px 20px 8px 10px
+    transition: 0.5s
+    opacity: 0.5
+    &:hover
+      opacity: 1
+    svg
+      vertical-align: sub
+      fill: $colors.white
+      margin-right: 4px
+
   &_spaceMenu.mySimpleMenu
-    .other_status
+    display: block
+    height: 28px
+    .mySimpleMenu_popup
       width: auto
       ul
         width: auto
@@ -89,8 +158,8 @@
             cursor: default
             background: transparent
           &:not(.notHover):hover
-            themeBackgroundColor('accent')
-            color: #fff
+            background-color: $themeColors.accent
+            color: $colors.white
         .projectColumn_spaceMenu_profile
           display: flex
           align-items: center
@@ -105,6 +174,7 @@
             font-weight: bold
             font-size: 14px
 </style>
+
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';

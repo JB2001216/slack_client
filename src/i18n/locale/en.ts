@@ -28,6 +28,10 @@ const struct: LocaleStruct = {
     },
 
     components: {
+      myConfirmChangeDiscardDialog: {
+        title: 'Your entry is not saved.',
+        description: 'Are you sure you want to discard the data you entered?',
+      },
       myDateRangeInput: {
         save: 'Save',
         cancel: 'Cancel',
