@@ -26,16 +26,15 @@
           <td>{{ user ? user.email : '' }}</td>
           <td>{{ user ? (user.displayName || user.account) : '' }}</td>
           <td class="clearfix">
-            <div class="select">
-              <my-project-role-select
-                :value="puser.projectRoleId"
-                :my-space-role="mySpaceRole"
-                :my-project-role="myProjectRole"
-                :current-space-role="puser.currentSpaceRole"
-                :current-project-role="puser.currentProjectRole"
-                @input="onProjectRoleChange($event, puser)"
-              />
-            </div>
+            <my-project-role-select
+              class="select basicSelect"
+              :value="puser.projectRoleId"
+              :my-space-role="mySpaceRole"
+              :my-project-role="myProjectRole"
+              :current-space-role="puser.currentSpaceRole"
+              :current-project-role="puser.currentProjectRole"
+              @input="onProjectRoleChange($event, puser)"
+            />
             <button v-if="user && getRemovable(puser)" @click="removingUser = removingUser || user" />
           </td>
         </my-space-user>
@@ -44,13 +43,13 @@
       <!-- メンバーが少ない場合 -->
       <!--
           <div v-if="projectUserAddable" class="option_spaceMember_addButton">
-          <button @click="$store.mutations.settingRouter.to('project-member-add')">{{$t('views.setting.main.projectMembers.addMember')}}</button>
+          <button @click="$store.actions.settingRouter.to('project-member-add')">{{$t('views.setting.main.projectMembers.addMember')}}</button>
           </div>
           -->
     </div>
     <!-- メンバーが多い場合 -->
     <div v-if="projectUserAddable" class="option_spaceMember_addBar">
-      <button @click="$store.mutations.settingRouter.to('project-member-add')">
+      <button @click="$store.actions.settingRouter.to('project-member-add')">
         {{ $t('views.setting.main.projectMembers.addMember') }}
       </button>
     </div>

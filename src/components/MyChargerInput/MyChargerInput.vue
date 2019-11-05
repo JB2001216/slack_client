@@ -1,42 +1,44 @@
 <template>
   <div class="myChargerInput" :class="{disabled}">
-    <div v-if="value" class="myChargerInput_batonUser">
-      <my-space-user v-slot="{user}" tag="div" :user-id="value.batonUser" class="myChargerInput_batonUser_item">
-        <my-space-user-avatar class="myChargerInput_batonUser_item_avatar" :user="user" :size="32" shape="circle" />
-        <span v-if="user" class="myChargerInput_batonUser_item_name">{{ user.displayName || user.account }}</span>
-        <span v-else-if="!value.batonUser" class="myChargerInput_batonUser_item_name">{{ $t('components.myChargerInput.notSet') }}</span>
-        <span class="myChargerInput_batonUser_item_badge">{{ $t('components.myChargerInput.baton') }}</span>
-      </my-space-user>
-    </div>
-    <div v-if="value" class="myChargerInput_chargeUsers">
-      <div class="myChargerInput_chargeUsers_item editButton" @click="showedDialog = true">
-        <div class="myChargerInput_chargeUsers_item_name">
-          <span class="myChargerInput_chargeUsers_item_name_box">{{ $t('components.myChargerInput.addMembers') }}</span>
-        </div>
-        <span class="editButton_icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m22 13h-19.99999v-2h19.99999z" /><path d="m11 22v-20.00003h2v20.00003z" /></svg>
-        </span>
-      </div>
-      <div v-if="chargeUsersWithoutBatonUser.length - displayChargeUsers.length > 0" class="myChargerInput_chargeUsers_item otherCount" @click="showedDialog = true">
-        <span>+{{ chargeUsersWithoutBatonUser.length - displayChargeUsers.length }}</span>
-      </div>
-      <template>
-        <my-space-user
-          v-for="userId in displayChargeUsersReverse"
-          :key="userId"
-          v-slot="{user}"
-          tag="div"
-          :user-id="userId"
-          class="myChargerInput_chargeUsers_item user"
-          @click="onChargeUserClick(userId)"
-        >
-          <div class="myChargerInput_chargeUsers_item_name">
-            <span v-if="user" class="myChargerInput_chargeUsers_item_name_box">{{ user.displayName || user.account }}</span>
-          </div>
-          <my-space-user-avatar class="myChargerInput_chargeUsers_item_avatar" :user="user" :size="32" shape="circle" />
-          <span v-if="!disabled" class="myChargerInput_chargeUsers_item_delete" @click="onChargeUserDelete(userId)">×</span>
+    <canvas ref="canvas" class="myChargerInput_canvas" />
+    <div ref="main" class="myChargerInput_main">
+      <div v-if="value" class="myChargerInput_batonUser">
+        <my-space-user v-slot="{user}" tag="div" :user-id="value.batonUser" class="myChargerInput_batonUser_item">
+          <my-space-user-avatar class="myChargerInput_batonUser_item_avatar" :user="user" :size="32" shape="circle" />
+          <span class="myChargerInput_batonUser_item_name">{{ batonUserName }}</span>
+          <span class="myChargerInput_batonUser_item_badge">{{ $t('components.myChargerInput.baton') }}</span>
         </my-space-user>
-      </template>
+      </div>
+      <div v-if="value" class="myChargerInput_chargeUsers">
+        <div class="myChargerInput_chargeUsers_item editButton" @click="showedDialog = true">
+          <div class="myChargerInput_chargeUsers_item_name">
+            <span class="myChargerInput_chargeUsers_item_name_box">{{ $t('components.myChargerInput.addMembers') }}</span>
+          </div>
+          <span class="editButton_icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m22 13h-19.99999v-2h19.99999z" /><path d="m11 22v-20.00003h2v20.00003z" /></svg>
+          </span>
+        </div>
+        <div v-if="chargeUsersWithoutBatonUser.length - displayChargeUsers.length > 0" class="myChargerInput_chargeUsers_item otherCount" @click="showedDialog = true">
+          <span>+{{ chargeUsersWithoutBatonUser.length - displayChargeUsers.length }}</span>
+        </div>
+        <template>
+          <my-space-user
+            v-for="userId in displayChargeUsersReverse"
+            :key="userId"
+            v-slot="{user}"
+            tag="div"
+            :user-id="userId"
+            class="myChargerInput_chargeUsers_item user"
+            @click="onChargeUserClick(userId)"
+          >
+            <div class="myChargerInput_chargeUsers_item_name">
+              <span v-if="user" class="myChargerInput_chargeUsers_item_name_box">{{ user.displayName || user.account }}</span>
+            </div>
+            <my-space-user-avatar class="myChargerInput_chargeUsers_item_avatar" :user="user" :size="32" shape="circle" />
+            <span v-if="!disabled" class="myChargerInput_chargeUsers_item_delete" @click="onChargeUserDelete(userId)">×</span>
+          </my-space-user>
+        </template>
+      </div>
     </div>
     <transition name="fade">
       <my-charger-dialog
@@ -55,12 +57,17 @@
 
 
 <style lang="stylus">
-@import '../../stylus/_fixed/base/_variable'
-@import '../../stylus/_fixed/base/_theme'
+@import '../../stylus/_settings'
 
 .myChargerInput
-  display: flex
-  user-select: none
+  width: 100%
+  &_main
+    display: flex
+    flex-wrap: nowrap
+    user-select: none
+    width: 100%
+  &_canvas
+    display: none
   &_batonUser
     &_item
       max-width: 244px
@@ -84,7 +91,7 @@
         white-space: nowrap
         text-overflow: ellipsis
       &_badge
-        themeBackgroundColor('active')
+        background-color: $themeColors.active
         display: inline-block
         position: absolute
         top: -7px
@@ -125,8 +132,8 @@
         align-items: center
         &_box
           font-size: 12px
-          color: #333
-          background #fff
+          color: $colors.white
+          background $colors.grayDarken3
           padding: 4px 8px
           white-space: nowrap
           border-radius: 4px
@@ -139,7 +146,7 @@
           left: 50%
           margin-left: -8px
           border: 8px solid transparent
-          border-top: 8px solid #fff
+          border-top: 8px solid $colors.grayDarken3
           transform: scaleX(0.75)
           z-index: 2
         &:after
@@ -149,7 +156,7 @@
           left: 50%
           margin-left: -8px
           border: 8px solid transparent
-          border-top: 8px solid #fff
+          border-top: 8px solid $colors.grayDarken3
           transform: scaleX(0.75)
           filter: drop-shadow(0 2px 3px rgba(0,0,0,0.16))
 
@@ -163,7 +170,7 @@
           height: 17px
           width: 17px
           border: 1px solid #FFFFFF
-          themeBackgroundColor('icon')
+          background-color: $themeColors.icon
           box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16)
           text-align: center
           font-size: 10px
@@ -177,14 +184,13 @@
           transform: scale(0.75, 0.75)
           pointer-events: none
           &:hover
-            themeBackgroundColor('iconDarken1')
+            background-color: $themeColors.iconDarken1
         &:hover
           padding: 0 12px
           .myChargerInput_chargeUsers_item_name
             display: flex
           .myChargerInput_chargeUsers_item_avatar
-            themeBorderColor('active')
-            border: 2px solid
+            border: 2px solid $themeColors.active
             transform: scale(1.25, 1.25)
           .myChargerInput_chargeUsers_item_delete
             opacity: 1
@@ -236,8 +242,26 @@ import { MyChargerDialogChangeEvent } from '../MyChargerDialog/types';
 import { LoggedInUser } from '@/store/root';
 import { TranslateResult } from 'vue-i18n';
 
+const styles = {
+  batonUserFontFamily: '"Noto Sans CJK JP", sans-serif',
+  batonUserFontSize: 13,
+  batonUserMaxWidth: 244,
+  batonUserPaddingLeft: 44,
+  batonUserPaddingRight: 8,
+  batonUserMarginRight: 4 + 2,
+  chargeUserHoverWidth: 60 - 4,
+  chargeUserWidth: 32,
+  editButtonWidth: 32,
+  editButtonMarginLeft: 6,
+};
+
 @Component
 export default class MyChargerInput extends Vue {
+  $refs!: {
+    canvas: HTMLCanvasElement;
+    main: HTMLDivElement;
+  }
+
   @Prop({ default: null })
   value!: MyChargerInputValue;
 
@@ -253,13 +277,40 @@ export default class MyChargerInput extends Vue {
   @Prop({ default: null })
   dialogTitle!: string | TranslateResult | null;
 
-  displayChargeUserCount = 4;
+  componentWidth: number = 0;
+  resizeObserver: ResizeObserver = null as any;
+
   showedDialog = false;
+
+  get batonUserName() {
+    if (!this.value || !this.value.batonUser) {
+      return this.$t('components.myChargerInput.notSet').toString();
+    }
+    const user = this.$store.state.activeUser.spaceUsers.find((u) => u.id === this.value!.batonUser);
+    if (!user) {
+      return '';
+    }
+    return user.displayName || user.account;
+  }
 
   get chargeUsersWithoutBatonUser() {
     if (!this.value) return [];
     if (!this.value.batonUser) return this.value.chargeUsers;
     return this.value.chargeUsers.filter((id) => id !== this.value!.batonUser);
+  }
+
+  get displayChargeUserCount() {
+    const componentWidth = this.componentWidth;
+    if (!this.$refs.canvas) return 0;
+
+    const ctx = this.$refs.canvas.getContext('2d')!;
+    ctx.font = `bold ${styles.batonUserFontSize}px ${styles.batonUserFontFamily}`;
+    const batonUserWidth = Math.min(
+      ctx.measureText(this.batonUserName).width + styles.batonUserPaddingLeft + styles.batonUserPaddingRight,
+      styles.batonUserMaxWidth
+    );
+    const restWidth = componentWidth - batonUserWidth - styles.batonUserMarginRight - styles.chargeUserHoverWidth - styles.editButtonWidth - styles.editButtonMarginLeft;
+    return Math.floor(restWidth / styles.chargeUserWidth);
   }
 
   get displayChargeUsers() {
@@ -310,6 +361,24 @@ export default class MyChargerInput extends Vue {
       });
     } else {
       this.emitInput(ev.value);
+    }
+  }
+
+  onResize(entries: ResizeObserverEntry[]) {
+    for (const el of entries) {
+      this.componentWidth = el.contentRect.width;
+    }
+  }
+
+  mounted() {
+    this.resizeObserver = new window.ResizeObserver(this.onResize);
+    this.resizeObserver.observe(this.$refs.main);
+  }
+
+  beforeDestroy() {
+    if (this.resizeObserver) {
+      this.resizeObserver.unobserve(this.$el);
+      this.resizeObserver.disconnect();
     }
   }
 }

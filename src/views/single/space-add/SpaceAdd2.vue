@@ -48,17 +48,26 @@
         </router-link>
       </div>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Mixins } from 'vue-property-decorator';
 import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
 import { apiRegistry, SpacesApi, SpacesPostRequestBody, ApiErrors, getJsonFromResponse } from '@/lib/api';
+import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
+
 
 @Component
-export default class SpaceAdd2 extends Vue {
+export default class SpaceAdd2 extends Mixins(ConfirmChangeDiscardMixin) {
   saving = false;
+  saved = false;
   data: SpacesPostRequestBody = {
     token: '',
     account: '',
@@ -71,6 +80,10 @@ export default class SpaceAdd2 extends Vue {
   };
   ownerMessages: {[field: string]: MySingleFormTextInputMessage} = {
   };
+
+  get changes() {
+    return !this.saved;
+  }
 
   get backTo() {
     let userId: number | null = null;
@@ -104,6 +117,7 @@ export default class SpaceAdd2 extends Vue {
       });
 
       const user = await this.$store.actions.addLoggedInUser(res.token);
+      this.saved = true;
       this.$router.push({
         name: 'user',
         params: {

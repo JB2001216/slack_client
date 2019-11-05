@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,300">
     <link rel="stylesheet" href="kss-assets/vendor/prism.css">
     <link rel="stylesheet" href="kss-assets/css/kss.css">
-    <link rel="stylesheet" href="./full.css">
+    <link rel="stylesheet" href="./main.css">
 
   </head>
 
@@ -72,7 +72,7 @@
             <header class="kss-section kss-section--depth-2" id="kssref-10-2">
 
             <article class="kss-section__content">
-                <p class="kss-section__source">Source: <span>_fixed/base/_theme.styl</span>, line <span>14</span></p>
+                <p class="kss-section__source">Source: <span>_settings/_themes.styl</span>, line <span>14</span></p>
 
               <a class="kss-section__permalink" href="#kssref-10-2">
                 <h2 class="kss-section__item kss-section__item--depth-2">
@@ -81,6 +81,21 @@
                 </h2>
               </a>
 
+                <div class="kss-section__description"><pre class="hljs"><code class="language-stylus"><span class="hljs-comment">// Sample Code</span>
+@import <span class="hljs-string">'../../stylus/_settings'</span>
+<span class="hljs-selector-class">.example1</span>
+  <span class="hljs-attribute">color</span>: <span class="hljs-variable">$themeColors</span>.main
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-variable">$themeColors</span>.sub
+
+
+<span class="hljs-comment">// Yielding the following CSS</span>
+<span class="hljs-comment">// * The color for each theme is automatically set using 'CSS custom properties'</span>
+<span class="hljs-selector-class">.example1</span> {
+  <span class="hljs-attribute">color</span>: var(--themeColor-main, <span class="hljs-number">#2e2e2e</span>)
+  <span class="hljs-attribute">background-color</span>: var(--themeColor-sub, <span class="hljs-number">#484848</span>)
+}
+</code></pre>
+</div>
 
             </article>
 

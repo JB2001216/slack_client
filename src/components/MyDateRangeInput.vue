@@ -45,16 +45,7 @@
     </transition>
     <slot :range="value" :pop="onPop">
       <div class="myDateRangeInput_view" @click.stop="onPop">
-        <svg
-          class="myDateRangeInput_view_icon"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path class="myDateRangeInput_view_icon_path" d="M6.16667 2V5.33333H7.83333V2H6.16667ZM16.1667 2V5.33333H17.8333V2H16.1667ZM2.83333 4.5C2.37435 4.5 2 4.87435 2 5.33333V7.83333C2 8.29232 2.37435 8.66667 2.83333 8.66667V22H21.1667V8.66667C21.6257 8.66667 22 8.29232 22 7.83333V5.33333C22 4.87435 21.6257 4.5 21.1667 4.5H18.6667V6.16667H15.3333V4.5H8.66667V6.16667H5.33333V4.5H2.83333ZM4.5 8.66667H19.5V20.3333H4.5V8.66667ZM6.16667 10.3333V12H7.83333V10.3333H6.16667ZM9.5 10.3333V12H11.1667V10.3333H9.5ZM12.8333 10.3333V12H14.5V10.3333H12.8333ZM16.1667 10.3333V12H17.8333V10.3333H16.1667ZM6.16667 13.6667V15.3333H7.83333V13.6667H6.16667ZM9.5 13.6667V15.3333H11.1667V13.6667H9.5ZM12.8333 13.6667V15.3333H14.5V13.6667H12.8333ZM16.1667 13.6667V15.3333H17.8333V13.6667H16.1667ZM6.16667 17V18.6667H7.83333V17H6.16667ZM9.5 17V18.6667H11.1667V17H9.5ZM12.8333 17V18.6667H14.5V17H12.8333ZM16.1667 17V18.6667H17.8333V17H16.1667Z" />
-        </svg>
+        <my-svg-icon name="calendar" class="myDateRangeInput_view_icon" />
         <span v-if="value" class="myDateRangeInput_view_value">{{ formatedEnd }}</span>
       </div>
     </slot>
@@ -62,8 +53,7 @@
 </template>
 
 <style lang="stylus" scoped>
-@import '../stylus/_fixed/base/_variable'
-@import '../stylus/_fixed/base/_theme'
+@import '../stylus/_settings'
 
 .myDateRangeInput
   display: inline-block
@@ -72,13 +62,17 @@
     user-select: none
     white-space: nowrap;
     &_icon
-      vertical-align: middle
+      vertical-align: top
+      --mySvgIconSize: 19px
       path
-        themeFill('icon')
+        fill: $themeColors.icon
     &_value
-      vertical-align: middle
-      themeColor('icon')
+      vertical-align: top
+      color: $themeColors.icon
       white-space: nowrap
+      display: inline-block
+      font-size: 13px
+      line-height: 19px
   &_pop
     position: fixed
     padding: 10px
@@ -115,10 +109,9 @@
   &:not(.disabled)
     &:hover
       .myDateRangeInput_view_icon
-        &_path
-          themeFill('iconDarken1')
+        --mySvgIconColor: $themeColors.iconDarken1
       .myDateRangeInput_view_value
-        themeColor('iconDarken1')
+        color: $themeColors.iconDarken1
   .vc-container
     border: none !important
   .vc-w-full

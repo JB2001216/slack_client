@@ -34,7 +34,7 @@
       @click.stop="showOtherDialog()"
     >
       <span class="myProjectStatusInput_etc_text">{{ isEtc(selectedOption) ? selectedOption.name : $t('components.myProjectStatusInput.others') }}</span>
-      <img class="myProjectStatusInput_etc_icon" src="~@/assets/images/icn/pulldown2.svg">
+      <my-svg-icon name="pulldown" class="myProjectStatusInput_etc_icon" />
       <transition name="fade">
         <div v-if="selectingEtc" class="myProjectStatusInput_etc_dialog">
           <div
@@ -55,7 +55,7 @@
 
 
 <style lang="stylus" scoped>
-@import '../stylus/_fixed/base/_theme'
+@import '../stylus/_settings'
 
 .myProjectStatusInput
   max-width: 100%
@@ -185,6 +185,8 @@
       cursor: pointer
     &_icon
       vertical-align: middle
+      --mySvgIconColor: $colors.white
+      --mySvgIconSize: 9px
     &_text
       vertical-align: middle
       display: inline-block
@@ -213,7 +215,7 @@
         margin: 4px 0
         padding: 6px 16px
         &:hover
-          themeBackgroundColor('accent')
+          background-color: $themeColors.accent
           color: #fff
         &_color
           width: 12px
@@ -246,13 +248,13 @@ interface ProjectStatusOptionWithWidth extends ProjectStatusOption {
 }
 
 const styles = {
-  textFontFamily: 'Noto Sans CJK JP',
+  textFontFamily: '"Noto Sans CJK JP", sans-serif',
   textFontSize: 12,
   etcMarginLeft: 8,
   etcPaddingHorizontal: 32,
   etcTextMaxWidth: 100,
   etcTextMarginRight: 4,
-  etcIconWidth: 10,
+  etcIconWidth: 9,
   itemPaddingHorizontal: 30,
   itemLastPadding: 14,
 };
@@ -277,7 +279,7 @@ export default class MyProjectStatusInput extends Vue {
   defaultColor = '#6FCF97';
 
   componentWidth: number = 0;
-  resizeObserver: ResizeObserver = new window.ResizeObserver(this.onResize);
+  resizeObserver: ResizeObserver = null as any;
 
   get progressOptionsWithTextWidth(): ProjectStatusOptionWithWidth[] {
     const componentWidth = this.componentWidth;
@@ -285,7 +287,7 @@ export default class MyProjectStatusInput extends Vue {
     if (!this.$refs.canvas) return this.progressOptions;
 
     const ctx = this.$refs.canvas.getContext('2d')!;
-    ctx.font = `bold ${styles.textFontSize}px '${styles.textFontFamily}'`;
+    ctx.font = `bold ${styles.textFontSize}px ${styles.textFontFamily}`;
 
     const progressOptions: ProjectStatusOptionWithWidth[] = this.progressOptions.concat();
     progressOptions.forEach((o) => {
@@ -443,6 +445,7 @@ export default class MyProjectStatusInput extends Vue {
 
   mounted() {
     document.addEventListener('click', this.onDocumentClick);
+    this.resizeObserver = new window.ResizeObserver(this.onResize);
     this.resizeObserver.observe(this.$el);
   }
 

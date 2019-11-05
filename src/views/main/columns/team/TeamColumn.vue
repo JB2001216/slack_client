@@ -25,8 +25,40 @@
 
 
 <style lang="stylus">
+@import '../../../../stylus/_settings'
+
 .teamColumn
+  color: $colors.white;
+  background-color: $themeColors.main
+  user-select: none
+  max-height: 100vh
+  overflow-y: auto
   &_nav
+    margin-top: $sizes.windowMarginTop + 6px
+    a
+      display: block
+      width: 36px
+      height: 36px
+      background: rgba(255, 255, 255, 0.16)
+      border-radius: 8px
+      margin: 0 auto 16px
+      transition: 0.5s
+      cursor: pointer
+      &:hover
+        background: $colors.lightGrayLighten2
+      &.active
+        background: $colors.lightGrayLighten2
+      &.teamColumn_add
+        display: flex
+        justify-content: center
+        align-items: center
+        box-sizing: border-box
+        background: transparent
+        fill: $colors.white
+        border: 1px solid rgba(255,255,255,0.24)
+        &:hover
+          fill: #1F081F
+          background: $colors.lightGrayLighten2
     &_item
       overflow: hidden
       text-decoration: none

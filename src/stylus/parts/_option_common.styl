@@ -1,512 +1,333 @@
-.optionWrap{
-  *{
-    box-sizing: border-box;
-  }
-}
+.optionWrap
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  z-index: 100
+  background: #fff
+  *
+    box-sizing: border-box
 
-.option{
-  &_title{
-    min-height: 63px;
-    padding: 17px 20px;
-    background-color: #FFFFFF;
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.16);
-    color: #333333;
-    font-family: "Noto Sans CJK JP";
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 29px;
-    text-align: center;
-    position: relative;
-    button{
-      width: 30px;
-      height: 30px;
-      padding: 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      outline: none;
-      position: absolute;
-      top: 0;
-      right: 20px;
-      bottom: 0;
-      margin: auto;
-      &:before,
-      &:after{
-        content: "";
-        display: block;
-        width: 30px;
-        height: 2px;
-        background: #6d6d6d;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-      }
-      &:before{
-        transform: rotate(315deg);
-      }
-      &:after{
-        transform: rotate(-315deg);
-      }
-    }
-    &.noShadow{
-      box-shadow: none;
-    }
-  }
-  &_container{
-    max-width: 960px;
-    padding: 48px 20px 90px 20px;
-    margin: 0 auto;
-  }
-  &_mainColumn{
-    float: right;
-    width: calc(100% - 240px);
-    padding-left: 40px;
-    border-left: 1px solid #E0E0E0;
-    &_title{
-      color: #333333;
-      font-family: "Noto Sans CJK JP";
-      font-size: 18px;
-      font-weight: bold;
-      line-height: 27px;
-    }
-  }
-  &_subColumn{
-    float: right;
-    width: 240px;
-    padding-right: 40px;
-    &_title{
-      padding-left: 15px;
-      margin-top: 10px;
-      color: #333333;
-      font-family: "Noto Sans CJK JP";
-      font-size: 16px;
-      line-height: 24px;
-    }
-    &_button{
-      display: block;
-      width: 100%;
-      padding: 10px 15px;
-      margin-top: 10px;
-      background: transparent;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      outline: none;
-      color: #333;
-      font-family: "Noto Sans CJK JP";
-      font-size: 16px;
-      line-height: 24px;
-      text-decoration: none;
-      text-align: left;
-      transition: all 0.2s ease;
-      &:first-child{
-        margin-top: 0;
-      }
-      &:hover,
-      &.active{
-        background: #519589;
-        font-weight: bold;
-        color: #fff;
-      }
-    }
-  }
-  &_modal{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.3);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    &_dialog{
-      max-width: 400px;
-      padding: 30px;
-      background: #fff;
-      border-radius: 4px;
-      &_title{
-        color: #333333;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        font-weight: bold;
-        line-height: 24px;
-      }
-      &_description{
-        margin-top: 15px;
-        color: #666666;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        line-height: 24px;
-      }
-      &_button{
-        margin-top: 30px;
-        button{
-          height: 40px;
-          padding: 10px 20px;
-          margin-left: 15px;
-          float: right;
-          border: none;
-          border-radius: 20px;
-          cursor: pointer;
-          outline: none;
-          color: #FFFFFF;
-          font-family: "Noto Sans CJK JP";
-          font-size: 14px;
-          font-weight: bold;
-          line-height: 20px;
-          text-align: center;
-        }
-        &_yes{
-          background: #E02D2D;
-        }
-        &_no{
-          background: $colors.lightGray
-        }
-      }
-    }
-  }
-  &_commonColumn{
-    margin-top: 25px;
-    dd{
-      float: left;
-      max-width: 46%;
-      padding: 0 30px 0 40px;
-      border-left: 1px solid #e0e0e0;
-      &:first-child{
-        max-width: 40%;
-        padding-left: 0;
-        border-left: none;
-      }
-    }
-    &_title{
-      color: #333333;
-      font-family: "Noto Sans CJK JP";
-      font-size: 16px;
-      font-weight: bold;
-      line-height: 24px;
-    }
-    &_list{
-      margin-top: 25px;
-      li{
-        margin-top: 15px;
-        &:first-child{
-          margin-top: 0;
-        }
-        table{
-          width: 100%;
-          table-layout: fixed;
-          tr{
-            td{
-              vertical-align: middle;
-            }
-          }
-        }
-      }
-      &_number{
-        width: 25px;
-        color: #333333;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        line-height: 24px;
-      }
-      &_input{
-        &_parts{
-          position: relative;
-          &_color{
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            cursor: pointer;
-            position: absolute;
-            top: 0;
-            left: 10px;
-            bottom: 0;
-            margin: auto;
-            &.wineRed{
-              background: #AD1357;
-            }
-            &.deepOrange{
-              background: #F4501E;
-            }
-            &.yamabuki{
-              background: #E4C442;
-            }
-            &.deepGreen{
-              background: #0C8043;
-            }
-            &.deepBlue{
-              background: #3F51B5;
-            }
-            &.deepPurple{
-              background: #8E24AA;
-            }
-            &.winePink{
-              background: #D81B60;
-            }
-            &.orange{
-              background: #EE6C00;
-            }
-            &.lightGreen{
-              background: #C0CA33;
-            }
-            &.viridian{
-              background: #009688;
-            }
-            &.lightblue{
-              background: #7986CB;
-            }
-            &.brown{
-              background: #795548;
-            }
-            &.red{
-              background: #D50000;
-            }
-            &.lightOrange{
-              background: #F09300;
-            }
-            &.green{
-              background: #7CB243;
-            }
-            &.skyBlue{
-              background: #039BE5;
-            }
-            &.lightPurple{
-              background: #B39DDB;
-            }
-            &.black{
-              background: #616161;
-            }
-            &.salmonPink{
-              background: #E67C73;
-            }
-            &.lightYellow{
-              background: #F6BF25;
-            }
-            &.emerald{
-              background: #32B679;
-            }
-            &.blue{
-              background: #4385F4;
-            }
-            &.purple{
-              background: #9E69AF;
-            }
-            &.lightBrown{
-              background: #A79B8D;
-            }
-            &.gray{
-              background: #ccc;
-            }
-          }
-          &_palette{
-            width: 202px;
-            padding: 10px;
-            border-radius: 4px;
-            background-color: #FFFFFF;
-            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.16);
-            position: absolute;
-            top: 33px;
-            left: -7px;
-            z-index: 2;
-            ul{
-              li{
-                float: left;
-                width: 30px;
-                height: 30px;
-                margin-top: 0;
-                cursor: pointer;
-                position: relative;
-                &:before,
-                &:after{
-                  content: "";
-                  display: block;
-                  border-radius: 50%;
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  right: 0;
-                  bottom: 0;
-                  margin: auto;
-                }
-                &:before{
-                  width: 16px;
-                  height: 16px;
-                }
-                &.wineRed:before{
-                  background: #AD1357;
-                }
-                &.deepOrange:before{
-                  background: #F4501E;
-                }
-                &.yamabuki:before{
-                  background: #E4C442;
-                }
-                &.deepGreen:before{
-                  background: #0C8043;
-                }
-                &.deepBlue:before{
-                  background: #3F51B5;
-                }
-                &.deepPurple:before{
-                  background: #8E24AA;
-                }
-                &.winePink:before{
-                  background: #D81B60;
-                }
-                &.orange:before{
-                  background: #EE6C00;
-                }
-                &.lightGreen:before{
-                  background: #C0CA33;
-                }
-                &.viridian:before{
-                  background: #009688;
-                }
-                &.lightblue:before{
-                  background: #7986CB;
-                }
-                &.brown:before{
-                  background: #795548;
-                }
-                &.red:before{
-                  background: #D50000;
-                }
-                &.lightOrange:before{
-                  background: #F09300;
-                }
-                &.green:before{
-                  background: #7CB243;
-                }
-                &.skyBlue:before{
-                  background: #039BE5;
-                }
-                &.lightPurple:before{
-                  background: #B39DDB;
-                }
-                &.black:before{
-                  background: #616161;
-                }
-                &.salmonPink:before{
-                  background: #E67C73;
-                }
-                &.lightYellow:before{
-                  background: #F6BF25;
-                }
-                &.emerald:before{
-                  background: #32B679;
-                }
-                &.blue:before{
-                  background: #4385F4;
-                }
-                &.purple:before{
-                  background: #9E69AF;
-                }
-                &.lightBrown:before{
-                  background: #A79B8D;
-                }
-                &.gray:before{
-                  background: #ccc;
-                }
-                &:after{
-                  width: 24px;
-                  height: 24px;
-                }
-                &:hover:after,
-                &.active:after{
-                  border: 1px solid $colors.lightGray
-                }
-              }
-            }
-          }
-          &_toggle{
-            width: 16px;
-            height: 10px;
-            cursor: pointer;
-            position: absolute;
-            top: 0;
-            right: 15px;
-            bottom: 0;
-            margin: auto;
-            span{
-              display: block;
-              width: 100%;
-              height: 2px;
-              themeBackgroundColor('icon')
-              position: absolute;
-              left: 0;
-              margin: auto;
-              &:nth-of-type(1){
-                top: 0;
-              }
-              &:nth-of-type(2){
-                top: 0;
-                bottom: 0;
-              }
-              &:nth-of-type(3){
-                bottom: 0;
-              }
-            }
-          }
-          input[type=text]{
-            width: 100%;
-            padding: 10px 40px 10px 30px;
-            font-size: 14px;
-            line-height: 20px;
-          }
-        }
-      }
-      &_button{
-        width: 40px;
-        button{
-          float: right;
-          display: block;
-          width: 40px;
-          height: 40px;
-          background: none;
-          border: none;
-          cursor: pointer;
-          outline: none;
-          position: relative;
+  .option
+    &_title
+      min-height: 63px
+      padding: 17px 20px
+      background-color: #FFFFFF
+      box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.16)
+      color: #333333
+      font-family: $fontFamilyBody
+      font-size: 20px
+      font-weight: bold
+      line-height: 29px
+      text-align: center
+      position: relative
+      button
+        width: 30px
+        height: 30px
+        padding: 0
+        background: none
+        border: none
+        cursor: pointer
+        outline: none
+        position: absolute
+        top: 0
+        right: 20px
+        bottom: 0
+        margin: auto
+        &:before,
+        &:after
+          content: ""
+          display: block
+          width: 30px
+          height: 2px
+          background: $colors.gray
+          position: absolute
+          top: 0
+          bottom: 0
+          margin: auto
+        &:before
+          transform: rotate(315deg)
+        &:after
+          transform: rotate(-315deg)
+        &:hover
           &:before,
-          &:after{
-            content: "";
-            display: block;
-            width: 15px;
-            height: 1px;
-            background: #6d6d6d;
-            position: absolute;
-            left: 0;
-            right: 0;
-            margin: auto;
-          }
-          &:before{
-            top: 20px;
-            transform: rotate(315deg);
-          }
-          &:after{
-            top: 20px;
-            transform: rotate(-315deg);
-          }
-        }
-      }
-    }
-    &_addButton{
-      margin-top: 25px;
-      button{
-        padding: 5px 0 5px 28px;
-        background: url('~@/assets/images/parts/img_option_space_member_add.svg') no-repeat center left / 20px 20px, transparent;
-        border: none;
-        cursor: pointer;
-        outline: none;
-        color: $colors.primaryBlue
-        font-family: "Noto Sans CJK JP";
-        font-size: 14px;
-        line-height: 1;
-      }
-    }
-  }
-}
+          &:after
+            background: $colors.grayDarken5
+      &.noShadow
+        box-shadow: none
+    &_container
+      max-width: 960px
+      padding: 48px 0 0 20px
+      margin: 0 auto
+    &_mainColumn
+      float: right
+      width: calc(100% - 240px)
+      padding-left: 40px
+      padding-right: 20px
+      border-left: 1px solid #E0E0E0
+      &_title
+        color: #333333
+        font-family: $fontFamilyBody
+        font-size: 18px
+        font-weight: bold
+        line-height: 27px
+    &_subColumn
+      float: right
+      width: 240px
+      padding-right: 40px
+      &_title
+        color: #333333
+        font-family: $fontFamilyBody
+        font-size: 16px
+        line-height: 24px
+      &_button
+        display: block
+        width: 100%
+        background: transparent
+        border: none
+        border-radius: 4px
+        cursor: pointer
+        outline: none
+        color: #333
+        font-family: $fontFamilyBody
+        font-size: 16px
+        line-height: 24px
+        text-decoration: none
+        text-align: left
+        transition: all 0.2s ease
+        &:first-child
+          margin-top: 0
+        &:hover,
+        &.active
+          background: #519589
+          font-weight: bold
+          color: #fff
+      &_title,
+      &_button
+        margin: 0
+        padding: 10px 15px
+        &:not(.active):hover
+          font-weight: normal
+          background-color: $colors.whiteDarken1
+          border-radius: 4px
+          color: #333
+    &_subColumn,
+    &_mainColumn
+      padding-bottom: 90px
+      height: calc(100vh - 111px)
+      overflow-y: auto
+
+    &_modal
+      display: flex
+      flex-direction: column
+      justify-content: center
+      align-items: center
+      width: 100vw
+      height: 100vh
+      background: rgba(0, 0, 0, 0.3)
+      position: fixed
+      top: 0
+      left: 0
+      z-index: 2
+      &_dialog
+        max-width: 400px
+        padding: 30px
+        background: #fff
+        border-radius: 4px
+        &_title
+          color: #333333
+          font-family: $fontFamilyBody
+          font-size: 16px
+          font-weight: bold
+          line-height: 24px
+        &_description
+          margin-top: 15px
+          color: #666666
+          font-family: $fontFamilyBody
+          font-size: 16px
+          line-height: 24px
+        &_button
+          margin-top: 30px
+          button
+            height: 40px
+            padding: 10px 20px
+            margin-left: 15px
+            float: right
+            border: none
+            border-radius: 20px
+            cursor: pointer
+            outline: none
+            color: #FFFFFF
+            font-family: $fontFamilyBody
+            font-size: 14px
+            font-weight: bold
+            line-height: 20px
+            text-align: center
+          &_yes
+            background: #E02D2D
+          &_no
+            background: $colors.lightGray
+    &_commonColumn
+      margin-top: 25px
+      dd
+        float: left
+        max-width: 46%
+        padding: 0 30px 0 40px
+        border-left: 1px solid #e0e0e0
+        &:first-child
+          max-width: 40%
+          padding-left: 0
+          border-left: none
+      &_title
+        color: #333333
+        font-family: $fontFamilyBody
+        font-size: 16px
+        font-weight: bold
+        line-height: 24px
+      &_list
+        margin-top: 25px
+        li
+          margin-top: 15px
+          &:first-child
+            margin-top: 0
+          table
+            width: 100%
+            table-layout: fixed
+            tr
+              td
+                vertical-align: middle
+        &_number
+          width: 25px
+          color: #333333
+          font-family: $fontFamilyBody
+          font-size: 16px
+          line-height: 24px
+        &_input
+          &_parts
+            position: relative
+            &_color
+              width: 12px
+              height: 12px
+              border-radius: 50%
+              cursor: pointer
+              position: absolute
+              top: 0
+              left: 10px
+              bottom: 0
+              margin: auto
+            &_palette
+              width: 202px
+              padding: 10px
+              border-radius: 4px
+              background-color: #FFFFFF
+              box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.16)
+              position: absolute
+              top: 33px
+              left: -7px
+              z-index: 2
+              ul
+                li
+                  float: left
+                  width: 30px
+                  height: 30px
+                  margin-top: 0
+                  cursor: pointer
+                  position: relative
+                  &:before,
+                  &:after
+                    content: ""
+                    display: block
+                    border-radius: 50%
+                    position: absolute
+                    top: 0
+                    left: 0
+                    right: 0
+                    bottom: 0
+                    margin: auto
+                  &:before
+                    width: 16px
+                    height: 16px
+                  &:after
+                    width: 24px
+                    height: 24px
+                  &:hover:after,
+                  &.active:after
+                    border: 1px solid $colors.lightGray
+            &_toggle
+              width: 16px
+              height: 10px
+              cursor: pointer
+              position: absolute
+              top: 0
+              right: 15px
+              bottom: 0
+              margin: auto
+              span
+                display: block
+                width: 100%
+                height: 2px
+                background-color: $themeColors.icon
+                position: absolute
+                left: 0
+                margin: auto
+                &:nth-of-type(1)
+                  top: 0
+                &:nth-of-type(2)
+                  top: 0
+                  bottom: 0
+                &:nth-of-type(3)
+                  bottom: 0
+              &:hover
+                span
+                  background-color: $themeColors.iconDarken1
+            input[type=text]
+              width: 100%
+              padding: 10px 40px 10px 30px
+              font-size: 14px
+              line-height: 20px
+        &_button
+          width: 40px
+          button
+            float: right
+            display: block
+            width: 40px
+            height: 40px
+            background: none
+            border: none
+            cursor: pointer
+            outline: none
+            position: relative
+            &:before,
+            &:after
+              content: ""
+              display: block
+              width: 15px
+              height: 1px
+              background: $themeColors.icon
+              position: absolute
+              left: 0
+              right: 0
+              margin: auto
+            &:before
+              top: 20px
+              transform: rotate(315deg)
+            &:after
+              top: 20px
+              transform: rotate(-315deg)
+            &:hover
+              &:before,
+              &:after
+                background: $themeColors.iconDarken1
+      &_addButton
+        margin-top: 25px
+        button
+          padding: 5px 0 5px 28px
+          background: url('~@/assets/images/parts/img_option_space_member_add.svg') no-repeat center left / 20px 20px, transparent
+          border: none
+          cursor: pointer
+          outline: none
+          color: $colors.primaryBlue
+          font-family: $fontFamilyBody
+          font-size: 14px
+          line-height: 1

@@ -42,17 +42,23 @@
       </div>
 
       <div class="option_spaceGeneral_addButton clearfix">
-        <button class="basicButtonPrimary wide" :disabled="saving" @click="save">
+        <button class="basicButtonPrimary wide" :disabled="saving || !changes" @click="save">
           {{ $t('views.setting.main.spaceGeneral.saveBtn') }}
         </button>
       </div>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
 
 <style lang="stylus">
-@import '../../../../stylus/_fixed/base/_variable'
+@import '../../../../stylus/_settings'
 
 .option_spaceGeneral
   input[type="file"]
@@ -96,11 +102,13 @@
 
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi, SpacesSpaceIdAvatarPostRequest } from '@/lib/api';
+import { Route, NavigationGuard } from 'vue-router';
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 
 @Component
-export default class SpaceGeneral extends Vue {
+export default class SpaceGeneral extends Mixins(ConfirmChangeDiscardForSettingMixin) {
   $refs!: {
     avatarInput: HTMLInputElement;
     avatarImage: HTMLImageElement;
@@ -123,13 +131,15 @@ export default class SpaceGeneral extends Vue {
     return this.avatarFileMimes.join(',');
   }
 
-  clearAvatarInput() {
-    this.$refs.avatarInput.value = '';
+  get changes() {
+    return (
+      !!this.avatar ||
+      this.displayName !== (this.myUser.space.displayName || this.myUser.space.account)
+    );
   }
 
-  beforeMount() {
-    this.avatarUrl = this.myUser.space.avatarUrl;
-    this.displayName = this.myUser.space.displayName || this.myUser.space.account;
+  clearAvatarInput() {
+    this.$refs.avatarInput.value = '';
   }
 
   avatarInputChange(ev: any) {
@@ -207,6 +217,7 @@ export default class SpaceGeneral extends Vue {
         }));
         space.avatarUrl = avatarPostResponse.avatarUrl;
         space.avatarSmallUrl = avatarPostResponse.avatarSmallUrl;
+        this.avatar = null;
       }
       this.$store.mutations.editSpace(space);
       this.$flash(this.$t('views.setting.main.statusFlow.updatedMessage').toString(), 'success');
@@ -216,6 +227,11 @@ export default class SpaceGeneral extends Vue {
     } finally {
       this.saving = false;
     }
+  }
+
+  beforeMount() {
+    this.avatarUrl = this.myUser.space.avatarUrl;
+    this.displayName = this.myUser.space.displayName || this.myUser.space.account;
   }
 }
 </script>
