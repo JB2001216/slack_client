@@ -1,5 +1,5 @@
 <template>
-  <div class="subColumn">
+  <div v-if="project" class="subColumn">
     <div class="subColumn_head columnTitle">
       <h2>{{ project ? project.displayName : '' }}</h2>
       <my-simple-menu class="subColumn_head_menuContainer">

@@ -39,6 +39,8 @@ class EventsSubscription {
       this.source.removeEventListener('createProject', createProjectTask);
       this.source.removeEventListener('updateProject', updateProjectTask);
       this.source.removeEventListener('deleteProject', deleteProjectTask);
+      this.source.removeEventListener('deleteProjectUser', deleteProjectUserTask);
+      this.source.removeEventListener('createProjectUser', createProjectUserTask);
 
       this.source.close();
     }
@@ -56,6 +58,8 @@ class EventsSubscription {
     this.source.addEventListener('createProject', createProjectTask);
     this.source.addEventListener('updateProject', updateProjectTask);
     this.source.addEventListener('deleteProject', deleteProjectTask);
+    this.source.addEventListener('createProjectUser', createProjectUserTask);
+    this.source.addEventListener('deleteProjectUser', deleteProjectUserTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -165,6 +169,8 @@ class EventsSubscription {
       const data = JSON.parse(e.data);
       const isFireUser = data.userId === myUser.id;
 
+      if (!isFireUser) { return; }
+
       projectsApi.projectsProjectIdGet({
         spaceId: data.spaceId,
         projectId: data.params.projectId,
@@ -172,23 +178,19 @@ class EventsSubscription {
 
         store.mutations.activeUser.addProject(res);
 
-        if (isFireUser) {
+        router.push({
+          name: 'project',
+          params: {
+            userId: myUser.id + '',
+            projectId: res.id + '',
+          },
+        });
 
-          router.push({
-            name: 'project',
-            params: {
-              userId: myUser.id + '',
-              projectId: res.id + '',
-            },
-          });
-
-          appEventBus.emit('flash', { 'message': i18n.t('views.projectAddColumn.createNotification').toString(), 'name': 'success' });
-
-        }
+        appEventBus.emit('flash', { 'message': i18n.t('views.projectAddColumn.createNotification').toString(), 'name': 'success' });
 
       }).catch((err) => { console.log(err); });
 
-    }
+    } // +
 
     function updateProjectTask(e: any): void {
 
@@ -236,6 +238,46 @@ class EventsSubscription {
       }).catch((err) => { console.log(err); });
 
     }
+
+    function createProjectUserTask(e: any): void {
+
+      const data = JSON.parse(e.data);
+      const isCurrentUser = data.params.userId === myUser.id;
+
+      if (!isCurrentUser) { return; }
+
+      projectsApi.projectsProjectIdGet({
+        spaceId: data.spaceId,
+        projectId: data.params.projectId,
+      }).then((res) => {
+        store.mutations.activeUser.addProject(res);
+      }).catch((err) => { console.log(err); });
+
+    } // +
+
+    function deleteProjectUserTask(e: any): void {
+
+      const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
+      const isCurrentUser = data.params.userId === myUser.id;
+      const activeProjectId = store.state.activeUser.activeProjectData!.id;
+      const isActiveProject = data.params.projectId === activeProjectId;
+
+      if (isCurrentUser) {
+        store.actions.activeUser.init(myUser);
+        store.mutations.settingRouter.close();
+      }
+
+      if (isActiveProject) {
+        store.actions.activeUser.setActiveProject(null);
+        appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.removedCrntUserMessage').toString(), 'name': 'success' });
+      } else {
+        store.actions.activeUser.setActiveProject(activeProjectId);
+      }
+
+      if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.removedMessage').toString(), 'name': 'success' }); }
+
+    } // +
 
     // this.source.addEventListener('updateProjectUser', (e: any) => {
     //   console.log('updateProjectUser');

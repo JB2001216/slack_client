@@ -140,21 +140,9 @@ export default class SpaceMembers extends Vue {
   }
 
   deleteProjectUserTask(e: any): void {
-
     const data = JSON.parse(e.data);
-    const isFireUser = data.userId === this.myUser.id;
-    const currentUser = data.params.userId === this.myUser.id;
-
-    if (currentUser) {
-      this.$store.mutations.settingRouter.close();
-      this.$flash(this.$t('views.setting.main.projectMembers.removedCrntUserMessage').toString(), 'success');
-    }
-
     const index = this.pusers.findIndex((pu) => pu.userId === data.params.userId);
     if (index >= 0) { this.pusers.splice(index, 1); }
-
-    if (isFireUser) { this.$flash(this.$t('views.setting.main.projectMembers.removedMessage').toString(), 'success'); }
-
   }
 
   async onInfinite($state: StateChanger) {
