@@ -39,7 +39,7 @@
             <button v-if="user && getRemovable(puser)" @click="removingUser = removingUser || user" />
           </td>
         </my-space-user>
-        <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
+        <infinite-loading v-if="pusersInit" :identifier="infiniteId" @infinite="onInfinite" />
       </table>
       <!-- メンバーが少ない場合 -->
       <!--
@@ -131,19 +131,23 @@ export default class SpaceMembers extends Vue {
 
   created() {
     EventsSub.source.addEventListener('createProjectUser', this.createProjectUserTask);
+    EventsSub.source.addEventListener('deleteProjectUser', this.deleteProjectUserTask);
   }
 
   createProjectUserTask(e: any): void {
+    this.pusersInit = false;
+    setTimeout(() => { this.pusersInit = true; }, 100);
+  }
+
+  deleteProjectUserTask(e: any): void {
 
     const data = JSON.parse(e.data);
     const isFireUser = data.userId === this.myUser.id;
 
-    if (isFireUser) {
-      this.$flash(this.$t('views.setting.main.projectMemberAdd.addedMessage').toString(), 'success');
-    } else {
-      this.pusersInit = false;
-      setTimeout(() => { this.pusersInit = true; }, 100);
-    }
+    const index = this.pusers.findIndex((pu) => pu.userId === data.params.userId);
+    if (index >= 0) { this.pusers.splice(index, 1); }
+
+    if (isFireUser) { this.$flash(this.$t('views.setting.main.projectMembers.removedMessage').toString(), 'success'); }
 
   }
 
@@ -207,31 +211,27 @@ export default class SpaceMembers extends Vue {
   }
 
   async remove() {
-    if (this.saving) return;
-    if (!this.removingUser) return;
+
+    if (this.saving || !this.removingUser) return;
 
     try {
+
       this.saving = true;
-      const myUser = this.$store.state.activeUser.myUser!;
-      const projectId = this.$store.state.activeUser.activeProjectData!.id;
-      const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
-      await projectsApi.projectsProjectIdUsersUserIdDelete({
-        spaceId: myUser.space.id,
-        projectId,
+
+      await this.api.projectsProjectIdUsersUserIdDelete({
+        spaceId: this.myUser.space.id,
+        projectId: this.projectId,
         userId: this.removingUser.id,
       });
-      const index = this.pusers.findIndex((pu) => pu.userId === this.removingUser!.id);
-      if (index >= 0) {
-        this.pusers.splice(index, 1);
-      }
+
       this.removingUser = null;
 
     } catch (err) {
       this.$appEmit('error', { err });
-
     } finally {
       this.saving = false;
     }
+
   }
 
   getRemovable(puser: ProjectUserWithCurrentRole) {
@@ -249,6 +249,7 @@ export default class SpaceMembers extends Vue {
 
   destroyed() {
     EventsSub.source.removeEventListener('createProjectUser', this.createProjectUserTask);
+    EventsSub.source.removeEventListener('deleteProjectUser', this.deleteProjectUserTask);
   }
 
 }

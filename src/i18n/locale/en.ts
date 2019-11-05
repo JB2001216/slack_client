@@ -206,6 +206,7 @@ const struct: LocaleStruct = {
             role: 'Role',
             addMember: 'Add Member',
             removeConfirmMessage: 'Remove {name} ({email}) ?',
+            removedMessage: 'Project User Successfully Deleted',
           },
           projectMemberAdd: {
             title: 'Add members to {projectName}',

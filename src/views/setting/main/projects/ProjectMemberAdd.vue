@@ -153,6 +153,8 @@ export default class ProjectMemberAdd extends Vue {
         spaceId: this.myUser.space.id,
         projectId: this.activeProject.id,
         projectsProjectIdUsersPostRequestBody: data.body,
+      }).then(() => {
+        this.$flash(this.$t('views.setting.main.projectMemberAdd.addedMessage').toString(), 'success');
       }).catch((err) => {
         errorUsers.push(data);
         this.$appEmit('error', { err });
