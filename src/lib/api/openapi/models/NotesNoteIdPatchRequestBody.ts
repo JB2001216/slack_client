@@ -60,6 +60,12 @@ export interface NotesNoteIdPatchRequestBody {
      * @memberof NotesNoteIdPatchRequestBody
      */
     parent?: number | null;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof NotesNoteIdPatchRequestBody
+     */
+    related?: Array<number>;
 }
 
 export function NotesNoteIdPatchRequestBodyFromJSON(json: any): NotesNoteIdPatchRequestBody {
@@ -79,6 +85,7 @@ export function NotesNoteIdPatchRequestBodyFromJSONTyped(json: any, ignoreDiscri
         'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
         'chargeUsers': !exists(json, 'chargeUsers') ? undefined : json['chargeUsers'],
         'parent': !exists(json, 'parent') ? undefined : json['parent'],
+        'related': !exists(json, 'related') ? undefined : json['related']
     };
 }
 
@@ -98,6 +105,7 @@ export function NotesNoteIdPatchRequestBodyToJSON(value?: NotesNoteIdPatchReques
         'writeUser': value.writeUser,
         'chargeUsers': value.chargeUsers,
         'parent': value.parent,
+        'related': value.related,
     };
 }
 

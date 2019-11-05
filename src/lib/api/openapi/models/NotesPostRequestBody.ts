@@ -60,6 +60,12 @@ export interface NotesPostRequestBody {
      * @memberof NotesPostRequestBody
      */
     parent?: number | null;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof NotesPostRequestBody
+     */
+    related?: Array<number>;
 }
 
 export function NotesPostRequestBodyFromJSON(json: any): NotesPostRequestBody {
@@ -79,6 +85,7 @@ export function NotesPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator
         'writeUser': !exists(json, 'writeUser') ? undefined : json['writeUser'],
         'chargeUsers': json['chargeUsers'],
         'parent': !exists(json, 'parent') ? undefined : json['parent'],
+        'related': !exists(json, 'related') ? undefined : json['related'],
     };
 }
 
@@ -98,6 +105,7 @@ export function NotesPostRequestBodyToJSON(value?: NotesPostRequestBody): any {
         'writeUser': value.writeUser,
         'chargeUsers': value.chargeUsers,
         'parent': value.parent,
+        'related': value.related,
     };
 }
 
