@@ -70,6 +70,7 @@ import MyProjectRoleSelect from '@/components/MyProjectRoleSelect.vue';
   },
 })
 export default class ProjectMemberAdd extends Vue {
+
   users: { user: SpaceUser; body: ProjectsProjectIdUsersPostRequestBody }[] = [];
   page = 1;
   limit = 10;
@@ -85,7 +86,7 @@ export default class ProjectMemberAdd extends Vue {
   }
 
   get activeProject() {
-    return this.$store.getters.activeUser.activeProject;
+    return this.$store.getters.activeUser.activeProject!;
   }
 
   get selectedUserIds() {
@@ -138,34 +139,33 @@ export default class ProjectMemberAdd extends Vue {
   }
 
   async save() {
+
     if (this.saving || !this.users.length) return;
 
     this.saving = true;
-    const myUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
+
+    const projectsApi = apiRegistry.load(ProjectsApi, this.myUser.token);
     const errorUsers: this['users'] = [];
+
     for (const data of this.users) {
-      try {
-        await projectsApi.projectsProjectIdUsersPost({
-          spaceId: myUser.space.id,
-          projectId,
-          projectsProjectIdUsersPostRequestBody: data.body,
-        });
-      } catch (err) {
+
+      await projectsApi.projectsProjectIdUsersPost({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProject.id,
+        projectsProjectIdUsersPostRequestBody: data.body,
+      }).catch((err) => {
         errorUsers.push(data);
         this.$appEmit('error', { err });
-      }
+      });
+
     }
 
-    if (!errorUsers.length) {
-      this.$flash(this.$t('views.setting.main.projectMemberAdd.addedMessage').toString(), 'success');
-      this.$store.mutations.settingRouter.to('project-members');
-      return;
-    }
+    if (!errorUsers.length) { this.$store.mutations.settingRouter.to('project-members'); }
 
     this.users = errorUsers;
     this.saving = false;
+
   }
+
 }
 </script>

@@ -237,12 +237,6 @@ class EventsSubscription {
 
     }
 
-    // this.source.addEventListener('createProjectUser', (e: any) => {
-    //   console.log('createProjectUser');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
-
     // this.source.addEventListener('updateProjectUser', (e: any) => {
     //   console.log('updateProjectUser');
     //   const data = JSON.parse(e.data);

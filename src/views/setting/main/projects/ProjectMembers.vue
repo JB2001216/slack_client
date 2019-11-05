@@ -83,6 +83,7 @@ import { StateChanger } from 'vue-infinite-loading';
 import { apiRegistry, SpaceUser, ProjectsApi, ProjectUser } from '@/lib/api';
 import { SpaceRoles, SpaceRole, ProjectRoles, ProjectRole, Perm } from '@/lib/permissions';
 import MyProjectRoleSelect from '@/components/MyProjectRoleSelect.vue';
+import EventsSub from '@/events-subscription';
 
 interface ProjectUserWithCurrentRole extends ProjectUser {
   currentSpaceRole: SpaceRole;
@@ -95,12 +96,26 @@ interface ProjectUserWithCurrentRole extends ProjectUser {
   },
 })
 export default class SpaceMembers extends Vue {
+
   page = 1;
   limit = 30;
   infiniteId = +new Date();
+  pusersInit: boolean = true;
   pusers: ProjectUserWithCurrentRole[] = [];
   saving = false;
   removingUser: SpaceUser | null = null;
+
+  get myUser() {
+    return this.$store.state.activeUser.myUser!;
+  }
+
+  get projectId() {
+    return this.$store.state.activeUser.activeProjectData!.id;
+  }
+
+  get api() {
+    return apiRegistry.load(ProjectsApi, this.myUser.token);
+  }
 
   get mySpaceRole() {
     return this.$store.getters.activeUser.mySpaceRole!;
@@ -114,23 +129,41 @@ export default class SpaceMembers extends Vue {
     return this.$store.getters.activeUser.activeProjectMyPerms.includes(Perm.ADD_PROJECT_USER);
   }
 
+  created() {
+    EventsSub.source.addEventListener('createProjectUser', this.createProjectUserTask);
+  }
+
+  createProjectUserTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const isFireUser = data.userId === this.myUser.id;
+
+    if (isFireUser) {
+      this.$flash(this.$t('views.setting.main.projectMemberAdd.addedMessage').toString(), 'success');
+    } else {
+      this.pusersInit = false;
+      setTimeout(() => { this.pusersInit = true; }, 100);
+    }
+
+  }
+
   async onInfinite($state: StateChanger) {
-    const myUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.state.activeUser.activeProjectData!.id;
-    const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
 
     try {
-      const res = await projectsApi.projectsProjectIdUsersGet({
-        spaceId: myUser.space.id,
-        projectId,
+
+      const res = await this.api.projectsProjectIdUsersGet({
+        spaceId: this.myUser.space.id,
+        projectId: this.projectId,
         page: this.page,
         limit: this.limit,
       });
+
       const addData: ProjectUserWithCurrentRole[] = res.results.filter((r) => !this.pusers.find((pu) => pu.userId === r.userId))
         .map((pu) => Object.assign({}, pu, {
           currentSpaceRole: SpaceRoles.get(pu.spaceRoleId),
           currentProjectRole: pu.projectRoleId ? ProjectRoles.get(pu.projectRoleId) : null,
         }));
+
       if (addData.length) {
         this.pusers.push(...addData);
       }
@@ -145,6 +178,7 @@ export default class SpaceMembers extends Vue {
     } catch (err) {
       this.$appEmit('error', { err });
     }
+
   }
 
   async onProjectRoleChange(projectRoleId: number, user: ProjectUserWithCurrentRole) {
@@ -212,5 +246,10 @@ export default class SpaceMembers extends Vue {
     }
     return true;
   }
+
+  destroyed() {
+    EventsSub.source.removeEventListener('createProjectUser', this.createProjectUserTask);
+  }
+
 }
 </script>
