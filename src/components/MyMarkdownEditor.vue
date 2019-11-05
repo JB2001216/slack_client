@@ -116,9 +116,27 @@ export default class MyMarkdownEditor extends Vue {
     this.input = this.value;
   }
 
+  produceNoteLinks(markdown: string) {
+    if (markdown === null || markdown === undefined) {
+      return markdown;
+    }
+    const noteLink = /:([^:\n]*):/g;
+    const html = markdown.replace(noteLink, (match, data) => {
+      const note = this.allNotes.find((note) => note.subject === data);
+      if (note === undefined) {
+        return match;
+      }
+      const loginUser = this.$store.state.activeUser.myUser!;
+      const projectId = this.$store.getters.activeUser.activeProjectId!;
+      const href = `#/main/users/${loginUser.id}/projects/${projectId}/notes/${note.id.toString()}`;
+      return `<a href="${href}">${note.subject}</a>`;
+    });
+    return html;
+  }
+
   // computed
   get compiledValue() {
-    const value = marked(
+    const value = this.produceNoteLinks(marked(
       sanitizeHtml(this.value || '', {
         allowedTags: [],
         allowedAttributes: {},
@@ -130,7 +148,7 @@ export default class MyMarkdownEditor extends Vue {
           return highlight.highlightAuto(code, [lang]).value;
         },
       }
-    );
+    ));
     return sanitizeHtml(value, {
       allowedTags: [
         'em', 'strong', 'strike',
@@ -141,7 +159,7 @@ export default class MyMarkdownEditor extends Vue {
       ],
       allowedAttributes: {
         '*': ['class'],
-        a: ['href', 'name', 'target'],
+        a: ['href', 'name', 'target', 'routerlink'],
         img: ['src'],
       },
     });
@@ -167,7 +185,11 @@ export default class MyMarkdownEditor extends Vue {
   onKeyDown(event: KeyboardEvent) {
     switch (event.key) {
       case ':':
-        this.onShowList();
+        if (this.isAddingNoteLink === false) {
+          this.onShowList();
+        } else {
+          this.hideList();
+        }
         break;
       case 'ArrowLeft':
       case 'ArrowRight':
