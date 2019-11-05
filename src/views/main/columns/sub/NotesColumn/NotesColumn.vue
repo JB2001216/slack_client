@@ -348,6 +348,7 @@ export default class NotesColumn extends Vue {
             subject: this.addingNoteSubject.trim(),
             status: statusOptions[0].id,
             chargeUsers: [],
+            related: [],
           },
         });
         this.$appEmit('note-added', { note: updatedNote });
