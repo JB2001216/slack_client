@@ -518,7 +518,7 @@ export default class NoteColumn extends Vue {
 
   onNoteEdited(ev: { note: api.Note }) {
     if (this.note && this.note.id === ev.note.id) {
-      this.note = Object.assign({}, ev.note);
+      this.note = Object.assign({}, ev.note, { body: this.noteIdToTitle(ev.note.body) });
     }
   }
 
