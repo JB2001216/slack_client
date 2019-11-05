@@ -148,6 +148,7 @@
               preview-class="noteEditWrap_post_view"
               :preview-placeholder="$t('views.noteColumn.detailsAreEmpty')"
               :hide-editor="true"
+              :all-notes="allNotes"
             />
           </div>
           <div class="noteEditWrap_submit noEdit">
