@@ -42,9 +42,7 @@
                 >
               </td>
               <td class="clearfix">
-                <div class="select" :class="{error: r.errors.spaceRoleId}">
-                  <my-space-role-select v-model="r.body.spaceRoleId" :my-role="myRole" />
-                </div>
+                <my-space-role-select v-model="r.body.spaceRoleId" class="select basicSelect" :class="{error: r.errors.spaceRoleId}" :my-role="myRole" />
                 <button v-if="rows.length > 1" type="button" @click="deleteRow(i)" />
               </td>
             </tr>
@@ -64,12 +62,18 @@
           <button class="iconButtonPlus" type="button" @click="addRow()">
             {{ $t('views.setting.main.spaceMemberInvite.addAnEntryField') }}
           </button>
-          <button class="basicButtonPrimary wide" type="submit">
+          <button class="basicButtonPrimary wide" type="submit" :disabled="!changes">
             {{ $t('views.setting.main.spaceMemberInvite.sendInvitation') }}
           </button>
         </div>
       </form>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
@@ -77,8 +81,8 @@
 <style lang="stylus">
 .setting_main_spaceMemberInvite
   .option_spaceMemberInvite_table
-    input.error, .select.error select
-      background: #fbeeee
+    input.error, .select.error
+      background-color: #fbeeee
     tr.errors
       td
         padding-top: 0
@@ -89,10 +93,10 @@
 
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Mixins } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi, SpacesSpaceIdUsersInviteByEmailPostRequestBody, ApiErrors, getJsonFromResponse } from '@/lib/api';
 import { SpaceRoles, SpaceRole } from '@/lib/permissions';
-
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 import MySpaceRoleSelect from '@/components/MySpaceRoleSelect.vue';
 
 @Component({
@@ -100,7 +104,7 @@ import MySpaceRoleSelect from '@/components/MySpaceRoleSelect.vue';
     MySpaceRoleSelect,
   },
 })
-export default class SpaceMemberInvite extends Vue {
+export default class SpaceMemberInvite extends Mixins(ConfirmChangeDiscardForSettingMixin) {
   rows: {
     body: SpacesSpaceIdUsersInviteByEmailPostRequestBody;
     errors: {[field: string]: string[]};
@@ -117,6 +121,10 @@ export default class SpaceMemberInvite extends Vue {
 
   get selectableRoles() {
     return [...SpaceRoles.getSelectables(this.myRole)];
+  }
+
+  get changes() {
+    return this.rows.findIndex((r) => r.body.email.trim() !== '' || r.body.account.trim() !== '') >= 0;
   }
 
   addRow() {
@@ -145,7 +153,7 @@ export default class SpaceMemberInvite extends Vue {
       r.errors = {};
     });
 
-    let rows = this.rows.filter((r) => r.body.email.trim() !== '' || r.body.account.trim() !== '');
+    const rows = this.rows.filter((r) => r.body.email.trim() !== '' || r.body.account.trim() !== '');
     if (!rows.length) return;
 
     const myUser = this.$store.state.activeUser.myUser!;
@@ -159,6 +167,9 @@ export default class SpaceMemberInvite extends Vue {
         spaceId: myUser.space.id,
         spacesSpaceIdUsersInviteByEmailPostRequestBody: rows.map((r) => r.body),
       });
+      this.$flash(this.$t('views.setting.main.spaceMemberInvite.invitedMessage').toString(), 'success');
+      this.rows = [];
+      await this.$store.actions.settingRouter.to('space-members');
 
     } catch (err) {
 

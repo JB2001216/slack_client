@@ -1,97 +1,91 @@
-body{
-  font-family: Noto Sans CJK JP;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: normal;
-  color: #000;
-  .preload{
-    transition: none !important;
-  }
-}
+*
+  word-wrap: break-word
+  word-break: break-word
+  overflow-wrap: break-word
 
-.home{
-  height: 100vh;
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 68px 200px minmax(300px, 0.6fr) minmax(440px, 1fr);
-  grid-gap: 0;
-  .teamColumn{
-    grid-row: 1;
-    grid-column: 1 / 2;
-  }
-  .projectColumn{
-    grid-row: 1;
-    grid-column: 2 / 3;
-  }
-  .subColumn{
-    grid-row: 1;
-    grid-column: 3 / 4;
-  }
-  .mainColumn{
-    grid-row: 1;
-    grid-column: 4 / 5;
-    position: relative;
-    max-height: 100vh;
-  }
-}
+body
+  -webkit-font-smoothing antialiased
+  -moz-osx-font-smoothing grayscale
+  font-family: $fontFamilyBody
+  color: $colors.primaryBlack
+  font-style: normal
+  font-weight: normal
+  font-size: 14px
+  line-height: normal
+  .preload
+    transition: none !important
+
+button
+  outline: none
+
+input::placeholder,
+textarea::placeholder
+  color: $colors.lightGray
+
+.home
+  height: 100vh
+  display: grid
+  grid-template-rows: 1fr
+  grid-template-columns: 68px 200px minmax(300px, 0.6fr) minmax(440px, 1fr)
+  grid-gap: 0
+  .teamColumn
+    grid-row: 1
+    grid-column: 1 / 2
+  .projectColumn
+    grid-row: 1
+    grid-column: 2 / 3
+  .subColumn
+    grid-row: 1
+    grid-column: 3 / 4
+  .mainColumn
+    grid-row: 1
+    grid-column: 4 / 5
+    position: relative
+    max-height: 100vh
 
 //テキスト設定
-.t-hero{
-  font-weight: bold;
-  font-size: 52px;
-}
-.t-display2{
-  font-weight: bold;
-  font-size: 45px;
-}
-.t-display1{
-  font-weight: bold;
-  font-size: 34px;
-}
-.t-heading{
-  font-weight: bold;
-  font-size: 24px;
-}
-.t-title{
-  font-weight: bold;
-  font-size: 22px;
-}
-.t-sub{
-  font-weight: bold;
-  font-size: 18px;
-}
-.t-bold{
-  font-weight: bold;
-}
-.t-caption{
-  font-weight: normal;
-  font-size: 12px;
-}
+.t-hero
+  font-weight: bold
+  font-size: 52px
+.t-display2
+  font-weight: bold
+  font-size: 45px
+.t-display1
+  font-weight: bold
+  font-size: 34px
+.t-heading
+  font-weight: bold
+  font-size: 24px
+.t-title
+  font-weight: bold
+  font-size: 22px
+.t-sub
+  font-weight: bold
+  font-size: 18px
+.t-bold
+  font-weight: bold
+.t-caption
+  font-weight: normal
+  font-size: 12px
 
 //ボタン
-.btn{
-  font-weight: bold;
-  font-size: 14px;
-}
+.btn
+  font-weight: bold
+  font-size: 14px
 
 //ステータス
-.status{
-  display: inline-block;
-  color: #FFF;
-  padding: 4px 12px;
-  border-radius: 24px;
-  &.status_1{
-    background: #E69A17;
-  }
-}
+.status
+  display: inline-block
+  color: #FFF
+  padding: 4px 12px
+  border-radius: 24px
+  &.status_1
+    background: #E69A17
 
 //clearfix
-.clearfix {
-  zoom: 1;
-  &:after {
-    content: "";
-    clear: both;
-    display: block;
-  }
-}
+.clearfix
+  zoom: 1
+  &:after
+    content: ''
+    clear: both
+    display: block

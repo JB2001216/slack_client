@@ -14,6 +14,12 @@
         <button v-show="false" type="submit" />
       </form>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
@@ -26,15 +32,21 @@
 </style>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Mixins } from 'vue-property-decorator';
 import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
 import { apiRegistry, ProjectsApi, ApiErrors, getJsonFromResponse } from '@/lib/api';
+import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
+
 
 @Component
-export default class ProjectAddColumn extends Vue {
+export default class ProjectAddColumn extends Mixins(ConfirmChangeDiscardMixin) {
   displayName = '';
   displayNameMessage: MySingleFormTextInputMessage = null;
   saving = false;
+
+  get changes() {
+    return this.displayName.trim() !== '';
+  }
 
   async save() {
 
@@ -53,6 +65,7 @@ export default class ProjectAddColumn extends Vue {
           displayName: this.displayName,
         },
       });
+      this.displayName = '';
 
     } catch (err) {
 

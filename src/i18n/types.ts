@@ -38,6 +38,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
   };
 
   components: {
+    myConfirmChangeDiscardDialog: {
+      title: string;
+      description: string;
+    };
     myDateRangeInput: {
       save: string;
       cancel: string;

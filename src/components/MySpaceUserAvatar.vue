@@ -16,8 +16,7 @@
 
 
 <style lang="stylus">
-@import '../stylus/_fixed/base/_variable'
-@import '../stylus/_fixed/base/_theme'
+@import '../stylus/_settings'
 
 .mySpaceUserAvatar
   box-sizing: border-box
@@ -35,7 +34,7 @@
   &_initials
     width: 100%
     height: 100%
-    themeBackgroundColor('icon')
+    background-color: $themeColors.icon
     color: #fff
     display: flex
     justify-content: center

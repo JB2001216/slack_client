@@ -3,11 +3,7 @@
     <div class="tab_task">
       <div class="task_menu">
         <div class="task_menu_left">
-          <a class="task_menu_favorite" href="#" :class="{active: isFavorite}" @click.prevent="favorite(!isFavorite)">
-            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="m12 1.5 2.3574 7.25532h7.6287l-6.1718 4.48408 2.3574 7.2553-6.1717-4.4841-6.17175 4.4841 2.3574-7.2553-6.17174-4.48408h7.62869z" />
-            </svg>
-          </a>
+          <my-svg-icon name="bookmark" class="task_menu_favorite" :class="{active: isFavorite}" @click.prevent="favorite(!isFavorite)" />
         </div>
         <div class="task_menu_right">
           <a
@@ -17,18 +13,14 @@
             href="#"
             @click.prevent="showedFilter = !showedFilter"
           >
+            <my-svg-icon name="filter" />
             <span class="t-caption">{{ $t('views.tasksColumn.filter') }}</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="m2.8442 3.00008c-.1103-.00153-.2198.0185-.32215.05893-.10236.04043-.19551.10045-.27406.17658-.07855.07612-.14092.16684-.18349.26686-.04258.10003-.0645.20738-.0645.31581s.02192.21578.0645.31581c.04257.10002.10494.19074.18349.26686.07855.07613.1717.13615.27406.17658.10235.04043.21185.06046.32215.05893h.66653l5.99223 7.36356h4.99404l5.9923-7.36356h.6665c.1103.00153.2198-.0185.3222-.05893.1023-.04043.1955-.10045.274-.17658.0786-.07612.1409-.16684.1835-.26686.0426-.10003.0645-.20738.0645-.31581s-.0219-.21578-.0645-.31581c-.0426-.10002-.1049-.19074-.1835-.26686-.0785-.07613-.1717-.13615-.274-.17658-.1024-.04043-.2119-.06046-.3222-.05893zm6.65876 10.63632v7.3636l4.99404-1.6364v-5.7272z" />
-            </svg>
           </a>
           <my-simple-menu>
             <template v-slot="{open, close, opened}">
               <a class="task_menu_sort" href="#" @click.stop.prevent="opened ? close() : open()">
                 <span class="t-caption">{{ $t(`views.tasksColumn.ordering.${currentSort.i18nKey}`) }}</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="m12 20-8.66025-13.5h17.32055z" />
-                </svg>
+                <my-svg-icon name="pulldown" />
               </a>
             </template>
             <template v-slot:items>
@@ -98,13 +90,34 @@
 
 
 <style lang="stylus">
-@import '../../../../../stylus/_fixed/base/_theme'
+@import '../../../../../stylus/_settings'
 
 .tab_task
-  .task_menu_search.active
-    themeColor('active')
-    svg
-      themeFill('active')
+  .task_menu
+    &_search
+      --mySvgIconColor: $themeColors.icon
+      --mySvgIconSize: 16px
+      &:hover
+        color: $themeColors.iconDarken1
+        --mySvgIconColor: $themeColors.iconDarken1
+      &.active
+        color: $colors.primaryBlue
+        --mySvgIconColor: $colors.primaryBlue
+      &.active:hover
+        color: $colors.primaryBlueDarken1
+        --mySvgIconColor: $colors.primaryBlueDarken1
+      .mySvgIcon
+        margin-right: 6px
+    &_sort
+      --mySvgIconColor: $themeColors.icon
+      --mySvgIconSize: 9px
+      &:hover
+        color: $themeColors.iconDarken1
+        --mySvgIconColor: $themeColors.iconDarken1
+      .mySvgIcon
+        margin-left: 6px
+        vertical-align: middle
+
   .taskListContainer
     max-height: calc(100vh - 225px)
     overflow-y: scroll

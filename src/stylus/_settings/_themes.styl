@@ -1,0 +1,99 @@
+/*
+Theme Names
+
+Themes are switched by specifying one of the following classes in the root element.
+
+Currently, it is set to the element of id="app" of App.vue.
+
+- gray_green
+- blueGray_green
+
+Styleguide 10.1
+*/
+
+/*
+Theme Colors
+
+```stylus
+// Sample Code
+@import '../../stylus/_settings'
+.example1
+  color: $themeColors.main
+  background-color: $themeColors.sub
+
+
+// Yielding the following CSS
+// * The color for each theme is automatically set using 'CSS custom properties'
+.example1 {
+  color: var(--themeColor-main, #2e2e2e)
+  background-color: var(--themeColor-sub, #484848)
+}
+```
+
+Styleguide 10.2
+*/
+
+/*
+gray_green
+
+main - #2e2e2e
+sub - #484848
+subDarken1 - #414141
+accent - #519589
+active - #2F80ED
+activeLighten2 - #7AAEF3
+activeLighten5 - #EBEFF5
+icon - #333
+iconDarken1 - #000
+
+Styleguide 10.2.1
+*/
+
+/*
+blueGray_green
+
+main - #313444
+sub - #434659
+subDarken1 - #3C3F50
+accent - #519589
+active - #2F80ED
+activeLighten2 - #7AAEF3
+activeLighten5 - #EBEFF5
+icon - #333
+iconDarken1 - #000
+
+Styleguide 10.2.2
+*/
+$themes := {
+  gray_green: {
+    colors: {
+      main: #2e2e2e,
+      sub: #484848,
+      subDarken1: #484848 - 10%, // #414141
+      accent: #519589,
+      active: #2F80ED,
+      activeLighten2: #2F80ED + 36%, // #7AAEF3,
+      activeLighten5: #EBEFF5,
+      icon: #666,
+      iconDarken1: #000,
+    }
+  },
+  blueGray_green: {
+    colors: {
+      main: #313444,
+      sub: #434659,
+      subDarken1: #434659 - 10%, // #3C3F50
+      accent: #519589,
+      active: #2F80ED,
+      activeLighten2: #2F80ED + 36%, // #7AAEF3,
+      activeLighten5: #EBEFF5,
+      icon: #666,
+      iconDarken1: #000,
+    }
+  },
+}
+
+
+$themeColors := {}
+for $colorName, $color in $themes['gray_green'].colors
+  $themeColors[$colorName] = 'var(--themeColor-%s, %s)' % (unquote($colorName) $color)

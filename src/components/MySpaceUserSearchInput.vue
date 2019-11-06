@@ -35,7 +35,7 @@
 
 
 <style lang="stylus">
-@import '../stylus/_fixed/base/_theme'
+@import '../stylus/_settings'
 
 .mySpaceUserSearchInput
   position: relative
@@ -68,7 +68,7 @@
       align-items: center
       cursor: pointer
       &:hover
-        themeBackgroundColor('accent')
+        background-color: $themeColors.accent
         color: #fff
       &_avatar
         width: 30px

@@ -1,6 +1,6 @@
 {
   "name": "erniepjm",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "author": "Ernie inc <info@ernie.co.jp>",
   "homepage": "https://ernie.co.jp/",
   "private": true,
@@ -13,11 +13,11 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     "test:unit": "vue-cli-service test:unit",
-    "kss": "mkdir -p ./kss/dist & stylus ./src/stylus/_fixed/full.styl -o ./kss/dist & kss -c ./kss/kss-config.json"
+    "kss": "mkdir -p ./kss/dist & stylus ./src/stylus/main.styl -o ./kss/dist & kss -c ./kss/kss-config.json"
   },
   "main": "background.js",
   "dependencies": {
-    "@juggle/resize-observer": "^2.3.0",
+    "@juggle/resize-observer": "^2.4.0",
     "@types/vue-color": "^2.4.2",
     "ajv": "^6.10.2",
     "electron-log": "^3.0.8",

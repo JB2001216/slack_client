@@ -29,13 +29,17 @@ const struct: LocaleStruct = {
     },
 
     components: {
+      myConfirmChangeDiscardDialog: {
+        title: '入力中の内容は保存されていません。',
+        description: '入力中の内容は破棄されますがよろしいですか？',
+      },
       myDateRangeInput: {
         save: 'Save',
         cancel: 'Cancel',
         clear: 'Clear',
       },
       myProjectStatusInput: {
-        others: 'Others',
+        others: 'その他',
       },
       myChargerInput: {
         baton: '担当',

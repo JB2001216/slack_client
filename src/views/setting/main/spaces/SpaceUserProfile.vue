@@ -20,7 +20,7 @@
           @drop.prevent.stop="onAvatarImageDrop"
         >
           <img v-if="avatarUrl" ref="avatarImage" :src="avatarUrl" alt="pic">
-          <my-space-user-avatar v-else :user="myUser" :size="160" shape="roundedSquare" />
+          <my-space-user-avatar v-else :user="myUser" :size="160" shape="circle" />
         </label>
       </div>
       <label class="option_spaceProfileGeneral_uploadButton" for="avatarInput">
@@ -37,16 +37,22 @@
       <input v-model="displayName" type="text" class="basicInput">
     </div>
     <div class="option_spaceProfileGeneral_addButton clearfix">
-      <button class="basicButtonPrimary wide" :disabled="saving" @click="save">
+      <button class="basicButtonPrimary wide" :disabled="saving || !changes" @click="save">
         {{ $t('views.setting.main.userProfile.saveBtn') }}
       </button>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
 
 <style lang="stylus">
-@import '../../../../stylus/_fixed/base/_variable'
+@import '../../../../stylus/_settings'
 
 .option_spaceProfileGeneral
   input[type="file"]
@@ -65,19 +71,19 @@
       height: 100%
       object-fit: cover
       border: 1px solid $colors.lightGray
-      border-radius: 4px
+      border-radius: 50%
     &.avatarFileDragging
       label
         &:before
           content: ''
           display: block
           position: absolute
-          border: 4px dashed $colors.primaryBlue
-          border-radius: 4px
-          left: -2px
-          top: -2px
-          right: -2px
-          bottom: -2px
+          border: 2px dashed $colors.primaryBlue
+          border-radius: 50%
+          left: -1px
+          top: -1px
+          right: -1px
+          bottom: -1px
           box-sizing: border-box
           pointer-events: none
         >img,
@@ -91,11 +97,12 @@
 
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi, UsersApi, SpacesSpaceIdUsersUserIdAvatarPostRequestBody } from '@/lib/api';
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 
 @Component
-export default class SpaceUserProfile extends Vue {
+export default class SpaceUserProfile extends Mixins(ConfirmChangeDiscardForSettingMixin) {
   $refs!: {
     avatarInput: HTMLInputElement;
     avatarImage: HTMLImageElement;
@@ -116,6 +123,13 @@ export default class SpaceUserProfile extends Vue {
 
   get avatarInputAccept() {
     return this.avatarFileMimes.join(',');
+  }
+
+  get changes() {
+    return (
+      !!this.avatar ||
+      this.displayName !== (this.myUser.displayName || this.myUser.account)
+    );
   }
 
   clearAvatarInput() {
@@ -210,7 +224,7 @@ export default class SpaceUserProfile extends Vue {
           userId: this.myUser.id,
           avatar: this.avatar,
         }));
-
+        this.avatar = null;
       }
 
       await usersApi.usersMePatch({

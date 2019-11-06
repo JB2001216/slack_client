@@ -12,7 +12,7 @@
         <button
           class="basicButtonPrimary wide"
           type="button"
-          :disabled="!activeProject || saving"
+          :disabled="!activeProject || !changes || saving"
           @click="actions('save')"
         >
           {{ $t('views.setting.main.projectGeneral.save') }}
@@ -31,6 +31,11 @@
       </div>
     </div>
 
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
     <my-modal
       v-if="confirmDeleting"
       :value="true"
@@ -58,12 +63,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
 import store from '@/store';
 import { apiRegistry, ProjectsApi } from '@/lib/api';
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
+
 
 @Component
-export default class ProjectGeneral extends Vue {
+export default class ProjectGeneral extends Mixins(ConfirmChangeDiscardForSettingMixin) {
 
   inputName: string = '';
   saving: boolean = false;
@@ -80,6 +87,10 @@ export default class ProjectGeneral extends Vue {
 
   get api() {
     return apiRegistry.load(ProjectsApi, this.myUser.token);
+  }
+
+  get changes() {
+    return !!this.activeProject && this.activeProject.displayName !== this.inputName;
   }
 
   async actions(type: string) {

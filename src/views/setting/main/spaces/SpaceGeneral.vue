@@ -42,7 +42,7 @@
       </div>
 
       <div class="option_spaceGeneral_addButton clearfix">
-        <button class="basicButtonPrimary wide" :disabled="saving" @click="save">
+        <button class="basicButtonPrimary wide" :disabled="saving || !changes" @click="save">
           {{ $t('views.setting.main.spaceGeneral.saveBtn') }}
         </button>
       </div>
@@ -52,12 +52,18 @@
         </button>
       </div>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
 
 <style lang="stylus">
-@import '../../../../stylus/_fixed/base/_variable'
+@import '../../../../stylus/_settings'
 
 .option_spaceGeneral
   input[type="file"]
@@ -83,12 +89,12 @@
           content: ''
           display: block
           position: absolute
-          border: 4px dashed $colors.primaryBlue
+          border: 2px dashed $colors.primaryBlue
           border-radius: 4px
-          left: -2px
-          top: -2px
-          right: -2px
-          bottom: -2px
+          left: -1px
+          top: -1px
+          right: -1px
+          bottom: -1px
           box-sizing: border-box
           pointer-events: none
         img
@@ -101,11 +107,13 @@
 
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi, SpacesSpaceIdAvatarPostRequest } from '@/lib/api';
+import { Route, NavigationGuard } from 'vue-router';
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 
 @Component
-export default class SpaceGeneral extends Vue {
+export default class SpaceGeneral extends Mixins(ConfirmChangeDiscardForSettingMixin) {
   $refs!: {
     avatarInput: HTMLInputElement;
     avatarImage: HTMLImageElement;
@@ -129,13 +137,15 @@ export default class SpaceGeneral extends Vue {
     return this.avatarFileMimes.join(',');
   }
 
-  clearAvatarInput() {
-    this.$refs.avatarInput.value = '';
+  get changes() {
+    return (
+      !!this.avatar ||
+      this.displayName !== (this.myUser.space.displayName || this.myUser.space.account)
+    );
   }
 
-  beforeMount() {
-    this.avatarUrl = this.myUser.space.avatarUrl;
-    this.displayName = this.myUser.space.displayName || this.myUser.space.account;
+  clearAvatarInput() {
+    this.$refs.avatarInput.value = '';
   }
 
   avatarInputChange(ev: any) {
@@ -211,6 +221,7 @@ export default class SpaceGeneral extends Vue {
           spaceId: this.myUser.space.id,
           avatar: this.avatar,
         }));
+        this.avatar = null;
       }
 
       await spaceApi.spacesSpaceIdPut({
@@ -246,5 +257,9 @@ export default class SpaceGeneral extends Vue {
 
   }
 
+  beforeMount() {
+    this.avatarUrl = this.myUser.space.avatarUrl;
+    this.displayName = this.myUser.space.displayName || this.myUser.space.account;
+  }
 }
 </script>

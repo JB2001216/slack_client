@@ -128,7 +128,7 @@ class EventsSubscription {
       }).then((res) => {
         store.mutations.activeUser.addSpaceUser(...res.results);
         if (isFireUser) {
-          store.mutations.settingRouter.to('space-members');
+          store.actions.settingRouter.to('space-members');
           appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.spaceMemberInvite.invitedMessage').toString(), 'name': 'success' });
         }
       }).catch((err) => { console.log(err); });
@@ -265,7 +265,7 @@ class EventsSubscription {
 
       if (isCurrentUser) {
         store.actions.activeUser.init(myUser);
-        store.mutations.settingRouter.close();
+        store.actions.settingRouter.close();
       }
 
       if (isActiveProject) {
