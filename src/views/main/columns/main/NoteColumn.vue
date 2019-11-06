@@ -22,6 +22,7 @@
               :editor-placeholder="$t('views.noteColumn.enterDetails')"
               preview-class="noteEditWrap_post_view"
               :preview-placeholder="$t('views.noteColumn.detailsAreEmpty')"
+              :all-notes="allNotes"
             />
           </div>
           <div class="dashboardWrap_submit">
@@ -87,6 +88,7 @@
               preview-class="noteEditWrap_post_view"
               :preview-placeholder="$t('views.noteColumn.detailsAreEmpty')"
               :hide-editor="true"
+              :all-notes="allNotes"
             />
           </div>
           <div class="noteEditWrap_submit noEdit">
@@ -186,14 +188,16 @@ import * as api from '@/lib/api';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
+import { NotesApi } from '../../../../lib/api/openapi/apis/NotesApi';
+import { dateFormat } from '../../../../filters';
 
-async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'note'>>> {
+async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'note' | 'allNotes'>>> {
   const loginUser = store.state.activeUser.myUser!;
   const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
   const spaceId = loginUser.space.id;
   const projectId = store.getters.activeUser.activeProjectId;
 
-  const [_, note, resFavorite] = await Promise.all([
+  const [_, note, resFavorite, allNotes] = await Promise.all([
     store.actions.activeUser.fetchNoteStatus(),
     notesApi.notesNoteIdGet({
       spaceId: store.state.activeUser.myUser!.space.id,
@@ -205,10 +209,31 @@ async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite
       projectId: store.getters.activeUser.activeProjectId!,
       noteId: parseInt(to.params.noteId),
     }),
+    notesApi.notesGet({
+      spaceId: store.state.activeUser.myUser!.space.id,
+      projectId: store.getters.activeUser.activeProjectId!,
+      limit: 1000,
+    }),
   ]);
+
+  const raw = note.body;
+  if (raw !== null && raw !== undefined) {
+    const noteLink = /\[\[note:(\d*)\]([^\]]+)\]/g;
+    const markdown = raw.replace(noteLink, (match, g1, title) => {
+      const id = parseInt(g1);
+      const note = allNotes.results.find((note) => note.id === id);
+      if (note === undefined) {
+        return `:${title}:`;
+      }
+      return `:${note.subject}:`;
+    });
+    note.body = markdown;
+  }
+
   return {
     isFavorite: resFavorite.value,
     note,
+    allNotes: allNotes.results,
   };
 }
 
@@ -228,6 +253,7 @@ export default class NoteColumn extends Vue {
 
   note: api.Note | null = null;
   isFavorite = false;
+  allNotes: Array<api.Note> = [];
   editDetail: Pick<api.Note, 'subject' | 'body'> | null = null;
   wideScreen = false;
   saving = false;
@@ -260,6 +286,42 @@ export default class NoteColumn extends Vue {
     return this.$store.state.fullMainColumn;
   }
 
+  noteIdToTitle(raw: string | null) {
+    if (raw === null || raw === undefined) {
+      return raw;
+    }
+    const noteLink = /\[\[note:(\d*)\]([^\]]+)\]/g;
+    const markdown = raw.replace(noteLink, (match, g1, title) => {
+      const id = parseInt(g1);
+      const note = this.allNotes.find((note) => note.id === id);
+      if (note === undefined) {
+        return `:${title}:`;
+      }
+      return `:${note.subject}:`;
+    });
+    return markdown;
+  }
+
+  noteTitleToId(markdown : string | null | undefined) {
+    if (markdown === null || markdown === undefined) {
+      return markdown;
+    }
+    let related : Array<number> = [];
+    const noteLink = /:([^:\n]*):/g;
+    const raw = markdown.replace(noteLink, (match, data) => {
+      const note = this.allNotes.find((note) => note.subject === data);
+      if (note === undefined) {
+        return match;
+      }
+      related.push(note.id);
+      return `[[note:${note.id}]${data}]`;
+    });
+    return {
+      body: raw,
+      related: related,
+    };
+  }
+
   async save(data: api.NotesNoteIdPatchRequestBody) {
     if (this.saving) {
       return false;
@@ -267,14 +329,17 @@ export default class NoteColumn extends Vue {
     const loginUser = store.state.activeUser.myUser!;
     const projectId = store.getters.activeUser.activeProjectId!;
     const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
+    let newData = Object.assign({}, data, this.noteTitleToId(data.body));
+    console.log(newData);
     try {
       this.saving = true;
       const note = await notesApi.notesNoteIdPatch({
         spaceId: loginUser.space.id,
         projectId,
         noteId: parseInt(this.$route.params.noteId),
-        notesNoteIdPatchRequestBody: data,
+        notesNoteIdPatchRequestBody: newData,
       });
+      note.body = this.noteIdToTitle(note.body);
       this.$appEmit('note-edited', { note });
       return true;
 
@@ -394,7 +459,7 @@ export default class NoteColumn extends Vue {
 
   onNoteEdited(ev: { note: api.Note }) {
     if (this.note && this.note.id === ev.note.id) {
-      this.note = Object.assign({}, ev.note);
+      this.note = Object.assign({}, ev.note, { body: this.noteIdToTitle(ev.note.body) });
     }
   }
 
