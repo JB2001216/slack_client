@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -47,7 +48,7 @@ export function TaskCommmentsTaskCommentIdFilesPostRequestBodyFromJSONTyped(json
     };
 }
 
-export function TaskCommmentsTaskCommentIdFilesPostRequestBodyToJSON(value?: TaskCommmentsTaskCommentIdFilesPostRequestBody): any {
+export function TaskCommmentsTaskCommentIdFilesPostRequestBodyToJSON(value?: TaskCommmentsTaskCommentIdFilesPostRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }

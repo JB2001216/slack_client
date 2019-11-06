@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -105,8 +106,8 @@ export class FilesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-   /**
-    */
+    /**
+     */
     async filesFileIdDelete(requestParameters: FilesFileIdDeleteRequest): Promise<void> {
         await this.filesFileIdDeleteRaw(requestParameters);
     }
@@ -144,8 +145,8 @@ export class FilesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => FileRecordFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async filesFileIdGet(requestParameters: FilesFileIdGetRequest): Promise<FileRecord> {
         const response = await this.filesFileIdGetRaw(requestParameters);
         return await response.value();
@@ -191,8 +192,8 @@ export class FilesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => FileRecordFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async filesFileIdPut(requestParameters: FilesFileIdPutRequest): Promise<FileRecord> {
         const response = await this.filesFileIdPutRaw(requestParameters);
         return await response.value();
@@ -271,8 +272,8 @@ export class FilesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => FilesGetResponseFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async filesGet(requestParameters: FilesGetRequest): Promise<FilesGetResponse> {
         const response = await this.filesGetRaw(requestParameters);
         return await response.value();
@@ -305,13 +306,28 @@ export class FilesApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        const formData = new FormData();
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
         if (requestParameters.name !== undefined) {
-            formData.append('name', requestParameters.name as any);
+            formParams.append('name', requestParameters.name as any);
         }
 
         if (requestParameters.file !== undefined) {
-            formData.append('file', requestParameters.file as any);
+            formParams.append('file', requestParameters.file as any);
         }
 
         const response = await this.request({
@@ -319,14 +335,14 @@ export class FilesApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: formData,
+            body: formParams,
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => FileRecordFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async filesPost(requestParameters: FilesPostRequest): Promise<FileRecord> {
         const response = await this.filesPostRaw(requestParameters);
         return await response.value();

@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -40,7 +41,7 @@ export function SpacesSpaceIdProjectsProjectIdTasksTagsFromJSONTyped(json: any, 
     };
 }
 
-export function SpacesSpaceIdProjectsProjectIdTasksTagsToJSON(value?: SpacesSpaceIdProjectsProjectIdTasksTags): any {
+export function SpacesSpaceIdProjectsProjectIdTasksTagsToJSON(value?: SpacesSpaceIdProjectsProjectIdTasksTags | null): any {
     if (value === undefined) {
         return undefined;
     }

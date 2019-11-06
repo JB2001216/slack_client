@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -54,7 +55,7 @@ export function SpacesSpaceIdUsersInviteByEmailPostRequestBodyFromJSONTyped(json
     };
 }
 
-export function SpacesSpaceIdUsersInviteByEmailPostRequestBodyToJSON(value?: SpacesSpaceIdUsersInviteByEmailPostRequestBody): any {
+export function SpacesSpaceIdUsersInviteByEmailPostRequestBodyToJSON(value?: SpacesSpaceIdUsersInviteByEmailPostRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }

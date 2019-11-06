@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -149,8 +150,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectsGetResponseFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async projectsGet(requestParameters: ProjectsGetRequest): Promise<ProjectsGetResponse> {
         const response = await this.projectsGetRaw(requestParameters);
         return await response.value();
@@ -188,8 +189,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async projectsPost(requestParameters: ProjectsPostRequest): Promise<Project> {
         const response = await this.projectsPostRaw(requestParameters);
         return await response.value();
@@ -224,8 +225,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-   /**
-    */
+    /**
+     */
     async projectsProjectIdDelete(requestParameters: ProjectsProjectIdDeleteRequest): Promise<void> {
         await this.projectsProjectIdDeleteRaw(requestParameters);
     }
@@ -259,8 +260,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async projectsProjectIdGet(requestParameters: ProjectsProjectIdGetRequest): Promise<Project> {
         const response = await this.projectsProjectIdGetRaw(requestParameters);
         return await response.value();
@@ -302,8 +303,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async projectsProjectIdPut(requestParameters: ProjectsProjectIdPutRequest): Promise<Project> {
         const response = await this.projectsProjectIdPutRaw(requestParameters);
         return await response.value();
@@ -354,8 +355,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectsProjectIdUsersGetResponseFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async projectsProjectIdUsersGet(requestParameters: ProjectsProjectIdUsersGetRequest): Promise<ProjectsProjectIdUsersGetResponse> {
         const response = await this.projectsProjectIdUsersGetRaw(requestParameters);
         return await response.value();
@@ -397,8 +398,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectUserFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async projectsProjectIdUsersPost(requestParameters: ProjectsProjectIdUsersPostRequest): Promise<ProjectUser> {
         const response = await this.projectsProjectIdUsersPostRaw(requestParameters);
         return await response.value();
@@ -437,8 +438,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-   /**
-    */
+    /**
+     */
     async projectsProjectIdUsersUserIdDelete(requestParameters: ProjectsProjectIdUsersUserIdDeleteRequest): Promise<void> {
         await this.projectsProjectIdUsersUserIdDeleteRaw(requestParameters);
     }
@@ -476,8 +477,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectUserFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async projectsProjectIdUsersUserIdGet(requestParameters: ProjectsProjectIdUsersUserIdGetRequest): Promise<ProjectUser> {
         const response = await this.projectsProjectIdUsersUserIdGetRaw(requestParameters);
         return await response.value();
@@ -523,8 +524,8 @@ export class ProjectsApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectUserFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async projectsProjectIdUsersUserIdPut(requestParameters: ProjectsProjectIdUsersUserIdPutRequest): Promise<ProjectUser> {
         const response = await this.projectsProjectIdUsersUserIdPutRaw(requestParameters);
         return await response.value();
