@@ -55,6 +55,9 @@
             >
           </div>
         </template>
+        <div class="infiniteLoadContainer">
+          <infinite-loading v-if="tasksInit" :identifier="infiniteId" @infinite="onInfinite" />
+        </div>
         <div
           ref="taskListContainer"
           class="taskListContainer"
@@ -72,7 +75,6 @@
             @drop-task="onDropTask"
             @item-click="onTaskItemClick"
           />
-          <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
         </div>
       </div>
       <transition name="slide-right">
@@ -127,6 +129,8 @@
       outline-offset: -3px
   a.task_add
     cursor: pointer
+    position: relative
+    z-index: 1
   .task_add.adding
     padding: 0 20px;
     .task_add_input
@@ -137,6 +141,10 @@
   .nestedList
     .nestedList
       padding-left: 20px
+
+.infiniteLoadContainer
+  margin-top: -10px
+  margin-bottom: -10px
 </style>
 
 
@@ -153,6 +161,7 @@ import { ProjectStatusCategory } from '@/consts';
 import { toSnakeCase } from '@/lib/utils/string-util';
 import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent, DropItemPosition, FilterFormValue } from './types';
 import { Perm } from '@/lib/permissions';
+import EventsSub from '@/events-subscription';
 
 type SearchScrollType = 'next' | 'prev';
 type SearchOrderField = 'priority' | 'limitedAt' | 'status';
@@ -178,6 +187,7 @@ Component.registerHooks([
   },
 })
 export default class TasksColumn extends Vue {
+
   $refs!: {
     addingTaskSubjectInput: HTMLInputElement;
     taskListContainer: HTMLDivElement;
@@ -217,6 +227,8 @@ export default class TasksColumn extends Vue {
   dragData: DragTaskData | null = null;
   dropHover: DropTaskData | null = null;
 
+  tasksInit: boolean = true;
+
   get isFavorite() {
     return this.conditions.filter &&
       this.conditions.filter.favorite;
@@ -238,32 +250,49 @@ export default class TasksColumn extends Vue {
     return this.$store.state.activeUser.taskStatusList;
   }
 
+  created() {
+    EventsSub.source.addEventListener('createTask', this.createTask);
+  }
+
+  createTask(e: any): void {
+    this.tasksInit = false;
+    setTimeout(() => { this.tasksInit = true; }, 100);
+  }
+
   async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
+
     const cond = this.conditions;
     const user = this.$store.state.activeUser.myUser!;
     const projectId = this.$store.getters.activeUser.activeProjectId!;
     const tasksApi = apiRegistry.load(TasksApi, user.token);
+
     const req: TasksGetRequest = Object.assign({
       spaceId: user.space.id,
       projectId: projectId,
       parent: options.parent ? options.parent! : undefined,
       root: options.parent ? undefined : true,
     }, cond.filter);
+
     req.ordering = [toSnakeCase(cond.order.field), 'id']
       .map((f) => cond.order.type === 'asc' ? f : `-${f}`)
       .join(',');
+
     if (options.limit) {
       req.limit = options.limit;
     }
+
     if (options.page) {
       req.page = options.page;
     }
 
     return tasksApi.tasksGet(req);
+
   }
 
   async onInfinite($state: StateChanger) {
+
     try {
+
       if (this.$refs.taskListContainer) {
         this.$refs.taskListContainer.scrollTop = 0;
       }
@@ -272,9 +301,10 @@ export default class TasksColumn extends Vue {
         page: this.page,
         limit: this.limit,
       });
+
       const addTasks = res.results.filter((r) => !this.tasks.find((t) => t.id === r.id));
       if (addTasks.length) {
-        this.tasks.push(...addTasks);
+        this.tasks.splice(0, 0, ...addTasks);
       }
 
       if (res.next) {
@@ -287,6 +317,7 @@ export default class TasksColumn extends Vue {
     } catch (err) {
       this.$appEmit('error', { err });
     }
+
   }
 
   changeCondition(cond: TasksGetConditions) {
@@ -335,24 +366,36 @@ export default class TasksColumn extends Vue {
   }
 
   async onInlineTaskAddStart() {
+
     if (this.adding || this.saving) return;
+
     this.addingTaskSubject = '';
     this.adding = true;
+
     await this.$nextTick();
+
     this.$refs.addingTaskSubjectInput.focus();
+
   }
 
   async onInlineTaskAddEnd() {
+
     if (!this.adding || this.saving) return;
+
     if (this.addingTaskSubject.trim() !== '') {
+
       const myUser = this.$store.state.activeUser.myUser!;
       const projectId = this.$store.getters.activeUser.activeProjectId!;
       const tasksApi = apiRegistry.load(TasksApi, myUser.token);
+
       const statusOptions = this.statusOptions!
         .filter((o) => o.category === ProjectStatusCategory.Progress)
         .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
+
       try {
+
         this.saving = true;
+
         const updatedTask = await tasksApi.tasksPost({
           spaceId: myUser.space.id,
           projectId,
@@ -363,15 +406,19 @@ export default class TasksColumn extends Vue {
             tags: [],
           },
         });
+
         this.$appEmit('task-added', { task: updatedTask });
+
       } catch (err) {
         this.$appEmit('error', { err });
-        return;
+        return; // ????
       } finally {
         this.saving = false;
       }
     }
+
     this.adding = false;
+
   }
 
   onTaskAdded(ev: { task: Task }) {
@@ -545,5 +592,10 @@ export default class TasksColumn extends Vue {
     next();
     await this.init(to, from);
   }
+
+  destroyed() {
+    EventsSub.source.removeEventListener('createTask', this.createTask);
+  }
+
 }
 </script>

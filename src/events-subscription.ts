@@ -1,8 +1,8 @@
 import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
-import { apiRegistry, SpacesApi, UsersApi, ProjectsApi } from '@/lib/api/';
-import router, { getUserLastLocation, getProjectLastLocation } from '@/router';
+import { apiRegistry, SpacesApi, UsersApi, ProjectsApi, TasksApi } from '@/lib/api/';
+import router, { getUserLastLocation } from '@/router';
 
 class EventsSubscription {
 
@@ -299,7 +299,7 @@ class EventsSubscription {
         if (!isSettings) { return; }
 
         if (res.projectRoleId === 10101) {
-          store.mutations.settingRouter.to('project-members');
+          store.actions.settingRouter.to('project-members');
         }
 
         appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.changedProjectRole').toString(), 'name': 'success' });
@@ -307,12 +307,6 @@ class EventsSubscription {
       }).catch((err) => { console.log(err); });
 
     } // +
-
-    // this.source.addEventListener('createTask', (e: any) => {
-    //   console.log('createTask');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
 
     // this.source.addEventListener('updateTask', (e: any) => {
     //   console.log('updateTask');
