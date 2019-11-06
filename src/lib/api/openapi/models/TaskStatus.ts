@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -75,7 +76,7 @@ export function TaskStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function TaskStatusToJSON(value?: TaskStatus): any {
+export function TaskStatusToJSON(value?: TaskStatus | null): any {
     if (value === undefined) {
         return undefined;
     }

@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -40,7 +41,7 @@ export function UsersMeSmsGetResponseFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function UsersMeSmsGetResponseToJSON(value?: UsersMeSmsGetResponse): any {
+export function UsersMeSmsGetResponseToJSON(value?: UsersMeSmsGetResponse | null): any {
     if (value === undefined) {
         return undefined;
     }

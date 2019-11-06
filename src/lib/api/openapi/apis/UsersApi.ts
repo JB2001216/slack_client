@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -141,9 +142,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-   /**
-    * ログイン用メール認証メッセージ送信
-    */
+    /**
+     * ログイン用メール認証メッセージ送信
+     */
     async usersEmailLoginConfirmPost(requestParameters: UsersEmailLoginConfirmPostRequest): Promise<void> {
         await this.usersEmailLoginConfirmPostRaw(requestParameters);
     }
@@ -173,9 +174,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SelectLoginUserFromJSON));
     }
 
-   /**
-    * メール認証通過後、ログイン可能なユーザーの一覧を取得
-    */
+    /**
+     * メール認証通過後、ログイン可能なユーザーの一覧を取得
+     */
     async usersEmailLoginPost(requestParameters: UsersEmailLoginPostRequest): Promise<Array<SelectLoginUser>> {
         const response = await this.usersEmailLoginPostRaw(requestParameters);
         return await response.value();
@@ -206,9 +207,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => UsersLoginPostResponseFromJSON(jsonValue));
     }
 
-   /**
-    * メール or SMS認証で得たログイン用トークンを使ってログイン
-    */
+    /**
+     * メール or SMS認証で得たログイン用トークンを使ってログイン
+     */
     async usersLoginPost(requestParameters: UsersLoginPostRequest): Promise<UsersLoginPostResponse> {
         const response = await this.usersLoginPostRaw(requestParameters);
         return await response.value();
@@ -243,9 +244,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-   /**
-    * メール変更用メール認証メッセージ送信
-    */
+    /**
+     * メール変更用メール認証メッセージ送信
+     */
     async usersMeEmailConfirmPost(requestParameters: UsersMeEmailConfirmPostRequest): Promise<void> {
         await this.usersMeEmailConfirmPostRaw(requestParameters);
     }
@@ -272,9 +273,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => UsersMeEmailGetResponseFromJSON(jsonValue));
     }
 
-   /**
-    * 自身のメール取得
-    */
+    /**
+     * 自身のメール取得
+     */
     async usersMeEmailGet(): Promise<UsersMeEmailGetResponse> {
         const response = await this.usersMeEmailGetRaw();
         return await response.value();
@@ -309,9 +310,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => UsersMeEmailGetResponseFromJSON(jsonValue));
     }
 
-   /**
-    * メール認証通過後、メール変更
-    */
+    /**
+     * メール認証通過後、メール変更
+     */
     async usersMeEmailPut(requestParameters: UsersMeEmailPutRequest): Promise<UsersMeEmailGetResponse> {
         const response = await this.usersMeEmailPutRaw(requestParameters);
         return await response.value();
@@ -339,9 +340,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => MyUserFromJSON(jsonValue));
     }
 
-   /**
-    * 自身のユーザー情報を取得
-    */
+    /**
+     * 自身のユーザー情報を取得
+     */
     async usersMeGet(): Promise<MyUser> {
         const response = await this.usersMeGetRaw();
         return await response.value();
@@ -376,9 +377,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => MyUserFromJSON(jsonValue));
     }
 
-   /**
-    * 自身のユーザー情報を更新
-    */
+    /**
+     * 自身のユーザー情報を更新
+     */
     async usersMePatch(requestParameters: UsersMePatchRequest): Promise<MyUser> {
         const response = await this.usersMePatchRaw(requestParameters);
         return await response.value();
@@ -413,9 +414,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => MyUserFromJSON(jsonValue));
     }
 
-   /**
-    * 自身のユーザー情報を更新
-    */
+    /**
+     * 自身のユーザー情報を更新
+     */
     async usersMePut(requestParameters: UsersMePutRequest): Promise<MyUser> {
         const response = await this.usersMePutRaw(requestParameters);
         return await response.value();
@@ -450,9 +451,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => UsersSmsLoginConfirmPostResponseFromJSON(jsonValue));
     }
 
-   /**
-    * SMS変更用SMS認証メッセージ送信
-    */
+    /**
+     * SMS変更用SMS認証メッセージ送信
+     */
     async usersMeSmsConfirmPost(requestParameters: UsersMeSmsConfirmPostRequest): Promise<UsersSmsLoginConfirmPostResponse> {
         const response = await this.usersMeSmsConfirmPostRaw(requestParameters);
         return await response.value();
@@ -480,9 +481,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => UsersMeSmsGetResponseFromJSON(jsonValue));
     }
 
-   /**
-    * 自身のSMS取得
-    */
+    /**
+     * 自身のSMS取得
+     */
     async usersMeSmsGet(): Promise<UsersMeSmsGetResponse> {
         const response = await this.usersMeSmsGetRaw();
         return await response.value();
@@ -517,9 +518,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => UsersMeSmsGetResponseFromJSON(jsonValue));
     }
 
-   /**
-    * SMS認証通過後、SMS変更
-    */
+    /**
+     * SMS認証通過後、SMS変更
+     */
     async usersMeSmsPut(requestParameters: UsersMeSmsPutRequest): Promise<UsersMeSmsGetResponse> {
         const response = await this.usersMeSmsPutRaw(requestParameters);
         return await response.value();
@@ -550,9 +551,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => UsersSmsLoginConfirmPostResponseFromJSON(jsonValue));
     }
 
-   /**
-    * ログイン用SMS認証メッセージ送信
-    */
+    /**
+     * ログイン用SMS認証メッセージ送信
+     */
     async usersSmsLoginConfirmPost(requestParameters: UsersSmsLoginConfirmPostRequest): Promise<UsersSmsLoginConfirmPostResponse> {
         const response = await this.usersSmsLoginConfirmPostRaw(requestParameters);
         return await response.value();
@@ -583,9 +584,9 @@ export class UsersApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SelectLoginUserFromJSON));
     }
 
-   /**
-    * SMS認証通過後、ログイン可能なユーザーの一覧を取得
-    */
+    /**
+     * SMS認証通過後、ログイン可能なユーザーの一覧を取得
+     */
     async usersSmsLoginPost(requestParameters: UsersSmsLoginPostRequest): Promise<Array<SelectLoginUser>> {
         const response = await this.usersSmsLoginPostRaw(requestParameters);
         return await response.value();

@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -40,7 +41,7 @@ export function UsersMeEmailPutRequestBodyFromJSONTyped(json: any, ignoreDiscrim
     };
 }
 
-export function UsersMeEmailPutRequestBodyToJSON(value?: UsersMeEmailPutRequestBody): any {
+export function UsersMeEmailPutRequestBodyToJSON(value?: UsersMeEmailPutRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }
