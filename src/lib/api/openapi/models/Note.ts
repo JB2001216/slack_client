@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -92,6 +93,12 @@ export interface Note {
     parentNote: number | null;
     /**
      * 
+     * @type {Array<number>}
+     * @memberof Note
+     */
+    related: Array<number>;
+    /**
+     * 
      * @type {Date}
      * @memberof Note
      */
@@ -126,12 +133,13 @@ export function NoteFromJSONTyped(json: any, ignoreDiscriminator: boolean): Note
         'priority': !exists(json, 'priority') ? undefined : json['priority'],
         'hasChilds': !exists(json, 'hasChilds') ? undefined : json['hasChilds'],
         'parentNote': json['parentNote'],
+        'related': json['related'],
         'createdAt': new Date(json['createdAt']),
         'updatedAt': new Date(json['updatedAt']),
     };
 }
 
-export function NoteToJSON(value?: Note): any {
+export function NoteToJSON(value?: Note | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -152,6 +160,7 @@ export function NoteToJSON(value?: Note): any {
         'priority': value.priority,
         'hasChilds': value.hasChilds,
         'parentNote': value.parentNote,
+        'related': value.related,
         'createdAt': value.createdAt.toISOString(),
         'updatedAt': value.updatedAt.toISOString(),
     };

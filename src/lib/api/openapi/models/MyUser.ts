@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -114,7 +115,7 @@ export function MyUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): My
     };
 }
 
-export function MyUserToJSON(value?: MyUser): any {
+export function MyUserToJSON(value?: MyUser | null): any {
     if (value === undefined) {
         return undefined;
     }

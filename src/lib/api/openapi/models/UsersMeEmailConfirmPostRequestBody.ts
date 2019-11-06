@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -40,7 +41,7 @@ export function UsersMeEmailConfirmPostRequestBodyFromJSONTyped(json: any, ignor
     };
 }
 
-export function UsersMeEmailConfirmPostRequestBodyToJSON(value?: UsersMeEmailConfirmPostRequestBody): any {
+export function UsersMeEmailConfirmPostRequestBodyToJSON(value?: UsersMeEmailConfirmPostRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }

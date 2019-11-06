@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -89,7 +90,7 @@ export function TaskCommentFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function TaskCommentToJSON(value?: TaskComment): any {
+export function TaskCommentToJSON(value?: TaskComment | null): any {
     if (value === undefined) {
         return undefined;
     }
