@@ -66,6 +66,7 @@ const struct: LocaleStruct = {
           inviteMembers: 'メンバー招待',
           spaceSettings: 'スペース設定',
         },
+        deleteNotification: 'このプロジェクトはもう利用できません',
       },
 
       // sub

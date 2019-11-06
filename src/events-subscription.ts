@@ -208,36 +208,31 @@ class EventsSubscription {
 
       }).catch((err) => { console.log(err); });
 
-    }
+    } // +
 
     function deleteProjectTask(e: any): void {
 
       const data = JSON.parse(e.data);
       const isFireUser = data.userId === myUser.id;
+      const activeProjectId = store.state.activeUser.activeProjectData!.id;
+      const isActiveProject = data.params.projectId === activeProjectId;
 
-      projectsApi.projectsGet({
-        spaceId: data.spaceId,
-      }).then((res) => {
+      store.actions.activeUser.init(myUser);
 
-        store.actions.activeUser.init(myUser);
+      if (isFireUser || isActiveProject) {
+        store.actions.activeUser.setActiveProject(null);
+        store.actions.settingRouter.close();
+      }
 
-        if (isFireUser) {
+      if (isFireUser) {
+        appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectGeneral.deleteNotification').toString(), 'name': 'success' });
+      } else if (isActiveProject) {
+        appEventBus.emit('flash', { 'message': i18n.t('views.projectColumn.deleteNotification').toString(), 'name': 'success' });
+      } else {
+        store.actions.activeUser.setActiveProject(activeProjectId);
+      }
 
-          const projectArr = res.results;
-
-          if (projectArr.length > 0) {
-            router.push(getProjectLastLocation(myUser.id, projectArr[0].id));
-          } else {
-            router.back();
-          }
-
-          appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectGeneral.deleteNotification').toString(), 'name': 'success' });
-
-        }
-
-      }).catch((err) => { console.log(err); });
-
-    }
+    } // +
 
     function createProjectUserTask(e: any): void {
 
@@ -264,15 +259,17 @@ class EventsSubscription {
       const isActiveProject = data.params.projectId === activeProjectId;
 
       if (isCurrentUser) {
-        store.actions.activeUser.init(myUser);
-        store.actions.settingRouter.close();
-      }
 
-      if (isActiveProject) {
-        store.actions.activeUser.setActiveProject(null);
-        appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.removedCrntUserMessage').toString(), 'name': 'success' });
-      } else {
-        store.actions.activeUser.setActiveProject(activeProjectId);
+        store.actions.activeUser.init(myUser);
+
+        if (isActiveProject) {
+          store.actions.activeUser.setActiveProject(null);
+          store.actions.settingRouter.close();
+          appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.removedCrntUserMessage').toString(), 'name': 'success' });
+        } else {
+          store.actions.activeUser.setActiveProject(activeProjectId);
+        }
+
       }
 
       if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.removedMessage').toString(), 'name': 'success' }); }

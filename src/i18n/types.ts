@@ -75,6 +75,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         inviteMembers: string;
         spaceSettings: string;
       };
+      deleteNotification: string;
     };
 
     // sub
