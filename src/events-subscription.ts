@@ -41,6 +41,7 @@ class EventsSubscription {
       this.source.removeEventListener('deleteProject', deleteProjectTask);
       this.source.removeEventListener('deleteProjectUser', deleteProjectUserTask);
       this.source.removeEventListener('createProjectUser', createProjectUserTask);
+      this.source.removeEventListener('updateProjectUser', updateProjectUserTask);
 
       this.source.close();
     }
@@ -60,6 +61,7 @@ class EventsSubscription {
     this.source.addEventListener('deleteProject', deleteProjectTask);
     this.source.addEventListener('createProjectUser', createProjectUserTask);
     this.source.addEventListener('deleteProjectUser', deleteProjectUserTask);
+    this.source.addEventListener('updateProjectUser', updateProjectUserTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -276,11 +278,35 @@ class EventsSubscription {
 
     } // +
 
-    // this.source.addEventListener('updateProjectUser', (e: any) => {
-    //   console.log('updateProjectUser');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
+    function updateProjectUserTask(e: any): void {
+
+      const data = JSON.parse(e.data);
+      const isCurrentUser = data.params.userId === myUser.id;
+      const activeProjectId = store.state.activeUser.activeProjectData!.id;
+      const isActiveProject = data.params.projectId === activeProjectId;
+      const isSettings = store.state.settingRouter.name !== null;
+
+      projectsApi.projectsProjectIdUsersUserIdGet({
+        spaceId: data.spaceId,
+        projectId: data.params.projectId,
+        userId: data.params.userId,
+      }).then((res) => {
+
+        if (!isCurrentUser || !isActiveProject) { return; }
+
+        store.mutations.activeUser.setActiveProjectData({ id: data.params.projectId, user: res });
+
+        if (!isSettings) { return; }
+
+        if (res.projectRoleId === 10101) {
+          store.mutations.settingRouter.to('project-members');
+        }
+
+        appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.changedProjectRole').toString(), 'name': 'success' });
+
+      }).catch((err) => { console.log(err); });
+
+    } // +
 
     // this.source.addEventListener('createTask', (e: any) => {
     //   console.log('createTask');

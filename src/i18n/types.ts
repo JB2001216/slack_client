@@ -223,6 +223,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           removeConfirmMessage: string;
           removedMessage: string;
           removedCrntUserMessage: string;
+          changedProjectRole: string;
         };
         projectMemberAdd: {
           title: string;

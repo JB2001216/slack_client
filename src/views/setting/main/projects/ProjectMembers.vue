@@ -131,6 +131,7 @@ export default class SpaceMembers extends Vue {
   created() {
     EventsSub.source.addEventListener('createProjectUser', this.createProjectUserTask);
     EventsSub.source.addEventListener('deleteProjectUser', this.deleteProjectUserTask);
+    EventsSub.source.addEventListener('updateProjectUser', this.updateProjectUserTask);
   }
 
   createProjectUserTask(e: any): void {
@@ -142,6 +143,15 @@ export default class SpaceMembers extends Vue {
     const data = JSON.parse(e.data);
     const index = this.pusers.findIndex((pu) => pu.userId === data.params.userId);
     if (index >= 0) { this.pusers.splice(index, 1); }
+  }
+
+  updateProjectUserTask(e: any): void {
+    const data = JSON.parse(e.data);
+    const index = this.pusers.findIndex((pu) => pu.userId === data.params.userId);
+    if (index >= 0) {
+      this.pusers.splice(index, 1);
+      this.createProjectUserTask(e);
+    }
   }
 
   async onInfinite($state: StateChanger) {
@@ -179,28 +189,28 @@ export default class SpaceMembers extends Vue {
   }
 
   async onProjectRoleChange(projectRoleId: number, user: ProjectUserWithCurrentRole) {
+
     if (this.saving) return;
 
     try {
+
       this.saving = true;
-      const myUser = this.$store.state.activeUser.myUser!;
-      const projectId = this.$store.state.activeUser.activeProjectData!.id;
-      const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
-      await projectsApi.projectsProjectIdUsersUserIdPut({
-        spaceId: myUser.space.id,
-        projectId,
+
+      await this.api.projectsProjectIdUsersUserIdPut({
+        spaceId: this.myUser.space.id,
+        projectId: this.projectId,
         userId: user.userId,
         projectsProjectIdUsersUserIdPutRequestBody: {
           projectRoleId,
         },
       });
-      user.projectRoleId = projectRoleId;
-      user.currentProjectRole = ProjectRoles.get(projectRoleId);
+
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
       this.saving = false;
     }
+
   }
 
   async remove() {
@@ -243,6 +253,7 @@ export default class SpaceMembers extends Vue {
   destroyed() {
     EventsSub.source.removeEventListener('createProjectUser', this.createProjectUserTask);
     EventsSub.source.removeEventListener('deleteProjectUser', this.deleteProjectUserTask);
+    EventsSub.source.removeEventListener('updateProjectUser', this.updateProjectUserTask);
   }
 
 }

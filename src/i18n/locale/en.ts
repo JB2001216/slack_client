@@ -213,6 +213,7 @@ const struct: LocaleStruct = {
             removeConfirmMessage: 'Remove {name} ({email}) ?',
             removedMessage: 'Project User Successfully Deleted',
             removedCrntUserMessage: 'You are no longer member of this project',
+            changedProjectRole: 'Your project role was changed',
           },
           projectMemberAdd: {
             title: 'Add members to {projectName}',
