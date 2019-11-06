@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="markdownEditor" :class="{hideEditor}">
-    <div v-if="!hideEditor" :class="editorClass" @blur="hideList()">
+    <div v-if="!hideEditor" id="editor" :class="editorClass" @blur="hideList()">
       <textarea
         ref="textarea"
         v-model="input"
@@ -38,6 +38,12 @@
 @import '../stylus/_settings'
 
 .markdownEditor
+  overflow: auto;
+  #editor
+    padding: 0px
+    overflow: hidden
+    textarea
+      padding: 28px 28px 50px 28px
   textarea
     width: 100%
     height: 100%
