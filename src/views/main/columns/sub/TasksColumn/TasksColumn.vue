@@ -162,6 +162,7 @@ import { toSnakeCase } from '@/lib/utils/string-util';
 import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent, DropItemPosition, FilterFormValue } from './types';
 import { Perm } from '@/lib/permissions';
 import EventsSub from '@/events-subscription';
+import { getProjectLastLocation } from '@/router';
 
 type SearchScrollType = 'next' | 'prev';
 type SearchOrderField = 'priority' | 'limitedAt' | 'status';
@@ -229,6 +230,18 @@ export default class TasksColumn extends Vue {
 
   tasksInit: boolean = true;
 
+  get myUser() {
+    return this.$store.state.activeUser.myUser!;
+  }
+
+  get activeProjectId() {
+    return this.$store.getters.activeUser.activeProjectId!;
+  }
+
+  get api() {
+    return apiRegistry.load(TasksApi, this.myUser.token);
+  }
+
   get isFavorite() {
     return this.conditions.filter &&
       this.conditions.filter.favorite;
@@ -252,23 +265,61 @@ export default class TasksColumn extends Vue {
 
   created() {
     EventsSub.source.addEventListener('createTask', this.createTask);
+    EventsSub.source.addEventListener('deleteTask', this.deleteTask);
   }
 
   createTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const isFireUser = data.userId === this.myUser.id;
+
     this.tasksInit = false;
-    setTimeout(() => { this.tasksInit = true; }, 100);
+    setTimeout(() => {
+
+      this.tasksInit = true;
+
+      if (isFireUser) { this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: this.addingTaskSubject }).toString(), 'success'); }
+
+    }, 100);
+
+  }
+
+  deleteTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const isFireUser = data.userId === this.myUser.id;
+    const isActiveProject = data.params.projectId === this.activeProjectId;
+
+    const index = this.tasks.findIndex((t) => t.id === data.params.taskId);
+
+    if (index >= 0) {
+
+      const taskName = this.tasks[index].subject;
+
+      this.tasks.splice(index, 1);
+
+      if (isFireUser) {
+        this.$flash(this.$t('views.tasksColumn.deleteNotify', { taskName }).toString(), 'success');
+        return;
+      }
+
+      if (isActiveProject) {
+        this.$router.push(getProjectLastLocation(this.myUser.id, this.activeProjectId));
+        this.$store.mutations.setFullMainColumn(false);
+        this.$flash(this.$t('views.tasksColumn.noLongerNotify', { taskName }).toString(), 'success');
+      }
+
+    }
+
   }
 
   async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
 
     const cond = this.conditions;
-    const user = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const tasksApi = apiRegistry.load(TasksApi, user.token);
 
     const req: TasksGetRequest = Object.assign({
-      spaceId: user.space.id,
-      projectId: projectId,
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
       parent: options.parent ? options.parent! : undefined,
       root: options.parent ? undefined : true,
     }, cond.filter);
@@ -285,7 +336,7 @@ export default class TasksColumn extends Vue {
       req.page = options.page;
     }
 
-    return tasksApi.tasksGet(req);
+    return this.api.tasksGet(req);
 
   }
 
@@ -304,7 +355,7 @@ export default class TasksColumn extends Vue {
 
       const addTasks = res.results.filter((r) => !this.tasks.find((t) => t.id === r.id));
       if (addTasks.length) {
-        this.tasks.splice(0, 0, ...addTasks);
+        this.tasks.unshift(...addTasks);
       }
 
       if (res.next) {
@@ -384,10 +435,6 @@ export default class TasksColumn extends Vue {
 
     if (this.addingTaskSubject.trim() !== '') {
 
-      const myUser = this.$store.state.activeUser.myUser!;
-      const projectId = this.$store.getters.activeUser.activeProjectId!;
-      const tasksApi = apiRegistry.load(TasksApi, myUser.token);
-
       const statusOptions = this.statusOptions!
         .filter((o) => o.category === ProjectStatusCategory.Progress)
         .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
@@ -396,9 +443,9 @@ export default class TasksColumn extends Vue {
 
         this.saving = true;
 
-        const updatedTask = await tasksApi.tasksPost({
-          spaceId: myUser.space.id,
-          projectId,
+        await this.api.tasksPost({
+          spaceId: this.myUser.space.id,
+          projectId: this.activeProjectId,
           tasksPostRequestBody: {
             subject: this.addingTaskSubject.trim(),
             status: statusOptions[0].id,
@@ -407,43 +454,17 @@ export default class TasksColumn extends Vue {
           },
         });
 
-        this.$appEmit('task-added', { task: updatedTask });
-
       } catch (err) {
         this.$appEmit('error', { err });
-        return; // ????
       } finally {
         this.saving = false;
       }
+
     }
 
     this.adding = false;
 
   }
-
-  onTaskAdded(ev: { task: Task }) {
-    if (!this.tasks || ev.task.parent) return;
-    if (!this.tasks.find((t) => t.id === ev.task.id)) {
-      this.tasks.unshift(ev.task);
-    }
-  }
-
-  onTaskEdited(ev: { task: Task }) {
-    if (!this.tasks) return;
-    const index = this.tasks.findIndex((t) => t.id === ev.task.id);
-    if (index >= 0) {
-      this.tasks.splice(index, 1, ev.task);
-    }
-  }
-
-  onTaskDeleted(ev: { taskId: number }) {
-    if (!this.tasks) return;
-    const index = this.tasks.findIndex((t) => t.id === ev.taskId);
-    if (index >= 0) {
-      this.tasks.splice(index, 1);
-    }
-  }
-
 
   async onDropTask(ev: DropTaskEvent) {
     if (this.saving) return;
@@ -569,16 +590,10 @@ export default class TasksColumn extends Vue {
   }
 
   beforeMount() {
-    this.$appOn('task-added', this.onTaskAdded);
-    this.$appOn('task-edited', this.onTaskEdited);
-    this.$appOn('task-deleted', this.onTaskDeleted);
     window.addEventListener('mousedown', this.onWindowMouseDownUseCapture, true);
   }
 
   beforeDestroy() {
-    this.$appOff('task-added', this.onTaskAdded);
-    this.$appOff('task-edited', this.onTaskEdited);
-    this.$appOff('task-deleted', this.onTaskDeleted);
     window.removeEventListener('mousedown', this.onWindowMouseDownUseCapture, true);
   }
 
@@ -595,6 +610,7 @@ export default class TasksColumn extends Vue {
 
   destroyed() {
     EventsSub.source.removeEventListener('createTask', this.createTask);
+    EventsSub.source.removeEventListener('deleteTask', this.deleteTask);
   }
 
 }

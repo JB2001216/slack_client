@@ -103,6 +103,10 @@ const struct: LocaleStruct = {
           batonHolder: 'Baton holder',
           tags: 'Tags',
         },
+        createNotify: 'Task {taskName} was created',
+        updateNotify: 'Task {taskName} was updated',
+        deleteNotify: 'Task {taskName} was deleted',
+        noLongerNotify: '{taskName} is no longer available',
       },
       notesColumn: {
         addANewNote: 'Add a new note',

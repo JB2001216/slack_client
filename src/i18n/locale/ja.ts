@@ -104,6 +104,10 @@ const struct: LocaleStruct = {
           batonHolder: 'バトンを持っている人',
           tags: 'タグ',
         },
+        createNotify: '仕事{taskName}だった 作成した',
+        updateNotify: '仕事{taskName}だった 更新しました',
+        deleteNotify: '仕事{taskName}だった 削除された',
+        noLongerNotify: '{taskName}使用できなくなりました',
       },
       notesColumn: {
         addANewNote: '新規ノート',

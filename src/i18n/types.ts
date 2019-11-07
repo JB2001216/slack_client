@@ -113,6 +113,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         batonHolder: string;
         tags: string;
       };
+      createNotify: string;
+      updateNotify: string;
+      deleteNotify: string;
+      noLongerNotify: string;
     };
     notesColumn: {
       addANewNote: string;

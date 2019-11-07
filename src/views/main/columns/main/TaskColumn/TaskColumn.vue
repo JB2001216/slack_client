@@ -272,6 +272,7 @@ Component.registerHooks([
   },
 })
 export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
+
   $refs!: {
     tagInput: HTMLInputElement;
   };
@@ -284,11 +285,17 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   get myUser() {
     return this.$store.state.activeUser.myUser!;
   }
+
+  get activeProjectId() {
+    return this.$store.getters.activeUser.activeProjectId!;
+  }
+
+  get api() {
+    return api.apiRegistry.load(api.TasksApi, this.myUser.token);
+  }
+
   get myPerms() {
     return this.$store.getters.activeUser.activeProjectMyPerms!;
-  }
-  get activeProjectId() {
-    return this.$store.getters.activeUser.activeProjectId;
   }
 
   get statusOptions() {
@@ -358,28 +365,25 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   }
 
   async destroy() {
-    if (this.saving) {
-      return;
-    }
-    const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.getters.activeUser.activeProjectId!;
-    const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
+
+    if (this.saving) { return; }
 
     try {
+
       this.saving = true;
-      await tasksApi.tasksTaskIdDelete({
-        spaceId: loginUser.space.id,
-        projectId,
+
+      await this.api.tasksTaskIdDelete({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
         taskId: parseInt(this.$route.params.taskId),
       });
-      this.$appEmit('task-deleted', { taskId: parseInt(this.$route.params.taskId) });
-      this.$flash(this.$t('common.deleted').toString(), 'success');
 
     } catch (err) {
       this.$appEmit('error', { err });
     }
 
     this.saving = false;
+
   }
 
   async favorite(value: boolean) {
@@ -466,12 +470,6 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     }
   }
 
-  onTaskDeleted(ev: { taskId: number }) {
-    if (this.task && this.task.id === ev.taskId) {
-      this.task = null;
-    }
-  }
-
   async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
     const options = await initData(to);
     store.mutations.setFullMainColumn(false);
@@ -494,19 +492,11 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
 
   beforeMount() {
     this.$appOn('task-edited', this.onTaskEdited);
-    this.$appOn('task-deleted', this.onTaskDeleted);
   }
 
   beforeDestroy() {
     this.$appOff('task-edited', this.onTaskEdited);
-    this.$appOff('task-deleted', this.onTaskDeleted);
   }
 
-  @Watch('$route')
-  onRouteChange() {
-    if (name !== 'task') {
-      store.mutations.setFullMainColumn(false);
-    }
-  }
 }
 </script>
