@@ -169,13 +169,9 @@ export default class ProjectMemberAdd extends Mixins(ConfirmChangeDiscardForSett
         this.$appEmit('error', { err });
       });
 
-      if (!errorUsers.length) {
-        this.$flash(this.$t('views.setting.main.projectMemberAdd.addedMessage').toString(), 'success');
-        this.users = [];
-        this.$store.actions.settingRouter.to('project-members');
-        return;
-      }
     }
+
+    if (!errorUsers.length) { this.$store.mutations.settingRouter.setName('project-members'); }
 
     this.users = errorUsers;
     this.saving = false;

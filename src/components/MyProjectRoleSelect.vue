@@ -9,7 +9,7 @@
       v-for="r in selectableRoles"
       :key="r.id"
       :value="r.id"
-      :selected="r.id === currentProjectRole.id"
+      :selected="currentProjectRole && r.id === currentProjectRole.id"
     >
       {{ $t(`common.projectRole.${r.key}`) }}
     </option>
