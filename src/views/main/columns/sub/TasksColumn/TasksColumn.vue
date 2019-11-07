@@ -229,6 +229,7 @@ export default class TasksColumn extends Vue {
   dropHover: DropTaskData | null = null;
 
   tasksInit: boolean = true;
+  taskInit: boolean = false;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
@@ -278,7 +279,13 @@ export default class TasksColumn extends Vue {
 
       this.tasksInit = true;
 
-      if (isFireUser) { this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: this.addingTaskSubject }).toString(), 'success'); }
+      if (isFireUser) {
+
+        this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: this.addingTaskSubject }).toString(), 'success');
+
+        this.taskInit = true;
+
+      }
 
     }, 100);
 
@@ -288,24 +295,29 @@ export default class TasksColumn extends Vue {
 
     const data = JSON.parse(e.data);
     const isFireUser = data.userId === this.myUser.id;
-    const isActiveProject = data.params.projectId === this.activeProjectId;
 
     const index = this.tasks.findIndex((t) => t.id === data.params.taskId);
 
     if (index >= 0) {
 
       const taskName = this.tasks[index].subject;
+      const isActiveTask = this.tasks[index].id === +this.$route.params['taskId'];
 
       this.tasks.splice(index, 1);
 
-      if (isFireUser) {
-        this.$flash(this.$t('views.tasksColumn.deleteNotify', { taskName }).toString(), 'success');
-        return;
+      if (isFireUser || isActiveTask) {
+        this.$router.push({
+          name: 'project',
+          params: {
+            userId: this.myUser.id + '',
+            projectId: this.activeProjectId + '',
+          },
+        });
       }
 
-      if (isActiveProject) {
-        this.$router.push(getProjectLastLocation(this.myUser.id, this.activeProjectId));
-        this.$store.mutations.setFullMainColumn(false);
+      if (isFireUser) {
+        this.$flash(this.$t('views.tasksColumn.deleteNotify', { taskName }).toString(), 'success');
+      } else if (isActiveTask) {
         this.$flash(this.$t('views.tasksColumn.noLongerNotify', { taskName }).toString(), 'success');
       }
 
@@ -365,6 +377,11 @@ export default class TasksColumn extends Vue {
         $state.complete();
       }
 
+      if (this.taskInit) {
+        this.taskInit = false;
+        this.$router.push(this.getTaskTo(this.tasks[0].id));
+      }
+
     } catch (err) {
       this.$appEmit('error', { err });
     }
@@ -378,15 +395,15 @@ export default class TasksColumn extends Vue {
     this.infiniteId += 1;
   }
 
-  getTaskAddTo(): Location {
-    return {
-      name: 'task-add',
-      params: {
-        userId: this.$route.params.userId,
-        projectId: this.$route.params.projectId,
-      },
-    };
-  }
+  // getTaskAddTo(): Location {
+  //   return {
+  //     name: 'task-add',
+  //     params: {
+  //       userId: this.$route.params.userId,
+  //       projectId: this.$route.params.projectId,
+  //     },
+  //   };
+  // }
 
   getTaskTo(taskId: number): Location {
     return {
