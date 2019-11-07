@@ -338,30 +338,28 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   }
 
   async save(data: api.TasksTaskIdPatchRequestBody) {
-    if (this.saving) {
-      return false;
-    }
-    const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.getters.activeUser.activeProjectId!;
-    const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
+
+    if (this.saving) { return false; }
+
     try {
+
       this.saving = true;
-      const task = await tasksApi.tasksTaskIdPatch({
-        spaceId: loginUser.space.id,
-        projectId,
+
+      await this.api.tasksTaskIdPatch({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
         taskId: parseInt(this.$route.params.taskId),
         tasksTaskIdPatchRequestBody: data,
       });
-      this.$appEmit('task-edited', { task });
-      return true;
+
+      // this.$appEmit('task-edited', { task });
 
     } catch (err) {
       this.$appEmit('error', { err });
-      throw err;
-
-    } finally {
-      this.saving = false;
     }
+
+    this.saving = false;
+
   }
 
   async destroy() {

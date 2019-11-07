@@ -9,6 +9,7 @@ class EventsSubscription {
   private url: string = process.env.VUE_APP_NOTIFICATION_BASE_PATH + '/notifications/subscribe?space_id=';
   private users: any = [];
   source: any;
+  updatingTask: any;
 
   init(usersArr: any = null): void {
 
@@ -24,6 +25,7 @@ class EventsSubscription {
     const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
     const usersApi = apiRegistry.load(UsersApi, myUser.token);
     const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
+    const tasksApi = apiRegistry.load(TasksApi, myUser.token);
 
     const usersSpaceIds = this.users.map((user: any) => { return user.space.id; }).join('_');
 
@@ -307,12 +309,6 @@ class EventsSubscription {
       }).catch((err) => { console.log(err); });
 
     } // +
-
-    // this.source.addEventListener('updateTask', (e: any) => {
-    //   console.log('updateTask');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
 
     // this.source.addEventListener('createTaskComment', (e: any) => {
     //   console.log('createTaskComment');

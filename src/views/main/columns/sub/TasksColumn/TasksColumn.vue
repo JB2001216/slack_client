@@ -229,7 +229,6 @@ export default class TasksColumn extends Vue {
   dropHover: DropTaskData | null = null;
 
   tasksInit: boolean = true;
-  taskInit: boolean = false;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
@@ -267,6 +266,7 @@ export default class TasksColumn extends Vue {
   created() {
     EventsSub.source.addEventListener('createTask', this.createTask);
     EventsSub.source.addEventListener('deleteTask', this.deleteTask);
+    EventsSub.source.addEventListener('updateTask', this.updateTask);
   }
 
   createTask(e: any): void {
@@ -279,13 +279,7 @@ export default class TasksColumn extends Vue {
 
       this.tasksInit = true;
 
-      if (isFireUser) {
-
-        this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: this.addingTaskSubject }).toString(), 'success');
-
-        this.taskInit = true;
-
-      }
+      if (isFireUser) { this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: this.addingTaskSubject }).toString(), 'success'); }
 
     }, 100);
 
@@ -322,6 +316,21 @@ export default class TasksColumn extends Vue {
       }
 
     }
+
+  }
+
+  updateTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+
+    this.api.tasksTaskIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+      taskId: data.params.taskId,
+    }).then((res) => {
+      const index = this.tasks.findIndex((t) => t.id === res.id);
+      this.tasks.splice(index, 1, res);
+    });
 
   }
 
@@ -377,11 +386,6 @@ export default class TasksColumn extends Vue {
         $state.complete();
       }
 
-      if (this.taskInit) {
-        this.taskInit = false;
-        this.$router.push(this.getTaskTo(this.tasks[0].id));
-      }
-
     } catch (err) {
       this.$appEmit('error', { err });
     }
@@ -394,16 +398,6 @@ export default class TasksColumn extends Vue {
     this.tasks = [];
     this.infiniteId += 1;
   }
-
-  // getTaskAddTo(): Location {
-  //   return {
-  //     name: 'task-add',
-  //     params: {
-  //       userId: this.$route.params.userId,
-  //       projectId: this.$route.params.projectId,
-  //     },
-  //   };
-  // }
 
   getTaskTo(taskId: number): Location {
     return {
@@ -484,6 +478,7 @@ export default class TasksColumn extends Vue {
   }
 
   async onDropTask(ev: DropTaskEvent) {
+
     if (this.saving) return;
 
     // 循環参照によるPropの直接変更対策
@@ -497,6 +492,7 @@ export default class TasksColumn extends Vue {
       taskParent: TaskWithChilds | null;
       position: DropItemPosition;
     } = ev.dropData;
+
     if (!this.currentSort.droppableBetween && dropData.position !== 'child') {
       dropData = {
         task: null,
@@ -508,6 +504,7 @@ export default class TasksColumn extends Vue {
     if (dragData.task === dropData.task) {
       return;
     }
+
     if (dropData.position === 'child') {
       if ((dropData.task && dragData.taskParent === dropData.task) ||
           (!dropData.task && !dragData.taskParent)
@@ -527,9 +524,6 @@ export default class TasksColumn extends Vue {
       this.tasks!.splice(this.tasks!.indexOf(dragData.task), 1);
     }
 
-    const myUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const tasksApi = apiRegistry.load(TasksApi, myUser.token);
     const body: TasksTaskIdPriorityPostRequestBody = {};
 
     // 指定の親グループに加入
@@ -560,18 +554,22 @@ export default class TasksColumn extends Vue {
     }
 
     try {
+
       this.saving = true;
-      await tasksApi.tasksTaskIdPriorityPost({
-        spaceId: myUser.space.id,
-        projectId,
+
+      await this.api.tasksTaskIdPriorityPost({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
         taskId: dragData.task.id,
         tasksTaskIdPriorityPostRequestBody: body,
       });
+
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
       this.saving = false;
     }
+
   }
 
   async init(to: Route, from: Route) {
@@ -628,6 +626,7 @@ export default class TasksColumn extends Vue {
   destroyed() {
     EventsSub.source.removeEventListener('createTask', this.createTask);
     EventsSub.source.removeEventListener('deleteTask', this.deleteTask);
+    EventsSub.source.removeEventListener('updateTask', this.updateTask);
   }
 
 }
