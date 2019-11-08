@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -40,7 +41,7 @@ export function TasksTaskIdFavoriteGetResponseFromJSONTyped(json: any, ignoreDis
     };
 }
 
-export function TasksTaskIdFavoriteGetResponseToJSON(value?: TasksTaskIdFavoriteGetResponse): any {
+export function TasksTaskIdFavoriteGetResponseToJSON(value?: TasksTaskIdFavoriteGetResponse | null): any {
     if (value === undefined) {
         return undefined;
     }

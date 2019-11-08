@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -47,7 +48,7 @@ export function SpacesSpaceIdAvatarPostResponseFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function SpacesSpaceIdAvatarPostResponseToJSON(value?: SpacesSpaceIdAvatarPostResponse): any {
+export function SpacesSpaceIdAvatarPostResponseToJSON(value?: SpacesSpaceIdAvatarPostResponse | null): any {
     if (value === undefined) {
         return undefined;
     }

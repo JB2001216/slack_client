@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -54,7 +55,7 @@ export function ProjectFromJSONTyped(json: any, ignoreDiscriminator: boolean): P
     };
 }
 
-export function ProjectToJSON(value?: Project): any {
+export function ProjectToJSON(value?: Project | null): any {
     if (value === undefined) {
         return undefined;
     }

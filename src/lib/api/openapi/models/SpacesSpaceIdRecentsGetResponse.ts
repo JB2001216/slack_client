@@ -14,49 +14,49 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Space,
-    SpaceFromJSON,
-    SpaceFromJSONTyped,
-    SpaceToJSON,
+    Recent,
+    RecentFromJSON,
+    RecentFromJSONTyped,
+    RecentToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface SpacesGetResponse
+ * @interface SpacesSpaceIdRecentsGetResponse
  */
-export interface SpacesGetResponse {
+export interface SpacesSpaceIdRecentsGetResponse {
     /**
      * 
      * @type {number}
-     * @memberof SpacesGetResponse
+     * @memberof SpacesSpaceIdRecentsGetResponse
      */
     count: number;
     /**
      * 
      * @type {string}
-     * @memberof SpacesGetResponse
+     * @memberof SpacesSpaceIdRecentsGetResponse
      */
     previous: string | null;
     /**
      * 
      * @type {string}
-     * @memberof SpacesGetResponse
+     * @memberof SpacesSpaceIdRecentsGetResponse
      */
     next: string | null;
     /**
      * 
-     * @type {Array<Space>}
-     * @memberof SpacesGetResponse
+     * @type {Array<Recent>}
+     * @memberof SpacesSpaceIdRecentsGetResponse
      */
-    results: Array<Space>;
+    results: Array<Recent>;
 }
 
-export function SpacesGetResponseFromJSON(json: any): SpacesGetResponse {
-    return SpacesGetResponseFromJSONTyped(json, false);
+export function SpacesSpaceIdRecentsGetResponseFromJSON(json: any): SpacesSpaceIdRecentsGetResponse {
+    return SpacesSpaceIdRecentsGetResponseFromJSONTyped(json, false);
 }
 
-export function SpacesGetResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesGetResponse {
+export function SpacesSpaceIdRecentsGetResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpacesSpaceIdRecentsGetResponse {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -65,11 +65,11 @@ export function SpacesGetResponseFromJSONTyped(json: any, ignoreDiscriminator: b
         'count': json['count'],
         'previous': json['previous'],
         'next': json['next'],
-        'results': (json['results'] as Array<any>).map(SpaceFromJSON),
+        'results': (json['results'] as Array<any>).map(RecentFromJSON),
     };
 }
 
-export function SpacesGetResponseToJSON(value?: SpacesGetResponse | null): any {
+export function SpacesSpaceIdRecentsGetResponseToJSON(value?: SpacesSpaceIdRecentsGetResponse | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -81,7 +81,7 @@ export function SpacesGetResponseToJSON(value?: SpacesGetResponse | null): any {
         'count': value.count,
         'previous': value.previous,
         'next': value.next,
-        'results': (value.results as Array<any>).map(SpaceToJSON),
+        'results': (value.results as Array<any>).map(RecentToJSON),
     };
 }
 

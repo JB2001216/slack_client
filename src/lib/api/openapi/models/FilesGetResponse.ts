@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -68,7 +69,7 @@ export function FilesGetResponseFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function FilesGetResponseToJSON(value?: FilesGetResponse): any {
+export function FilesGetResponseToJSON(value?: FilesGetResponse | null): any {
     if (value === undefined) {
         return undefined;
     }

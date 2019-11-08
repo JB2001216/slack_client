@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -75,7 +76,7 @@ export function SelectLoginUserFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function SelectLoginUserToJSON(value?: SelectLoginUser): any {
+export function SelectLoginUserToJSON(value?: SelectLoginUser | null): any {
     if (value === undefined) {
         return undefined;
     }

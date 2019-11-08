@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -103,7 +104,7 @@ export function TasksPostRequestBodyFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function TasksPostRequestBodyToJSON(value?: TasksPostRequestBody): any {
+export function TasksPostRequestBodyToJSON(value?: TasksPostRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }
