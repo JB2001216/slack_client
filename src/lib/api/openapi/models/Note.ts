@@ -109,12 +109,6 @@ export interface Note {
      * @memberof Note
      */
     updatedAt: Date;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof Note
-     */
-    related?: Array<number>;
 }
 
 export function NoteFromJSON(json: any): Note {

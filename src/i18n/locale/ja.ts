@@ -121,6 +121,9 @@ const struct: LocaleStruct = {
       },
 
       // main
+      homeColumn: {
+        title: 'プロジェクトホーム',
+      },
       taskColumn: {
         addTags: 'タグを追加',
         enterDetails: '詳細を入力',

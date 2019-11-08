@@ -15,6 +15,7 @@ import TasksColumn from '../views/main/columns/sub/TasksColumn';
 import MainColumnPass from '../views/main/columns/main/MainColumnPass.vue';
 import ProjectAddColumn from '../views/main/columns/main/ProjectAddColumn.vue';
 import FileColumn from '../views/main/columns/main/FileColumn.vue';
+import HomeColumn from '../views/main/columns/main/HomeColumn.vue';
 import NoteColumn from '../views/main/columns/main/NoteColumn.vue';
 import TaskColumn from '../views/main/columns/main/TaskColumn';
 import { bindOpenUrl } from './open-url';
@@ -82,6 +83,14 @@ const router = new Router({
                 mainColumn: MainColumnPass,
               },
               children: [
+                {
+                  path: 'home',
+                  name: 'home',
+                  components: {
+                    subColumn: TasksColumn,
+                    mainColumn: HomeColumn,
+                  },
+                },
                 {
                   path: 'files',
                   name: 'files',

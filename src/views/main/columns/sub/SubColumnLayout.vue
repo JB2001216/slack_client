@@ -3,7 +3,9 @@
     <div class="subColumn_head columnTitle">
       <h2>{{ project ? project.displayName : '' }}</h2>
       <div class="subColumn_head_toolbar">
-        <my-svg-icon class="subColumn_head_toolbar_item" name="home" />
+        <router-link :to="{name: 'home' }">
+          <my-svg-icon class="subColumn_head_toolbar_item" name="home" />
+        </router-link>
         <my-svg-icon class="subColumn_head_toolbar_item" name="atsign" />
         <my-svg-icon class="subColumn_head_toolbar_item" name="star" />
         <my-svg-icon class="subColumn_head_toolbar_item" name="search" />

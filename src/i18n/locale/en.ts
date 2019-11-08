@@ -120,6 +120,9 @@ const struct: LocaleStruct = {
       },
 
       // main
+      homeColumn: {
+        title: 'Project Home',
+      },
       taskColumn: {
         addTags: 'Add tags',
         enterDetails: 'Enter details',

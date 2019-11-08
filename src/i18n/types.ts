@@ -130,6 +130,9 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     };
 
     // main
+    homeColumn: {
+      title: string;
+    };
     taskColumn: {
       addTags: string;
       enterDetails: string;

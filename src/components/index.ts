@@ -9,6 +9,7 @@ import MySpaceUserAvatar from './MySpaceUserAvatar.vue';
 import MySpaceUserSearchInput from './MySpaceUserSearchInput.vue';
 import MyChargerDialog from './MyChargerDialog';
 import MyChargerInput from './MyChargerInput';
+import MyProjectMemberList from './MyProjectMemberList';
 import MyMarkdownEditor from './MyMarkdownEditor.vue';
 import MyProjectStatus from './MyProjectStatus.vue';
 import MySimpleMenu from './MySimpleMenu.vue';
@@ -25,6 +26,7 @@ export {
   MySpaceUserSearchInput,
   MyChargerDialog,
   MyChargerInput,
+  MyProjectMemberList,
   MyMarkdownEditor,
   MyProjectStatus,
   MySimpleMenu,
