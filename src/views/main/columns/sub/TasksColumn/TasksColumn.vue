@@ -229,6 +229,7 @@ export default class TasksColumn extends Vue {
   dropHover: DropTaskData | null = null;
 
   tasksInit: boolean = true;
+  newTaskInit: boolean = false;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
@@ -269,23 +270,37 @@ export default class TasksColumn extends Vue {
     EventsSub.source.addEventListener('updateTask', this.updateTask);
   }
 
-  createTask(e: any): void {
+  async createTask(e: any): Promise<void> {
 
     const data = JSON.parse(e.data);
     const isFireUser = data.userId === this.myUser.id;
 
-    this.tasksInit = false;
-    setTimeout(() => {
+    await this.getTask(data)
+      .then((task: Task) => {
 
-      this.tasksInit = true;
+        if (task.parent) { return; }
 
-      if (isFireUser) { this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: this.addingTaskSubject }).toString(), 'success'); }
+        this.tasksInit = false;
 
-    }, 100);
+        setTimeout(() => {
+
+          this.tasksInit = true;
+
+          if (isFireUser) {
+
+            this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
+
+            this.newTaskInit = true;
+
+          }
+
+        }, 100);
+
+      });
 
   }
 
-  deleteTask(e: any): void {
+  async deleteTask(e: any): Promise<void> {
 
     const data = JSON.parse(e.data);
     const isFireUser = data.userId === this.myUser.id;
@@ -319,19 +334,28 @@ export default class TasksColumn extends Vue {
 
   }
 
-  updateTask(e: any): void {
+  async updateTask(e: any): Promise<void> {
 
     const data = JSON.parse(e.data);
 
-    this.api.tasksTaskIdGet({
+    await this.getTask(data)
+      .then((task: Task) => {
+
+        if (task.parent) { return; }
+
+        const index = this.tasks.findIndex((t) => t.id === task.id);
+        this.tasks.splice(index, 1, task);
+
+      });
+
+  }
+
+  getTask(data: any) {
+    return this.api.tasksTaskIdGet({
       spaceId: data.spaceId,
       projectId: data.params.projectId,
       taskId: data.params.taskId,
-    }).then((res) => {
-      const index = this.tasks.findIndex((t) => t.id === res.id);
-      this.tasks.splice(index, 1, res);
     });
-
   }
 
   async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
@@ -384,6 +408,11 @@ export default class TasksColumn extends Vue {
         $state.loaded();
       } else {
         $state.complete();
+      }
+
+      if (this.newTaskInit) {
+        this.newTaskInit = false;
+        this.$router.push(this.getTaskTo(this.tasks[0].id));
       }
 
     } catch (err) {
