@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -40,7 +41,7 @@ export function TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBodyFr
     };
 }
 
-export function TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBodyToJSON(value?: TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBody): any {
+export function TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBodyToJSON(value?: TaskCommmentsTaskCommentIdFilesTaskCommentFileIdPutRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }

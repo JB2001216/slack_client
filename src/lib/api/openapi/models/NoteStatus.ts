@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -75,7 +76,7 @@ export function NoteStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function NoteStatusToJSON(value?: NoteStatus): any {
+export function NoteStatusToJSON(value?: NoteStatus | null): any {
     if (value === undefined) {
         return undefined;
     }

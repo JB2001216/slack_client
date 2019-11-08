@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -47,7 +48,7 @@ export function NotesNoteIdPriorityPostRequestBodyFromJSONTyped(json: any, ignor
     };
 }
 
-export function NotesNoteIdPriorityPostRequestBodyToJSON(value?: NotesNoteIdPriorityPostRequestBody): any {
+export function NotesNoteIdPriorityPostRequestBodyToJSON(value?: NotesNoteIdPriorityPostRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }

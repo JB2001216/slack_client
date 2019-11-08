@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -92,6 +93,12 @@ export interface Note {
     parentNote: number | null;
     /**
      * 
+     * @type {Array<number>}
+     * @memberof Note
+     */
+    related: Array<number>;
+    /**
+     * 
      * @type {Date}
      * @memberof Note
      */
@@ -138,7 +145,7 @@ export function NoteFromJSONTyped(json: any, ignoreDiscriminator: boolean): Note
     };
 }
 
-export function NoteToJSON(value?: Note): any {
+export function NoteToJSON(value?: Note | null): any {
     if (value === undefined) {
         return undefined;
     }

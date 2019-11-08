@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -89,7 +90,7 @@ export function NotesNoteIdPatchRequestBodyFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function NotesNoteIdPatchRequestBodyToJSON(value?: NotesNoteIdPatchRequestBody): any {
+export function NotesNoteIdPatchRequestBodyToJSON(value?: NotesNoteIdPatchRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }

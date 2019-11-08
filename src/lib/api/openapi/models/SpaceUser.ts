@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -89,7 +90,7 @@ export function SpaceUserFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function SpaceUserToJSON(value?: SpaceUser): any {
+export function SpaceUserToJSON(value?: SpaceUser | null): any {
     if (value === undefined) {
         return undefined;
     }

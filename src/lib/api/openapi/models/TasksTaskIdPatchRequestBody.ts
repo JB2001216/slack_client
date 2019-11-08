@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -103,7 +104,7 @@ export function TasksTaskIdPatchRequestBodyFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function TasksTaskIdPatchRequestBodyToJSON(value?: TasksTaskIdPatchRequestBody): any {
+export function TasksTaskIdPatchRequestBodyToJSON(value?: TasksTaskIdPatchRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -120,7 +121,7 @@ export function TasksTaskIdPatchRequestBodyToJSON(value?: TasksTaskIdPatchReques
         'status': value.status,
         'batonUser': value.batonUser,
         'chargeUsers': value.chargeUsers,
-        'tags': value.tags === undefined ? undefined : (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),
+        'tags': value.tags == null ? undefined : (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),
     };
 }
 
