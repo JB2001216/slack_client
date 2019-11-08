@@ -12,8 +12,9 @@
           :project-id-exact="activeProjectId"
         />
       </div>
-      <div class="dashboardWrap dashboardWrap_home" />
-      <infinite-loading @infinite="infiniteLoadData" />
+      <div class="dashboardWrap dashboardWrap_home">
+        <infinite-loading @infinite="infiniteLoadData" />
+      </div>
     </div>
   </div>
 </template>
@@ -43,6 +44,9 @@ export default class HomeColumn extends Vue {
   $refs!: {
   };
 
+  page : number = 1;
+  list : api.Recent[] = [];
+
   get myUser() {
     return this.$store.state.activeUser.myUser!;
   }
@@ -57,10 +61,27 @@ export default class HomeColumn extends Vue {
     return this.$store.state.fullMainColumn;
   }
 
-  async infiniteLoadData() {
+  async infiniteLoadData($state: any) {
     const loginUser = store.state.activeUser.myUser!;
     const SpacesApi = api.apiRegistry.load(api.SpacesApi, loginUser.token);
 
+    SpacesApi.spacesSpaceIdRecentsGet({
+      spaceId: store.state.activeUser.myUser!.space.id,
+      projectId: store.getters.activeUser.activeProjectId!,
+      page: this.page,
+    }).then((data) => {
+      if (data.results.length) {
+        this.page += 1;
+        this.list.push(...data.results);
+      }
+      if (data.count > this.list.length) {
+        $state.loaded();
+      } else {
+        $state.complete();
+        console.log(this.list);
+      }
+    },
+    (error) => console.log(error));
   }
 
   @Watch('$route')

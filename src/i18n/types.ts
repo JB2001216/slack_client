@@ -132,6 +132,27 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     // main
     homeColumn: {
       title: string;
+      recent: {
+        updateTask: {
+          title: string;
+        };
+        createTask: {
+          title: string;
+        };
+        updateNote: {
+          title: string;
+        };
+        createTaskComment: {
+          title: string;
+        };
+        createNote: {
+          title: string;
+        };
+        createProjectUser: {
+          title: string;
+          content: string;
+        };
+      };
     };
     taskColumn: {
       addTags: string;

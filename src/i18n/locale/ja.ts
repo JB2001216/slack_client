@@ -123,6 +123,27 @@ const struct: LocaleStruct = {
       // main
       homeColumn: {
         title: 'プロジェクトホーム',
+        recent: {
+          updateTask: {
+            title: 'さんがタスクを"更新"しました',
+          },
+          createTask: {
+            title: 'さんが"タスク"を追加しました',
+          },
+          updateNote: {
+            title: 'さんがノートを"更新"しました',
+          },
+          createTaskComment: {
+            title: 'さんがタスクに"コメント"しました',
+          },
+          createNote: {
+            title: 'さんがタスクに"コメント"しました',
+          },
+          createProjectUser: {
+            title: 'さんがタスクに"コメント"しました',
+            content: 'さんがメンバーに加わりました',
+          },
+        },
       },
       taskColumn: {
         addTags: 'タグを追加',

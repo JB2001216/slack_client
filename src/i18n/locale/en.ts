@@ -122,6 +122,27 @@ const struct: LocaleStruct = {
       // main
       homeColumn: {
         title: 'Project Home',
+        recent: {
+          updateTask: {
+            title: '"updated" the task',
+          },
+          createTask: {
+            title: 'created the "task"',
+          },
+          updateNote: {
+            title: '"updated" the note',
+          },
+          createTaskComment: {
+            title: 'added the "comment" on the task',
+          },
+          createNote: {
+            title: 'created the "note"',
+          },
+          createProjectUser: {
+            title: 'changed the "project members"',
+            content: 'joined as a member',
+          },
+        },
       },
       taskColumn: {
         addTags: 'Add tags',
