@@ -278,23 +278,36 @@ export default class TasksColumn extends Vue {
     await this.getTask(data)
       .then((task: Task) => {
 
-        if (task.parent) { return; }
+        if (!task.parent) {
+          this.tasksInit = false;
+          setTimeout(() => { this.tasksInit = true; }, 100);
+        } else {
 
-        this.tasksInit = false;
+          const parentTask = this.tasks.find((t) => t.id === task.parent)!;
 
-        setTimeout(() => {
+          if (!parentTask) { return; }
 
-          this.tasksInit = true;
-
-          if (isFireUser) {
-
-            this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
-
-            this.newTaskInit = true;
-
+          if (parentTask.childs) {
+            if (!parentTask.childs.find((t) => t.id === task.id)) {
+              parentTask.childs.unshift(task);
+            }
+          } else {
+            parentTask.childs = [task];
           }
 
-        }, 100);
+          parentTask.hasChilds = true;
+
+          if (!isFireUser) { parentTask.childs = []; }
+
+          const index = this.tasks.findIndex((t) => t.id === parentTask.id);
+          this.tasks.splice(index, 1, parentTask);
+
+        }
+
+        if (isFireUser) {
+          this.$router.push(this.getTaskTo(task.id));
+          this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
+        }
 
       });
 
@@ -408,11 +421,6 @@ export default class TasksColumn extends Vue {
         $state.loaded();
       } else {
         $state.complete();
-      }
-
-      if (this.newTaskInit) {
-        this.newTaskInit = false;
-        this.$router.push(this.getTaskTo(this.tasks[0].id));
       }
 
     } catch (err) {

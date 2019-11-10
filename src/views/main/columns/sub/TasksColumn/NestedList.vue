@@ -202,11 +202,13 @@ import {
 import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent } from './types';
 import { ProjectStatusCategory } from '@/consts';
 import { Perm } from '@/lib/permissions';
+import EventsSub from '@/events-subscription';
 
 @Component({
   name: 'nested-list',
 })
 export default class NestedList extends Vue {
+
   $refs!: {
     addingTaskSubjectInputs: HTMLInputElement[];
     editingTaskSubjectInputs: HTMLInputElement[];
@@ -246,6 +248,14 @@ export default class NestedList extends Vue {
     return this.$store.state.activeUser.myUser!;
   }
 
+  get activeProjectId() {
+    return this.$store.getters.activeUser.activeProjectId!;
+  }
+
+  get api() {
+    return apiRegistry.load(TasksApi, this.myUser.token);
+  }
+
   get myPerms() {
     return this.$store.getters.activeUser.activeProjectMyPerms!;
   }
@@ -265,6 +275,51 @@ export default class NestedList extends Vue {
     return null;
   }
 
+  created() {
+    EventsSub.source.addEventListener('createTask', this.createTask);
+  }
+
+  async createTask(e: any): Promise<void> {
+
+    const data = JSON.parse(e.data);
+    const isFireUser = data.userId === this.myUser.id;
+
+    await this.getTask(data)
+      .then((task: Task) => {
+
+        if (!task.parent) { return; }
+
+        const parentTask = this.tasks.find((t) => t.id === task.parent);
+
+        if (!parentTask) { return; }
+
+        if (parentTask.childs) {
+          if (!parentTask.childs.find((t) => t.id === task.id)) {
+            parentTask.childs.unshift(task);
+          }
+        } else {
+          parentTask.childs = [task];
+        }
+
+        parentTask.hasChilds = true;
+
+        if (!isFireUser) { parentTask.childs = []; }
+
+        const index = this.tasks.findIndex((t) => t.id === parentTask.id);
+        this.tasks.splice(index, 1, parentTask);
+
+      });
+
+  }
+
+  getTask(data: any) {
+    return this.api.tasksTaskIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+      taskId: data.params.taskId,
+    });
+  }
+
   getTaskUpdatable(task: Task) {
     return this.$store.getters.activeUser.taskUpdatable(task);
   }
@@ -274,17 +329,6 @@ export default class NestedList extends Vue {
       return null;
     }
     return this.statusOptions.find((o) => o.id === optionId) || null;
-  }
-
-  async addTask(requestBody: TasksPostRequestBody) {
-    const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
-    return tasksApi.tasksPost({
-      spaceId: loginUser.space.id,
-      projectId,
-      tasksPostRequestBody: requestBody,
-    });
   }
 
   async patchTask(taskId: number, requestBody: TasksTaskIdPatchRequestBody) {
@@ -308,34 +352,41 @@ export default class NestedList extends Vue {
   }
 
   async onInlineTaskAddEnd() {
+
     if (!this.addingParentTask || this.saving) return;
+
     if (this.addingTaskSubject.trim() !== '') {
+
       try {
+
         this.saving = true;
+
         const statusOptions = this.statusOptions!
           .filter((o) => o.category === ProjectStatusCategory.Progress)
           .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
-        const addedTask = await this.addTask({
-          parent: this.addingParentTask.id,
-          subject: this.addingTaskSubject.trim(),
-          status: statusOptions[0].id,
-          tags: [],
-          chargeUsers: [],
+
+        await this.api.tasksPost({
+          spaceId: this.myUser.space.id,
+          projectId: this.activeProjectId,
+          tasksPostRequestBody: {
+            parent: this.addingParentTask.id,
+            subject: this.addingTaskSubject.trim(),
+            status: statusOptions[0].id,
+            tags: [],
+            chargeUsers: [],
+          },
         });
-        this.$appEmit('task-added', { task: addedTask });
-        if (!this.addingParentTask.childs || !this.addingParentTask.childs.length) {
-          await this.onExpandChilds(this.addingParentTask);
-        }
 
       } catch (err) {
         this.$appEmit('error', { err });
-        return;
       } finally {
         this.saving = false;
       }
+
     }
 
     this.addingParentTask = null;
+
   }
 
   async onInlineTaskEditStart(task: Task) {
@@ -506,17 +557,6 @@ export default class NestedList extends Vue {
     });
   }
 
-  onTaskAdded(ev: { task: Task }) {
-    if (!ev.task.parent) return;
-
-    const parentTask = this.tasks.find((t) => t.id === ev.task.parent);
-    if (!parentTask || !parentTask.childs || !parentTask.childs) return;
-
-    if (!parentTask.childs.find((t) => t.id === ev.task.id)) {
-      parentTask.childs.unshift(ev.task);
-    }
-  }
-
   onTaskEdited(ev: { task: Task }) {
     if (!ev.task.parent) return;
 
@@ -545,15 +585,18 @@ export default class NestedList extends Vue {
   }
 
   beforeMount() {
-    this.$appOn('task-added', this.onTaskAdded);
     this.$appOn('task-edited', this.onTaskEdited);
     this.$appOn('task-deleted', this.onTaskDeleted);
   }
 
   beforeDestroy() {
-    this.$appOff('task-added', this.onTaskAdded);
     this.$appOff('task-edited', this.onTaskEdited);
     this.$appOff('task-deleted', this.onTaskDeleted);
   }
+
+  destroyed() {
+    EventsSub.source.removeEventListener('createTask', this.createTask);
+  }
+
 }
 </script>
