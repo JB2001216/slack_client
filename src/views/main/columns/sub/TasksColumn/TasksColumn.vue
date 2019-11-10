@@ -281,27 +281,6 @@ export default class TasksColumn extends Vue {
         if (!task.parent) {
           this.tasksInit = false;
           setTimeout(() => { this.tasksInit = true; }, 100);
-        } else {
-
-          const parentTask = this.tasks.find((t) => t.id === task.parent)!;
-
-          if (!parentTask) { return; }
-
-          if (parentTask.childs) {
-            if (!parentTask.childs.find((t) => t.id === task.id)) {
-              parentTask.childs.unshift(task);
-            }
-          } else {
-            parentTask.childs = [task];
-          }
-
-          parentTask.hasChilds = true;
-
-          if (!isFireUser) { parentTask.childs = []; }
-
-          const index = this.tasks.findIndex((t) => t.id === parentTask.id);
-          this.tasks.splice(index, 1, parentTask);
-
         }
 
         if (isFireUser) {
