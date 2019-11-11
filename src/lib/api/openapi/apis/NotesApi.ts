@@ -18,6 +18,18 @@ import {
     Note,
     NoteFromJSON,
     NoteToJSON,
+    NoteComment,
+    NoteCommentFromJSON,
+    NoteCommentToJSON,
+    NoteCommmentsGetResponse,
+    NoteCommmentsGetResponseFromJSON,
+    NoteCommmentsGetResponseToJSON,
+    NoteCommmentsNoteCommentIdPutRequestBody,
+    NoteCommmentsNoteCommentIdPutRequestBodyFromJSON,
+    NoteCommmentsNoteCommentIdPutRequestBodyToJSON,
+    NoteCommmentsPostRequestBody,
+    NoteCommmentsPostRequestBodyFromJSON,
+    NoteCommmentsPostRequestBodyToJSON,
     NoteStatus,
     NoteStatusFromJSON,
     NoteStatusToJSON,
@@ -39,6 +51,9 @@ import {
     NotesPostRequestBody,
     NotesPostRequestBodyFromJSON,
     NotesPostRequestBodyToJSON,
+    NotesSummariesGetResponse,
+    NotesSummariesGetResponseFromJSON,
+    NotesSummariesGetResponseToJSON,
     TasksStatusPostRequestBodyItem,
     TasksStatusPostRequestBodyItemFromJSON,
     TasksStatusPostRequestBodyItemToJSON,
@@ -47,23 +62,63 @@ import {
     TasksTaskIdFavoriteGetResponseToJSON,
 } from '../models';
 
+export interface NoteCommmentsGetRequest {
+    spaceId: number;
+    projectId: number;
+    noteId: number;
+    page?: number;
+    limit?: number;
+    id?: number;
+    idGt?: number;
+    idLt?: number;
+    createdAt?: Date;
+    createdAtGt?: Date;
+    createdAtLt?: Date;
+    ordering?: string;
+}
+
+export interface NoteCommmentsNoteCommentIdDeleteRequest {
+    spaceId: number;
+    projectId: number;
+    noteId: number;
+    noteCommentId: number;
+}
+
+export interface NoteCommmentsNoteCommentIdGetRequest {
+    spaceId: number;
+    projectId: number;
+    noteId: number;
+    noteCommentId: number;
+}
+
+export interface NoteCommmentsNoteCommentIdPutRequest {
+    spaceId: number;
+    projectId: number;
+    noteId: number;
+    noteCommentId: number;
+    noteCommmentsNoteCommentIdPutRequestBody: NoteCommmentsNoteCommentIdPutRequestBody;
+}
+
+export interface NoteCommmentsPostRequest {
+    spaceId: number;
+    projectId: number;
+    noteId: number;
+    noteCommmentsPostRequestBody: NoteCommmentsPostRequestBody;
+}
+
 export interface NotesGetRequest {
     spaceId: number;
     projectId: number;
     page?: number;
     limit?: number;
-    id?: number;
+    id?: Array<number>;
     parent?: number;
     root?: boolean;
-    idGt?: number;
-    idLt?: number;
     subject?: string;
-    status?: number;
-    batonUser?: number;
+    status?: Array<number>;
+    batonUser?: Array<number>;
     writeUser?: number;
-    updatedAt?: Date;
-    updatedAtGt?: Date;
-    updatedAtLt?: Date;
+    chargeUsers?: Array<number>;
     favorite?: boolean;
     ordering?: string;
 }
@@ -131,10 +186,288 @@ export interface NotesStatusPostRequest {
     tasksStatusPostRequestBodyItem: Array<TasksStatusPostRequestBodyItem>;
 }
 
+export interface NotesSummariesGetRequest {
+    spaceId: number;
+    projectId: number;
+    page?: number;
+    limit?: number;
+    id?: Array<number>;
+    parent?: number;
+    root?: boolean;
+    subject?: string;
+    status?: Array<number>;
+    batonUser?: Array<number>;
+    writeUser?: number;
+    chargeUsers?: Array<number>;
+    favorite?: boolean;
+    ordering?: string;
+}
+
 /**
  * no description
  */
 export class NotesApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async noteCommmentsGetRaw(requestParameters: NoteCommmentsGetRequest): Promise<runtime.ApiResponse<NoteCommmentsGetResponse>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling noteCommmentsGet.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling noteCommmentsGet.');
+        }
+
+        if (requestParameters.noteId === null || requestParameters.noteId === undefined) {
+            throw new runtime.RequiredError('noteId','Required parameter requestParameters.noteId was null or undefined when calling noteCommmentsGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.id !== undefined) {
+            queryParameters['id'] = requestParameters.id;
+        }
+
+        if (requestParameters.idGt !== undefined) {
+            queryParameters['id__gt'] = requestParameters.idGt;
+        }
+
+        if (requestParameters.idLt !== undefined) {
+            queryParameters['id__lt'] = requestParameters.idLt;
+        }
+
+        if (requestParameters.createdAt !== undefined) {
+            queryParameters['created_at'] = (requestParameters.createdAt as any).toISOString();
+        }
+
+        if (requestParameters.createdAtGt !== undefined) {
+            queryParameters['created_at__gt'] = (requestParameters.createdAtGt as any).toISOString();
+        }
+
+        if (requestParameters.createdAtLt !== undefined) {
+            queryParameters['created_at__lt'] = (requestParameters.createdAtLt as any).toISOString();
+        }
+
+        if (requestParameters.ordering !== undefined) {
+            queryParameters['ordering'] = requestParameters.ordering;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/comments/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => NoteCommmentsGetResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async noteCommmentsGet(requestParameters: NoteCommmentsGetRequest): Promise<NoteCommmentsGetResponse> {
+        const response = await this.noteCommmentsGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async noteCommmentsNoteCommentIdDeleteRaw(requestParameters: NoteCommmentsNoteCommentIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling noteCommmentsNoteCommentIdDelete.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling noteCommmentsNoteCommentIdDelete.');
+        }
+
+        if (requestParameters.noteId === null || requestParameters.noteId === undefined) {
+            throw new runtime.RequiredError('noteId','Required parameter requestParameters.noteId was null or undefined when calling noteCommmentsNoteCommentIdDelete.');
+        }
+
+        if (requestParameters.noteCommentId === null || requestParameters.noteCommentId === undefined) {
+            throw new runtime.RequiredError('noteCommentId','Required parameter requestParameters.noteCommentId was null or undefined when calling noteCommmentsNoteCommentIdDelete.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/comments/{noteCommentId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))).replace(`{${"noteCommentId"}}`, encodeURIComponent(String(requestParameters.noteCommentId))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async noteCommmentsNoteCommentIdDelete(requestParameters: NoteCommmentsNoteCommentIdDeleteRequest): Promise<void> {
+        await this.noteCommmentsNoteCommentIdDeleteRaw(requestParameters);
+    }
+
+    /**
+     */
+    async noteCommmentsNoteCommentIdGetRaw(requestParameters: NoteCommmentsNoteCommentIdGetRequest): Promise<runtime.ApiResponse<NoteComment>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling noteCommmentsNoteCommentIdGet.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling noteCommmentsNoteCommentIdGet.');
+        }
+
+        if (requestParameters.noteId === null || requestParameters.noteId === undefined) {
+            throw new runtime.RequiredError('noteId','Required parameter requestParameters.noteId was null or undefined when calling noteCommmentsNoteCommentIdGet.');
+        }
+
+        if (requestParameters.noteCommentId === null || requestParameters.noteCommentId === undefined) {
+            throw new runtime.RequiredError('noteCommentId','Required parameter requestParameters.noteCommentId was null or undefined when calling noteCommmentsNoteCommentIdGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/comments/{noteCommentId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))).replace(`{${"noteCommentId"}}`, encodeURIComponent(String(requestParameters.noteCommentId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => NoteCommentFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async noteCommmentsNoteCommentIdGet(requestParameters: NoteCommmentsNoteCommentIdGetRequest): Promise<NoteComment> {
+        const response = await this.noteCommmentsNoteCommentIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async noteCommmentsNoteCommentIdPutRaw(requestParameters: NoteCommmentsNoteCommentIdPutRequest): Promise<runtime.ApiResponse<NoteComment>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling noteCommmentsNoteCommentIdPut.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling noteCommmentsNoteCommentIdPut.');
+        }
+
+        if (requestParameters.noteId === null || requestParameters.noteId === undefined) {
+            throw new runtime.RequiredError('noteId','Required parameter requestParameters.noteId was null or undefined when calling noteCommmentsNoteCommentIdPut.');
+        }
+
+        if (requestParameters.noteCommentId === null || requestParameters.noteCommentId === undefined) {
+            throw new runtime.RequiredError('noteCommentId','Required parameter requestParameters.noteCommentId was null or undefined when calling noteCommmentsNoteCommentIdPut.');
+        }
+
+        if (requestParameters.noteCommmentsNoteCommentIdPutRequestBody === null || requestParameters.noteCommmentsNoteCommentIdPutRequestBody === undefined) {
+            throw new runtime.RequiredError('noteCommmentsNoteCommentIdPutRequestBody','Required parameter requestParameters.noteCommmentsNoteCommentIdPutRequestBody was null or undefined when calling noteCommmentsNoteCommentIdPut.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/comments/{noteCommentId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))).replace(`{${"noteCommentId"}}`, encodeURIComponent(String(requestParameters.noteCommentId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: NoteCommmentsNoteCommentIdPutRequestBodyToJSON(requestParameters.noteCommmentsNoteCommentIdPutRequestBody),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => NoteCommentFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async noteCommmentsNoteCommentIdPut(requestParameters: NoteCommmentsNoteCommentIdPutRequest): Promise<NoteComment> {
+        const response = await this.noteCommmentsNoteCommentIdPutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async noteCommmentsPostRaw(requestParameters: NoteCommmentsPostRequest): Promise<runtime.ApiResponse<NoteComment>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling noteCommmentsPost.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling noteCommmentsPost.');
+        }
+
+        if (requestParameters.noteId === null || requestParameters.noteId === undefined) {
+            throw new runtime.RequiredError('noteId','Required parameter requestParameters.noteId was null or undefined when calling noteCommmentsPost.');
+        }
+
+        if (requestParameters.noteCommmentsPostRequestBody === null || requestParameters.noteCommmentsPostRequestBody === undefined) {
+            throw new runtime.RequiredError('noteCommmentsPostRequestBody','Required parameter requestParameters.noteCommmentsPostRequestBody was null or undefined when calling noteCommmentsPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/{noteId}/comments/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"noteId"}}`, encodeURIComponent(String(requestParameters.noteId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: NoteCommmentsPostRequestBodyToJSON(requestParameters.noteCommmentsPostRequestBody),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => NoteCommentFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async noteCommmentsPost(requestParameters: NoteCommmentsPostRequest): Promise<NoteComment> {
+        const response = await this.noteCommmentsPostRaw(requestParameters);
+        return await response.value();
+    }
 
     /**
      */
@@ -157,8 +490,8 @@ export class NotesApi extends runtime.BaseAPI {
             queryParameters['limit'] = requestParameters.limit;
         }
 
-        if (requestParameters.id !== undefined) {
-            queryParameters['id'] = requestParameters.id;
+        if (requestParameters.id) {
+            queryParameters['id'] = requestParameters.id.join(runtime.COLLECTION_FORMATS["csv"]);
         }
 
         if (requestParameters.parent !== undefined) {
@@ -169,40 +502,24 @@ export class NotesApi extends runtime.BaseAPI {
             queryParameters['root'] = requestParameters.root;
         }
 
-        if (requestParameters.idGt !== undefined) {
-            queryParameters['id__gt'] = requestParameters.idGt;
-        }
-
-        if (requestParameters.idLt !== undefined) {
-            queryParameters['id__lt'] = requestParameters.idLt;
-        }
-
         if (requestParameters.subject !== undefined) {
             queryParameters['subject'] = requestParameters.subject;
         }
 
-        if (requestParameters.status !== undefined) {
-            queryParameters['status'] = requestParameters.status;
+        if (requestParameters.status) {
+            queryParameters['status'] = requestParameters.status.join(runtime.COLLECTION_FORMATS["csv"]);
         }
 
-        if (requestParameters.batonUser !== undefined) {
-            queryParameters['baton_user'] = requestParameters.batonUser;
+        if (requestParameters.batonUser) {
+            queryParameters['baton_user'] = requestParameters.batonUser.join(runtime.COLLECTION_FORMATS["csv"]);
         }
 
         if (requestParameters.writeUser !== undefined) {
             queryParameters['write_user'] = requestParameters.writeUser;
         }
 
-        if (requestParameters.updatedAt !== undefined) {
-            queryParameters['updated_at'] = (requestParameters.updatedAt as any).toISOString();
-        }
-
-        if (requestParameters.updatedAtGt !== undefined) {
-            queryParameters['updated_at__gt'] = (requestParameters.updatedAtGt as any).toISOString();
-        }
-
-        if (requestParameters.updatedAtLt !== undefined) {
-            queryParameters['updated_at__lt'] = (requestParameters.updatedAtLt as any).toISOString();
+        if (requestParameters.chargeUsers) {
+            queryParameters['charge_users'] = requestParameters.chargeUsers.join(runtime.COLLECTION_FORMATS["csv"]);
         }
 
         if (requestParameters.favorite !== undefined) {
@@ -661,6 +978,90 @@ export class NotesApi extends runtime.BaseAPI {
      */
     async notesStatusPost(requestParameters: NotesStatusPostRequest): Promise<Array<NoteStatus>> {
         const response = await this.notesStatusPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async notesSummariesGetRaw(requestParameters: NotesSummariesGetRequest): Promise<runtime.ApiResponse<NotesSummariesGetResponse>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling notesSummariesGet.');
+        }
+
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling notesSummariesGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.id) {
+            queryParameters['id'] = requestParameters.id.join(runtime.COLLECTION_FORMATS["csv"]);
+        }
+
+        if (requestParameters.parent !== undefined) {
+            queryParameters['parent'] = requestParameters.parent;
+        }
+
+        if (requestParameters.root !== undefined) {
+            queryParameters['root'] = requestParameters.root;
+        }
+
+        if (requestParameters.subject !== undefined) {
+            queryParameters['subject'] = requestParameters.subject;
+        }
+
+        if (requestParameters.status) {
+            queryParameters['status'] = requestParameters.status.join(runtime.COLLECTION_FORMATS["csv"]);
+        }
+
+        if (requestParameters.batonUser) {
+            queryParameters['baton_user'] = requestParameters.batonUser.join(runtime.COLLECTION_FORMATS["csv"]);
+        }
+
+        if (requestParameters.writeUser !== undefined) {
+            queryParameters['write_user'] = requestParameters.writeUser;
+        }
+
+        if (requestParameters.chargeUsers) {
+            queryParameters['charge_users'] = requestParameters.chargeUsers.join(runtime.COLLECTION_FORMATS["csv"]);
+        }
+
+        if (requestParameters.favorite !== undefined) {
+            queryParameters['favorite'] = requestParameters.favorite;
+        }
+
+        if (requestParameters.ordering !== undefined) {
+            queryParameters['ordering'] = requestParameters.ordering;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/projects/{projectId}/notes/summaries/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => NotesSummariesGetResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async notesSummariesGet(requestParameters: NotesSummariesGetRequest): Promise<NotesSummariesGetResponse> {
+        const response = await this.notesSummariesGetRaw(requestParameters);
         return await response.value();
     }
 

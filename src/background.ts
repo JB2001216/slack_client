@@ -159,7 +159,7 @@ function createWindow(this: any) {
   win.setMenu(null);
   win.removeMenu();
 
-  // 新規ウインドウはアプリ外で起動する
+  // Open link in a os browser
   win.webContents.on('new-window', (e, url) => {
     e.preventDefault();
     shell.openExternal(url);

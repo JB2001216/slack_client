@@ -54,6 +54,14 @@ const struct: LocaleStruct = {
         notfound: '条件に一致するユーザーは見つかりませんでした',
         searchTextPlaceholder: '名前またはメールアドレスで検索',
       },
+      myMarkdownEditor: {
+        noteLink: {
+          move: '移動',
+          enter: '確定',
+          cancel: 'キャンセル',
+          lastUpdated: '最終更新日',
+        },
+      },
     },
 
     views: {
