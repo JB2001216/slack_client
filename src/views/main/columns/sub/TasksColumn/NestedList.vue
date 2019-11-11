@@ -108,6 +108,7 @@
         :item-droppable-between="itemDroppableBetween"
         :drag-data="dragData"
         :drop-hover="dropHover"
+        :added-child-task="addedChildTask"
         @drag-data-change="emitDragDataChange($event)"
         @drop-hover-change="emitDropHoverChange($event)"
         @drop-task="emitDropTask($event)"
@@ -194,7 +195,7 @@
 
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
   MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry,
   TasksGetResponse, TasksPostRequestBody, TasksTaskIdPatchRequestBody,
@@ -238,11 +239,16 @@ export default class NestedList extends Vue {
   @Prop({ default: null })
   dropHover: DropTaskData | null = null;
 
+  @Prop({ default: null })
+  addedChildTask!: Task | null;
+
   saving = false;
   addingParentTask: TaskWithChilds | null = null;
   addingTaskSubject = '';
   editingTask: TaskWithChilds | null = null;
   editingTaskSubject = '';
+
+  addedChildTaskId: number | null = null;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
@@ -276,51 +282,24 @@ export default class NestedList extends Vue {
   }
 
   created() {
-    EventsSub.source.addEventListener('createTask', this.createTask);
     EventsSub.source.addEventListener('deleteTask', this.deleteTask);
   }
 
-  async createTask(e: any): Promise<void> {
+  @Watch('addedChildTask')
+  onAddChildTask(task: this['addedChildTask']) {
 
-    const data = JSON.parse(e.data);
-    const isFireUser = data.userId === this.myUser.id;
+    if (!task) { return; }
 
-    await this.getTask(data)
-      .then((task: Task) => {
+    const childTask = this.tasks.find((t) => t.parent === task.parent);
+    if (childTask) { this.tasks.unshift(task!); }
 
-        if (!task.parent) {
-          this.tasks.unshift(task);
-        } else {
-
-          const parentTask = this.tasks.find((t) => t.id === task.parent);
-          if (!parentTask) { return; }
-
-          if (parentTask.childs) {
-            if (!parentTask.childs.find((t) => t.id === task.id)) {
-              parentTask.childs.unshift(task);
-            }
-          } else {
-            parentTask.childs = [task];
-          }
-
-          parentTask.hasChilds = true;
-
-          if (!isFireUser) { parentTask.childs = []; }
-
-          const index = this.tasks.findIndex((t) => t.id === parentTask.id);
-          this.tasks.splice(index, 1, parentTask);
-
-        }
-
-        if (isFireUser) {
-          this.$router.push({
-            name: 'task',
-            params: { projectId: this.activeProjectId + '', userId: this.myUser.id + '', taskId: task.id + '' },
-          });
-          this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
-        }
-
-      });
+    const parentTask = this.tasks.find((t) => t.id === task.parent);
+    if (parentTask) {
+      parentTask.hasChilds = true;
+      if (task.id === +this.$route.params['taskId']) {
+        this.onExpandChilds(parentTask);
+      }
+    }
 
   }
 
@@ -652,7 +631,6 @@ export default class NestedList extends Vue {
   }
 
   destroyed() {
-    EventsSub.source.removeEventListener('createTask', this.createTask);
     EventsSub.source.removeEventListener('deleteTask', this.deleteTask);
   }
 

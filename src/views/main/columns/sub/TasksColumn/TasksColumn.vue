@@ -56,7 +56,7 @@
           </div>
         </template>
         <div class="infiniteLoadContainer">
-          <infinite-loading v-if="tasksInit" :identifier="infiniteId" @infinite="onInfinite" />
+          <infinite-loading :identifier="infiniteId" @infinite="onInfinite" />
         </div>
         <div
           ref="taskListContainer"
@@ -70,6 +70,7 @@
             :item-droppable-between="currentSort.droppableBetween"
             :drag-data="dragData"
             :drop-hover="dropHover"
+            :added-child-task="addedChildTask"
             @drag-data-change="dragData = $event"
             @drop-hover-change="dropHover = $event"
             @drop-task="onDropTask"
@@ -228,8 +229,7 @@ export default class TasksColumn extends Vue {
   dragData: DragTaskData | null = null;
   dropHover: DropTaskData | null = null;
 
-  tasksInit: boolean = true;
-  newTaskInit: boolean = false;
+  addedChildTask: Task | null = null;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
@@ -265,7 +265,30 @@ export default class TasksColumn extends Vue {
   }
 
   created() {
+    EventsSub.source.addEventListener('createTask', this.createTask);
     EventsSub.source.addEventListener('updateTask', this.updateTask);
+  }
+
+  async createTask(e: any): Promise<void> {
+
+    const data = JSON.parse(e.data);
+    const isFireUser = data.userId === this.myUser.id;
+
+    this.getTask(data)
+      .then((task: Task) => {
+
+        if (isFireUser) {
+          this.$router.push(this.getTaskTo(task.id))
+            .then(() => {
+              if (!task.parent) { this.tasks.unshift(task); } else { this.addedChildTask = task; }
+            });
+          this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
+        } else {
+          if (!task.parent) { this.tasks.unshift(task); } else { this.addedChildTask = task; }
+        }
+
+      });
+
   }
 
   async updateTask(e: any): Promise<void> {
@@ -582,6 +605,7 @@ export default class TasksColumn extends Vue {
   }
 
   destroyed() {
+    EventsSub.source.removeEventListener('createTask', this.createTask);
     EventsSub.source.removeEventListener('updateTask', this.updateTask);
   }
 
