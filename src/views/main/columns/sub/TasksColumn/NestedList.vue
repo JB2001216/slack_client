@@ -288,26 +288,37 @@ export default class NestedList extends Vue {
     await this.getTask(data)
       .then((task: Task) => {
 
-        if (!task.parent) { return; }
-
-        const parentTask = this.tasks.find((t) => t.id === task.parent);
-
-        if (!parentTask) { return; }
-
-        if (parentTask.childs) {
-          if (!parentTask.childs.find((t) => t.id === task.id)) {
-            parentTask.childs.unshift(task);
-          }
+        if (!task.parent) {
+          this.tasks.unshift(task);
         } else {
-          parentTask.childs = [task];
+
+          const parentTask = this.tasks.find((t) => t.id === task.parent);
+          if (!parentTask) { return; }
+
+          if (parentTask.childs) {
+            if (!parentTask.childs.find((t) => t.id === task.id)) {
+              parentTask.childs.unshift(task);
+            }
+          } else {
+            parentTask.childs = [task];
+          }
+
+          parentTask.hasChilds = true;
+
+          if (!isFireUser) { parentTask.childs = []; }
+
+          const index = this.tasks.findIndex((t) => t.id === parentTask.id);
+          this.tasks.splice(index, 1, parentTask);
+
         }
 
-        parentTask.hasChilds = true;
-
-        if (!isFireUser) { parentTask.childs = []; }
-
-        const index = this.tasks.findIndex((t) => t.id === parentTask.id);
-        this.tasks.splice(index, 1, parentTask);
+        if (isFireUser) {
+          this.$router.push({
+            name: 'task',
+            params: { projectId: this.activeProjectId + '', userId: this.myUser.id + '', taskId: task.id + '' },
+          });
+          this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
+        }
 
       });
 

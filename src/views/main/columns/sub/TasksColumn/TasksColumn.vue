@@ -265,30 +265,7 @@ export default class TasksColumn extends Vue {
   }
 
   created() {
-    EventsSub.source.addEventListener('createTask', this.createTask);
     EventsSub.source.addEventListener('updateTask', this.updateTask);
-  }
-
-  async createTask(e: any): Promise<void> {
-
-    const data = JSON.parse(e.data);
-    const isFireUser = data.userId === this.myUser.id;
-
-    await this.getTask(data)
-      .then((task: Task) => {
-
-        if (!task.parent) {
-          this.tasksInit = false;
-          setTimeout(() => { this.tasksInit = true; }, 100);
-        }
-
-        if (isFireUser) {
-          this.$router.push(this.getTaskTo(task.id));
-          this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
-        }
-
-      });
-
   }
 
   async updateTask(e: any): Promise<void> {
@@ -605,7 +582,6 @@ export default class TasksColumn extends Vue {
   }
 
   destroyed() {
-    EventsSub.source.removeEventListener('createTask', this.createTask);
     EventsSub.source.removeEventListener('updateTask', this.updateTask);
   }
 
