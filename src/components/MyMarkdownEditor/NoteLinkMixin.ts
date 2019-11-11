@@ -57,9 +57,8 @@ export default class NoteLinkMixin extends Mixins(CommonMixin) {
   // compileHtml
   compileHtmlForNoteLink(markdown: string): string {
     if (!this.enabledNoteLinkWithConditions) return markdown;
-
-    const html = markdown.replace(tagInMarkdownMatcher, (match, subjectMd) => {
-      const subject = subjectRawToSubjectMarkdown(subjectMd);
+    const html = markdown.replace(new RegExp(tagInMarkdownMatcher, 'g'), (match, subjectMd) => {
+      const subject = subjectMarkdownToSubjectRaw(subjectMd);
       const note = this.notesForNoteLink.find((n) => n.subject === subject);
       if (!note) return match;
       return `<a href="#" data-type="noteLink" data-id="${note.id}">${escapeHtml(note.subject)}</a>`;
