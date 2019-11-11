@@ -53,6 +53,14 @@ const struct: LocaleStruct = {
         notfound: 'No users found that match the condition',
         searchTextPlaceholder: 'Search by name or email address',
       },
+      myMarkdownEditor: {
+        noteLink: {
+          move: 'Move',
+          enter: 'Enter',
+          cancel: 'Cancel',
+          lastUpdated: 'Last Updated',
+        },
+      },
     },
 
     views: {

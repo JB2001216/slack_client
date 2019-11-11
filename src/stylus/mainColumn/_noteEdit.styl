@@ -51,13 +51,17 @@
       content: ""
       clear: both
       display: block
+    &_edit
+      textarea
+        padding: 28px 28px 50px 28px
+    &_view
+      padding: 28px 28px 50px 28px
+      overflow-y: auto
     &_view,
     &_edit
       float: left
       width: 50%
       height: calc(100vh - 230px)
-      padding: 28px 28px 50px 28px
-      overflow-y: auto
       *:nth-child(1)
         margin-top: 0
       h1,h2,h3,h4,h5,h6,p,li,dt,dd,th,td,blockquote

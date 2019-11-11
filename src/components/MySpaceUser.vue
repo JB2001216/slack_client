@@ -2,9 +2,7 @@
   <div
     :is="tag"
     :class="tagClass"
-    @click="$emit('click', $event)"
-    @mouseenter="$emit('mouseenter', $event)"
-    @mouseleave="$emit('mouseleave', $event)"
+    v-on="$listeners"
   >
     <slot :user="user" />
   </div>

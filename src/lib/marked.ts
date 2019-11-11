@@ -8,4 +8,14 @@ for (const ruleName of ['normal', 'gfm', 'breaks', 'pedantic']) {
   });
 }
 
+// Open link in a os browser
+const originalLinkRederer = marked.Renderer.prototype.link;
+marked.Renderer.prototype.link = function(href, title, text) {
+  const out = originalLinkRederer.call(this, href, title, text);
+  if (out && !!out.match(/^<a href=".*<\/a>$/)) {
+    return out.replace(/^<a href="/, '<a target="_blank" href="');
+  }
+  return out;
+};
+
 export default marked;

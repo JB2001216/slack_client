@@ -10,7 +10,7 @@ export enum SubColumnTabNames {
   ganttChart = 'ganttChart',
 }
 
-export const colorPickerDefaultColors: string[] = [
+export const colorPickerDefaultColors: readonly string[] = [
   '#ad1357',
   '#f4501e',
   '#e4c442',
@@ -38,4 +38,4 @@ export const colorPickerDefaultColors: string[] = [
   '#4385f4',
   '#9e69af',
   '#a79b8d',
-];
+] as const;

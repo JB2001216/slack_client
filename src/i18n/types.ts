@@ -63,6 +63,14 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       notfound: string;
       searchTextPlaceholder: string;
     };
+    myMarkdownEditor: {
+      noteLink: {
+        move: string;
+        enter: string;
+        cancel: string;
+        lastUpdated: string;
+      };
+    };
   };
 
   views: {
