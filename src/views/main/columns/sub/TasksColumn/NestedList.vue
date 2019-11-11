@@ -348,14 +348,6 @@ export default class NestedList extends Vue {
 
   }
 
-  getTask(data: any) {
-    return this.api.tasksTaskIdGet({
-      spaceId: data.spaceId,
-      projectId: data.params.projectId,
-      taskId: data.params.taskId,
-    });
-  }
-
   getTaskUpdatable(task: Task) {
     return this.$store.getters.activeUser.taskUpdatable(task);
   }
@@ -605,29 +597,12 @@ export default class NestedList extends Vue {
     }
   }
 
-  onTaskDeleted(ev: { taskId: number }) {
-    this.tasks.forEach((parent) => {
-      if (parent.childs) {
-        const index = parent.childs.findIndex((t) => t.id === ev.taskId);
-        if (index >= 0) {
-          parent.childs.splice(index, 1);
-          if (!parent.childs.length) {
-            this.$delete(parent, 'childs');
-            parent.hasChilds = false;
-          }
-        }
-      }
-    });
-  }
-
   beforeMount() {
     this.$appOn('task-edited', this.onTaskEdited);
-    this.$appOn('task-deleted', this.onTaskDeleted);
   }
 
   beforeDestroy() {
     this.$appOff('task-edited', this.onTaskEdited);
-    this.$appOff('task-deleted', this.onTaskDeleted);
   }
 
   destroyed() {
