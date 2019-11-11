@@ -266,7 +266,6 @@ export default class TasksColumn extends Vue {
 
   created() {
     EventsSub.source.addEventListener('createTask', this.createTask);
-    EventsSub.source.addEventListener('deleteTask', this.deleteTask);
     EventsSub.source.addEventListener('updateTask', this.updateTask);
   }
 
@@ -289,40 +288,6 @@ export default class TasksColumn extends Vue {
         }
 
       });
-
-  }
-
-  async deleteTask(e: any): Promise<void> {
-
-    const data = JSON.parse(e.data);
-    const isFireUser = data.userId === this.myUser.id;
-
-    const index = this.tasks.findIndex((t) => t.id === data.params.taskId);
-
-    if (index >= 0) {
-
-      const taskName = this.tasks[index].subject;
-      const isActiveTask = this.tasks[index].id === +this.$route.params['taskId'];
-
-      this.tasks.splice(index, 1);
-
-      if (isFireUser || isActiveTask) {
-        this.$router.push({
-          name: 'project',
-          params: {
-            userId: this.myUser.id + '',
-            projectId: this.activeProjectId + '',
-          },
-        });
-      }
-
-      if (isFireUser) {
-        this.$flash(this.$t('views.tasksColumn.deleteNotify', { taskName }).toString(), 'success');
-      } else if (isActiveTask) {
-        this.$flash(this.$t('views.tasksColumn.noLongerNotify', { taskName }).toString(), 'success');
-      }
-
-    }
 
   }
 
@@ -641,7 +606,6 @@ export default class TasksColumn extends Vue {
 
   destroyed() {
     EventsSub.source.removeEventListener('createTask', this.createTask);
-    EventsSub.source.removeEventListener('deleteTask', this.deleteTask);
     EventsSub.source.removeEventListener('updateTask', this.updateTask);
   }
 

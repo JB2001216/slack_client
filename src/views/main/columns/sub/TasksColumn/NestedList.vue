@@ -277,6 +277,7 @@ export default class NestedList extends Vue {
 
   created() {
     EventsSub.source.addEventListener('createTask', this.createTask);
+    EventsSub.source.addEventListener('deleteTask', this.deleteTask);
   }
 
   async createTask(e: any): Promise<void> {
@@ -309,6 +310,51 @@ export default class NestedList extends Vue {
         this.tasks.splice(index, 1, parentTask);
 
       });
+
+  }
+
+  async deleteTask(e: any): Promise<void> {
+
+    const data = JSON.parse(e.data);
+    const index = this.tasks.findIndex((t) => t.id === data.params.taskId);
+
+    if (index >= 0) {
+
+      const isFireUser = data.userId === this.myUser.id;
+      const taskName = this.tasks[index].subject;
+      const isActiveTask = this.tasks[index].id === +this.$route.params['taskId'];
+
+      this.tasks.splice(index, 1);
+
+      if (!this.tasks.length && this.parentTask) { this.parentTask.hasChilds = false; }
+
+      if (isFireUser || isActiveTask) {
+
+        if (this.tasks.length || this.parentTask) {
+
+          const taskId: number = this.tasks.length ? this.tasks[index ? (index - 1) : 0].id : this.parentTask!.id;
+
+          this.$router.push({
+            name: 'task',
+            params: { projectId: this.activeProjectId + '', userId: this.myUser.id + '', taskId: taskId + '' },
+          });
+
+        } else {
+          this.$router.push({
+            name: 'project',
+            params: { projectId: this.activeProjectId + '', userId: this.myUser.id + '' },
+          });
+        }
+
+      }
+
+      if (isFireUser) {
+        this.$flash(this.$t('views.tasksColumn.deleteNotify', { taskName }).toString(), 'success');
+      } else if (isActiveTask) {
+        this.$flash(this.$t('views.tasksColumn.noLongerNotify', { taskName }).toString(), 'success');
+      }
+
+    }
 
   }
 
@@ -596,6 +642,7 @@ export default class NestedList extends Vue {
 
   destroyed() {
     EventsSub.source.removeEventListener('createTask', this.createTask);
+    EventsSub.source.removeEventListener('deleteTask', this.deleteTask);
   }
 
 }
