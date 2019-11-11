@@ -13,6 +13,7 @@ import MyProjectMemberList from './MyProjectMemberList';
 import MyMarkdownEditor from './MyMarkdownEditor.vue';
 import MyProjectStatus from './MyProjectStatus.vue';
 import MySimpleMenu from './MySimpleMenu.vue';
+import MyProjectRecent from './MyProjectRecent.vue';
 
 export {
   MyInput,
@@ -27,6 +28,7 @@ export {
   MyChargerDialog,
   MyChargerInput,
   MyProjectMemberList,
+  MyProjectRecent,
   MyMarkdownEditor,
   MyProjectStatus,
   MySimpleMenu,

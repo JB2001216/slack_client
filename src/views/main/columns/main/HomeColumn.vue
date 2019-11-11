@@ -13,6 +13,7 @@
         />
       </div>
       <div class="dashboardWrap dashboardWrap_home">
+        <my-project-recent v-for="recent in list" :key="recent.id" :data="recent" />
         <infinite-loading @infinite="infiniteLoadData" />
       </div>
     </div>
