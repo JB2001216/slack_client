@@ -1,128 +1,134 @@
 <template>
-  <div v-if="note && activeProjectId" class="mainColumn noteColumn" :class="{fullMainColumn, updatable, editDetail}">
-    <template v-if="editDetail">
-      <div class="mainColumn_head columnTitle">
-        <h2>
-          <my-input
-            v-model="editDetail.subject"
-            type="text"
-            class="basicInput borderless"
-            placeholder="No Title"
-            auto-resize
-          />
-        </h2>
-      </div>
-      <div class="mainColumn_body">
-        <div class="dashboardWrap">
-          <div class="dashboardWrap_detail">
-            <my-markdown-editor
-              ref="markdownEditor"
-              v-model="editDetail.body"
-              class="noteEditWrap_post"
-              editor-class="noteEditWrap_post_edit"
-              :editor-placeholder="$t('views.noteColumn.enterDetails')"
-              preview-class="noteEditWrap_post_view"
-              :preview-placeholder="$t('views.noteColumn.detailsAreEmpty')"
-              enabled-note-link
-              :my-user="myUser"
-              :project-id="activeProjectId"
+  <div
+    v-if="note && activeProjectId"
+    class="mainColumn noteColumn"
+    :class="{
+      fullMainColumn,
+      updatable,
+      editDetail,
+      viewingRelatedNote :viewingRelatedNoteId,
+    }"
+  >
+    <div class="mainColumn_mainPanel">
+      <template v-if="editDetail">
+        <div class="mainColumn_head columnTitle">
+          <h2>
+            <my-input
+              v-model="editDetail.subject"
+              type="text"
+              class="basicInput borderless"
+              placeholder="No Title"
+              auto-resize
+              @change="$event.target.blur()"
             />
-          </div>
-          <div class="dashboardWrap_submit">
-            <button @click="endEditDetail(true)">
-              {{ $t('common.save') }}
-            </button>
-            <button @click="endEditDetail()">
-              {{ $t('common.cancel') }}
-            </button>
+          </h2>
+        </div>
+        <div class="mainColumn_body">
+          <div class="dashboardWrap">
+            <div class="dashboardWrap_detail">
+              <my-markdown-editor
+                ref="markdownEditor"
+                v-model="editDetail.body"
+                class="noteEditWrap_post"
+                editor-class="noteEditWrap_post_edit"
+                :editor-placeholder="$t('views.noteColumn.enterDetails')"
+                preview-class="noteEditWrap_post_view"
+                :preview-placeholder="$t('views.noteColumn.detailsAreEmpty')"
+                enabled-note-link
+                :my-user="myUser"
+                :project-id="activeProjectId"
+              />
+            </div>
+            <div class="dashboardWrap_footer">
+              <button class="formFooterButtonPrimary wide dashboardWrap_footer_button" @click="endEditDetail(true)">
+                {{ $t('common.finishEditing') }}
+              </button>
+              <!--button class="formFooterButtonSecondary wide dashboardWrap_footer_button" @click="endEditDetail()">
+                {{ $t('common.cancel') }}
+              </button-->
+              <button class="formFooterButtonLight dashboardWrap_footer_mdHelpButton">
+                <my-svg-icon class="dashboardWrap_footer_mdHelpButton_icon" name="question" />
+                <span>{{ $t('common.markdownHelp') }}</span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </template>
+      </template>
 
-    <template v-else>
-      <div class="mainColumn_head columnTitle">
-        <h2>
-          <!--input v-if="updatable" v-model="note.subject" @change="onSubjectChange" type="text" style="background:none;"-->
-          <span>{{ note.subject }}</span>
-          <a v-if="updatable" href="" class="edit" @click.prevent="startEditDetail()">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M11.1501 0.333313C10.9705 0.333313 10.7908 0.401712 10.6539 0.538905L9.45605 1.73682L12.263 4.54384L13.4609 3.34592C13.7353 3.07154 13.7353 2.62728 13.4609 2.3536L11.6463 0.538905C11.5091 0.401712 11.3297 0.333313 11.1501 0.333313ZM8.40343 2.78945L0.333374 10.8596V13.6666H3.14035L11.2104 5.59647L8.40343 2.78945Z" fill="#333333" />
-            </svg>
-          </a>
-        </h2>
-        <div class="mainColumn_head_toolbar">
-          <my-svg-icon class="mainColumn_head_toolbar_item favoriteIcon" :class="{active: isFavorite}" name="bookmark" @click="favorite(!isFavorite)" />
-          <my-svg-icon class="mainColumn_head_toolbar_item" name="link" />
-          <my-svg-icon class="mainColumn_head_toolbar_item" name="clip" />
-          <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="destroy()" />
+      <template v-else>
+        <div class="mainColumn_head columnTitle">
+          <h2>
+            <my-input
+              v-if="updatable"
+              v-model="note.subject"
+              type="text"
+              class="basicInput borderless"
+              placeholder="No Title"
+              auto-resize
+              @change="onSubjectChange"
+            />
+            <span v-else>{{ note.subject }}</span>
+          </h2>
+          <div class="mainColumn_head_toolbar">
+            <my-svg-icon class="mainColumn_head_toolbar_item favoriteIcon" :class="{active: isFavorite}" name="bookmark" @click="favorite(!isFavorite)" />
+            <my-svg-icon class="mainColumn_head_toolbar_item" name="link" />
+            <my-svg-icon class="mainColumn_head_toolbar_item" name="clip" />
+            <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="destroy()" />
+          </div>
         </div>
-      </div>
-      <div class="mainColumn_body">
-        <div class="dashboardWrap">
-          <div class="dashboardWrap_list">
-            <my-charger-input
-              :value="{batonUser: note.batonUser, chargeUsers: note.chargeUsers}"
+        <div class="mainColumn_body">
+          <div class="dashboardWrap">
+            <div class="dashboardWrap_list">
+              <my-charger-input
+                :value="{batonUser: note.batonUser, chargeUsers: note.chargeUsers}"
+                :disabled="!updatable"
+                :my-user="myUser"
+                :project-id-exact="activeProjectId"
+                :dialog-title="$t('views.noteColumn.chargerDialogTitle')"
+                @change="onChargerChange"
+              />
+            </div>
+            <my-project-status-input
+              :value="note.status"
+              :options="statusOptions"
               :disabled="!updatable"
-              :my-user="myUser"
-              :project-id-exact="activeProjectId"
-              :dialog-title="$t('views.noteColumn.chargerDialogTitle')"
-              @change="onChargerChange"
+              @input="onStatusChange($event)"
             />
-          </div>
-          <my-project-status-input
-            :value="note.status"
-            :options="statusOptions"
-            :disabled="!updatable"
-            @input="onStatusChange($event)"
-          />
-          <div class="dashboardWrap_note">
-            <my-markdown-editor
-              v-model="note.body"
-              class="noteEditWrap_post"
-              editor-class="noteEditWrap_post_edit"
-              :editor-placeholder="$t('views.noteColumn.enterDetails')"
-              preview-class="noteEditWrap_post_view"
-              :preview-placeholder="$t('views.noteColumn.detailsAreEmpty')"
-              hide-editor
-              enabled-note-link
-              :my-user="myUser"
-              :project-id="activeProjectId"
-            />
-          </div>
-          <div class="noteEditWrap_submit noEdit">
-            <button v-if="!wideScreen" @click="onEnterWideScreen()">
-              {{ $t('views.noteColumn.enterWideScreen') }}
-            </button>
-            <button v-else @click="onExitWideScreen()">
-              {{ $t('views.noteColumn.exitWideScreen') }}
-            </button>
-            <button>
-              <svg
-                width="8"
-                height="13"
-                viewBox="0 0 8 13"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M2.87825 8.65579V7.77579C2.87825 7.54112 2.88892 7.34379 2.91026 7.18379C2.94226 7.01312 2.99026 6.86379 3.05426 6.73579C3.12892 6.59712 3.21959 6.46912 3.32625 6.35179C3.44359 6.22379 3.58226 6.07446 3.74225 5.90379L4.97426 4.65579C5.24092 4.38912 5.37426 4.04246 5.37426 3.61579C5.37426 3.19979 5.23559 2.86379 4.95825 2.60779C4.69159 2.34112 4.35026 2.20779 3.93426 2.20779C3.48626 2.20779 3.11826 2.36246 2.83026 2.67179C2.54226 2.97046 2.37692 3.33846 2.33426 3.77579L0.286255 3.61579C0.350255 3.10379 0.483588 2.65046 0.686255 2.25579C0.888922 1.85046 1.15026 1.50912 1.47026 1.23179C1.80092 0.954455 2.17959 0.746455 2.60626 0.607789C3.03292 0.458456 3.50226 0.383789 4.01426 0.383789C4.49426 0.383789 4.93692 0.453122 5.34226 0.591788C5.75826 0.730455 6.11559 0.933122 6.41426 1.19979C6.72359 1.45579 6.96359 1.78112 7.13425 2.17579C7.30492 2.55979 7.39025 3.00246 7.39025 3.50379C7.39025 3.85579 7.34226 4.16512 7.24626 4.43179C7.15026 4.69846 7.02226 4.94379 6.86226 5.16779C6.70226 5.39179 6.51559 5.60512 6.30226 5.80779C6.09959 6.01046 5.88092 6.22379 5.64626 6.44779C5.49692 6.58646 5.36892 6.70912 5.26226 6.81579C5.15559 6.92246 5.06492 7.03446 4.99026 7.15179C4.92626 7.25846 4.87826 7.38646 4.84626 7.53579C4.81426 7.67446 4.79825 7.84512 4.79825 8.04779V8.65579H2.87825ZM2.55826 10.8798C2.55826 10.5385 2.68092 10.2451 2.92626 9.99979C3.18226 9.75445 3.48626 9.63179 3.83826 9.63179C4.17959 9.63179 4.47826 9.74912 4.73426 9.98379C4.99026 10.2185 5.11826 10.5065 5.11826 10.8478C5.11826 11.1891 4.99026 11.4825 4.73426 11.7278C4.48892 11.9731 4.19026 12.0958 3.83826 12.0958C3.66759 12.0958 3.50225 12.0638 3.34226 11.9998C3.19292 11.9358 3.05959 11.8505 2.94226 11.7438C2.82492 11.6371 2.72892 11.5091 2.65426 11.3598C2.59026 11.2105 2.55826 11.0505 2.55826 10.8798Z" fill="#C4C4C4" />
-              </svg>{{ $t('views.noteColumn.markdownHelp') }}
-            </button>
+            <div class="dashboardWrap_note">
+              <button v-if="updatable" class="dashboardWrap_note_editButton" @click="startEditDetail()">
+                <my-svg-icon name="pen" class="dashboardWrap_note_editButton_icon" />Edit
+              </button>
+              <my-markdown-editor
+                v-model="note.body"
+                class="noteEditWrap_post"
+                preview-class="noteEditWrap_post_view"
+                :preview-placeholder="$t('views.noteColumn.detailsAreEmpty')"
+                hide-editor
+                enabled-note-link
+                :my-user="myUser"
+                :project-id="activeProjectId"
+                @note-link-click="onNoteLinkClick"
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </template>
+      </template>
+    </div>
+    <div v-if="viewingRelatedNoteId" class="mainColumn_subPanel">
+      <span class="mainColumn_subPanel_close" @click="onNoteLinkViewerClose">×</span>
+      <note-link-viewer
+        v-model="viewingRelatedNoteId"
+        :status-options="statusOptions"
+        :my-user="myUser"
+        :project-id="activeProjectId"
+        @note-edit="onNoteLinkViewerEdit"
+      />
+    </div>
   </div>
 </template>
 
 <style lang="stylus">
-@import '../../../../stylus/_settings'
+@import '../../../../../stylus/_settings'
 
 .noteColumn
   .favoriteIcon
@@ -130,60 +136,95 @@
       --mySvgIconColor: $colors.primaryBlue
     &.active:hover
       --mySvgIconColor: $colors.primaryBlueDarken1
-  .dashboardWrap_submit button:nth-child(2)
-    background: #e6f0ff
-    color: $themeColors.active
+  .columnTitle
+    h2
+      width: calc(100% - 140px)
   .dashboardWrap_note
-    margin-top: 24px;
+    margin-top: 16px;
     zoom: 1;
     position: relative
     &_editButton
       position: absolute
-      right: 0px
-      top: 20px
+      right: 0
+      top: 16px
+      background: $colors.whiteDarken1
+      color: $colors.primaryBlack
+      cursor: pointer
+      font-size: 12px
+      border: none
+      border-radius: 20px
+      height: 26px
+      padding: 0 12px
+      display: flex
+      align-items: center
+      &_icon
+        --mySvgIconSize: 14px
+        --mySvgIconColor: $colors.primaryBlack
+        margin-right: 4px
+      &:hover
+        background: $colors.whiteDarken2
+        color: $colors.primaryBlackDarken5
+        .dashboardWrap_note_editButton_icon
+          --mySvgIconColor: $colors.primaryBlackDarken5
     .noteEditWrap_post
       margin-top: 0
       &_view,
       &_edit
         height: auto
       &.hideEditor
-        height: calc(100vh - 264px)
+        height: calc(100vh - 180px)
         overflow-y: scroll
+        border-top: solid 1px $colors.lightGrayLighten2
         .noteEditWrap_post_view
-          padding: 24px
-  .dashboardWrap_submit
+          padding: 16px
+  .dashboardWrap_footer
     display: block
     width: 100%
     min-height: 60px
-    padding: 9px 20px 24px 20px
+    padding: 16px 20px
     background: #fff
-    border-top: 2px solid $colors.lightGrayLighten2
-    text-align: center
-    display: inline-block
     position: absolute
     bottom: 0
     left: 0
-    button
-      display: inline-block
-      width: 220px
-      padding: 10px
-      margin: 15px 1.5% 0 1.5%
-      border: none
-      border-radius: 90px
-      cursor: pointer
-      font-family: $fontFamilyBody
-      font-size: 14px
-      line-height: 1
-      text-align: center
-      &:first-child
-        background-color: $themeColors.active
-        color: #fff
-  .dashboardWrap_detail
+    text-align: center
+    &_mdHelpButton
+      position: absolute
+      right: 20px
+      &_icon
+        --mySvgIconColor: $colors.primaryBlack
+        --mySvgIconSize: 16px
+        vertical-align: middle
+        margin-right: 6px
+        margin-bottom: 3px
+      &:hover
+        .dashboardWrap_footer_mdHelpButton_icon
+          --mySvgIconColor: $colors.primaryBlackDarken5
+  &.editDetail
+    .columnTitle
+      h2
+        width: 100%
     .noteEditWrap_post
+      border-top: 1px solid $colors.lightGrayLighten2
+      border-bottom: 1px solid $colors.lightGrayLighten2
       margin-top: 0
-      &_view,
-      &_edit
-        height: calc(100vh - 184px)
+      height: calc(100vh - 144px)
+  &.viewingRelatedNote
+    display: grid
+    grid-template-columns: 50% 1fr
+  .mainColumn_subPanel
+    position: relative
+    box-shadow: 0px 2px 8px 0 rgba(0, 0, 0, 0.16);
+    &_close
+      position: absolute
+      right: 20px
+      top: 20px
+      cursor: pointer
+      color: $themeColors.icon
+      font-size: 18px
+      font-size: 22px
+      line-height: 1
+      &:hover
+        color: $themeColors.iconDarken1
 </style>
 
 <script lang="ts">
@@ -193,8 +234,8 @@ import * as api from '@/lib/api';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import MyMarkdownEditor from '@/components/MyMarkdownEditor';
+import NoteLinkViewer from './NoteLinkViewer.vue';
 import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
-import { dateFormat } from '../../../../filters';
 
 async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'note'>>> {
   const loginUser = store.state.activeUser.myUser!;
@@ -230,6 +271,7 @@ Component.registerHooks([
 @Component({
   components: {
     MyProjectStatusInput,
+    NoteLinkViewer,
   },
 })
 export default class NoteColumn extends Vue {
@@ -242,6 +284,8 @@ export default class NoteColumn extends Vue {
   editDetail: Pick<api.Note, 'subject' | 'body'> | null = null;
   wideScreen = false;
   saving = false;
+
+  viewingRelatedNoteId: number | null = null;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
@@ -280,7 +324,6 @@ export default class NoteColumn extends Vue {
     const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
     try {
       this.saving = true;
-      await this.$refs.markdownEditor.compileValue();
       const note = await notesApi.notesNoteIdPatch({
         spaceId: loginUser.space.id,
         projectId,
@@ -353,6 +396,7 @@ export default class NoteColumn extends Vue {
     const subject = (ev.target as HTMLInputElement).value.trim();
     if (subject !== '') {
       await this.save({ subject });
+      (ev.target as HTMLInputElement).blur();
     }
   }
 
@@ -379,19 +423,46 @@ export default class NoteColumn extends Vue {
   }
 
   startEditDetail() {
+    if (!this.updatable) return;
     this.editDetail = {
       subject: this.note!.subject,
       body: this.note!.body || '',
     };
-    //    this.$store.mutations.setFullMainColumn(true);
+    this.viewingRelatedNoteId = null;
+    this.$store.mutations.setFullMainColumn(true);
   }
 
   async endEditDetail(save = false) {
     if (save && this.editDetail) {
+      await this.$refs.markdownEditor.compileValue();
       await this.save(this.editDetail);
     }
     this.editDetail = null;
-    //     this.$store.mutations.setFullMainColumn(false);
+    this.$store.mutations.setFullMainColumn(false);
+  }
+
+  onNoteLinkClick(note: api.NoteSummary) {
+    this.$store.mutations.setFullMainColumn(true);
+    this.viewingRelatedNoteId = note.id;
+  }
+
+  onNoteLinkViewerClose() {
+    this.$store.mutations.setFullMainColumn(false);
+    this.viewingRelatedNoteId = null;
+  }
+
+  onNoteLinkViewerEdit(note: api.Note) {
+    this.$router.push({
+      name: 'note',
+      params: {
+        userId: this.$route.params.userId,
+        projectId: this.$route.params.projectId,
+        noteId: note.id.toString(),
+      },
+      query: {
+        edit: 'true',
+      },
+    });
   }
 
   onEnterWideScreen() {
@@ -423,6 +494,9 @@ export default class NoteColumn extends Vue {
       (Object.keys(options) as (keyof typeof options)[]).forEach((k) => {
         (vm as any)[k] = options[k]!;
       });
+      if (to.query.edit === 'true') {
+        (vm as this).startEditDetail();
+      }
     });
   }
 
@@ -433,6 +507,9 @@ export default class NoteColumn extends Vue {
       (this as any)[k] = options[k]!;
     });
     this.saving = false;
+    if (to.query.edit === 'true') {
+      this.startEditDetail();
+    }
     next();
   }
 

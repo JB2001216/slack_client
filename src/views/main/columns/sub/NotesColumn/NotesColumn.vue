@@ -172,7 +172,6 @@ Component.registerHooks([
   'beforeRouteEnter',
   'beforeRouteUpdate',
 ]);
-
 @Component({
   components: {
     SubColumnLayout,

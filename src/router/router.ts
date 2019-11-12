@@ -15,7 +15,7 @@ import TasksColumn from '../views/main/columns/sub/TasksColumn';
 import MainColumnPass from '../views/main/columns/main/MainColumnPass.vue';
 import ProjectAddColumn from '../views/main/columns/main/ProjectAddColumn.vue';
 import FileColumn from '../views/main/columns/main/FileColumn.vue';
-import NoteColumn from '../views/main/columns/main/NoteColumn.vue';
+import NoteColumn from '../views/main/columns/main/NoteColumn';
 import TaskColumn from '../views/main/columns/main/TaskColumn';
 import { bindOpenUrl } from './open-url';
 import { bindLastLocation } from './last-location';

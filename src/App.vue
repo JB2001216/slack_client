@@ -22,19 +22,19 @@
     <router-view />
 
     <!-- TODO: 暫定的に設定をここに入れる -->
-    <div style="background:rgba(0,0,0,0.5); font-size:12px; border-radius:3px; padding:1px 6px; position:fixed; left:2px; bottom:75px; z-index:1; color:#fff;">
+    <div style="background:rgba(0,0,0,0.5); font-size:12px; border-radius:3px; padding:1px 6px; position:fixed; left:2px; bottom:75px; z-index:2; color:#fff;">
       <template v-for="(t,i) in themes">
         <span v-if="i !== 0" :key="i" style="padding: 0 4px;">|</span>
         <span :key="t" style="cursor:pointer;" @click="theme=t">{{ i+1 }}</span>
       </template>
     </div>
-    <div style="background:rgba(0,0,0,0.5); font-size:12px; border-radius:3px; padding:1px 6px; position:fixed; left:2px; bottom:50px; z-index:1; color:#fff;">
+    <div style="background:rgba(0,0,0,0.5); font-size:12px; border-radius:3px; padding:1px 6px; position:fixed; left:2px; bottom:50px; z-index:2; color:#fff;">
       <template v-for="(locale, i) in loadableLocales">
         <span v-if="i !== 0" :key="i" style="padding: 0 4px;">|</span>
         <span :key="locale" style="cursor:pointer;" @click.prevent="$store.actions.setLocale(locale)">{{ locale }}</span>
       </template>
     </div>
-    <div style="background:rgba(0,0,0,0.5); font-size:12px; border-radius:3px; padding:1px 6px; position:fixed; left:2px; bottom:25px; z-index:1; color:#fff;">
+    <div style="background:rgba(0,0,0,0.5); font-size:12px; border-radius:3px; padding:1px 6px; position:fixed; left:2px; bottom:25px; z-index:2; color:#fff;">
       <span>v{{ version }}</span>
     </div>
   </div>
@@ -45,6 +45,7 @@
 @import './stylus/main'
 
 #app
+  overflow: hidden
   .fade-enter-active, .fade-leave-active
     transition: opacity 200ms
   .fade-enter, .fade-leave-to

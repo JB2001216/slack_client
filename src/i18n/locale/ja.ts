@@ -150,6 +150,9 @@ const struct: LocaleStruct = {
         addedChargeUser: 'ノートメンバーに{name}を追加しました。',
         deletedChargeUser: 'ノートメンバーから{name}を除外しました。',
         chargerDialogTitle: 'ノートメンバー管理',
+        status: 'ステータス',
+        baton: '担当',
+        lastUpdated: '最終更新日',
       },
 
       // setting
