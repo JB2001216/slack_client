@@ -26,6 +26,15 @@ const struct: LocaleStruct = {
         PROJECT_USER: 'ユーザー',
       },
       alreadyLoggedIn: '既にログイン済です',
+      time: {
+        second: '秒',
+        minute: '分',
+        hour: '時間',
+        day: '日',
+        month: '月',
+        year: '年',
+        ago: '前',
+      },
     },
 
     components: {

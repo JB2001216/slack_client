@@ -6,6 +6,7 @@
       <span class="recentTitleText"> {{ activityTextBeforeFocus }} </span>
       <span class="recentTitleText activityTextFocus"> {{ activityTextFocus }} </span>
       <span class="recentTitleText"> {{ activityTextAfterFocus }} </span>
+      <span class="timeAgo">{{ timeAgo }}</span>
     </div>
     <div class="recentContent">
       <a v-if="isShowLinkEvent && data" class="link" href="#" @click="onClickLink()">{{ dataSubject }}</a>
@@ -34,15 +35,18 @@
 <style lang="stylus" scoped>
 .recentTitle
   display: flex
-  font-weight: bold
   align-items: center
   .recentTitleText
     margin-left: 5px
+    font-weight: bold
   .activityTextFocus
     background-color: #2F80ED
     padding: 0px 5px
     border-radius: 10px
     color: white
+  .timeAgo
+    color: #999999
+    margin-left: 5px
 .recentContent
   display: inline-block
   margin-left: 40px
@@ -93,6 +97,29 @@ export default class MyProjectRecent extends Vue {
     return this.$store.state.activeUser.spaceUsers.find((su) => su.id === userId) || null;
   }
 
+  get timeAgo(): string {
+    const updatedAt = this.recent.data.find((data) => data.field === 'updatedAt')!.afterValue as string;
+    let time = Math.floor((new Date().getTime() - new Date(updatedAt).getTime()) / 1000);
+    let unit = '';
+    if (time < 60) {
+      unit = this.$t('common.time.second').toString();
+    } else if (time < 3600) {
+      time = Math.floor(time / 60);
+      unit = this.$t('common.time.minute').toString();
+    } else if (time < 86400) {
+      time = Math.floor(time / 3600);
+      unit = this.$t('common.time.hour').toString();
+    } else {
+      time = Math.floor(time / 86400);
+      unit = this.$t('common.time.day').toString();
+    }
+
+    let str = time.toString();
+    if (this.$i18n.locale === 'en') str = str + ' ';
+    str = str + unit;
+    if (this.$i18n.locale === 'en') str = str + 's ';
+    return str + this.$t('common.time.ago');
+  }
 
   get activityTextBeforeFocus(): string {
     const str = this.$t('views.homeColumn.recent.' + this.recent.event + '.title').toString();

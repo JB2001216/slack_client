@@ -25,6 +25,15 @@ const struct: LocaleStruct = {
         PROJECT_USER: 'User',
       },
       alreadyLoggedIn: 'Already logged in',
+      time: {
+        second: 'second',
+        minute: 'minute',
+        hour: 'hour',
+        day: 'day',
+        month: 'month',
+        year: 'year',
+        ago: 'ago',
+      },
     },
 
     components: {

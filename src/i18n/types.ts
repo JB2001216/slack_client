@@ -35,6 +35,15 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       // USER_READONLY: string;
     };
     alreadyLoggedIn: string;
+    time: {
+      second: string;
+      minute: string;
+      hour: string;
+      day: string;
+      month: string;
+      year: string;
+      ago: string;
+    };
   };
 
   components: {
