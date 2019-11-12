@@ -104,7 +104,6 @@ const struct: LocaleStruct = {
           tags: 'Tags',
         },
         createNotify: 'Task {taskName} created',
-        updateNotify: 'Task {taskName} updated',
         deleteNotify: 'Task {taskName} deleted',
         noLongerNotify: 'Task {taskName} is no longer available',
       },

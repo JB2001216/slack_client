@@ -114,7 +114,6 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         tags: string;
       };
       createNotify: string;
-      updateNotify: string;
       deleteNotify: string;
       noLongerNotify: string;
     };

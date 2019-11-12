@@ -156,7 +156,7 @@ import { StateChanger } from 'vue-infinite-loading';
 import SubColumnLayout from '../SubColumnLayout.vue';
 import FilterForm from './FilterForm.vue';
 import NestedList from './NestedList.vue';
-import { MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry, TasksGetRequest, TasksTaskIdPriorityPostRequestBody } from '@/lib/api';
+import { MyUser, Project, Task, TaskStatus, TasksApi, apiRegistry, TasksGetRequest, TasksTaskIdPriorityPostRequestBody, TasksGetResponse } from '@/lib/api';
 import { BasicError } from '@/lib/errors';
 import { ProjectStatusCategory } from '@/consts';
 import { toSnakeCase } from '@/lib/utils/string-util';
@@ -264,58 +264,52 @@ export default class TasksColumn extends Vue {
     return this.$store.state.activeUser.taskStatusList;
   }
 
-  created() {
+  created(): void {
     EventsSub.source.addEventListener('createTask', this.createTask);
-    EventsSub.source.addEventListener('updateTask', this.updateTask);
   }
 
-  async createTask(e: any): Promise<void> {
-
-    const data = JSON.parse(e.data);
-    const isFireUser = data.userId === this.myUser.id;
-
-    this.getTask(data)
-      .then((task: Task) => {
-
-        if (isFireUser) {
-          this.$router.push(this.getTaskTo(task.id))
-            .then(() => {
-              if (!task.parent) { this.tasks.unshift(task); } else { this.addedChildTask = task; }
-            });
-          this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
-        } else {
-          if (!task.parent) { this.tasks.unshift(task); } else { this.addedChildTask = task; }
-        }
-
-      });
-
-  }
-
-  async updateTask(e: any): Promise<void> {
+  createTask(e: any): void {
 
     const data = JSON.parse(e.data);
 
-    await this.getTask(data)
-      .then((task: Task) => {
-
-        if (task.parent) { return; }
-
-        const index = this.tasks.findIndex((t) => t.id === task.id);
-        this.tasks.splice(index, 1, task);
-
-      });
-
-  }
-
-  getTask(data: any) {
-    return this.api.tasksTaskIdGet({
+    this.api.tasksTaskIdGet({
       spaceId: data.spaceId,
       projectId: data.params.projectId,
       taskId: data.params.taskId,
+    }).then((task: Task) => {
+
+      const isFireUser = data.userId === this.myUser.id;
+
+      if (isFireUser) {
+
+        this.$router.push(this.getTaskTo(task.id))
+          .then(() => {
+
+            if (!task.parent) {
+              this.tasks.unshift(task);
+            } else {
+              this.addedChildTask = task;
+            }
+
+            this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
+
+          });
+
+      } else {
+        if (!task.parent) {
+          this.tasks.unshift(task);
+        } else {
+          this.addedChildTask = task;
+        }
+      }
+
+    }).catch((err) => {
+      this.$appEmit('error', { err });
     });
+
   }
 
-  async fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}) {
+  fetchTasks(options: { parent?: number; limit?: number; page?: number } = {}): Promise<TasksGetResponse> {
 
     const cond = this.conditions;
 
@@ -342,7 +336,7 @@ export default class TasksColumn extends Vue {
 
   }
 
-  async onInfinite($state: StateChanger) {
+  async onInfinite($state: StateChanger): Promise<void> {
 
     try {
 
@@ -373,7 +367,7 @@ export default class TasksColumn extends Vue {
 
   }
 
-  changeCondition(cond: TasksGetConditions) {
+  changeCondition(cond: TasksGetConditions): void {
     this.conditions = cond;
     this.page = 1;
     this.tasks = [];
@@ -402,26 +396,21 @@ export default class TasksColumn extends Vue {
     this.changeCondition(Object.assign(this.conditions, { order }));
   }
 
-  onTaskItemClick(ev: MouseEvent, task: Task) {
+  onTaskItemClick(ev: MouseEvent, task: Task): void {
     if (this.$route.name !== 'task' || this.$route.params['taskId'] !== task.id.toString()) {
       this.$router.push(this.getTaskTo(task.id));
     }
   }
 
-  async onInlineTaskAddStart() {
-
+  async onInlineTaskAddStart(): Promise<void> {
     if (this.adding || this.saving) return;
-
     this.addingTaskSubject = '';
     this.adding = true;
-
     await this.$nextTick();
-
     this.$refs.addingTaskSubjectInput.focus();
-
   }
 
-  async onInlineTaskAddEnd() {
+  onInlineTaskAddEnd(): void {
 
     if (!this.adding || this.saving) return;
 
@@ -431,26 +420,22 @@ export default class TasksColumn extends Vue {
         .filter((o) => o.category === ProjectStatusCategory.Progress)
         .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
 
-      try {
+      this.saving = true;
 
-        this.saving = true;
-
-        await this.api.tasksPost({
-          spaceId: this.myUser.space.id,
-          projectId: this.activeProjectId,
-          tasksPostRequestBody: {
-            subject: this.addingTaskSubject.trim(),
-            status: statusOptions[0].id,
-            chargeUsers: [],
-            tags: [],
-          },
-        });
-
-      } catch (err) {
+      this.api.tasksPost({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
+        tasksPostRequestBody: {
+          subject: this.addingTaskSubject.trim(),
+          status: statusOptions[0].id,
+          chargeUsers: [],
+          tags: [],
+        },
+      }).catch((err) => {
         this.$appEmit('error', { err });
-      } finally {
+      }).finally(() => {
         this.saving = false;
-      }
+      });
 
     }
 
@@ -606,7 +591,6 @@ export default class TasksColumn extends Vue {
 
   destroyed() {
     EventsSub.source.removeEventListener('createTask', this.createTask);
-    EventsSub.source.removeEventListener('updateTask', this.updateTask);
   }
 
 }

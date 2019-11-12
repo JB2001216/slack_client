@@ -281,12 +281,13 @@ export default class NestedList extends Vue {
     return null;
   }
 
-  created() {
+  created(): void {
+    EventsSub.source.addEventListener('updateTask', this.updateTask);
     EventsSub.source.addEventListener('deleteTask', this.deleteTask);
   }
 
   @Watch('addedChildTask')
-  onAddChildTask(task: this['addedChildTask']) {
+  onAddChildTask(task: this['addedChildTask']): void {
 
     if (!task) { return; }
 
@@ -296,9 +297,27 @@ export default class NestedList extends Vue {
     const parentTask = this.tasks.find((t) => t.id === task.parent);
     if (parentTask) {
       parentTask.hasChilds = true;
-      if (task.id === +this.$route.params['taskId']) {
+      if (task.id === this.activeTaskId) {
         this.onExpandChilds(parentTask);
       }
+    }
+
+  }
+
+  updateTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const index = this.tasks.findIndex((t) => t.id === data.params.taskId);
+
+    if (index >= 0) {
+
+      this.getTask(data)
+        .then((task: Task) => {
+          this.tasks[index] = Object.assign(this.tasks[index], task);
+        }).catch((err) => {
+          this.$appEmit('error', { err });
+        });
+
     }
 
   }
@@ -312,16 +331,13 @@ export default class NestedList extends Vue {
 
       const isFireUser = data.userId === this.myUser.id;
       const task = this.tasks[index];
-      const isActiveTask = task.id === +this.$route.params['taskId'];
+      const isActiveTask = task.id === this.activeTaskId;
       let isActiveTree = false;
 
-      await this.api.tasksTaskIdGet({
-        spaceId: data.spaceId,
-        projectId: data.params.projectId,
-        taskId: +this.$route.params['taskId'],
-      }).catch((err) => {
-        if (err.status === 404) { isActiveTree = true; }
-      });
+      await this.getTask(data)
+        .catch((err) => {
+          if (err.status === 404) { isActiveTree = true; }
+        });
 
       this.tasks.splice(index, 1);
 
@@ -357,30 +373,35 @@ export default class NestedList extends Vue {
 
   }
 
-  getTaskUpdatable(task: Task) {
+  getTask(data: any): Promise<Task> {
+    return this.api.tasksTaskIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+      taskId: data.params.taskId,
+    });
+  }
+
+  getTaskUpdatable(task: Task): boolean {
     return this.$store.getters.activeUser.taskUpdatable(task);
   }
 
-  getStatusOption(optionId: number | null) {
+  getStatusOption(optionId: number | null): TaskStatus | null {
     if (!optionId || !this.statusOptions) {
       return null;
     }
     return this.statusOptions.find((o) => o.id === optionId) || null;
   }
 
-  async patchTask(taskId: number, requestBody: TasksTaskIdPatchRequestBody) {
-    const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const tasksApi = apiRegistry.load(TasksApi, loginUser.token);
-    return tasksApi.tasksTaskIdPatch({
-      spaceId: loginUser.space.id,
-      projectId,
+  patchTask(taskId: number, requestBody: TasksTaskIdPatchRequestBody): Promise<Task> {
+    return this.api.tasksTaskIdPatch({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
       taskId,
       tasksTaskIdPatchRequestBody: requestBody,
     });
   }
 
-  async onInlineTaskAddStart(parent: Task) {
+  async onInlineTaskAddStart(parent: Task): Promise<void> {
     if (this.addingParentTask || this.saving) return;
     this.addingParentTask = parent;
     this.addingTaskSubject = '';
@@ -388,37 +409,33 @@ export default class NestedList extends Vue {
     this.$refs.addingTaskSubjectInputs[0].focus();
   }
 
-  async onInlineTaskAddEnd() {
+  onInlineTaskAddEnd(): void {
 
     if (!this.addingParentTask || this.saving) return;
 
     if (this.addingTaskSubject.trim() !== '') {
 
-      try {
+      this.saving = true;
 
-        this.saving = true;
+      const statusOptions = this.statusOptions!
+        .filter((o) => o.category === ProjectStatusCategory.Progress)
+        .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
 
-        const statusOptions = this.statusOptions!
-          .filter((o) => o.category === ProjectStatusCategory.Progress)
-          .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
-
-        await this.api.tasksPost({
-          spaceId: this.myUser.space.id,
-          projectId: this.activeProjectId,
-          tasksPostRequestBody: {
-            parent: this.addingParentTask.id,
-            subject: this.addingTaskSubject.trim(),
-            status: statusOptions[0].id,
-            tags: [],
-            chargeUsers: [],
-          },
-        });
-
-      } catch (err) {
+      this.api.tasksPost({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
+        tasksPostRequestBody: {
+          parent: this.addingParentTask.id,
+          subject: this.addingTaskSubject.trim(),
+          status: statusOptions[0].id,
+          tags: [],
+          chargeUsers: [],
+        },
+      }).catch((err) => {
         this.$appEmit('error', { err });
-      } finally {
+      }).finally(() => {
         this.saving = false;
-      }
+      });
 
     }
 
@@ -426,7 +443,7 @@ export default class NestedList extends Vue {
 
   }
 
-  async onInlineTaskEditStart(task: Task) {
+  async onInlineTaskEditStart(task: Task): Promise<void> {
     if (!this.getTaskUpdatable(task) || this.editingTask || this.saving) return;
     this.editingTask = task;
     this.editingTaskSubject = task.subject;
@@ -434,48 +451,50 @@ export default class NestedList extends Vue {
     this.$refs.editingTaskSubjectInputs[0].focus();
   }
 
-  async onInlineTaskEditEnd() {
+  onInlineTaskEditEnd(): void {
+
     if (!this.editingTask || this.saving) return;
+
     if (this.editingTaskSubject.trim() !== '') {
-      try {
-        this.saving = true;
-        const updatedTask = await this.patchTask(this.editingTask.id, {
-          subject: this.editingTaskSubject.trim(),
-        });
-        this.$appEmit('task-edited', { task: updatedTask });
-      } catch (err) {
-        this.$appEmit('error', { err });
-        return;
-      } finally {
-        this.saving = false;
-      }
-    }
-    this.editingTask = null;
-  }
 
-  async onDateRangeChange(task: Task, range: {start: Date; end: Date} | null) {
-    if (this.saving) {
-      return;
-    }
-    try {
       this.saving = true;
-      const updatedTask = await this.patchTask(task.id, {
-        startedAt: range ? range.start : (null as any),
-        limitedAt: range ? range.end : (null as any),
+
+      this.patchTask(this.editingTask.id, {
+        subject: this.editingTaskSubject.trim(),
+      }).catch((err) => {
+        this.$appEmit('error', { err });
+      }).finally(() => {
+        this.saving = false;
       });
-      this.$appEmit('task-edited', { task: updatedTask });
-    } catch (err) {
-      this.$appEmit('error', { err });
+
     }
-    this.saving = false;
+
+    this.editingTask = null;
+
   }
 
-  async onExpandChilds(task: TaskWithChilds) {
+  onDateRangeChange(task: Task, range: {start: Date; end: Date} | null): void {
+
+    if (this.saving) return;
+
+    this.saving = true;
+
+    this.patchTask(task.id, {
+      startedAt: range ? range.start : (null as any),
+      limitedAt: range ? range.end : (null as any),
+    }).catch((err) => {
+      this.$appEmit('error', { err });
+    }).finally(() => {
+      this.saving = false;
+    });
+
+  }
+
+  async onExpandChilds(task: TaskWithChilds): Promise<void> {
     try {
       const res = await this.fetchTasks({ parent: task.id, limit: 500 });
       if (res.count <= 0) {
         task.hasChilds = false;
-        return;
       } else if (!task.hasChilds) {
         task.hasChilds = true;
       }
@@ -485,7 +504,7 @@ export default class NestedList extends Vue {
     }
   }
 
-  async onContractChilds(task: TaskWithChilds) {
+  async onContractChilds(task: TaskWithChilds): Promise<void> {
     this.$delete(task, 'childs');
   }
 
@@ -594,27 +613,8 @@ export default class NestedList extends Vue {
     });
   }
 
-  onTaskEdited(ev: { task: Task }) {
-    if (!ev.task.parent) return;
-
-    const parentTask = this.tasks.find((t) => t.id === ev.task.parent);
-    if (!parentTask || !parentTask.childs || !parentTask.childs) return;
-
-    const index = parentTask.childs.findIndex((t) => t.id === ev.task.id);
-    if (index >= 0) {
-      parentTask.childs.splice(index, 1, ev.task);
-    }
-  }
-
-  beforeMount() {
-    this.$appOn('task-edited', this.onTaskEdited);
-  }
-
-  beforeDestroy() {
-    this.$appOff('task-edited', this.onTaskEdited);
-  }
-
   destroyed() {
+    EventsSub.source.removeEventListener('updateTask', this.updateTask);
     EventsSub.source.removeEventListener('deleteTask', this.deleteTask);
   }
 

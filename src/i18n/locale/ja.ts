@@ -105,7 +105,6 @@ const struct: LocaleStruct = {
           tags: 'タグ',
         },
         createNotify: '仕事{taskName}作成した',
-        updateNotify: '仕事{taskName}更新しました',
         deleteNotify: '仕事{taskName}削除された',
         noLongerNotify: '仕事{taskName}使用できなくなりました',
       },
