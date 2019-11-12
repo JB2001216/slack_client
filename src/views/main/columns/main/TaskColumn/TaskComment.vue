@@ -82,6 +82,7 @@ import { Location, Route, NavigationGuard } from 'vue-router';
 import { StateChanger } from 'vue-infinite-loading';
 import * as api from '@/lib/api';
 import { Perm } from '@/lib/permissions';
+import EventsSub from '@/events-subscription';
 
 Component.registerHooks([
   'beforeRouteEnter',
@@ -89,6 +90,7 @@ Component.registerHooks([
 ]);
 @Component
 export default class TaskCommment extends Vue {
+
   $refs!: {
     board: HTMLDivElement;
     boardTableBody: HTMLTableSectionElement;
@@ -106,7 +108,20 @@ export default class TaskCommment extends Vue {
   newComment: api.TaskCommmentsPostRequestBody = {
     body: '',
   };
+
   saving = false;
+
+  get myUser() {
+    return this.$store.state.activeUser.myUser!;
+  }
+
+  get activeProjectId() {
+    return this.$store.getters.activeUser.activeProjectId!;
+  }
+
+  get api() {
+    return api.apiRegistry.load(api.TasksApi, this.myUser.token);
+  }
 
   get myPerms() {
     return this.$store.getters.activeUser.activeProjectMyPerms;
@@ -116,54 +131,72 @@ export default class TaskCommment extends Vue {
     return this.myPerms.includes(Perm.ADD_TASK_COMMENT);
   }
 
-  resetNewComment() {
+  created() {
+    EventsSub.source.addEventListener('createTaskComment', this.createTaskComment);
+  }
+
+  async createTaskComment(e: any): Promise<void> {
+
+    const data = JSON.parse(e.data);
+    const isFireUser = data.userId === this.myUser.id;
+
+    await this.fetchNextComments();
+
+    if (isFireUser) {
+      await this.scrollBottom();
+    }
+
+  }
+
+  resetNewComment(): void {
     this.newComment = {
       body: '',
     };
   }
 
-  async save() {
-    if (this.saving) {
-      return;
-    }
-    const myUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const tasksApi = api.apiRegistry.load(api.TasksApi, myUser.token);
+  async save(): Promise<void> {
+
+    if (this.saving) return;
+
     try {
+
       this.saving = true;
-      const comment = await tasksApi.taskCommmentsPost({
-        spaceId: myUser.space.id,
-        projectId,
+
+      await this.api.taskCommmentsPost({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
         taskId: this.task.id,
         taskCommmentsPostRequestBody: this.newComment,
       });
+
       this.resetNewComment();
-      this.saving = false;
-      await this.fetchNextComments();
-      await this.scrollBottom();
       this.focusTextarea();
 
     } catch (err) {
       this.$appEmit('error', { err });
+    } finally {
       this.saving = false;
     }
+
   }
 
-  async onInfinite($state: StateChanger) {
+  async onInfinite($state: StateChanger): Promise<void> {
+
     try {
-      const myUser = this.$store.state.activeUser.myUser!;
-      const projectId = this.$store.getters.activeUser.activeProjectId!;
-      const taskApi = api.apiRegistry.load(api.TasksApi, myUser.token);
+
       const searchPage = this.page;
-      const res = await taskApi.taskCommmentsGet({
-        spaceId: myUser.space.id,
-        projectId,
+
+      const res = await this.api.taskCommmentsGet({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
         taskId: this.task.id,
         page: searchPage,
         limit: this.limit,
         ordering: '-createdAt,-id',
       });
+
       const addData = res.results.filter((r) => !this.comments.find((c) => c.id === r.id));
+
       if (addData.length) {
         this.comments.unshift(...addData.reverse());
       }
@@ -182,24 +215,27 @@ export default class TaskCommment extends Vue {
     } catch (err) {
       this.$appEmit('error', { err });
     }
+
   }
 
-  async fetchNextComments() {
+  async fetchNextComments(): Promise<void> {
+
     try {
-      const myUser = this.$store.state.activeUser.myUser!;
-      const projectId = this.$store.getters.activeUser.activeProjectId!;
-      const taskApi = api.apiRegistry.load(api.TasksApi, myUser.token);
+
       const lastComments = this.comments.length ? this.comments[this.comments.length - 1] : null;
-      const res = await taskApi.taskCommmentsGet({
-        spaceId: myUser.space.id,
-        projectId,
+
+      const res = await this.api.taskCommmentsGet({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
         taskId: this.task.id,
         page: 1,
         limit: 500,
         ordering: '-createdAt,-id',
         createdAtGt: lastComments ? lastComments.createdAt : undefined,
       });
+
       const addData = res.results.filter((r) => !this.comments.find((c) => c.id === r.id));
+
       if (addData.length) {
         this.comments.push(...addData.reverse());
       }
@@ -207,9 +243,10 @@ export default class TaskCommment extends Vue {
     } catch (err) {
       this.$appEmit('error', { err });
     }
+
   }
 
-  async scrollBottom() {
+  async scrollBottom(): Promise<void> {
     await this.$nextTick();
     this.$forceUpdate();
     await this.$nextTick();
@@ -221,13 +258,13 @@ export default class TaskCommment extends Vue {
     });
   }
 
-  focusTextarea() {
+  focusTextarea(): void {
     if (this.commentAddable) {
       this.$refs.textarea.focus();
     }
   }
 
-  init(first = false) {
+  init(first = false): void {
     if (!first) {
       this.comments = [];
       this.page = 1;
@@ -237,24 +274,29 @@ export default class TaskCommment extends Vue {
     this.focusTextarea();
   }
 
-  async onTextKeydown(ev: KeyboardEvent) {
+  onTextKeydown(ev: KeyboardEvent): void {
     if (ev.ctrlKey && ev.key === 'Enter') {
-      ev.preventDefault();
+      this.save();
       ev.stopPropagation();
-      await this.save();
+      ev.preventDefault();
     }
   }
 
   @Watch('task')
-  onTaskChange(newVal: api.Task, oldVal?: api.Task) {
+  onTaskChange(newVal: api.Task, oldVal?: api.Task): void {
     if (oldVal && newVal.id === oldVal.id) {
       return;
     }
     this.init();
   }
 
-  mounted() {
+  mounted(): void {
     this.init(true);
   }
+
+  destroyed() {
+    EventsSub.source.removeEventListener('createTaskComment', this.createTaskComment);
+  }
+
 }
 </script>

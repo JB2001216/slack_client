@@ -310,24 +310,6 @@ class EventsSubscription {
 
     } // +
 
-    // this.source.addEventListener('createTaskComment', (e: any) => {
-    //   console.log('createTaskComment');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
-
-    // this.source.addEventListener('updateTaskComment', (e: any) => {
-    //   console.log('updateTaskComment');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
-
-    // this.source.addEventListener('deleteTaskComment', (e: any) => {
-    //   console.log('deleteTaskComment');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
-
     // this.source.addEventListener('createNote', (e: any) => {
     //   console.log('createNote');
     //   const data = JSON.parse(e.data);
