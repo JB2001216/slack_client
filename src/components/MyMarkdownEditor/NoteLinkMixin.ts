@@ -170,6 +170,7 @@ export default class NoteLinkMixin extends Mixins(CommonMixin) {
       clearTimeout(this.noteLinkListNextSearchTimerId);
     }
     this.noteLinkListNextSearchTimerId = setTimeout(() => {
+      this.noteLinkListFilterPage = 1;
       this.noteLinkListInfiniteId = +new Date();
     }, 500);
   }
