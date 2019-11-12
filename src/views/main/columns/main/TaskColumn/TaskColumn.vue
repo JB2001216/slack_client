@@ -233,7 +233,7 @@ import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import TaskComment from './TaskComment.vue';
 import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
-
+import EventsSub from '@/events-subscription';
 
 async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'task'>>> {
   const loginUser = store.state.activeUser.myUser!;
@@ -323,100 +323,116 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     );
   }
 
-  async addTags() {
+  created() {
+    EventsSub.source.addEventListener('updateTask', this.updateTask);
+  }
+
+  updateTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const updatedTaskId = data.params.taskId;
+
+    if (updatedTaskId !== this.task!.id) return;
+
+    this.api.tasksTaskIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+      taskId: updatedTaskId,
+    }).then((task: api.Task) => {
+      this.task = Object.assign(this.task, task);
+    }).catch((err) => {
+      this.$appEmit('error', { err });
+    });
+
+  }
+
+  async save(data: api.TasksTaskIdPatchRequestBody): Promise<boolean> {
+
+    if (this.saving) return false;
+
+    this.saving = true;
+
+    let isResultCorrect: boolean = false;
+
+    await this.api.tasksTaskIdPatch({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
+      taskId: parseInt(this.$route.params.taskId),
+      tasksTaskIdPatchRequestBody: data,
+    }).then(() => {
+      isResultCorrect = true;
+    }).catch((err) => {
+      this.$appEmit('error', { err });
+    }).finally(() => {
+      this.saving = false;
+    });
+
+    return isResultCorrect;
+
+  }
+
+  destroy(): void {
+
+    if (this.saving) return;
+
+    this.saving = true;
+
+    this.api.tasksTaskIdDelete({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
+      taskId: parseInt(this.$route.params.taskId),
+    }).catch((err) => {
+      this.$appEmit('error', { err });
+    }).finally(() => {
+      this.saving = false;
+    });
+
+  }
+
+  favorite(value: boolean): void {
+
+    if (this.saving) return;
+
+    this.saving = true;
+
+    this.api.tasksTaskIdFavoritePost({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
+      taskId: parseInt(this.$route.params.taskId),
+      tasksTaskIdFavoritePostRequestBody: { value },
+    }).then((res) => {
+      this.isFavorite = res.value;
+    }).catch((err) => {
+      this.$appEmit('error', { err });
+    }).finally(() => {
+      this.saving = false;
+    });
+
+  }
+
+  addTags(): void {
+
     const newTagText = this.$refs.tagInput.value;
     this.$refs.tagInput.value = '';
     const newTagNames = newTagText.split(/[,、\s]/).map((s) => s.trim());
     const newTags = Array.from(new Set(newTagNames))
       .filter((s) => s.length > 0 && !this.task!.tags!.find((t) => t.name === s))
       .map((s) => ({ name: s }));
+
     if (newTags.length) {
-      await this.save({
-        tags: this.task!.tags!.concat(newTags),
-      });
+      this.save({ tags: this.task!.tags!.concat(newTags) });
     }
-  }
-
-  async save(data: api.TasksTaskIdPatchRequestBody) {
-
-    if (this.saving) { return false; }
-
-    try {
-
-      this.saving = true;
-
-      await this.api.tasksTaskIdPatch({
-        spaceId: this.myUser.space.id,
-        projectId: this.activeProjectId,
-        taskId: parseInt(this.$route.params.taskId),
-        tasksTaskIdPatchRequestBody: data,
-      });
-
-      // this.$appEmit('task-edited', { task });
-
-    } catch (err) {
-      this.$appEmit('error', { err });
-    }
-
-    this.saving = false;
 
   }
 
-  async destroy() {
-
-    if (this.saving) { return; }
-
-    try {
-
-      this.saving = true;
-
-      await this.api.tasksTaskIdDelete({
-        spaceId: this.myUser.space.id,
-        projectId: this.activeProjectId,
-        taskId: parseInt(this.$route.params.taskId),
-      });
-
-    } catch (err) {
-      this.$appEmit('error', { err });
-    }
-
-    this.saving = false;
-
-  }
-
-  async favorite(value: boolean) {
-    if (this.saving) {
-      return;
-    }
-
-    const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.getters.activeUser.activeProjectId!;
-    const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
-    try {
-      this.saving = true;
-      const res = await tasksApi.tasksTaskIdFavoritePost({
-        spaceId: loginUser.space.id,
-        projectId: projectId,
-        taskId: parseInt(this.$route.params.taskId),
-        tasksTaskIdFavoritePostRequestBody: { value },
-      });
-      this.isFavorite = res.value;
-
-    } catch (err) {
-      this.$appEmit('error', { err });
-    }
-
-    this.saving = false;
-  }
-
-  async onDateRangeChange(range: {start: Date; end: Date} | null) {
-    await this.save({
+  onDateRangeChange(range: {start: Date; end: Date} | null): void {
+    this.save({
       startedAt: range ? range.start : (null as any),
       limitedAt: range ? range.end : (null as any),
     });
   }
 
-  async onSubjectChange(ev: Event) {
+  async onSubjectChange(ev: Event): Promise<void> {
     const subject = (ev.target as HTMLInputElement).value.trim();
     if (subject !== '') {
       await this.save({ subject });
@@ -424,19 +440,21 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     }
   }
 
-  async onStatusChange(status: number) {
-    await this.save({
-      status,
-    });
+  onStatusChange(status: number): void {
+    this.save({ status });
   }
 
   async onChargerChange(ev: MyChargerInputChangeEvent) {
+
     if (!ev.value) return;
+
     const targetUser = ev.target && ev.target.from === 'dialog' ? (await this.$store.actions.activeUser.getSpaceUser(ev.target.id)) : null;
+
     const result = await this.save({
       batonUser: ev.value.batonUser,
       chargeUsers: ev.value.chargeUsers,
     });
+
     if (result && targetUser) {
       if (ev.target!.action === 'add') {
         this.$flash(this.$t('views.taskColumn.addedChargeUser', { name: targetUser.displayName || targetUser.account }).toString(), 'success');
@@ -444,9 +462,10 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
         this.$flash(this.$t('views.taskColumn.deletedChargeUser', { name: targetUser.displayName || targetUser.account }).toString(), 'success');
       }
     }
+
   }
 
-  startEditDetail() {
+  startEditDetail(): void {
     this.editDetail = {
       subject: this.task!.subject,
       body: this.task!.body || '',
@@ -454,18 +473,12 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     this.$store.mutations.setFullMainColumn(true);
   }
 
-  async endEditDetail(save = false) {
+  async endEditDetail(save = false): Promise<void> {
     if (save && this.editDetail) {
       await this.save(this.editDetail);
     }
     this.editDetail = null;
     this.$store.mutations.setFullMainColumn(false);
-  }
-
-  onTaskEdited(ev: { task: api.Task }) {
-    if (this.task && this.task.id === ev.task.id) {
-      this.task = Object.assign({}, ev.task);
-    }
   }
 
   async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
@@ -488,12 +501,8 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     next();
   }
 
-  beforeMount() {
-    this.$appOn('task-edited', this.onTaskEdited);
-  }
-
-  beforeDestroy() {
-    this.$appOff('task-edited', this.onTaskEdited);
+  destroyed() {
+    EventsSub.source.removeEventListener('updateTask', this.updateTask);
   }
 
 }
