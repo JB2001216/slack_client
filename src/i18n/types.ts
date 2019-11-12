@@ -144,6 +144,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         };
         createTaskComment: {
           title: string;
+          readMore: string;
         };
         createNote: {
           title: string;

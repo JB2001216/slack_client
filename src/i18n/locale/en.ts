@@ -134,6 +134,7 @@ const struct: LocaleStruct = {
           },
           createTaskComment: {
             title: 'added the "comment" on the task',
+            readMore: 'Read more',
           },
           createNote: {
             title: 'created the "note"',

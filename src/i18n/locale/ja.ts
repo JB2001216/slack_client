@@ -135,6 +135,7 @@ const struct: LocaleStruct = {
           },
           createTaskComment: {
             title: 'さんがタスクに"コメント"しました',
+            readMore: 'もっと読む',
           },
           createNote: {
             title: 'さんがタスクに"コメント"しました',
