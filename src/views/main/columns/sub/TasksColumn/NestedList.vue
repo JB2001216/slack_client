@@ -311,14 +311,23 @@ export default class NestedList extends Vue {
     if (index >= 0) {
 
       const isFireUser = data.userId === this.myUser.id;
-      const taskName = this.tasks[index].subject;
-      const isActiveTask = this.tasks[index].id === +this.$route.params['taskId'];
+      const task = this.tasks[index];
+      const isActiveTask = task.id === +this.$route.params['taskId'];
+      let isActiveTree = false;
+
+      await this.api.tasksTaskIdGet({
+        spaceId: data.spaceId,
+        projectId: data.params.projectId,
+        taskId: +this.$route.params['taskId'],
+      }).catch((err) => {
+        if (err.status === 404) { isActiveTree = true; }
+      });
 
       this.tasks.splice(index, 1);
 
       if (!this.tasks.length && this.parentTask) { this.parentTask.hasChilds = false; }
 
-      if (isFireUser || isActiveTask) {
+      if (isFireUser || isActiveTask || isActiveTree) {
 
         if (this.tasks.length || this.parentTask) {
 
@@ -339,9 +348,9 @@ export default class NestedList extends Vue {
       }
 
       if (isFireUser) {
-        this.$flash(this.$t('views.tasksColumn.deleteNotify', { taskName }).toString(), 'success');
-      } else if (isActiveTask) {
-        this.$flash(this.$t('views.tasksColumn.noLongerNotify', { taskName }).toString(), 'success');
+        this.$flash(this.$t('views.tasksColumn.deleteNotify', { taskName: task.subject }).toString(), 'success');
+      } else if (isActiveTask || isActiveTree) {
+        this.$flash(this.$t('views.tasksColumn.noLongerNotify', { taskName: task.subject }).toString(), 'success');
       }
 
     }
