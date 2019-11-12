@@ -334,10 +334,14 @@ export default class NestedList extends Vue {
       const isActiveTask = task.id === this.activeTaskId;
       let isActiveTree = false;
 
-      await this.getTask(data)
-        .catch((err) => {
+      if (!isFireUser && !isActiveTask && (this.activeTaskId || this.activeTaskId === 0)) {
+        await this.getTask({
+          spaceId: this.myUser.space.id,
+          params: { projectId: this.activeProjectId, taskId: this.activeTaskId },
+        }).catch((err) => {
           if (err.status === 404) { isActiveTree = true; }
         });
+      }
 
       this.tasks.splice(index, 1);
 
