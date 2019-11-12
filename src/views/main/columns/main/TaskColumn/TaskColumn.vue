@@ -88,7 +88,7 @@
           <dl class="dashboardWrap_tag">
             <dd v-for="(t,i) in task.tags" :key="t.name">
               <span>{{ t.name }}</span>
-              <div v-if="updatable" class="dashboardWrap_tag_destroy" @click="task.tags.splice(i, 1)" />
+              <div v-if="updatable" class="dashboardWrap_tag_destroy" @click="deleteTag(i)" />
             </dd>
             <form @submit.prevent="addTags()">
               <input
@@ -423,6 +423,11 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
       this.save({ tags: this.task!.tags!.concat(newTags) });
     }
 
+  }
+
+  deleteTag(index: number): void {
+    this.task!.tags.splice(index, 1);
+    this.save({ tags: this.task!.tags });
   }
 
   onDateRangeChange(range: {start: Date; end: Date} | null): void {
