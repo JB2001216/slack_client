@@ -309,7 +309,6 @@ export default class NestedList extends Vue {
           subject: this.addingNoteSubject.trim(),
           status: statusOptions[0].id,
           chargeUsers: [],
-          related: [],
         });
         this.$appEmit('note-added', { note: addedNote });
         if (!this.addingParentNote.childs || !this.addingParentNote.childs.length) {
