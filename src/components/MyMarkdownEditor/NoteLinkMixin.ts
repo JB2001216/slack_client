@@ -28,7 +28,7 @@ export default class NoteLinkMixin extends Mixins(CommonMixin) {
   noteLinkListNextSearchTimerId: NodeJS.Timeout | null = null;
 
   get noteLinkListSelecting() {
-    return this.noteLinkListStartTagPos > 0;
+    return this.noteLinkListStartTagPos >= 0;
   }
 
   get noteLinkListShowed() {

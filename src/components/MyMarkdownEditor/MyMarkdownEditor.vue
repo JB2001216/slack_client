@@ -50,7 +50,7 @@
 
     <div
       ref="preview"
-      class="markdownEditor_preview"
+      class="markdownEditor_preview markdownPreview"
       :class="previewClass"
       @click="onPreviewClick"
       v-html="previewHtml !== '' ? previewHtml : previewPlaceholderHtml"

@@ -159,6 +159,9 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       addedChargeUser: string;
       deletedChargeUser: string;
       chargerDialogTitle: string;
+      status: string;
+      baton: string;
+      lastUpdated: string;
     };
 
     // setting

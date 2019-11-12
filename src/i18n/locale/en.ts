@@ -149,6 +149,9 @@ const struct: LocaleStruct = {
         addedChargeUser: '{name} was added to the member list.',
         deletedChargeUser: '{name} was deleted from the member list.',
         chargerDialogTitle: 'Note member list',
+        status: 'Status',
+        baton: 'Baton',
+        lastUpdated: 'Last Updated',
       },
 
       // setting
