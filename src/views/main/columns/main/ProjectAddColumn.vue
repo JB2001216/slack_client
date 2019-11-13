@@ -66,14 +66,13 @@ export default class ProjectAddColumn extends Mixins(ConfirmChangeDiscardMixin) 
     }).then((project: Project) => {
 
       this.$store.mutations.activeUser.addProject(project);
-
-      this.$router.push({
-        name: 'project',
-        params: {
-          userId: myUser.id + '',
-          projectId: project.id + '',
-        },
-      });
+      this.$store.actions.activeUser.setActiveProject(project.id)
+        .then(() => {
+          this.$router.push({
+            name: 'project',
+            params: { userId: myUser.id.toString(), projectId: project.id.toString() },
+          });
+        });
 
       this.$flash(this.$t('views.projectAddColumn.createNotification', { projectName: project.displayName }).toString(), 'success');
 
