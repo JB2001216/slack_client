@@ -296,6 +296,7 @@ export default class ProjectColumn extends Vue {
 
       const project = this.projects.find((p) => p.id === data.params.projectId);
       if (!project) return;
+      const projectName = project.displayName;
 
       this.$store.mutations.activeUser.removeProject(project);
 
@@ -303,8 +304,9 @@ export default class ProjectColumn extends Vue {
 
         this.$store.actions.activeUser.setActiveProject(null);
         this.$store.actions.settingRouter.close();
+        this.$router.push({ name: 'user', params: { userId: this.myUser.id + '' } });
 
-        this.$flash(this.$t('views.setting.main.projectMembers.removedCrntUserMessage').toString(), 'success');
+        this.$flash(this.$t('views.setting.main.projectMembers.removedCrntUserMessage', { projectName }).toString(), 'success');
 
       }
 

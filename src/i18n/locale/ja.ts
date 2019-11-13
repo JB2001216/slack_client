@@ -227,7 +227,7 @@ const struct: LocaleStruct = {
             addMember: 'メンバーを追加する',
             removeConfirmMessage: '{name} ({email}) を削除してよろしいですか？',
             removedMessage: 'メンバーを削除しました',
-            removedCrntUserMessage: 'このプロジェクトのメンバーではなくなりました。',
+            removedCrntUserMessage: 'あなたはもうメンバーではありません{projectName}事業',
             changedProjectRole: 'プロジェクトの役割が変更されました',
           },
           projectMemberAdd: {

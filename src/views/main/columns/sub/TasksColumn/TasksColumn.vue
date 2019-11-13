@@ -163,7 +163,6 @@ import { toSnakeCase } from '@/lib/utils/string-util';
 import { TaskWithChilds, DragTaskData, DropTaskData, DropTaskEvent, DropItemPosition, FilterFormValue } from './types';
 import { Perm } from '@/lib/permissions';
 import EventsSub from '@/events-subscription';
-import { getProjectLastLocation } from '@/router';
 
 type SearchScrollType = 'next' | 'prev';
 type SearchOrderField = 'priority' | 'limitedAt' | 'status';
