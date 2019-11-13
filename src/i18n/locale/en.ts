@@ -25,6 +25,8 @@ const struct: LocaleStruct = {
         PROJECT_USER: 'User',
       },
       alreadyLoggedIn: 'Already logged in',
+      noLongerMemberOfAnySpacesNotify: 'You are no longer member of any spaces',
+      noLongerMemberOfCurrentSpaceNotify: 'You are no longer member of {spaceName} space',
     },
 
     components: {
@@ -74,6 +76,7 @@ const struct: LocaleStruct = {
           spaceSettings: 'Space settings',
         },
         deleteNotification: 'Project {projectName} is no longer available',
+        roleChangedNotify: 'Your space role was changed',
       },
 
       // sub

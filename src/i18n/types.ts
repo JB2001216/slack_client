@@ -35,6 +35,8 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       // USER_READONLY: string;
     };
     alreadyLoggedIn: string;
+    noLongerMemberOfAnySpacesNotify: string;
+    noLongerMemberOfCurrentSpaceNotify: string;
   };
 
   components: {
@@ -84,6 +86,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         spaceSettings: string;
       };
       deleteNotification: string;
+      roleChangedNotify: string;
     };
 
     // sub

@@ -30,7 +30,7 @@
           {{ $t('views.spaceAdd.login') }}
         </router-link>
       </div>
-      <div v-if="backTo" class="columnWrap_right_back">
+      <div v-if="backTo && $store.state.loggedInUsers.length" class="columnWrap_right_back">
         <router-link :to="backTo">
           <svg
             width="8"

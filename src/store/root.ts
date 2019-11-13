@@ -57,6 +57,23 @@ class RootMutations extends Mutations<RootState>() {
     }
   }
 
+  updateLoggedInUser(user: LoggedInUser, saveToken = true): void {
+
+    const index = this.state.loggedInUsers.findIndex((u) => u.id === user.id);
+    if (index < 0) return;
+
+    this.state.loggedInUsers.splice(index, 1, user);
+
+    if (saveToken) {
+      const tokens = localStorage.tokens;
+      if (!tokens.includes(user.token)) {
+        tokens.push(user.token);
+        localStorage.tokens = tokens;
+      }
+    }
+
+  }
+
   removeLoggedInUser(userId: number, saveToken = true) {
     const index = this.state.loggedInUsers.findIndex((u) => u.id === userId);
     if (index >= 0) {

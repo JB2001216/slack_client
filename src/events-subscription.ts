@@ -1,7 +1,7 @@
 import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
-import { apiRegistry, SpacesApi, UsersApi, ProjectsApi, TasksApi } from '@/lib/api/';
+import { apiRegistry, SpacesApi, UsersApi, ProjectsApi, TasksApi, SpaceUser } from '@/lib/api/';
 import router, { getUserLastLocation } from '@/router';
 
 class EventsSubscription {
@@ -27,27 +27,31 @@ class EventsSubscription {
 
     const usersSpaceIds = this.users.map((user: any) => { return user.space.id; }).join('_');
 
+    const isDebug: boolean = true;
+
     // close Event Source if it was already opened
     if (this.source) {
       // remove listeners
       this.source.removeEventListener('updateSpace', updateSpaceTask);
       this.source.removeEventListener('deleteSpace', deleteSpaceTask);
       this.source.removeEventListener('updateMyUser', updateMyUserTask);
-      this.source.removeEventListener('createSpaceUser', createSpaceUserTask);
+
       this.source.removeEventListener('updateSpaceUser', updateSpaceUserTask);
       this.source.removeEventListener('deleteSpaceUser', deleteSpaceUserTask);
 
       this.source.close();
+      l('events-subscriptions closed', isDebug);
     }
 
     // init Event Source
     this.source = new EventSource(this.url + usersSpaceIds);
+    l('events-subscriptions initialized', isDebug);
 
     // init listeners
     this.source.addEventListener('updateSpace', updateSpaceTask);
     this.source.addEventListener('deleteSpace', deleteSpaceTask);
     this.source.addEventListener('updateMyUser', updateMyUserTask);
-    this.source.addEventListener('createSpaceUser', createSpaceUserTask);
+
     this.source.addEventListener('updateSpaceUser', updateSpaceUserTask);
     this.source.addEventListener('deleteSpaceUser', deleteSpaceUserTask);
 
@@ -108,56 +112,79 @@ class EventsSubscription {
 
     }
 
-    function createSpaceUserTask(e: any): void {
-
-      const data = JSON.parse(e.data);
-      const isFireUser = data.userId === myUser.id;
-
-      spacesApi.spacesSpaceIdUsersGet({
-        spaceId: data.spaceId,
-      }).then((res) => {
-        store.mutations.activeUser.addSpaceUser(...res.results);
-        if (isFireUser) {
-          store.actions.settingRouter.to('space-members');
-          appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.spaceMemberInvite.invitedMessage').toString(), 'name': 'success' });
-        }
-      }).catch((err) => { console.log(err); });
-
-    }
+    // -----------------------------------------
 
     function updateSpaceUserTask(e: any): void {
 
       const data = JSON.parse(e.data);
-      const isFireUser = data.userId === myUser.id;
+      const isCurrentUser = data.params.userId === myUser.id;
+      const loggedUser = store.state.loggedInUsers.find((user) => user.id === data.params.userId);
 
-      spacesApi.spacesSpaceIdUsersUserIdGet({
-        spaceId: data.spaceId,
-        userId: data.userId,
-      }).then((res) => {
-        appEventBus.emit('space-user-edited', { spaceUser: res });
-        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' }); }
-      }).catch((error) => { console.log(error); });
+      if (!isCurrentUser && !loggedUser) return;
+
+      apiRegistry.load(SpacesApi, isCurrentUser ? myUser.token : loggedUser!.token)
+        .spacesSpaceIdUsersUserIdGet({
+          spaceId: data.spaceId,
+          userId: data.params.userId,
+        }).then((user: SpaceUser) => {
+
+          if (isCurrentUser) {
+
+            appEventBus.emit('space-user-edited', { spaceUser: user });
+
+            const settingLocation = store.state.settingRouter.name;
+
+            if (user.spaceRoleId === 101 && settingLocation !== 'space-user-profile' && settingLocation !== 'space-user-account') {
+              store.actions.settingRouter.close();
+            }
+
+            appEventBus.emit('flash', { 'message': i18n.t('views.projectColumn.roleChangedNotify').toString(), 'name': 'success' });
+
+            l('updateSpaceUser: ' + user.account + ', Role: ' + user.spaceRoleId, isDebug);
+
+          } else if (loggedUser) {
+
+            const updatedLoggedUser = Object.assign(loggedUser, user);
+            store.mutations.updateLoggedInUser(updatedLoggedUser);
+
+            l('updateSpaceUser: ' + updatedLoggedUser.account + ', Role: ' + updatedLoggedUser.spaceRoleId, isDebug);
+
+          }
+
+        }).catch((err) => { console.log(err); });
 
     }
 
     function deleteSpaceUserTask(e: any): void {
 
       const data = JSON.parse(e.data);
-      const isFireUser = data.userId === myUser.id;
+      const isCurrentUser = data.params.userId === myUser.id;
+      const loggedUser = store.state.loggedInUsers.find((user) => user.id === data.params.userId);
 
-      spacesApi.spacesSpaceIdUsersGet({
-        spaceId: data.spaceId,
-      }).then((res) => {
-        store.mutations.activeUser.addSpaceUser(...res.results);
-        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('common.deleted').toString(), 'name': 'success' }); }
-      }).catch((err) => { console.log(err); });
+      if (!isCurrentUser && !loggedUser) return;
+
+      store.mutations.removeLoggedInUser(data.params.userId);
+
+      l('deleteSpaceUser: ' + (isCurrentUser ? myUser.account : loggedUser!.account), isDebug);
+
+      if (!isCurrentUser) return;
+
+      const loggedInUsers = store.state.loggedInUsers;
+
+      if (loggedInUsers.length) {
+        appEventBus.emit('flash', { 'message': i18n.t('common.noLongerMemberOfCurrentSpaceNotify', { spaceName: myUser.space.displayName }).toString(), 'name': 'success' });
+        router.push(getUserLastLocation(loggedInUsers[0].id));
+      } else {
+        appEventBus.emit('flash', { 'message': i18n.t('common.noLongerMemberOfAnySpacesNotify').toString(), 'name': 'success' });
+        router.push({ name: 'space-add1' });
+      }
 
     }
 
-    // error event
-    this.source.onerror = (err: any) => {
-      console.error(err);
-    };
+    function l(msg: string, debug: boolean = false) {
+      if (!debug) return;
+      console.log(msg);
+    }
 
   }
 
