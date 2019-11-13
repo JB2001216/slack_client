@@ -24,8 +24,6 @@ class EventsSubscription {
 
     const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
     const usersApi = apiRegistry.load(UsersApi, myUser.token);
-    const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
-    const tasksApi = apiRegistry.load(TasksApi, myUser.token);
 
     const usersSpaceIds = this.users.map((user: any) => { return user.space.id; }).join('_');
 
@@ -38,9 +36,6 @@ class EventsSubscription {
       this.source.removeEventListener('createSpaceUser', createSpaceUserTask);
       this.source.removeEventListener('updateSpaceUser', updateSpaceUserTask);
       this.source.removeEventListener('deleteSpaceUser', deleteSpaceUserTask);
-      this.source.removeEventListener('createProject', createProjectTask);
-      this.source.removeEventListener('updateProject', updateProjectTask);
-      this.source.removeEventListener('deleteProject', deleteProjectTask);
 
       this.source.close();
     }
@@ -55,9 +50,6 @@ class EventsSubscription {
     this.source.addEventListener('createSpaceUser', createSpaceUserTask);
     this.source.addEventListener('updateSpaceUser', updateSpaceUserTask);
     this.source.addEventListener('deleteSpaceUser', deleteSpaceUserTask);
-    this.source.addEventListener('createProject', createProjectTask);
-    this.source.addEventListener('updateProject', updateProjectTask);
-    this.source.addEventListener('deleteProject', deleteProjectTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -161,76 +153,6 @@ class EventsSubscription {
       }).catch((err) => { console.log(err); });
 
     }
-
-    function createProjectTask(e: any): void {
-
-      const data = JSON.parse(e.data);
-      const isFireUser = data.userId === myUser.id;
-
-      if (!isFireUser) { return; }
-
-      projectsApi.projectsProjectIdGet({
-        spaceId: data.spaceId,
-        projectId: data.params.projectId,
-      }).then((res) => {
-
-        store.mutations.activeUser.addProject(res);
-
-        router.push({
-          name: 'project',
-          params: {
-            userId: myUser.id + '',
-            projectId: res.id + '',
-          },
-        });
-
-        appEventBus.emit('flash', { 'message': i18n.t('views.projectAddColumn.createNotification').toString(), 'name': 'success' });
-
-      }).catch((err) => { console.log(err); });
-
-    } // +
-
-    function updateProjectTask(e: any): void {
-
-      const data = JSON.parse(e.data);
-      const isFireUser = data.userId === myUser.id;
-
-      projectsApi.projectsProjectIdGet({
-        spaceId: data.spaceId,
-        projectId: data.params.projectId,
-      }).then((res) => {
-
-        store.mutations.activeUser.editProject(res);
-
-        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectGeneral.updateNotification').toString(), 'name': 'success' }); }
-
-      }).catch((err) => { console.log(err); });
-
-    } // +
-
-    function deleteProjectTask(e: any): void {
-
-      const data = JSON.parse(e.data);
-      const isFireUser = data.userId === myUser.id;
-      const activeProjectId = store.state.activeUser.activeProjectData!.id;
-      const isActiveProject = data.params.projectId === activeProjectId;
-
-      store.actions.activeUser.init(myUser);
-
-      if (isFireUser || isActiveProject) {
-        store.actions.activeUser.setActiveProject(null);
-        store.actions.settingRouter.close();
-      }
-
-      if (isFireUser) {
-        appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectGeneral.deleteNotification').toString(), 'name': 'success' });
-      } else if (isActiveProject) {
-        appEventBus.emit('flash', { 'message': i18n.t('views.projectColumn.deleteNotification').toString(), 'name': 'success' });
-      } else {
-        store.actions.activeUser.setActiveProject(activeProjectId);
-      }
-
-    } // +
 
     // error event
     this.source.onerror = (err: any) => {

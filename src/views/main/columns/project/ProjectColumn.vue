@@ -265,9 +265,54 @@ export default class ProjectColumn extends Vue {
   }
 
   created() {
+    EventsSub.source.addEventListener('deleteProject', this.deleteProjectTask);
+    EventsSub.source.addEventListener('updateProject', this.updateProjectTask);
     EventsSub.source.addEventListener('createProjectUser', this.createProjectUserTask);
     EventsSub.source.addEventListener('deleteProjectUser', this.deleteProjectUserTask);
     EventsSub.source.addEventListener('updateProjectUser', this.updateProjectUserTask);
+  }
+
+  deleteProjectTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const isFireUser = data.userId === this.myUser.id;
+    const isActiveProject = data.params.projectId === this.activeProjectId;
+
+    const project = this.projects.find((p) => p.id === data.params.projectId);
+    if (!project) return;
+
+    this.$store.mutations.activeUser.removeProject(project);
+
+    if (isFireUser || isActiveProject) {
+      store.actions.activeUser.setActiveProject(null);
+      store.actions.settingRouter.close();
+      this.$router.push({ name: 'user', params: { userId: this.myUser.id + '' } });
+    }
+
+    if (isFireUser) {
+      this.$flash(this.$t('views.setting.main.projectGeneral.deleteNotification', { projectName: project.displayName }).toString(), 'success');
+    } else if (isActiveProject) {
+      this.$flash(this.$t('views.projectColumn.deleteNotification', { projectName: project.displayName }).toString(), 'success');
+    }
+
+  }
+
+  updateProjectTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const isFireUser = data.userId === this.myUser.id;
+
+    this.api.projectsProjectIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+    }).then((project: Project) => {
+
+      this.$store.mutations.activeUser.editProject(project);
+
+      if (isFireUser) { this.$flash(this.$t('views.setting.main.projectGeneral.updateNotification', { projectName: project.displayName }).toString(), 'success'); }
+
+    }).catch((err) => { console.log(err); });
+
   }
 
   createProjectUserTask(e: any): void {
@@ -356,6 +401,8 @@ export default class ProjectColumn extends Vue {
   }
 
   destroyed() {
+    EventsSub.source.removeEventListener('deleteProject', this.deleteProjectTask);
+    EventsSub.source.removeEventListener('updateProject', this.updateProjectTask);
     EventsSub.source.removeEventListener('createProjectUser', this.createProjectUserTask);
     EventsSub.source.removeEventListener('deleteProjectUser', this.deleteProjectUserTask);
     EventsSub.source.removeEventListener('updateProjectUser', this.updateProjectUserTask);

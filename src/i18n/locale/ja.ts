@@ -74,7 +74,7 @@ const struct: LocaleStruct = {
           inviteMembers: 'メンバー招待',
           spaceSettings: 'スペース設定',
         },
-        deleteNotification: 'このプロジェクトはもう利用できません',
+        deleteNotification: '事業{projectName}使用できなくなりました',
       },
 
       // sub
@@ -93,7 +93,7 @@ const struct: LocaleStruct = {
       projectAddColumn: {
         addANewProject: 'プロジェクト追加',
         projectName: 'プロジェクト名',
-        createNotification: 'プロジェクト作成',
+        createNotification: '事業{projectName}正常に作成されました',
       },
       tasksColumn: {
         addANewTask: '新規タスク',
@@ -213,8 +213,8 @@ const struct: LocaleStruct = {
             title: 'プロジェクト名',
             save: '変更を保存する',
             delete: 'プロジェクトを削除',
-            updateNotification: 'プロジェクトが更新されました',
-            deleteNotification: 'プロジェクトを削除しました',
+            updateNotification: '事業{projectName}更新成功',
+            deleteNotification: '事業{projectName}削除しました',
             confirmationMsg: 'このプロジェクトを削除してもよろしいですか？',
             confirm: '削除する',
             cancel: 'キャンセル',

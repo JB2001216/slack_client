@@ -34,12 +34,13 @@
 <script lang="ts">
 import { Component, Prop, Vue, Mixins } from 'vue-property-decorator';
 import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
-import { apiRegistry, ProjectsApi, ApiErrors, getJsonFromResponse } from '@/lib/api';
+import { apiRegistry, ProjectsApi, Project, ApiErrors, getJsonFromResponse } from '@/lib/api';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
 
 
 @Component
 export default class ProjectAddColumn extends Mixins(ConfirmChangeDiscardMixin) {
+
   displayName = '';
   displayNameMessage: MySingleFormTextInputMessage = null;
   saving = false;
@@ -48,41 +49,60 @@ export default class ProjectAddColumn extends Mixins(ConfirmChangeDiscardMixin) 
     return this.displayName.trim() !== '';
   }
 
-  async save() {
+  save(): void {
 
     if (this.saving) return;
 
-    const loginUser = this.$store.state.activeUser.myUser!;
-    const projectsApi = apiRegistry.load(ProjectsApi, loginUser.token);
+    const myUser = this.$store.state.activeUser.myUser!;
+    const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
 
-    try {
+    this.saving = true;
 
-      this.saving = true;
+    projectsApi.projectsPost({
+      spaceId: myUser.space.id,
+      projectsPostRequestBody: {
+        displayName: this.displayName,
+      },
+    }).then((project: Project) => {
 
-      await projectsApi.projectsPost({
-        spaceId: loginUser.space.id,
-        projectsPostRequestBody: {
-          displayName: this.displayName,
+      this.$store.mutations.activeUser.addProject(project);
+
+      this.$router.push({
+        name: 'project',
+        params: {
+          userId: myUser.id + '',
+          projectId: project.id + '',
         },
       });
+
+      this.$flash(this.$t('views.projectAddColumn.createNotification', { projectName: project.displayName }).toString(), 'success');
+
       this.displayName = '';
 
-    } catch (err) {
+    }).catch((err) => {
 
       if (err instanceof Response) {
-        const json = await getJsonFromResponse(err);
-        if (json && json.error === ApiErrors.ValidationError) {
-          this.displayNameMessage = {
-            type: 'error',
-            text: json.data[Object.keys(json.data)[0]],
-          };
-        }
+
+        getJsonFromResponse(err)
+          .then((json) => {
+
+            if (json && json.error === ApiErrors.ValidationError) {
+              this.displayNameMessage = {
+                type: 'error',
+                text: json.data[Object.keys(json.data)[0]],
+              };
+            }
+
+          });
+
       }
 
       this.$appEmit('error', { err });
-      this.saving = false;
 
-    }
+    }).finally(() => {
+      this.saving = false;
+    });
+
   }
 
 }

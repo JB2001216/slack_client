@@ -73,7 +73,7 @@ const struct: LocaleStruct = {
           inviteMembers: 'Invite members',
           spaceSettings: 'Space settings',
         },
-        deleteNotification: 'This project is no longer available',
+        deleteNotification: 'Project {projectName} is no longer available',
       },
 
       // sub
@@ -92,7 +92,7 @@ const struct: LocaleStruct = {
       projectAddColumn: {
         addANewProject: 'Add a new Project',
         projectName: 'Project Name',
-        createNotification: 'Project Created',
+        createNotification: 'Project {projectName} created successfully',
       },
       tasksColumn: {
         addANewTask: 'Add a new task',
@@ -212,8 +212,8 @@ const struct: LocaleStruct = {
             title: 'Project name',
             save: 'Save changes',
             delete: 'Delete Project',
-            updateNotification: 'Project Updated',
-            deleteNotification: 'Project Deleted',
+            updateNotification: 'Project {projectName} updated successfully',
+            deleteNotification: 'Project {projectName} deleted successfully',
             confirmationMsg: 'Are you sure you want to delete this project ?',
             confirm: 'Delete',
             cancel: 'Cancel',
