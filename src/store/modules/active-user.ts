@@ -142,6 +142,13 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     this.state.projects.push(project);
   }
 
+  removeProject(project: api.Project) {
+    if (!this.state.myUser || !this.state.projects) return;
+    if (this.state.myUser.space.id !== project.spaceId) return;
+    const index = this.state.projects.findIndex((p) => p.id === project.id);
+    if (index >= 0) { this.state.projects.splice(index, 1); }
+  }
+
   editProject(project: api.Project) {
     if (!this.state.myUser || !this.state.projects) return;
     if (this.state.myUser.space.id !== project.spaceId) return;

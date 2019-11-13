@@ -41,9 +41,6 @@ class EventsSubscription {
       this.source.removeEventListener('createProject', createProjectTask);
       this.source.removeEventListener('updateProject', updateProjectTask);
       this.source.removeEventListener('deleteProject', deleteProjectTask);
-      this.source.removeEventListener('deleteProjectUser', deleteProjectUserTask);
-      this.source.removeEventListener('createProjectUser', createProjectUserTask);
-      this.source.removeEventListener('updateProjectUser', updateProjectUserTask);
 
       this.source.close();
     }
@@ -61,9 +58,6 @@ class EventsSubscription {
     this.source.addEventListener('createProject', createProjectTask);
     this.source.addEventListener('updateProject', updateProjectTask);
     this.source.addEventListener('deleteProject', deleteProjectTask);
-    this.source.addEventListener('createProjectUser', createProjectUserTask);
-    this.source.addEventListener('deleteProjectUser', deleteProjectUserTask);
-    this.source.addEventListener('updateProjectUser', updateProjectUserTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -237,96 +231,6 @@ class EventsSubscription {
       }
 
     } // +
-
-    function createProjectUserTask(e: any): void {
-
-      const data = JSON.parse(e.data);
-      const isCurrentUser = data.params.userId === myUser.id;
-
-      if (!isCurrentUser) { return; }
-
-      projectsApi.projectsProjectIdGet({
-        spaceId: data.spaceId,
-        projectId: data.params.projectId,
-      }).then((res) => {
-        store.mutations.activeUser.addProject(res);
-      }).catch((err) => { console.log(err); });
-
-    } // +
-
-    function deleteProjectUserTask(e: any): void {
-
-      const data = JSON.parse(e.data);
-      const isFireUser = data.userId === myUser.id;
-      const isCurrentUser = data.params.userId === myUser.id;
-      const activeProjectId = store.state.activeUser.activeProjectData!.id;
-      const isActiveProject = data.params.projectId === activeProjectId;
-
-      if (isCurrentUser) {
-
-        store.actions.activeUser.init(myUser);
-
-        if (isActiveProject) {
-          store.actions.activeUser.setActiveProject(null);
-          store.actions.settingRouter.close();
-          appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.removedCrntUserMessage').toString(), 'name': 'success' });
-        } else {
-          store.actions.activeUser.setActiveProject(activeProjectId);
-        }
-
-      }
-
-      if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.removedMessage').toString(), 'name': 'success' }); }
-
-    } // +
-
-    function updateProjectUserTask(e: any): void {
-
-      const data = JSON.parse(e.data);
-      const isCurrentUser = data.params.userId === myUser.id;
-      const activeProjectId = store.state.activeUser.activeProjectData!.id;
-      const isActiveProject = data.params.projectId === activeProjectId;
-      const isSettings = store.state.settingRouter.name !== null;
-
-      projectsApi.projectsProjectIdUsersUserIdGet({
-        spaceId: data.spaceId,
-        projectId: data.params.projectId,
-        userId: data.params.userId,
-      }).then((res) => {
-
-        if (!isCurrentUser || !isActiveProject) { return; }
-
-        store.mutations.activeUser.setActiveProjectData({ id: data.params.projectId, user: res });
-
-        if (!isSettings) { return; }
-
-        if (res.projectRoleId === 10101) {
-          store.actions.settingRouter.to('project-members');
-        }
-
-        appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.projectMembers.changedProjectRole').toString(), 'name': 'success' });
-
-      }).catch((err) => { console.log(err); });
-
-    } // +
-
-    // this.source.addEventListener('createNote', (e: any) => {
-    //   console.log('createNote');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
-
-    // this.source.addEventListener('updateNote', (e: any) => {
-    //   console.log('updateNote');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
-
-    // this.source.addEventListener('deleteNote', (e: any) => {
-    //   console.log('deleteNote');
-    //   const data = JSON.parse(e.data);
-    //   // DO UPDATE HERE
-    // });
 
     // error event
     this.source.onerror = (err: any) => {

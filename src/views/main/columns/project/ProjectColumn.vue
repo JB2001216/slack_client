@@ -180,9 +180,11 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Route, NavigationGuard } from 'vue-router';
 import store from '@/store';
+import { apiRegistry, ProjectsApi, Project, ProjectUser } from '@/lib/api';
 import { Perm } from '@/lib/permissions';
 import { SubColumnTabNames } from '@/consts';
 import { getProjectLastLocation } from '@/router';
+import EventsSub from '@/events-subscription';
 
 const tabs = {
   [SubColumnTabNames.task]: 'tasks',
@@ -223,15 +225,25 @@ Component.registerHooks([
 ]);
 @Component
 export default class ProjectColumn extends Vue {
+
   get myUser() {
-    return this.$store.state.activeUser.myUser;
+    return this.$store.state.activeUser.myUser!;
   }
+
   get projects() {
-    return this.$store.state.activeUser.projects;
+    const projects: Project[] = this.$store.state.activeUser.projects ? this.$store.state.activeUser.projects : [];
+    return projects;
   }
+
   get activeProjectId() {
-    return this.$store.getters.activeUser.activeProjectId;
+    const activeProjectId: number | null = this.$store.getters.activeUser.activeProjectId ? this.$store.getters.activeUser.activeProjectId : null;
+    return activeProjectId;
   }
+
+  get api() {
+    return apiRegistry.load(ProjectsApi, this.myUser.token);
+  }
+
   get mySpaceRole() {
     return this.$store.getters.activeUser.mySpaceRole;
   }
@@ -240,16 +252,94 @@ export default class ProjectColumn extends Vue {
     if (!this.mySpaceRole) return false;
     return this.mySpaceRole.perms.includes(Perm.ADD_PROJECT);
   }
+
   get spaceUserAddable() {
     if (!this.mySpaceRole) return false;
     return this.mySpaceRole.perms.includes(Perm.ADD_SPACE_USER);
   }
+
   get spaceUserListable() {
     if (!this.mySpaceRole) return false;
     return this.mySpaceRole.perms.includes(Perm.UPDATE_SPACE_USER) ||
       this.mySpaceRole.perms.includes(Perm.DELETE_SPACE_USER);
   }
 
+  created() {
+    EventsSub.source.addEventListener('createProjectUser', this.createProjectUserTask);
+    EventsSub.source.addEventListener('deleteProjectUser', this.deleteProjectUserTask);
+    EventsSub.source.addEventListener('updateProjectUser', this.updateProjectUserTask);
+  }
+
+  createProjectUserTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const isCurrentUser = data.params.userId === this.myUser.id;
+
+    if (!isCurrentUser) return;
+
+    this.api.projectsProjectIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+    }).then((project: Project) => {
+      this.$store.mutations.activeUser.addProject(project);
+    }).catch((err) => { console.log(err); });
+
+  }
+
+  deleteProjectUserTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const isCurrentUser = data.params.userId === this.myUser.id;
+    const isActiveProject = data.params.projectId === this.activeProjectId;
+
+    if (isCurrentUser) {
+
+      const project = this.projects.find((p) => p.id === data.params.projectId);
+      if (!project) return;
+
+      this.$store.mutations.activeUser.removeProject(project);
+
+      if (isActiveProject) {
+
+        this.$store.actions.activeUser.setActiveProject(null);
+        this.$store.actions.settingRouter.close();
+
+        this.$flash(this.$t('views.setting.main.projectMembers.removedCrntUserMessage').toString(), 'success');
+
+      }
+
+    }
+
+  }
+
+  updateProjectUserTask(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const isCurrentUser = data.params.userId === this.myUser.id;
+    const isActiveProject = data.params.projectId === this.activeProjectId;
+    const isSettings = store.state.settingRouter.name !== null;
+
+    if (!isCurrentUser || !isActiveProject) return;
+
+    this.api.projectsProjectIdUsersUserIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+      userId: data.params.userId,
+    }).then((user: ProjectUser) => {
+
+      this.$store.mutations.activeUser.setActiveProjectData({ id: data.params.projectId, user: user });
+
+      this.$flash(this.$t('views.setting.main.projectMembers.changedProjectRole').toString(), 'success');
+
+      if (!isSettings) return;
+
+      if (user.projectRoleId === 10101) {
+        store.actions.settingRouter.to('project-members');
+      }
+
+    }).catch((err) => { console.log(err); });
+
+  }
 
   getProjectLastLocation(userId: number, projectId: number) {
     return getProjectLastLocation(userId, projectId);
@@ -262,5 +352,12 @@ export default class ProjectColumn extends Vue {
   async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
     await beforeRouteChange(to, from, next);
   }
+
+  destroyed() {
+    EventsSub.source.removeEventListener('createProjectUser', this.createProjectUserTask);
+    EventsSub.source.removeEventListener('deleteProjectUser', this.deleteProjectUserTask);
+    EventsSub.source.removeEventListener('updateProjectUser', this.updateProjectUserTask);
+  }
+
 }
 </script>

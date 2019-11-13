@@ -104,6 +104,8 @@ export default class SpaceMembers extends Vue {
   saving = false;
   removingUser: SpaceUser | null = null;
 
+  updatingIndex: number = -1;
+
   get myUser() {
     return this.$store.state.activeUser.myUser!;
   }
@@ -135,23 +137,53 @@ export default class SpaceMembers extends Vue {
   }
 
   createProjectUserTask(e: any): void {
-    this.pusersInit = false;
-    setTimeout(() => { this.pusersInit = true; }, 100);
+
+    const data = JSON.parse(e.data);
+
+    this.api.projectsProjectIdUsersUserIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+      userId: data.params.userId,
+    }).then((res: ProjectUser) => {
+
+      const projectUserWithRole: ProjectUserWithCurrentRole = Object.assign({
+        currentSpaceRole: SpaceRoles.get(res.spaceRoleId),
+        currentProjectRole: res.projectRoleId ? ProjectRoles.get(res.projectRoleId) : null,
+      }, res);
+
+      if (this.updatingIndex >= 0) {
+        this.pusers.splice(this.updatingIndex, 1, projectUserWithRole);
+        this.updatingIndex = -1;
+      } else {
+        this.pusers.push(projectUserWithRole);
+      }
+
+    }).catch((err) => {
+      this.$appEmit('error', { err });
+    });
+
   }
 
   deleteProjectUserTask(e: any): void {
+
     const data = JSON.parse(e.data);
+    const isFireUser = data.userId === this.myUser.id;
+
     const index = this.pusers.findIndex((pu) => pu.userId === data.params.userId);
-    if (index >= 0) { this.pusers.splice(index, 1); }
+    if (index >= 0) {
+
+      this.pusers.splice(index, 1);
+
+      if (isFireUser) { this.$flash(this.$t('views.setting.main.projectMembers.removedMessage').toString(), 'success'); }
+
+    }
+
   }
 
   updateProjectUserTask(e: any): void {
     const data = JSON.parse(e.data);
-    const index = this.pusers.findIndex((pu) => pu.userId === data.params.userId);
-    if (index >= 0) {
-      this.pusers.splice(index, 1);
-      this.createProjectUserTask(e);
-    }
+    this.updatingIndex = this.pusers.findIndex((pu) => pu.userId === data.params.userId);
+    if (this.updatingIndex >= 0) { this.createProjectUserTask(e); }
   }
 
   async onInfinite($state: StateChanger) {
