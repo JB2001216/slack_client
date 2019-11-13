@@ -11,6 +11,7 @@
         @click="onTextareaClick"
         @keydown="onTextareaKeyDown"
         @scroll="onTextareaScroll"
+        @change="onTextareaChange"
       />
       <div
         v-if="enabledNoteLinkWithConditions"
@@ -256,6 +257,10 @@ export default class MyMarkdownEditor extends Mixins(CommonMixin, NoteLinkMixin)
 
   onTextareaScroll(ev: Event) {
     this.onTextareaScrollForNoteLink(ev);
+  }
+
+  onTextareaChange(ev: Event) {
+    this.$emit('change', ev);
   }
 
   onEditorBlur(ev: Event) {
