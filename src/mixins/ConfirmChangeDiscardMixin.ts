@@ -36,8 +36,14 @@ export default class ConfirmChangeDiscardMixin extends Vue {
   }
 
   beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
-    this.onInitForConfirmChangeDiscardDialog();
-    next();
+    if (this.nextForConfirmChangeDiscard) {
+      next(false);
+    } else if (to.name === from.name && this.changes) {
+      this.nextForConfirmChangeDiscard = next;
+    } else {
+      this.onInitForConfirmChangeDiscardDialog();
+      next();
+    }
   }
 
   beforeMount() {

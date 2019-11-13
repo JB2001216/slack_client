@@ -19,7 +19,7 @@
               class="basicInput borderless"
               placeholder="No Title"
               auto-resize
-              @change="$event.target.blur()"
+              @change="modified = true; $event.target.blur()"
             />
           </h2>
         </div>
@@ -37,6 +37,7 @@
                 enabled-note-link
                 :my-user="myUser"
                 :project-id="activeProjectId"
+                @change="modified = true"
               />
             </div>
             <div class="dashboardWrap_footer">
@@ -124,6 +125,12 @@
         @note-edit="onNoteLinkViewerEdit"
       />
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="!!nextForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscardDialog"
+    />
   </div>
 </template>
 
@@ -228,7 +235,7 @@
 </style>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch, Mixins } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
 import * as api from '@/lib/api';
 import store from '@/store';
@@ -236,8 +243,10 @@ import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import MyMarkdownEditor from '@/components/MyMarkdownEditor';
 import NoteLinkViewer from './NoteLinkViewer.vue';
 import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
+import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
 
-async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'note'>>> {
+
+async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'editDetail' | 'modified' | 'note'>>> {
   const loginUser = store.state.activeUser.myUser!;
   const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
   const spaceId = loginUser.space.id;
@@ -259,13 +268,14 @@ async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite
 
   return {
     isFavorite: resFavorite.value,
+    editDetail: null,
+    modified: false,
     note,
   };
 }
 
 Component.registerHooks([
   'beforeRouteEnter',
-  'beforeRouteUpdate',
   'beforeRouteLeave',
 ]);
 @Component({
@@ -274,7 +284,7 @@ Component.registerHooks([
     NoteLinkViewer,
   },
 })
-export default class NoteColumn extends Vue {
+export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
   $refs!: {
     markdownEditor: MyMarkdownEditor;
   };
@@ -282,6 +292,7 @@ export default class NoteColumn extends Vue {
   note: api.Note | null = null;
   isFavorite = false;
   editDetail: Pick<api.Note, 'subject' | 'body'> | null = null;
+  modified = false;
   wideScreen = false;
   saving = false;
 
@@ -313,6 +324,10 @@ export default class NoteColumn extends Vue {
 
   get fullMainColumn() {
     return this.$store.state.fullMainColumn;
+  }
+
+  get changes() {
+    return this.modified;
   }
 
   async save(data: api.NotesNoteIdPatchRequestBody) {
@@ -428,6 +443,7 @@ export default class NoteColumn extends Vue {
       subject: this.note!.subject,
       body: this.note!.body || '',
     };
+    this.modified = false;
     this.viewingRelatedNoteId = null;
     this.$store.mutations.setFullMainColumn(true);
   }
@@ -438,6 +454,7 @@ export default class NoteColumn extends Vue {
       await this.save(this.editDetail);
     }
     this.editDetail = null;
+    this.modified = false;
     this.$store.mutations.setFullMainColumn(false);
   }
 
@@ -500,7 +517,9 @@ export default class NoteColumn extends Vue {
     });
   }
 
-  async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+  @Watch('$route')
+  async onRouteChange(to: Route) {
+    if (to.name !== 'note') return;
     const options = await initData(to);
     store.mutations.setFullMainColumn(false);
     (Object.keys(options) as (keyof typeof options)[]).forEach((k) => {
@@ -510,7 +529,6 @@ export default class NoteColumn extends Vue {
     if (to.query.edit === 'true') {
       this.startEditDetail();
     }
-    next();
   }
 
   beforeRouteLeave(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {

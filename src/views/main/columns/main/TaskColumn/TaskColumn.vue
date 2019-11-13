@@ -243,7 +243,7 @@ import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
 
 
-async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'task'>>> {
+async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'editDetail' | 'task'>>> {
   const loginUser = store.state.activeUser.myUser!;
   const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
   const spaceId = loginUser.space.id;
@@ -265,6 +265,7 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite
   task.tags = task.tags || [];
   return {
     isFavorite: resFavorite.value,
+    editDetail: null,
     task,
   };
 }
@@ -272,6 +273,7 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite
 Component.registerHooks([
   'beforeRouteEnter',
   'beforeRouteUpdate',
+  'beforeRouteLeave',
 ]);
 @Component({
   components: {
@@ -500,6 +502,11 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     next();
   }
 
+  beforeRouteLeave(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    store.mutations.setFullMainColumn(false);
+    next();
+  }
+
   beforeMount() {
     this.$appOn('task-edited', this.onTaskEdited);
     this.$appOn('task-deleted', this.onTaskDeleted);
@@ -508,13 +515,6 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   beforeDestroy() {
     this.$appOff('task-edited', this.onTaskEdited);
     this.$appOff('task-deleted', this.onTaskDeleted);
-  }
-
-  @Watch('$route')
-  onRouteChange() {
-    if (name !== 'task') {
-      store.mutations.setFullMainColumn(false);
-    }
   }
 }
 </script>
