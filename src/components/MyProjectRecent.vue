@@ -98,7 +98,9 @@ export default class MyProjectRecent extends Vue {
   }
 
   get timeAgo(): string {
-    const updatedAt = this.recent.data.find((data) => data.field === 'updatedAt')!.afterValue as string;
+    const timeField = this.recent.data.find((data) => data.field === 'updatedAt');
+    if (timeField === undefined) return '';
+    const updatedAt = timeField.afterValue as string;
     let time = Math.floor((new Date().getTime() - new Date(updatedAt).getTime()) / 1000);
     let unit = '';
     if (time < 60) {

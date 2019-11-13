@@ -13,7 +13,13 @@
         />
       </div>
       <div class="dashboardWrap dashboardWrap_home">
-        <my-project-recent v-for="recent in list" :key="recent.id" :recent="recent" />
+        <div v-for="(recent, i) in list" :key="recent.id">
+          <div v-if="isNewDate(i)" class="dateBar">
+            <span class="date">{{ getFormatedDate(recent) }}</span>
+            <span class="bar" />
+          </div>
+          <my-project-recent :recent="recent" />
+        </div>
         <infinite-loading @infinite="infiniteLoadData" />
       </div>
     </div>
@@ -27,6 +33,18 @@
   .dashboardWrap_home
     border-top: 1px solid lightgray
     position: relative
+  .dateBar
+    display: flex
+    align-items: center
+    margin: 5px 0
+    .date
+      font-weight: bold
+      font-size: 16px
+    .bar
+      flex: 1
+      background-color: #f5f5f5
+      height: 2px
+      margin-left: 5px
 </style>
 
 <script lang="ts">
@@ -35,6 +53,7 @@ import { Location, Route, NavigationGuard } from 'vue-router';
 import InfiniteLoading from 'vue-infinite-loading';
 import store from '@/store';
 import * as api from '@/lib/api';
+import { BaseError } from '../../../../lib/errors';
 
 @Component({
   components: {
@@ -62,6 +81,35 @@ export default class HomeColumn extends Vue {
     return this.$store.state.fullMainColumn;
   }
 
+  isNewDate(i: number) {
+    if (i === 0) return true;
+    const date = this.getDateFromRecent(this.list[i]);
+    if (this.getDateFromRecent(this.list[i - 1]) !== date && date !== '') {
+      return true;
+    }
+    return false;
+  }
+
+  getDateFromRecent(recent: api.Recent) {
+    const timeField = recent.data.find((data) => data.field === 'updatedAt');
+    if (timeField === undefined) return '';
+    return new Date(timeField.afterValue as string).toLocaleDateString();
+  }
+
+  getFormatedDate(recent: api.Recent) {
+    const timeField = recent.data.find((data) => data.field === 'updatedAt');
+    if (timeField === undefined) return '';
+    const updatedAt = new Date(timeField.afterValue as string);
+    if (this.$i18n.locale === 'en') {
+      return updatedAt.toLocaleDateString() + ' ' + this.$t(`common.weekdays[${updatedAt.getDay()}]`);
+    }
+    let str = updatedAt.getFullYear().toString() + this.$t('common.time.year');
+    str = str + (updatedAt.getMonth() + 1).toString() + this.$t('common.time.month');
+    str = str + updatedAt.getDate().toString() + this.$t('common.time.day');
+    str = `${str} (${this.$t(`common.weekdays[${updatedAt.getDay()}]`)})`;
+    return str;
+  }
+
   async infiniteLoadData($state: any) {
     const loginUser = store.state.activeUser.myUser!;
     const SpacesApi = api.apiRegistry.load(api.SpacesApi, loginUser.token);
@@ -79,7 +127,6 @@ export default class HomeColumn extends Vue {
         $state.loaded();
       } else {
         $state.complete();
-        console.log(this.list);
       }
     },
     (error) => console.log(error));

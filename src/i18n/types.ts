@@ -44,6 +44,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       year: string;
       ago: string;
     };
+    weekdays: string[];
   };
 
   components: {

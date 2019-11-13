@@ -34,6 +34,7 @@ const struct: LocaleStruct = {
         year: 'year',
         ago: 'ago',
       },
+      weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     },
 
     components: {
