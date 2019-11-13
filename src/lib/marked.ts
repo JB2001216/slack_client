@@ -8,9 +8,14 @@ for (const ruleName of ['normal', 'gfm', 'breaks', 'pedantic']) {
   });
 }
 
-export default marked;
+// Open link in a os browser
+const originalLinkRederer = marked.Renderer.prototype.link;
+marked.Renderer.prototype.link = function(href, title, text) {
+  const out = originalLinkRederer.call(this, href, title, text);
+  if (out && !!out.match(/^<a href=".*<\/a>$/)) {
+    return out.replace(/^<a href="/, '<a target="_blank" href="');
+  }
+  return out;
+};
 
-//    strong: /^\*([^\s*<\[]+)\*(?!\*)|^\*([^\s*"<\[]+[\s\S]*?[^\s])\*(?!\*)|^\*([^\s<"]+[\s\S]*?[^\s\*]+)\*(?!\*|[^\spunctuation])/,
-//  (^|[\s?!.])_(?!_)((?:[^_\n]*?[^_])?)_(?!(_|[^\s\?!.]))
-// strong: /^__([^\s_])__(?!_)|^\*\*([^\s*])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/
-// em: /^_([^\s_])_(?!_)|^\*([^\s*<\[])\*(?!\*)|^_([^\s<][\s\S]*?[^\s_])_(?!_|[^\s!"#$%&'()*+,\-./:;<=>?@\[^_{|}~])|^_([^\s_<][\s\S]*?[^\s])_(?!_|[^\s!"#$%&'()*+,\-./:;<=>?@\[^_{|}~])|^\*([^\s<"][\s\S]*?[^\s\*])\*(?!\*|[^\s!"#$%&'()*+,\-./:;<=>?@\[^_{|}~])|^\*([^\s*"<\[][\s\S]*?[^\s])\*(?!\*)/
+export default marked;

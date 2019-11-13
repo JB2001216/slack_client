@@ -8,7 +8,7 @@
         dragging: dragData,
         dragCurrent: dragData && dragData.note === t,
       }"
-      :draggable="allNoteUpdatable"
+      :draggable="allNoteUpdatable && itemDraggable"
       @dragstart.stop="onItemDragStart($event, t)"
       @dragend.stop.prevent="onItemDragEnd($event, t)"
     >
@@ -44,13 +44,8 @@
         class="note_item"
         :class="{
           active: t.id === activeNoteId,
-          dropHover: dropHover && dropHover.position === 'child' && dropHover.note === t,
         }"
         @click.stop="onItemClick($event, t)"
-        @dragenter.stop.prevent="onItemDragEnter($event, t)"
-        @dragleave.stop.prevent="onItemDragLeave($event, t)"
-        @dragover.stop.prevent="$event.dataTransfer.dropEffect = 'move'"
-        @drop.stop.prevent="onItemDrop($event, t)"
       >
         <div class="note_item_accordionIcon">
           <template v-if="t.hasChilds">
@@ -321,6 +316,7 @@ export default class NestedList extends Vue {
         }
 
       } catch (err) {
+        console.log(err);
         this.$appEmit('error', { err });
         return;
       } finally {

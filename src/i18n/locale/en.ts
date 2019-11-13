@@ -53,6 +53,14 @@ const struct: LocaleStruct = {
         notfound: 'No users found that match the condition',
         searchTextPlaceholder: 'Search by name or email address',
       },
+      myMarkdownEditor: {
+        noteLink: {
+          move: 'Move',
+          enter: 'Enter',
+          cancel: 'Cancel',
+          lastUpdated: 'Last Updated',
+        },
+      },
     },
 
     views: {
@@ -146,6 +154,9 @@ const struct: LocaleStruct = {
         addedChargeUser: '{name} was added to the member list.',
         deletedChargeUser: '{name} was deleted from the member list.',
         chargerDialogTitle: 'Note member list',
+        status: 'Status',
+        baton: 'Baton',
+        lastUpdated: 'Last Updated',
       },
 
       // setting

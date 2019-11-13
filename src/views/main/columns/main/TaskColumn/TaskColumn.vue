@@ -9,6 +9,7 @@
             class="basicInput borderless"
             placeholder="No Title"
             auto-resize
+            @change="$event.target.blur()"
           />
         </h2>
       </div>
@@ -102,17 +103,9 @@
           </dl>
           <hr>
           <div class="dashboardWrap_task">
-            <a v-if="updatable" href="" class="edit dashboardWrap_task_editButton" @click.prevent="startEditDetail()">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M11.1501 0.333313C10.9705 0.333313 10.7908 0.401712 10.6539 0.538905L9.45605 1.73682L12.263 4.54384L13.4609 3.34592C13.7353 3.07154 13.7353 2.62728 13.4609 2.3536L11.6463 0.538905C11.5091 0.401712 11.3297 0.333313 11.1501 0.333313ZM8.40343 2.78945L0.333374 10.8596V13.6666H3.14035L11.2104 5.59647L8.40343 2.78945Z" fill="#333333" />
-              </svg>
-            </a>
+            <button v-if="updatable" class="dashboardWrap_task_editButton" @click="startEditDetail()">
+              <my-svg-icon name="pen" class="dashboardWrap_task_editButton_icon" />Edit
+            </button>
             <my-markdown-editor
               v-model="task.body"
               class="noteEditWrap_post"
@@ -149,8 +142,27 @@
     position: relative
     &_editButton
       position: absolute
-      right: 0px
+      right: 0
       top: 0
+      background: $colors.whiteDarken1
+      color: $colors.primaryBlack
+      cursor: pointer
+      font-size: 12px
+      border: none
+      border-radius: 20px
+      height: 26px
+      padding: 0 12px
+      display: flex
+      align-items: center
+      &_icon
+        --mySvgIconSize: 14px
+        --mySvgIconColor: $colors.primaryBlack
+        margin-right: 4px
+      &:hover
+        background: $colors.whiteDarken2
+        color: $colors.primaryBlackDarken5
+        .dashboardWrap_note_editButton_icon
+          --mySvgIconColor: $colors.primaryBlackDarken5
     .noteEditWrap_post
       margin-top: 0
       &_view,
@@ -191,10 +203,8 @@
   .dashboardWrap_footer
     display: block
     width: 100%
-    min-height: 60px
-    padding: 9px 20px 24px 20px
+    padding: 16px 20px
     background: #fff
-    border-top: 2px solid $colors.lightGrayLighten2
     position: absolute
     bottom: 0
     left: 0
@@ -211,17 +221,15 @@
       &:hover
         .dashboardWrap_footer_mdHelpButton_icon
           --mySvgIconColor: $colors.primaryBlackDarken5
-  .dashboardWrap_detail
-    .noteEditWrap_post
-      margin-top: 0
-      &_view,
-      &_edit
-        height: calc(100vh - 184px)
-
   &.editDetail
     .columnTitle
       h2
         width: 100%
+    .noteEditWrap_post
+      border-top: 1px solid $colors.lightGrayLighten2
+      border-bottom: 1px solid $colors.lightGrayLighten2
+      margin-top: 0
+      height: calc(100vh - 144px)
 </style>
 
 <script lang="ts">
@@ -235,7 +243,7 @@ import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
 import EventsSub from '@/events-subscription';
 
-async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'task'>>> {
+async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'editDetail' | 'task'>>> {
   const loginUser = store.state.activeUser.myUser!;
   const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
   const spaceId = loginUser.space.id;
@@ -257,6 +265,7 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite
   task.tags = task.tags || [];
   return {
     isFavorite: resFavorite.value,
+    editDetail: null,
     task,
   };
 }
@@ -264,6 +273,7 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite
 Component.registerHooks([
   'beforeRouteEnter',
   'beforeRouteUpdate',
+  'beforeRouteLeave',
 ]);
 @Component({
   components: {
@@ -510,5 +520,9 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     EventsSub.source.removeEventListener('updateTask', this.updateTask);
   }
 
+  beforeRouteLeave(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
+    store.mutations.setFullMainColumn(false);
+    next();
+  }
 }
 </script>

@@ -64,6 +64,7 @@
             :notes="notes"
             :status-options="statusOptions"
             :fetch-notes="fetchNotes"
+            :item-draggable="currentSort.droppableBetween"
             :item-droppable-between="currentSort.droppableBetween"
             :drag-data="dragData"
             :drop-hover="dropHover"
@@ -171,7 +172,6 @@ Component.registerHooks([
   'beforeRouteEnter',
   'beforeRouteUpdate',
 ]);
-
 @Component({
   components: {
     SubColumnLayout,

@@ -9,7 +9,7 @@ import MySpaceUserAvatar from './MySpaceUserAvatar.vue';
 import MySpaceUserSearchInput from './MySpaceUserSearchInput.vue';
 import MyChargerDialog from './MyChargerDialog';
 import MyChargerInput from './MyChargerInput';
-import MyMarkdownEditor from './MyMarkdownEditor.vue';
+import MyMarkdownEditor from './MyMarkdownEditor';
 import MyProjectStatus from './MyProjectStatus.vue';
 import MySimpleMenu from './MySimpleMenu.vue';
 

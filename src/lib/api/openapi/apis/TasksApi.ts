@@ -161,16 +161,17 @@ export interface TasksGetRequest {
     projectId: number;
     page?: number;
     limit?: number;
+    id?: Array<number>;
     parent?: number;
     root?: boolean;
     subject?: string;
     status?: Array<number>;
     batonUser?: Array<number>;
     writeUser?: number;
-    favorite?: boolean;
-    ordering?: string;
     chargeUsers?: Array<number>;
     tags?: Array<string>;
+    favorite?: boolean;
+    ordering?: string;
 }
 
 export interface TasksPostRequest {
@@ -799,6 +800,10 @@ export class TasksApi extends runtime.BaseAPI {
             queryParameters['limit'] = requestParameters.limit;
         }
 
+        if (requestParameters.id) {
+            queryParameters['id'] = requestParameters.id.join(runtime.COLLECTION_FORMATS["csv"]);
+        }
+
         if (requestParameters.parent !== undefined) {
             queryParameters['parent'] = requestParameters.parent;
         }
@@ -823,20 +828,20 @@ export class TasksApi extends runtime.BaseAPI {
             queryParameters['write_user'] = requestParameters.writeUser;
         }
 
-        if (requestParameters.favorite !== undefined) {
-            queryParameters['favorite'] = requestParameters.favorite;
-        }
-
-        if (requestParameters.ordering !== undefined) {
-            queryParameters['ordering'] = requestParameters.ordering;
-        }
-
         if (requestParameters.chargeUsers) {
             queryParameters['charge_users'] = requestParameters.chargeUsers.join(runtime.COLLECTION_FORMATS["csv"]);
         }
 
         if (requestParameters.tags) {
             queryParameters['tags'] = requestParameters.tags.join(runtime.COLLECTION_FORMATS["csv"]);
+        }
+
+        if (requestParameters.favorite !== undefined) {
+            queryParameters['favorite'] = requestParameters.favorite;
+        }
+
+        if (requestParameters.ordering !== undefined) {
+            queryParameters['ordering'] = requestParameters.ordering;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

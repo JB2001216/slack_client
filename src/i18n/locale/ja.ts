@@ -54,6 +54,14 @@ const struct: LocaleStruct = {
         notfound: '条件に一致するユーザーは見つかりませんでした',
         searchTextPlaceholder: '名前またはメールアドレスで検索',
       },
+      myMarkdownEditor: {
+        noteLink: {
+          move: '移動',
+          enter: '確定',
+          cancel: 'キャンセル',
+          lastUpdated: '最終更新日',
+        },
+      },
     },
 
     views: {
@@ -147,6 +155,9 @@ const struct: LocaleStruct = {
         addedChargeUser: 'ノートメンバーに{name}を追加しました。',
         deletedChargeUser: 'ノートメンバーから{name}を除外しました。',
         chargerDialogTitle: 'ノートメンバー管理',
+        status: 'ステータス',
+        baton: '担当',
+        lastUpdated: '最終更新日',
       },
 
       // setting
