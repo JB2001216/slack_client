@@ -178,8 +178,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Route, NavigationGuard } from 'vue-router';
-import store from '@/store';
 import { Perm } from '@/lib/permissions';
 import { SubColumnTabNames } from '@/consts';
 import { getProjectLastLocation } from '@/router';
@@ -191,38 +189,9 @@ const tabs = {
   [SubColumnTabNames.ganttChart]: 'notes',
 };
 
-async function beforeRouteChange(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
-  if (to.params.projectId) {
-    const projectId = parseInt(to.params.projectId);
-    const project = store.state.activeUser.projects!.find((p) => p.id === projectId);
-    if (!project) {
-      return next({ name: 'user', params: { userId: to.params.userId } });
-    }
-
-    if (project.id !== store.getters.activeUser.activeProjectId) {
-      await store.actions.activeUser.setActiveProject(project.id);
-    }
-  }
-
-  // If no tab is selected, select the task tab
-  if (to.name === 'project') {
-    return next({
-      name: 'tasks',
-      params: {
-        userId: to.params.userId,
-        projectId: to.params.projectId,
-      },
-    });
-  }
-  return next();
-}
-
-Component.registerHooks([
-  'beforeRouteEnter',
-  'beforeRouteUpdate',
-]);
 @Component
 export default class ProjectColumn extends Vue {
+
   get myUser() {
     return this.$store.state.activeUser.myUser;
   }
@@ -253,14 +222,6 @@ export default class ProjectColumn extends Vue {
 
   getProjectLastLocation(userId: number, projectId: number) {
     return getProjectLastLocation(userId, projectId);
-  }
-
-  async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
-    await beforeRouteChange(to, from, next);
-  }
-
-  async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
-    await beforeRouteChange(to, from, next);
   }
 }
 </script>

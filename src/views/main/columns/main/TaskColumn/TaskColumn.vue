@@ -17,12 +17,14 @@
         <div class="dashboardWrap">
           <div class="dashboardWrap_detail">
             <my-markdown-editor
+              ref="markdownEditor"
               v-model="editDetail.body"
               class="noteEditWrap_post"
               editor-class="noteEditWrap_post_edit"
               :editor-placeholder="$t('views.taskColumn.enterDetails')"
               preview-class="noteEditWrap_post_view"
               :preview-placeholder="$t('views.taskColumn.detailsAreEmpty')"
+              @change="editedDetailBody = true"
             />
           </div>
           <div class="dashboardWrap_footer">
@@ -123,8 +125,8 @@
 
     <my-confirm-change-discard-dialog
       :changes="changes"
-      :next="!!nextForConfirmChangeDiscard"
-      @answer="onAnswerForConfirmChangeDiscardDialog"
+      :next="nextRouteForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscard"
     />
   </div>
 </template>
@@ -238,12 +240,13 @@ import { Location, Route, NavigationGuard } from 'vue-router';
 import * as api from '@/lib/api';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
+import MyMarkdownEditor from '@/components/MyMarkdownEditor';
 import TaskComment from './TaskComment.vue';
 import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
 
 
-async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'editDetail' | 'task'>>> {
+async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'editDetail' | 'editedDetailBody' | 'task'>>> {
   const loginUser = store.state.activeUser.myUser!;
   const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
   const spaceId = loginUser.space.id;
@@ -266,6 +269,7 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite
   return {
     isFavorite: resFavorite.value,
     editDetail: null,
+    editedDetailBody: true,
     task,
   };
 }
@@ -284,11 +288,13 @@ Component.registerHooks([
 export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   $refs!: {
     tagInput: HTMLInputElement;
+    markdownEditor: MyMarkdownEditor;
   };
 
   task: api.Task | null = null;
   isFavorite = false;
   editDetail: Pick<api.Task, 'subject' | 'body'> | null = null;
+  editedDetailBody = false;
   saving = false;
 
   get myUser() {
@@ -322,7 +328,7 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   get changes() {
     return !!this.task && !!this.editDetail && (
       this.task.subject !== this.editDetail.subject ||
-      this.task.body !== this.editDetail.body
+      this.editedDetailBody
     );
   }
 
@@ -459,14 +465,17 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
       subject: this.task!.subject,
       body: this.task!.body || '',
     };
+    this.editedDetailBody = false;
     this.$store.mutations.setFullMainColumn(true);
   }
 
   async endEditDetail(save = false) {
     if (save && this.editDetail) {
+      await this.$refs.markdownEditor.compileValue();
       await this.save(this.editDetail);
     }
     this.editDetail = null;
+    this.editedDetailBody = false;
     this.$store.mutations.setFullMainColumn(false);
   }
 

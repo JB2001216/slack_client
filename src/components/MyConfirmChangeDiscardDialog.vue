@@ -38,8 +38,8 @@ export default class MyConfirmChangeDiscardDialog extends Vue {
   @Prop({ type: Boolean, required: true })
   changes!: boolean;
 
-  @Prop({ type: Boolean, default: false })
-  next!: boolean;
+  @Prop({ default: null })
+  next!: any;
 
   get showed() {
     return this.changes && !!this.next;
