@@ -296,16 +296,6 @@ export default class TasksColumn extends Vue {
     this.infiniteId += 1;
   }
 
-  getTaskAddTo(): Location {
-    return {
-      name: 'task-add',
-      params: {
-        userId: this.$route.params.userId,
-        projectId: this.$route.params.projectId,
-      },
-    };
-  }
-
   getTaskTo(taskId: number): Location {
     return {
       name: 'task',

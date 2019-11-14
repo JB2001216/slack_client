@@ -19,7 +19,7 @@
               class="basicInput borderless"
               placeholder="No Title"
               auto-resize
-              @change="modified = true; $event.target.blur()"
+              @change="$event.target.blur()"
             />
           </h2>
         </div>
@@ -37,7 +37,7 @@
                 enabled-note-link
                 :my-user="myUser"
                 :project-id="activeProjectId"
-                @change="modified = true"
+                @change="editedDetailBody = true"
               />
             </div>
             <div class="dashboardWrap_footer">
@@ -128,8 +128,8 @@
 
     <my-confirm-change-discard-dialog
       :changes="changes"
-      :next="!!nextForConfirmChangeDiscard"
-      @answer="onAnswerForConfirmChangeDiscardDialog"
+      :next="nextRouteForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscard"
     />
   </div>
 </template>
@@ -246,7 +246,7 @@ import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
 
 
-async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'editDetail' | 'modified' | 'note'>>> {
+async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'editDetail' | 'editedDetailBody' | 'note'>>> {
   const loginUser = store.state.activeUser.myUser!;
   const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
   const spaceId = loginUser.space.id;
@@ -269,7 +269,7 @@ async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite
   return {
     isFavorite: resFavorite.value,
     editDetail: null,
-    modified: false,
+    editedDetailBody: false,
     note,
   };
 }
@@ -292,7 +292,7 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
   note: api.Note | null = null;
   isFavorite = false;
   editDetail: Pick<api.Note, 'subject' | 'body'> | null = null;
-  modified = false;
+  editedDetailBody = false;
   wideScreen = false;
   saving = false;
 
@@ -327,7 +327,10 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
   }
 
   get changes() {
-    return this.modified;
+    return !!this.note && !!this.editDetail && (
+      this.note.subject !== this.editDetail.subject ||
+      this.editedDetailBody
+    );
   }
 
   async save(data: api.NotesNoteIdPatchRequestBody) {
@@ -443,7 +446,7 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
       subject: this.note!.subject,
       body: this.note!.body || '',
     };
-    this.modified = false;
+    this.editedDetailBody = false;
     this.viewingRelatedNoteId = null;
     this.$store.mutations.setFullMainColumn(true);
   }
@@ -454,7 +457,7 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
       await this.save(this.editDetail);
     }
     this.editDetail = null;
-    this.modified = false;
+    this.editedDetailBody = false;
     this.$store.mutations.setFullMainColumn(false);
   }
 

@@ -6,11 +6,11 @@ import store from '../store';
 export function bindLastLocation(router: Router) {
   // Save last location
   router.afterEach((to) => {
-    if (to.path.match(/^\/main\/users\/\d+/) && to.params.userId) {
+    if (to.path.match(/^\/main\/users\/\d+/) && to.params.userId && !to.params.redirectUrl) {
       store.mutations.location.setAppLastLocation(to);
       store.mutations.location.setUserLastLocation(to);
     }
-    if (to.path.match(/^\/main\/users\/\d+\/projects\/\d+/) && to.params.userId && to.params.projectId) {
+    if (to.path.match(/^\/main\/users\/\d+\/projects\/\d+/) && to.params.userId && to.params.projectId && !to.params.redirectUrl) {
       store.mutations.location.setProjectLastLocation(to);
     }
   });

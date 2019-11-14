@@ -4,7 +4,7 @@
       <li v-for="u in loggedInUsers" :key="u.id">
         <a
           class="teamColumn_nav_item"
-          :class="{active: activeUserId === u.id}"
+          :class="{active: routeUserId === u.id}"
           @click.prevent="$router.push(getUserLastLocation(u.id))"
         >
           <img v-if="u.space.avatarSmallUrl" :src="u.space.avatarSmallUrl">
@@ -88,12 +88,13 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { getUserLastLocation } from '@/router';
 
 @Component
-export default class UserColumn extends Vue {
+export default class TeamColumn extends Vue {
+
   get loggedInUsers() {
     return this.$store.state.loggedInUsers;
   }
 
-  get activeUserId() {
+  get routeUserId() {
     const userId = this.$route.params.userId;
     return userId ? parseInt(userId) : null;
   }
