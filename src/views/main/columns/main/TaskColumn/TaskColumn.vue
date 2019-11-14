@@ -67,7 +67,7 @@
           <my-svg-icon class="mainColumn_head_toolbar_item favoriteIcon" :class="{active: isFavorite}" name="bookmark" @click="favorite(!isFavorite)" />
           <my-svg-icon class="mainColumn_head_toolbar_item" name="link" />
           <my-svg-icon class="mainColumn_head_toolbar_item" name="clip" />
-          <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="destroy()" />
+          <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="deleteConfirming = true" />
         </div>
       </div>
       <div class="mainColumn_body">
@@ -128,6 +128,27 @@
       :next="nextRouteForConfirmChangeDiscard"
       @answer="onAnswerForConfirmChangeDiscard"
     />
+
+    <my-modal
+      v-model="deleteConfirming"
+      class="modalDialog"
+      content-class="modalDialog_content"
+    >
+      <div class="modalDialog_content_title">
+        {{ $t('views.taskColumn.deleteConfirmDialog.title') }}
+      </div>
+      <div class="modalDialog_content_description">
+        {{ $t('views.taskColumn.deleteConfirmDialog.description') }}
+      </div>
+      <div class="modalDialog_content_footerButtons">
+        <button class="modalDialog_content_footerButtons_button basicButtonDanger" @click="destroy()">
+          {{ $t('common.yes') }}
+        </button>
+        <button class="modalDialog_content_footerButtons_button basicButtonNormal" @click="deleteConfirming = false">
+          {{ $t('common.no') }}
+        </button>
+      </div>
+    </my-modal>
   </div>
 </template>
 
@@ -296,6 +317,7 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   editDetail: Pick<api.Task, 'subject' | 'body'> | null = null;
   editedDetailBody = false;
   saving = false;
+  deleteConfirming = false;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;

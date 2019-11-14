@@ -138,6 +138,10 @@ const struct: LocaleStruct = {
         addedChargeUser: '{name} was added to the member list.',
         deletedChargeUser: '{name} was deleted from the member list.',
         chargerDialogTitle: 'Task member list',
+        deleteConfirmDialog: {
+          title: 'Deleting the task',
+          description: 'Are you sure you want to delete this task?',
+        },
       },
       noteColumn: {
         save: 'save',
@@ -152,6 +156,10 @@ const struct: LocaleStruct = {
         status: 'Status',
         baton: 'Baton',
         lastUpdated: 'Last Updated',
+        deleteConfirmDialog: {
+          title: 'Deleting the note',
+          description: 'Are you sure you want to delete this note?',
+        },
       },
 
       // setting

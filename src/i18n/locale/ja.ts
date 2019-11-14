@@ -139,6 +139,10 @@ const struct: LocaleStruct = {
         addedChargeUser: 'タスクメンバーに{name}を追加しました。',
         deletedChargeUser: 'タスクメンバーから{name}を除外しました。',
         chargerDialogTitle: 'タスクメンバー管理',
+        deleteConfirmDialog: {
+          title: 'タスクの削除',
+          description: 'このタスクを削除してよろしいですか？',
+        },
       },
       noteColumn: {
         save: '編集を終了',
@@ -153,6 +157,10 @@ const struct: LocaleStruct = {
         status: 'ステータス',
         baton: '担当',
         lastUpdated: '最終更新日',
+        deleteConfirmDialog: {
+          title: 'ノートの削除',
+          description: 'このノートを削除してよろしいですか？',
+        },
       },
 
       // setting

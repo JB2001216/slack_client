@@ -148,6 +148,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       addedChargeUser: string;
       deletedChargeUser: string;
       chargerDialogTitle: string;
+      deleteConfirmDialog: {
+        title: string;
+        description: string;
+      };
     };
     noteColumn: {
       save: string;
@@ -162,6 +166,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       status: string;
       baton: string;
       lastUpdated: string;
+      deleteConfirmDialog: {
+        title: string;
+        description: string;
+      };
     };
 
     // setting
