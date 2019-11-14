@@ -65,11 +65,11 @@
         {{ $t('views.setting.main.projectMembers.removeConfirmMessage', { name: removingUser.displayName || removingUser.account, email: removingUser.email }) }}
       </p>
       <div class="modalDialog_content_footerButtons">
-        <button class="basicButtonNormal modalDialog_content_footerButtons_button" @click="removingUser = null">
-          {{ $t('common.no') }}
-        </button>
         <button class="basicButtonDanger modalDialog_content_footerButtons_button" @click="remove()">
           {{ $t('common.yes') }}
+        </button>
+        <button class="basicButtonNormal modalDialog_content_footerButtons_button" @click="removingUser = null">
+          {{ $t('common.no') }}
         </button>
       </div>
     </my-modal>
@@ -132,8 +132,8 @@ export default class SpaceMembers extends Vue {
 
   created() {
     EventsSub.source.addEventListener('createProjectUser', this.createProjectUserTask);
-    EventsSub.source.addEventListener('deleteProjectUser', this.deleteProjectUserTask);
     EventsSub.source.addEventListener('updateProjectUser', this.updateProjectUserTask);
+    EventsSub.source.addEventListener('deleteProjectUser', this.deleteProjectUserTask);
   }
 
   createProjectUserTask(e: any): void {
@@ -146,10 +146,10 @@ export default class SpaceMembers extends Vue {
       userId: data.params.userId,
     }).then((res: ProjectUser) => {
 
-      const projectUserWithRole: ProjectUserWithCurrentRole = Object.assign({
+      const projectUserWithRole: ProjectUserWithCurrentRole = Object.assign(res, {
         currentSpaceRole: SpaceRoles.get(res.spaceRoleId),
         currentProjectRole: res.projectRoleId ? ProjectRoles.get(res.projectRoleId) : null,
-      }, res);
+      });
 
       if (this.updatingIndex >= 0) {
         this.pusers.splice(this.updatingIndex, 1, projectUserWithRole);
@@ -164,6 +164,12 @@ export default class SpaceMembers extends Vue {
 
   }
 
+  updateProjectUserTask(e: any): void {
+    const data = JSON.parse(e.data);
+    this.updatingIndex = this.pusers.findIndex((pu) => pu.userId === data.params.userId);
+    if (this.updatingIndex >= 0) { this.createProjectUserTask(e); }
+  }
+
   deleteProjectUserTask(e: any): void {
 
     const data = JSON.parse(e.data);
@@ -174,16 +180,10 @@ export default class SpaceMembers extends Vue {
 
       this.pusers.splice(index, 1);
 
-      if (isFireUser) { this.$flash(this.$t('views.setting.main.projectMembers.removedMessage').toString(), 'success'); }
+      if (isFireUser) { this.$flash(this.$t('notifications.project.deletedMember').toString(), 'success'); }
 
     }
 
-  }
-
-  updateProjectUserTask(e: any): void {
-    const data = JSON.parse(e.data);
-    this.updatingIndex = this.pusers.findIndex((pu) => pu.userId === data.params.userId);
-    if (this.updatingIndex >= 0) { this.createProjectUserTask(e); }
   }
 
   async onInfinite($state: StateChanger) {
@@ -284,8 +284,8 @@ export default class SpaceMembers extends Vue {
 
   destroyed() {
     EventsSub.source.removeEventListener('createProjectUser', this.createProjectUserTask);
-    EventsSub.source.removeEventListener('deleteProjectUser', this.deleteProjectUserTask);
     EventsSub.source.removeEventListener('updateProjectUser', this.updateProjectUserTask);
+    EventsSub.source.removeEventListener('deleteProjectUser', this.deleteProjectUserTask);
   }
 
 }

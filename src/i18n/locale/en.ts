@@ -39,6 +39,9 @@ const struct: LocaleStruct = {
         created: 'Project {projectName} created successfully.',
         updated: 'Project {projectName} updated successfully.',
         deleted: 'Project {projectName} deleted successfully.',
+        changedRole: 'Your project role was changed.',
+        deletedMember: 'Member deleted successfully.',
+        deletedCrntMember: 'You are no longer member of {projectName} project.',
       },
     },
 
@@ -245,9 +248,6 @@ const struct: LocaleStruct = {
             role: 'Role',
             addMember: 'Add Member',
             removeConfirmMessage: 'Remove {name} ({email}) ?',
-            removedMessage: 'Member deleted successfully',
-            removedCrntUserMessage: 'You are no longer member of {projectName} project',
-            changedProjectRole: 'Your project role was changed',
           },
           projectMemberAdd: {
             title: 'Add members to {projectName}',

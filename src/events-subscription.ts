@@ -2,7 +2,7 @@ import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
 import {
-  apiRegistry, SpacesApi, UsersApi, ProjectsApi, Space, SpaceUser, Project,
+  apiRegistry, SpacesApi, UsersApi, ProjectsApi, Space, SpaceUser, Project, ProjectUser,
 } from '@/lib/api/';
 import router, { getUserLastLocation } from '@/router';
 
@@ -47,6 +47,10 @@ class EventsSubscription {
       this.source.removeEventListener('updateProject', updateProjectTask);
       this.source.removeEventListener('deleteProject', deleteProjectTask);
 
+      this.source.removeEventListener('createProjectUser', createProjectUserTask);
+      this.source.removeEventListener('updateProjectUser', updateProjectUserTask);
+      this.source.removeEventListener('deleteProjectUser', deleteProjectUserTask);
+
       this.source.close();
       l('events-subscriptions closed', isDebug);
     }
@@ -67,6 +71,10 @@ class EventsSubscription {
     this.source.addEventListener('createProject', createProjectTask);
     this.source.addEventListener('updateProject', updateProjectTask);
     this.source.addEventListener('deleteProject', deleteProjectTask);
+
+    this.source.addEventListener('createProjectUser', createProjectUserTask);
+    this.source.addEventListener('updateProjectUser', updateProjectUserTask);
+    this.source.addEventListener('deleteProjectUser', deleteProjectUserTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -297,6 +305,87 @@ class EventsSubscription {
 
         appEventBus.emit('flash', { 'message': i18n.t('notifications.project.deleted', { projectName: actualProject.displayName }).toString(), 'name': 'success' });
 
+      }
+
+    }
+
+    function createProjectUserTask(e: any): void {
+
+      const data = JSON.parse(e.data);
+      const isCurrentSpace = data.spaceId === myUser.space.id;
+      const isCurrentUser = data.params.userId === myUser.id;
+
+      if (!isCurrentSpace || !isCurrentUser) return;
+
+      projectsApi.projectsProjectIdGet({
+        spaceId: data.spaceId,
+        projectId: data.params.projectId,
+      }).then((project: Project) => {
+
+        store.mutations.activeUser.addProject(project);
+
+        l('createProjectUser: ' + project.displayName, isDebug);
+
+      }).catch((err) => { console.log(err); });
+
+    }
+
+    function updateProjectUserTask(e: any): void {
+
+      const data = JSON.parse(e.data);
+      const isCurrentUser = data.params.userId === myUser.id;
+      const isActiveProject = data.params.projectId === store.getters.activeUser.activeProjectId;
+
+      if (!isCurrentUser || !isActiveProject) return;
+
+      const isSettings = store.state.settingRouter.name !== null;
+
+      projectsApi.projectsProjectIdUsersUserIdGet({
+        spaceId: data.spaceId,
+        projectId: data.params.projectId,
+        userId: data.params.userId,
+      }).then((user: ProjectUser) => {
+
+        store.mutations.activeUser.setActiveProjectData({ id: data.params.projectId, user: user });
+
+        appEventBus.emit('flash', { 'message': i18n.t('notifications.project.changedRole').toString(), 'name': 'success' });
+
+        if (isSettings && user.projectRoleId === 10101) {
+          store.actions.settingRouter.to('project-members');
+        }
+
+        l('updateProjectUser: ' + user.userId, isDebug);
+
+      }).catch((err) => { console.log(err); });
+
+    }
+
+    function deleteProjectUserTask(e: any): void {
+
+      const projects: Project[] | null = store.state.activeUser.projects;
+      if (!projects) return;
+
+      const data = JSON.parse(e.data);
+      const isCurrentUser = data.params.userId === myUser.id;
+      const isActiveProject = data.params.projectId === store.getters.activeUser.activeProjectId;
+
+      if (!isCurrentUser) return;
+
+      const project = projects.find((p) => p.id === data.params.projectId);
+      if (!project) return;
+
+      const projectName = project.displayName;
+
+      store.mutations.activeUser.removeProject(project);
+
+      l('deleteProjectUser: ' + projectName, isDebug);
+
+      if (isActiveProject) {
+        store.actions.activeUser.setActiveProject(null);
+        store.actions.settingRouter.close();
+        router.push({ name: 'user', params: { userId: myUser.id.toString() } });
+
+        appEventBus.emit('flash', { 'message': i18n.t('notifications.project.deletedCrntMember', { projectName }).toString(), 'name': 'success' });
       }
 
     }

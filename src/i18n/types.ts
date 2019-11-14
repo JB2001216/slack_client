@@ -49,6 +49,9 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       created: string;
       updated: string;
       deleted: string;
+      changedRole: string;
+      deletedMember: string;
+      deletedCrntMember: string;
     };
   };
 
@@ -255,9 +258,6 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           role: string;
           addMember: string;
           removeConfirmMessage: string;
-          removedMessage: string;
-          removedCrntUserMessage: string;
-          changedProjectRole: string;
         };
         projectMemberAdd: {
           title: string;

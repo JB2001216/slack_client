@@ -40,6 +40,9 @@ const struct: LocaleStruct = {
         created: '事業{projectName}正常に作成されました。',
         updated: '事業{projectName}更新成功。',
         deleted: '事業{projectName}削除しました。',
+        changedRole: 'プロジェクトの役割が変更されました。',
+        deletedMember: 'メンバーを削除しました。',
+        deletedCrntMember: 'あなたはもうメンバーではありません{projectName}事業。',
       },
     },
 
@@ -246,9 +249,6 @@ const struct: LocaleStruct = {
             role: '権限',
             addMember: 'メンバーを追加する',
             removeConfirmMessage: '{name} ({email}) を削除してよろしいですか？',
-            removedMessage: 'メンバーを削除しました',
-            removedCrntUserMessage: 'あなたはもうメンバーではありません{projectName}事業',
-            changedProjectRole: 'プロジェクトの役割が変更されました',
           },
           projectMemberAdd: {
             title: '{projectName}にメンバーを追加する',
