@@ -21,6 +21,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     invalidInput: string;
     login: string;
     save: string;
+    confirm: string;
     cancel: string;
     finishEditing: string;
     markdownHelp: string;
@@ -35,8 +36,14 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       // USER_READONLY: string;
     };
     alreadyLoggedIn: string;
-    noLongerMemberOfAnySpacesNotify: string;
-    noLongerMemberOfCurrentSpaceNotify: string;
+  };
+
+  notifications: {
+    space: {
+      updated: string;
+      noLongerMemberOfCurrent: string;
+      noLongerMemberOfAny: string;
+    };
   };
 
   components: {
@@ -199,6 +206,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           title2: string;
           saveBtn: string;
           deleteBtn: string;
+          confirmDeleteSpace: string;
         };
         spaceMembers: {
           memberList: string;

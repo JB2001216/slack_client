@@ -1,7 +1,7 @@
 import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
-import { apiRegistry, SpacesApi, UsersApi, ProjectsApi, TasksApi, SpaceUser } from '@/lib/api/';
+import { apiRegistry, SpacesApi, UsersApi, Space, SpaceUser } from '@/lib/api/';
 import router, { getUserLastLocation } from '@/router';
 
 class EventsSubscription {
@@ -50,6 +50,7 @@ class EventsSubscription {
     // init listeners
     this.source.addEventListener('updateSpace', updateSpaceTask);
     this.source.addEventListener('deleteSpace', deleteSpaceTask);
+
     this.source.addEventListener('updateMyUser', updateMyUserTask);
 
     this.source.addEventListener('updateSpaceUser', updateSpaceUserTask);
@@ -60,37 +61,50 @@ class EventsSubscription {
 
       const data = JSON.parse(e.data);
       const isFireUser = data.userId === myUser.id;
+      const loggedUser = store.state.loggedInUsers.find((user) => user.space.id === data.spaceId);
+      if (!loggedUser) return;
 
       spacesApi.spacesSpaceIdGet({
         spaceId: data.spaceId,
-      }).then((res) => {
-        store.mutations.editSpace(res);
-        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' }); }
-      }).catch((err) => {
-        console.log(err);
-      });
+      }).then((space: Space) => {
+
+        store.mutations.editSpace(space);
+
+        l('updateSpace: ' + (space.displayName || space.account), isDebug);
+
+        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('notifications.space.updated', { spaceName: myUser.space.displayName || myUser.space.account }).toString(), 'name': 'success' }); }
+
+      }).catch((err) => { console.log(err); });
 
     }
 
     function deleteSpaceTask(e: any): void {
 
       const data = JSON.parse(e.data);
-      const isFireUser = data.userId === myUser.id;
+      const isActiveUser = data.spaceId === myUser.space.id;
+      const loggedUser = store.state.loggedInUsers.find((user) => user.space.id === data.spaceId);
 
-      store.mutations.removeLoggedInUser(data.userId);
+      if (!isActiveUser && !loggedUser) return;
 
-      if (isFireUser) {
+      const deleteId = isActiveUser ? myUser.id : loggedUser!.id;
 
-        const loggedInUsersArr = store.state.loggedInUsers;
+      store.mutations.removeLoggedInUser(deleteId);
 
-        if (loggedInUsersArr.length > 0) {
-          const loggedInUser = loggedInUsersArr[0];
-          router.push(getUserLastLocation(loggedInUser.id));
+      l('deleteSpace: ' + deleteId, isDebug);
+
+      if (isActiveUser) {
+
+        store.actions.settingRouter.close();
+
+        const loggedInUsers = store.state.loggedInUsers;
+
+        if (loggedInUsers.length) {
+          appEventBus.emit('flash', { 'message': i18n.t('notifications.space.noLongerMemberOfCurrent', { spaceName: myUser.space.displayName || myUser.space.account }).toString(), 'name': 'success' });
+          router.push(getUserLastLocation(loggedInUsers[0].id));
         } else {
+          appEventBus.emit('flash', { 'message': i18n.t('notifications.space.noLongerMemberOfAny').toString(), 'name': 'success' });
           router.push({ name: 'space-add1' });
         }
-
-        appEventBus.emit('flash', { 'message': i18n.t('common.deleted').toString(), 'name': 'success' });
 
       }
 
@@ -107,12 +121,11 @@ class EventsSubscription {
         .then((res) => {
           appEventBus.emit('my-user-edited', { myUser: res });
           appEventBus.emit('flash', { 'message': i18n.t('views.setting.main.statusFlow.updatedMessage').toString(), 'name': 'success' });
+          l('updateMyUser: ' + res.account, isDebug);
         })
         .catch((err) => { console.log(err); });
 
     }
-
-    // -----------------------------------------
 
     function updateSpaceUserTask(e: any): void {
 
@@ -172,10 +185,10 @@ class EventsSubscription {
       const loggedInUsers = store.state.loggedInUsers;
 
       if (loggedInUsers.length) {
-        appEventBus.emit('flash', { 'message': i18n.t('common.noLongerMemberOfCurrentSpaceNotify', { spaceName: myUser.space.displayName }).toString(), 'name': 'success' });
+        appEventBus.emit('flash', { 'message': i18n.t('notifications.space.noLongerMemberOfCurrent', { spaceName: myUser.space.displayName || myUser.space.account }).toString(), 'name': 'success' });
         router.push(getUserLastLocation(loggedInUsers[0].id));
       } else {
-        appEventBus.emit('flash', { 'message': i18n.t('common.noLongerMemberOfAnySpacesNotify').toString(), 'name': 'success' });
+        appEventBus.emit('flash', { 'message': i18n.t('notifications.space.noLongerMemberOfAny').toString(), 'name': 'success' });
         router.push({ name: 'space-add1' });
       }
 

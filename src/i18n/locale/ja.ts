@@ -13,6 +13,7 @@ const struct: LocaleStruct = {
       invalidInput: '入力内容に問題があります',
       login: 'ログイン',
       save: '保存',
+      confirm: '確認する',
       cancel: 'キャンセル',
       finishEditing: '編集を終了する',
       markdownHelp: 'Markdownヘルプ',
@@ -26,8 +27,14 @@ const struct: LocaleStruct = {
         PROJECT_USER: 'ユーザー',
       },
       alreadyLoggedIn: '既にログイン済です',
-      noLongerMemberOfCurrentSpaceNotify: 'あなたはもうメンバーではありません{spaceName}スペース',
-      noLongerMemberOfAnySpacesNotify: 'もはやスペースのメンバーではありません',
+    },
+
+    notifications: {
+      space: {
+        updated: '{spaceName}更新しました。',
+        noLongerMemberOfCurrent: 'あなたはもうメンバーではありません{spaceName}スペース。',
+        noLongerMemberOfAny: 'もはやスペースのメンバーではありません。',
+      },
     },
 
     components: {
@@ -190,6 +197,7 @@ const struct: LocaleStruct = {
             title2: 'スペース表示名',
             saveBtn: '変更内容を保存',
             deleteBtn: 'スペースを削除する',
+            confirmDeleteSpace: '消去してもよろしいですか{spaceName}スペース',
           },
           spaceMembers: {
             memberList: 'メンバー一覧',

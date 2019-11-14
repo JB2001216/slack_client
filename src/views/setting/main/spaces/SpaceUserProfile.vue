@@ -238,6 +238,7 @@ export default class SpaceUserProfile extends Mixins(ConfirmChangeDiscardForSett
     } finally {
       this.saving = false;
     }
+
   }
 }
 </script>

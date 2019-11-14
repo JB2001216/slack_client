@@ -47,17 +47,39 @@
         </button>
       </div>
       <div class="option_spaceGeneral_addButton clearfix">
-        <button class="basicButtonDanger wide" :disabled="deleting" @click="deleteSpace">
+        <button class="basicButtonDanger wide" :disabled="deleting" @click="confirmDeleting = true">
           {{ $t('views.setting.main.spaceGeneral.deleteBtn') }}
         </button>
       </div>
     </div>
 
     <my-confirm-change-discard-dialog
+      v-if="!deleting"
       :changes="changes"
       :next="!!nextForConfirmChangeDiscard"
       @answer="onAnswerForConfirmChangeDiscardDialog"
     />
+
+    <my-modal
+      v-if="confirmDeleting"
+      :value="true"
+      class="modalDialog"
+      content-class="modalDialog_content"
+      @input="space"
+    >
+      <p class="modalDialog_content_title">
+        {{ $t('views.setting.main.spaceGeneral.confirmDeleteSpace', { spaceName: space.displayName || space.account }) }}
+      </p>
+
+      <div class="modalDialog_content_footerButtons">
+        <button class="basicButtonDanger modalDialog_content_footerButtons_button" @click="deleteSpace">
+          {{ $t('common.confirm') }}
+        </button>
+        <button class="basicButtonNormal modalDialog_content_footerButtons_button" @click="confirmDeleting = false">
+          {{ $t('common.cancel') }}
+        </button>
+      </div>
+    </my-modal>
   </div>
 </template>
 
@@ -108,12 +130,14 @@
 
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import { apiRegistry, SpacesApi, SpacesSpaceIdAvatarPostRequest } from '@/lib/api';
+import { apiRegistry, SpacesApi, Space, SpacesSpaceIdAvatarPostRequest } from '@/lib/api';
 import { Route, NavigationGuard } from 'vue-router';
 import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
+import EventsSub from '@/events-subscription';
 
 @Component
 export default class SpaceGeneral extends Mixins(ConfirmChangeDiscardForSettingMixin) {
+
   $refs!: {
     avatarInput: HTMLInputElement;
     avatarImage: HTMLImageElement;
@@ -129,8 +153,19 @@ export default class SpaceGeneral extends Mixins(ConfirmChangeDiscardForSettingM
   saving: boolean = false;
   deleting: boolean = false;
 
+  confirmDeleting: boolean = false;
+  deletingSpace: any = null;
+
   get myUser() {
     return this.$store.state.activeUser.myUser!;
+  }
+
+  get space() {
+    return this.myUser.space;
+  }
+
+  get api() {
+    return apiRegistry.load(SpacesApi, this.myUser.token);
   }
 
   get avatarInputAccept() {
@@ -138,9 +173,10 @@ export default class SpaceGeneral extends Mixins(ConfirmChangeDiscardForSettingM
   }
 
   get changes() {
+    if (!this.space) return false;
     return (
       !!this.avatar ||
-      this.displayName !== (this.myUser.space.displayName || this.myUser.space.account)
+      this.displayName !== (this.space.displayName || this.space.account)
     );
   }
 
@@ -195,14 +231,15 @@ export default class SpaceGeneral extends Mixins(ConfirmChangeDiscardForSettingM
   }
 
   async save() {
-    if (this.saving) return;
+
+    if (this.saving || !this.space) return;
 
     try {
+
       this.saving = true;
 
-      const spaceApi = apiRegistry.load(SpacesApi, this.myUser.token);
-
       if (this.avatar && this.$refs.avatarImage) {
+
         const image = this.$refs.avatarImage;
 
         const clip: Pick<SpacesSpaceIdAvatarPostRequest, 'left' | 'top' | 'width' | 'height'> = image.naturalWidth <= image.naturalHeight ? {
@@ -217,15 +254,17 @@ export default class SpaceGeneral extends Mixins(ConfirmChangeDiscardForSettingM
           width: image.naturalHeight,
         };
 
-        await spaceApi.spacesSpaceIdAvatarPost(Object.assign(clip, {
-          spaceId: this.myUser.space.id,
+        await this.api.spacesSpaceIdAvatarPost(Object.assign(clip, {
+          spaceId: this.space.id,
           avatar: this.avatar,
         }));
+
         this.avatar = null;
+
       }
 
-      await spaceApi.spacesSpaceIdPut({
-        spaceId: this.myUser.space.id,
+      await this.api.spacesSpaceIdPut({
+        spaceId: this.space.id,
         displayName: this.displayName.trim() === '' ? null : this.displayName.trim(),
       });
 
@@ -238,28 +277,29 @@ export default class SpaceGeneral extends Mixins(ConfirmChangeDiscardForSettingM
 
   async deleteSpace() {
 
-    if (this.deleting) return;
+    if (this.deleting || !this.space) return;
 
     try {
+
       this.deleting = true;
+      this.confirmDeleting = false;
 
-      const spaceApi = apiRegistry.load(SpacesApi, this.myUser.token);
-
-      await spaceApi.spacesSpaceIdDelete({
-        spaceId: this.myUser.space.id,
+      await this.api.spacesSpaceIdDelete({
+        spaceId: this.space.id,
       });
 
     } catch (err) {
       this.$appEmit('error', { err });
-    } finally {
       this.deleting = false;
     }
 
   }
 
   beforeMount() {
-    this.avatarUrl = this.myUser.space.avatarUrl;
-    this.displayName = this.myUser.space.displayName || this.myUser.space.account;
+    if (!this.space) return;
+    this.avatarUrl = this.space.avatarUrl;
+    this.displayName = this.space.displayName || this.space.account;
   }
+
 }
 </script>

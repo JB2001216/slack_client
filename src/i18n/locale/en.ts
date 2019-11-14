@@ -12,6 +12,7 @@ const struct: LocaleStruct = {
       invalidInput: 'Invalid input',
       login: 'Login',
       save: 'Save',
+      confirm: 'Confirm',
       cancel: 'Cancel',
       finishEditing: 'Finish editing',
       markdownHelp: 'Markdown Help',
@@ -25,8 +26,14 @@ const struct: LocaleStruct = {
         PROJECT_USER: 'User',
       },
       alreadyLoggedIn: 'Already logged in',
-      noLongerMemberOfAnySpacesNotify: 'You are no longer member of any spaces',
-      noLongerMemberOfCurrentSpaceNotify: 'You are no longer member of {spaceName} space',
+    },
+
+    notifications: {
+      space: {
+        updated: '{spaceName} updated.',
+        noLongerMemberOfCurrent: 'You are no longer member of {spaceName} space.',
+        noLongerMemberOfAny: 'You are no longer member of any spaces.',
+      },
     },
 
     components: {
@@ -189,6 +196,7 @@ const struct: LocaleStruct = {
             title2: 'Space name',
             saveBtn: 'Save changes',
             deleteBtn: 'Delete space',
+            confirmDeleteSpace: 'Are you sure you want to delete {spaceName} space?',
           },
           spaceMembers: {
             memberList: 'Member List',
