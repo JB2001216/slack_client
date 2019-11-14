@@ -15,6 +15,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     yes: string;
     no: string;
     deleted: string;
+    copied: string;
     filterByKeyword: string;
     anErrorHasOccurred: string;
     networkConnectionError: string;
@@ -163,6 +164,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       addedChargeUser: string;
       deletedChargeUser: string;
       chargerDialogTitle: string;
+      deleteConfirmDialog: {
+        title: string;
+        description: string;
+      };
     };
     noteColumn: {
       save: string;
@@ -177,6 +182,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       status: string;
       baton: string;
       lastUpdated: string;
+      deleteConfirmDialog: {
+        title: string;
+        description: string;
+      };
     };
 
     // setting

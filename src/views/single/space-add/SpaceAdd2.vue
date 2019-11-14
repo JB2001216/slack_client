@@ -51,8 +51,8 @@
 
     <my-confirm-change-discard-dialog
       :changes="changes"
-      :next="!!nextForConfirmChangeDiscard"
-      @answer="onAnswerForConfirmChangeDiscardDialog"
+      :next="nextRouteForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscard"
     />
   </div>
 </template>

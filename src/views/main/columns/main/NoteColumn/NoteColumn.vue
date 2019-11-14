@@ -19,7 +19,7 @@
               class="basicInput borderless"
               placeholder="No Title"
               auto-resize
-              @change="modified = true; $event.target.blur()"
+              @change="$event.target.blur()"
             />
           </h2>
         </div>
@@ -37,7 +37,7 @@
                 enabled-note-link
                 :my-user="myUser"
                 :project-id="activeProjectId"
-                @change="modified = true"
+                @change="editedDetailBody = true"
               />
             </div>
             <div class="dashboardWrap_footer">
@@ -72,9 +72,9 @@
           </h2>
           <div class="mainColumn_head_toolbar">
             <my-svg-icon class="mainColumn_head_toolbar_item favoriteIcon" :class="{active: isFavorite}" name="bookmark" @click="favorite(!isFavorite)" />
-            <my-svg-icon class="mainColumn_head_toolbar_item" name="link" />
+            <my-svg-icon class="mainColumn_head_toolbar_item" name="link" @click="copyLink()" />
             <my-svg-icon class="mainColumn_head_toolbar_item" name="clip" />
-            <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="destroy()" />
+            <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="deleteConfirming = true" />
           </div>
         </div>
         <div class="mainColumn_body">
@@ -128,9 +128,30 @@
 
     <my-confirm-change-discard-dialog
       :changes="changes"
-      :next="!!nextForConfirmChangeDiscard"
-      @answer="onAnswerForConfirmChangeDiscardDialog"
+      :next="nextRouteForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscard"
     />
+
+    <my-modal
+      v-model="deleteConfirming"
+      class="modalDialog"
+      content-class="modalDialog_content"
+    >
+      <div class="modalDialog_content_title">
+        {{ $t('views.noteColumn.deleteConfirmDialog.title') }}
+      </div>
+      <div class="modalDialog_content_description">
+        {{ $t('views.noteColumn.deleteConfirmDialog.description') }}
+      </div>
+      <div class="modalDialog_content_footerButtons">
+        <button class="modalDialog_content_footerButtons_button basicButtonDanger" @click="destroy()">
+          {{ $t('common.yes') }}
+        </button>
+        <button class="modalDialog_content_footerButtons_button basicButtonNormal" @click="deleteConfirming = false">
+          {{ $t('common.no') }}
+        </button>
+      </div>
+    </my-modal>
   </div>
 </template>
 
@@ -235,9 +256,11 @@
 </style>
 
 <script lang="ts">
+import { clipboard } from 'electron';
 import { Component, Prop, Vue, Watch, Mixins } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
 import * as api from '@/lib/api';
+import { getNoteOpenUrl } from '@/lib/web-router';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import MyMarkdownEditor from '@/components/MyMarkdownEditor';
@@ -246,7 +269,7 @@ import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
 
 
-async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'editDetail' | 'modified' | 'note'>>> {
+async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'editDetail' | 'editedDetailBody' | 'note'>>> {
   const loginUser = store.state.activeUser.myUser!;
   const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
   const spaceId = loginUser.space.id;
@@ -269,7 +292,7 @@ async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite
   return {
     isFavorite: resFavorite.value,
     editDetail: null,
-    modified: false,
+    editedDetailBody: false,
     note,
   };
 }
@@ -292,9 +315,10 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
   note: api.Note | null = null;
   isFavorite = false;
   editDetail: Pick<api.Note, 'subject' | 'body'> | null = null;
-  modified = false;
+  editedDetailBody = false;
   wideScreen = false;
   saving = false;
+  deleteConfirming = false;
 
   viewingRelatedNoteId: number | null = null;
 
@@ -327,7 +351,10 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
   }
 
   get changes() {
-    return this.modified;
+    return !!this.note && !!this.editDetail && (
+      this.note.subject !== this.editDetail.subject ||
+      this.editedDetailBody
+    );
   }
 
   async save(data: api.NotesNoteIdPatchRequestBody) {
@@ -379,6 +406,7 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
       this.$appEmit('error', { err });
     }
 
+    this.deleteConfirming = false;
     this.saving = false;
   }
 
@@ -405,6 +433,17 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
     }
 
     this.saving = false;
+  }
+
+  copyLink() {
+    if (!this.note) return;
+    const url = getNoteOpenUrl({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId!,
+      noteId: this.note.id,
+    });
+    clipboard.writeText(url);
+    this.$flash(this.$t('common.copied').toString(), 'success');
   }
 
   async onSubjectChange(ev: Event) {
@@ -443,7 +482,7 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
       subject: this.note!.subject,
       body: this.note!.body || '',
     };
-    this.modified = false;
+    this.editedDetailBody = false;
     this.viewingRelatedNoteId = null;
     this.$store.mutations.setFullMainColumn(true);
   }
@@ -454,7 +493,7 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
       await this.save(this.editDetail);
     }
     this.editDetail = null;
-    this.modified = false;
+    this.editedDetailBody = false;
     this.$store.mutations.setFullMainColumn(false);
   }
 

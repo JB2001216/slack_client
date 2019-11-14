@@ -316,7 +316,6 @@ export default class NestedList extends Vue {
         }
 
       } catch (err) {
-        console.log(err);
         this.$appEmit('error', { err });
         return;
       } finally {

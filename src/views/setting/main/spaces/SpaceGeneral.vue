@@ -56,8 +56,8 @@
     <my-confirm-change-discard-dialog
       v-if="!deleting"
       :changes="changes"
-      :next="!!nextForConfirmChangeDiscard"
-      @answer="onAnswerForConfirmChangeDiscardDialog"
+      :next="nextRouteForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscard"
     />
 
     <my-modal

@@ -1,4 +1,4 @@
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Route, NavigationGuard } from 'vue-router';
 
 Component.registerHooks([
@@ -8,45 +8,63 @@ Component.registerHooks([
 @Component
 export default class ConfirmChangeDiscardMixin extends Vue {
 
-  nextForConfirmChangeDiscard: Parameters<NavigationGuard>[2] | null = null;
+  nextRouteForConfirmChangeDiscard: Route | null = null;
+  forceForConfirmChangeDiscard = false;
 
   get changes(): boolean {
     console.warn('"changes" not implemented');
     return false;
   }
 
-  onInitForConfirmChangeDiscardDialog() {
-    this.nextForConfirmChangeDiscard = null;
+  onInitForConfirmChangeDiscard() {
+    this.nextRouteForConfirmChangeDiscard = null;
+    this.forceForConfirmChangeDiscard = false;
   }
 
-  onAnswerForConfirmChangeDiscardDialog(answer: 'yes' | 'no') {
-    if (!this.nextForConfirmChangeDiscard) return;
-    this.nextForConfirmChangeDiscard(answer === 'yes' ? undefined : false);
-    this.nextForConfirmChangeDiscard = null;
+  onAnswerForConfirmChangeDiscard(answer: 'yes' | 'no') {
+    const nextRoute = this.nextRouteForConfirmChangeDiscard;
+    if (!nextRoute) return;
+    if (answer === 'yes') {
+      this.forceForConfirmChangeDiscard = true;
+      this.nextRouteForConfirmChangeDiscard = null;
+      this.$router.push(nextRoute);
+    } else {
+      this.onInitForConfirmChangeDiscard();
+    }
   }
 
   beforeRouteLeave(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
-    if (this.nextForConfirmChangeDiscard) {
+    if (this.forceForConfirmChangeDiscard) {
+      next();
+    } else if (this.nextRouteForConfirmChangeDiscard) {
       next(false);
     } else if (this.changes) {
-      this.nextForConfirmChangeDiscard = next;
+      next(false);
+      this.nextRouteForConfirmChangeDiscard = to;
     } else {
       next();
     }
   }
 
   beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
-    if (this.nextForConfirmChangeDiscard) {
+    if (this.forceForConfirmChangeDiscard) {
+      next();
+    } else if (this.nextRouteForConfirmChangeDiscard) {
       next(false);
     } else if (to.name === from.name && this.changes) {
-      this.nextForConfirmChangeDiscard = next;
+      next(false);
+      this.nextRouteForConfirmChangeDiscard = to;
     } else {
-      this.onInitForConfirmChangeDiscardDialog();
       next();
     }
   }
 
-  beforeMount() {
-    this.onInitForConfirmChangeDiscardDialog();
+  @Watch('$route')
+  onRouteChangeForConfirmChangeDiscard() {
+    this.onInitForConfirmChangeDiscard();
+  }
+
+  created() {
+    this.onInitForConfirmChangeDiscard();
   }
 }

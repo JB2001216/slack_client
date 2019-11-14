@@ -297,16 +297,6 @@ export default class NotesColumn extends Vue {
     this.infiniteId += 1;
   }
 
-  getNoteAddTo(): Location {
-    return {
-      name: 'note-add',
-      params: {
-        userId: this.$route.params.userId,
-        projectId: this.$route.params.projectId,
-      },
-    };
-  }
-
   getNoteTo(noteId: number): Location {
     return {
       name: 'note',

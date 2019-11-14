@@ -17,12 +17,14 @@
         <div class="dashboardWrap">
           <div class="dashboardWrap_detail">
             <my-markdown-editor
+              ref="markdownEditor"
               v-model="editDetail.body"
               class="noteEditWrap_post"
               editor-class="noteEditWrap_post_edit"
               :editor-placeholder="$t('views.taskColumn.enterDetails')"
               preview-class="noteEditWrap_post_view"
               :preview-placeholder="$t('views.taskColumn.detailsAreEmpty')"
+              @change="editedDetailBody = true"
             />
           </div>
           <div class="dashboardWrap_footer">
@@ -63,9 +65,9 @@
             @input="onDateRangeChange($event)"
           />
           <my-svg-icon class="mainColumn_head_toolbar_item favoriteIcon" :class="{active: isFavorite}" name="bookmark" @click="favorite(!isFavorite)" />
-          <my-svg-icon class="mainColumn_head_toolbar_item" name="link" />
+          <my-svg-icon class="mainColumn_head_toolbar_item" name="link" @click="copyLink()" />
           <my-svg-icon class="mainColumn_head_toolbar_item" name="clip" />
-          <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="destroy()" />
+          <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="deleteConfirming = true" />
         </div>
       </div>
       <div class="mainColumn_body">
@@ -123,9 +125,30 @@
 
     <my-confirm-change-discard-dialog
       :changes="changes"
-      :next="!!nextForConfirmChangeDiscard"
-      @answer="onAnswerForConfirmChangeDiscardDialog"
+      :next="nextRouteForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscard"
     />
+
+    <my-modal
+      v-model="deleteConfirming"
+      class="modalDialog"
+      content-class="modalDialog_content"
+    >
+      <div class="modalDialog_content_title">
+        {{ $t('views.taskColumn.deleteConfirmDialog.title') }}
+      </div>
+      <div class="modalDialog_content_description">
+        {{ $t('views.taskColumn.deleteConfirmDialog.description') }}
+      </div>
+      <div class="modalDialog_content_footerButtons">
+        <button class="modalDialog_content_footerButtons_button basicButtonDanger" @click="destroy()">
+          {{ $t('common.yes') }}
+        </button>
+        <button class="modalDialog_content_footerButtons_button basicButtonNormal" @click="deleteConfirming = false">
+          {{ $t('common.no') }}
+        </button>
+      </div>
+    </my-modal>
   </div>
 </template>
 
@@ -233,17 +256,20 @@
 </style>
 
 <script lang="ts">
+import { clipboard } from 'electron';
 import { Component, Prop, Vue, Mixins, Watch } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
 import * as api from '@/lib/api';
+import { getTaskOpenUrl } from '@/lib/web-router';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
+import MyMarkdownEditor from '@/components/MyMarkdownEditor';
 import TaskComment from './TaskComment.vue';
 import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
 import EventsSub from '@/events-subscription';
 
-async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'editDetail' | 'task'>>> {
+async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite' | 'editDetail' | 'editedDetailBody' | 'task'>>> {
   const loginUser = store.state.activeUser.myUser!;
   const tasksApi = api.apiRegistry.load(api.TasksApi, loginUser.token);
   const spaceId = loginUser.space.id;
@@ -266,6 +292,7 @@ async function initData(to: Route): Promise<Partial<Pick<TaskColumn, 'isFavorite
   return {
     isFavorite: resFavorite.value,
     editDetail: null,
+    editedDetailBody: true,
     task,
   };
 }
@@ -285,12 +312,15 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
 
   $refs!: {
     tagInput: HTMLInputElement;
+    markdownEditor: MyMarkdownEditor;
   };
 
   task: api.Task | null = null;
   isFavorite = false;
   editDetail: Pick<api.Task, 'subject' | 'body'> | null = null;
+  editedDetailBody = false;
   saving = false;
+  deleteConfirming = false;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
@@ -329,7 +359,7 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   get changes() {
     return !!this.task && !!this.editDetail && (
       this.task.subject !== this.editDetail.subject ||
-      this.task.body !== this.editDetail.body
+      this.editedDetailBody
     );
   }
 
@@ -440,6 +470,17 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     this.save({ tags: this.task!.tags });
   }
 
+  copyLink() {
+    if (!this.task) return;
+    const url = getTaskOpenUrl({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId!,
+      taskId: this.task.id,
+    });
+    clipboard.writeText(url);
+    this.$flash(this.$t('common.copied').toString(), 'success');
+  }
+
   onDateRangeChange(range: {start: Date; end: Date} | null): void {
     this.save({
       startedAt: range ? range.start : (null as any),
@@ -485,14 +526,17 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
       subject: this.task!.subject,
       body: this.task!.body || '',
     };
+    this.editedDetailBody = false;
     this.$store.mutations.setFullMainColumn(true);
   }
 
   async endEditDetail(save = false): Promise<void> {
     if (save && this.editDetail) {
+      await this.$refs.markdownEditor.compileValue();
       await this.save(this.editDetail);
     }
     this.editDetail = null;
+    this.editedDetailBody = false;
     this.$store.mutations.setFullMainColumn(false);
   }
 

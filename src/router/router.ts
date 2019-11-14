@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Router from 'vue-router';
+import Router, { Route } from 'vue-router';
 import store from '../store';
 import SpaceAdd1 from '../views/single/space-add/SpaceAdd1.vue';
 import SpaceAdd2 from '../views/single/space-add/SpaceAdd2.vue';
@@ -163,6 +163,132 @@ const router = new Router({
     },
   ],
 });
+
+router.beforeEach(async(to, from, next) => {
+  // main route
+  if (to.matched[0].name === 'users') {
+    const routeUserId = to.params.userId ? parseInt(to.params.userId) : null;
+    const routeProjectId = to.params.projectId ? parseInt(to.params.projectId) : null;
+
+    // users
+    if (to.name === 'users') {
+      // If the user exists but has not selected a user, select the first user.
+      if (store.state.loggedInUsers.length) {
+        const user = store.state.loggedInUsers[0];
+        if (user) {
+          return next({
+            name: 'user',
+            params: {
+              userId: user.id.toString(),
+            },
+          });
+        }
+      }
+      return next();
+    }
+
+    // Load activeUser
+    if (to.name === 'user') {
+      const user = store.state.loggedInUsers.find((u) => u.id === routeUserId);
+      if (!user) {
+        return next({ name: 'users' });
+      }
+      if (!store.state.activeUser.myUser || user.id !== store.state.activeUser.myUser.id) {
+        await store.actions.activeUser.init(user);
+      }
+      if (!store.state.activeUser.myUser) {
+        return next({ name: 'users' });
+      }
+    }
+    const myUser = store.state.activeUser.myUser;
+
+    // When myUser is different from the user of params.userId,
+    // once access the "user" route and get the myUser data again.
+    if (to.name !== 'user') {
+      if (!routeUserId) {
+        return next();
+      }
+      if (!myUser || myUser.id !== routeUserId) {
+        return next({
+          name: 'user',
+          params: {
+            userId: to.params.userId,
+            redirectUrl: to.fullPath,
+          },
+        });
+      }
+    }
+
+    // If you have temporarily accessed to get myUser, return to the original route.
+    // If the project exists but no project is selected, select the first project.
+    if (to.name === 'user') {
+      if (to.params.redirectUrl) {
+        return next(to.params.redirectUrl);
+      }
+      const projects = store.state.activeUser.projects;
+      if (projects && projects.length) {
+        return next({
+          name: 'project',
+          params: {
+            userId: to.params.userId,
+            projectId: projects[0].id.toString(),
+          },
+        });
+      }
+    }
+
+    // Load activeProject
+    if (to.name === 'project') {
+      const project = store.state.activeUser.projects!.find((p) => p.id === routeProjectId);
+      if (!project) {
+        return next({ name: 'user', params: { userId: to.params.userId } });
+      }
+      if (project.id !== store.getters.activeUser.activeProjectId) {
+        await store.actions.activeUser.setActiveProject(project.id);
+      }
+      if (!store.state.activeUser.activeProjectData) {
+        return next({ name: 'user', params: { userId: to.params.userId } });
+      }
+    }
+    const activeProjectData = store.state.activeUser.activeProjectData;
+
+    // When activeProject is different from the project of params.projectId,
+    // once access the "project" route and get the activeProject data again.
+    if (to.name !== 'project') {
+      if (!routeProjectId) {
+        return next();
+      }
+      if (!activeProjectData || activeProjectData.id !== routeProjectId) {
+        return next({
+          name: 'project',
+          params: {
+            userId: to.params.userId,
+            projectId: to.params.projectId,
+            redirectUrl: to.fullPath,
+          },
+        });
+      }
+    }
+
+    // If you have temporarily accessed to get activeProject, return to the original route.
+    // If the project exists but no tab is selected, select the first tab.
+    if (to.name === 'project') {
+      if (to.params.redirectUrl) {
+        return next(to.params.redirectUrl);
+      }
+      return next({
+        name: 'tasks',
+        params: {
+          userId: to.params.userId,
+          projectId: to.params.projectId,
+        },
+      });
+    }
+
+    next();
+  }
+});
+
 
 bindOpenUrl(router);
 bindLastLocation(router);
