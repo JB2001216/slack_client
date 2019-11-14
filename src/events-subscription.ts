@@ -219,7 +219,7 @@ class EventsSubscription {
       const spaceRole = myUser.spaceRoleId;
 
       // check administrator permission
-      if (spaceRole !== 11) return;
+      if (spaceRole !== 11 && spaceRole !== 1) return;
 
       projectsApi.projectsProjectIdGet({
         spaceId: data.spaceId,
