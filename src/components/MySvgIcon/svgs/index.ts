@@ -13,6 +13,7 @@ import SvgQuestion from './SvgQuestion.vue';
 import SvgSearch from './SvgSearch.vue';
 import SvgStar from './SvgStar.vue';
 import SvgTrash from './SvgTrash.vue';
+import SvgTag from './SvgTag.vue';
 
 export default {
   SvgAtsign,
@@ -30,4 +31,5 @@ export default {
   SvgSearch,
   SvgStar,
   SvgTrash,
+  SvgTag,
 };

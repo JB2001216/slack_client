@@ -43,6 +43,13 @@
       </div>
     </template>
 
+    <template v-else-if="editTags">
+      <tag-column
+        :tags="task.tags"
+        @end-edit-tags="endEditTags()"
+      />
+    </template>
+
     <template v-else>
       <div class="mainColumn_head columnTitle">
         <h2>
@@ -88,7 +95,13 @@
             :disabled="!updatable"
             @input="onStatusChange($event)"
           />
-          <dl class="dashboardWrap_tag">
+          <div class="dashboardWrap_bar">
+            <span class="dashboardWrap_bar_item" @click="startEditTags()">
+              <my-svg-icon class="dashboardWrap_bar_item_icon" name="tag" />
+              <span>{{ $t('views.taskColumn.tags.tags') + ': ' + task.tags.length.toString() }}</span>
+            </span>
+          </div>
+          <!-- <dl class="dashboardWrap_tag">
             <dd v-for="(t,i) in task.tags" :key="t.name">
               <span>{{ t.name }}</span>
               <div v-if="updatable" class="dashboardWrap_tag_destroy" @click="task.tags.splice(i, 1)" />
@@ -103,7 +116,7 @@
               >
             </form>
           </dl>
-          <hr>
+          <hr> -->
           <div class="dashboardWrap_task">
             <button v-if="updatable" class="dashboardWrap_task_editButton" @click="startEditDetail()">
               <my-svg-icon name="pen" class="dashboardWrap_task_editButton_icon" />Edit
@@ -175,6 +188,23 @@
         overflow-y: scroll
         .noteEditWrap_post_view
           padding: 0 18px 18px
+  .dashboardWrap_bar
+    align-items: center
+    display: flex
+    padding: 5px
+    margin: 5px 0px
+    background-color: #f0f0f0
+    &_item
+      cursor: pointer
+      align-items: center
+      display: flex
+      &_icon
+        --mySvgIconSize: 19px
+        --mySvgIconColor: $themeColors.icon
+        &:hover
+          --mySvgIconColor: $themeColors.iconDarken1
+        &:not(:first-child)
+          margin-left: 16px
   .dashboardWrap_tag
     form
       margin-bottom: 5px
@@ -241,6 +271,7 @@ import * as api from '@/lib/api';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import MyMarkdownEditor from '@/components/MyMarkdownEditor';
+import TagColumn from './TagColumn.vue';
 import TaskComment from './TaskComment.vue';
 import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
@@ -282,6 +313,7 @@ Component.registerHooks([
 @Component({
   components: {
     MyProjectStatusInput,
+    TagColumn,
     TaskComment,
   },
 })
@@ -296,6 +328,7 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   editDetail: Pick<api.Task, 'subject' | 'body'> | null = null;
   editedDetailBody = false;
   saving = false;
+  editTags = false;
 
   get myUser() {
     return this.$store.state.activeUser.myUser!;
@@ -459,6 +492,17 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
       }
     }
   }
+
+  startEditTags() {
+    this.editTags = true;
+    this.$store.mutations.setFullMainColumn(true);
+  }
+
+  endEditTags() {
+    this.editTags = false;
+    this.$store.mutations.setFullMainColumn(false);
+  }
+
 
   startEditDetail() {
     this.editDetail = {
