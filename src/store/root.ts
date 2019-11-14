@@ -1,7 +1,7 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import i18n, { Locale, loadLocale, defaultLocale } from '@/i18n';
 import localStorage from '@/lib/local-storage';
-import { apiRegistry, UsersApi, MyUser, Space } from '@/lib/api';
+import { apiRegistry, UsersApi, TasksApi, NotesApi, MyUser, Space } from '@/lib/api';
 import activeUser from './modules/active-user';
 import settingRouter from './modules/setting-router';
 import location from './modules/location';
@@ -113,6 +113,30 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
     const user = await apiRegistry.load(UsersApi, token).usersMeGet();
     this.mutations.addLoggedInUser(user, token, saveToken);
     return user;
+  }
+
+  async getViewableTaskUser(params: { spaceId: number; projectId: number; taskId: number }) {
+    for (const user of this.state.loggedInUsers) {
+      if (user.space.id !== params.spaceId) continue;
+      try {
+        const task = await apiRegistry.load(TasksApi, user.token).tasksTaskIdGet(params);
+        if (task) {
+          return user;
+        }
+      } catch { }
+    }
+  }
+
+  async getViewableNoteUser(params: { spaceId: number; projectId: number; noteId: number }) {
+    for (const user of this.state.loggedInUsers) {
+      if (user.space.id !== params.spaceId) continue;
+      try {
+        const note = await apiRegistry.load(NotesApi, user.token).notesNoteIdGet(params);
+        if (note) {
+          return user;
+        }
+      } catch { }
+    }
   }
 }
 

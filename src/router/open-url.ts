@@ -2,9 +2,9 @@ import Router from 'vue-router';
 import electron from 'electron';
 import { apiRegistry, UsersApi } from '@/lib/api';
 import { appEventBus } from '@/plugins/app-event';
+import * as WebRouter from '@/lib/web-router';
 import i18n from '@/i18n';
 import store from '../store';
-
 
 export function bindOpenUrl(router: Router) {
   // Access via browser
@@ -14,6 +14,36 @@ export function bindOpenUrl(router: Router) {
       const method = match[1];
       const url = new URL(urlraw);
       const sparams = url.searchParams;
+
+      if (method === WebRouter.WebRouterCbMethod.task) {
+        const params = WebRouter.getTaskParamsFromOpenUrl(sparams);
+        if (!params) return;
+        const user = await store.actions.getViewableTaskUser(params);
+        if (!user) return;
+        return router.push({
+          name: 'task',
+          params: {
+            userId: user.id.toString(),
+            projectId: params.projectId.toString(),
+            taskId: params.taskId.toString(),
+          },
+        });
+      }
+
+      if (method === WebRouter.WebRouterCbMethod.note) {
+        const params = WebRouter.getNoteParamsFromOpenUrl(sparams);
+        if (!params) return;
+        const user = await store.actions.getViewableNoteUser(params);
+        if (!user) return;
+        return router.push({
+          name: 'note',
+          params: {
+            userId: user.id.toString(),
+            projectId: params.projectId.toString(),
+            noteId: params.noteId.toString(),
+          },
+        });
+      }
 
       if (method === 'create_space') {
         return router.push({

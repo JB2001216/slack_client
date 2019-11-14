@@ -65,7 +65,7 @@
             @input="onDateRangeChange($event)"
           />
           <my-svg-icon class="mainColumn_head_toolbar_item favoriteIcon" :class="{active: isFavorite}" name="bookmark" @click="favorite(!isFavorite)" />
-          <my-svg-icon class="mainColumn_head_toolbar_item" name="link" />
+          <my-svg-icon class="mainColumn_head_toolbar_item" name="link" @click="copyLink()" />
           <my-svg-icon class="mainColumn_head_toolbar_item" name="clip" />
           <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="deleteConfirming = true" />
         </div>
@@ -256,9 +256,11 @@
 </style>
 
 <script lang="ts">
+import { clipboard } from 'electron';
 import { Component, Prop, Vue, Mixins, Watch } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
 import * as api from '@/lib/api';
+import { getTaskOpenUrl } from '@/lib/web-router';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import MyMarkdownEditor from '@/components/MyMarkdownEditor';
@@ -443,6 +445,17 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
     }
 
     this.saving = false;
+  }
+
+  copyLink() {
+    if (!this.task) return;
+    const url = getTaskOpenUrl({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId!,
+      taskId: this.task.id,
+    });
+    clipboard.writeText(url);
+    this.$flash(this.$t('common.copied').toString(), 'success');
   }
 
   async onDateRangeChange(range: {start: Date; end: Date} | null) {

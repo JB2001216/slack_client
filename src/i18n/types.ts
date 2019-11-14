@@ -15,6 +15,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     yes: string;
     no: string;
     deleted: string;
+    copied: string;
     filterByKeyword: string;
     anErrorHasOccurred: string;
     networkConnectionError: string;

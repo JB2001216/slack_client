@@ -7,6 +7,7 @@ const struct: LocaleStruct = {
       yes: 'はい',
       no: 'いいえ',
       deleted: '削除しました',
+      copied: 'コピーしました',
       filterByKeyword: 'キーワードで絞り込む',
       anErrorHasOccurred: 'エラーが発生しました',
       networkConnectionError: 'ネットワーク接続に問題があります',

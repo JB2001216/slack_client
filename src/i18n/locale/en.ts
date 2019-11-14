@@ -6,6 +6,7 @@ const struct: LocaleStruct = {
       yes: 'Yes',
       no: 'No',
       deleted: 'Deleted',
+      copied: 'Copied',
       filterByKeyword: 'Filter by keyword',
       anErrorHasOccurred: 'An error has occurred',
       networkConnectionError: 'Network connection error',

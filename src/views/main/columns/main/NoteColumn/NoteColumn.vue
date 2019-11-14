@@ -72,7 +72,7 @@
           </h2>
           <div class="mainColumn_head_toolbar">
             <my-svg-icon class="mainColumn_head_toolbar_item favoriteIcon" :class="{active: isFavorite}" name="bookmark" @click="favorite(!isFavorite)" />
-            <my-svg-icon class="mainColumn_head_toolbar_item" name="link" />
+            <my-svg-icon class="mainColumn_head_toolbar_item" name="link" @click="copyLink()" />
             <my-svg-icon class="mainColumn_head_toolbar_item" name="clip" />
             <my-svg-icon v-if="deletable" class="mainColumn_head_toolbar_item" name="trash" @click="deleteConfirming = true" />
           </div>
@@ -256,9 +256,11 @@
 </style>
 
 <script lang="ts">
+import { clipboard } from 'electron';
 import { Component, Prop, Vue, Watch, Mixins } from 'vue-property-decorator';
 import { Location, Route, NavigationGuard } from 'vue-router';
 import * as api from '@/lib/api';
+import { getNoteOpenUrl } from '@/lib/web-router';
 import store from '@/store';
 import MyProjectStatusInput from '@/components/MyProjectStatusInput.vue';
 import MyMarkdownEditor from '@/components/MyMarkdownEditor';
@@ -431,6 +433,17 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
     }
 
     this.saving = false;
+  }
+
+  copyLink() {
+    if (!this.note) return;
+    const url = getNoteOpenUrl({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId!,
+      noteId: this.note.id,
+    });
+    clipboard.writeText(url);
+    this.$flash(this.$t('common.copied').toString(), 'success');
   }
 
   async onSubjectChange(ev: Event) {
