@@ -1,7 +1,9 @@
 import store from '@/store/index';
 import { appEventBus } from '@/plugins/app-event';
 import i18n from '@/i18n';
-import { apiRegistry, SpacesApi, UsersApi, Space, SpaceUser } from '@/lib/api/';
+import {
+  apiRegistry, SpacesApi, UsersApi, ProjectsApi, Space, SpaceUser, Project,
+} from '@/lib/api/';
 import router, { getUserLastLocation } from '@/router';
 
 class EventsSubscription {
@@ -24,6 +26,7 @@ class EventsSubscription {
 
     const spacesApi = apiRegistry.load(SpacesApi, myUser.token);
     const usersApi = apiRegistry.load(UsersApi, myUser.token);
+    const projectsApi = apiRegistry.load(ProjectsApi, myUser.token);
 
     const usersSpaceIds = this.users.map((user: any) => { return user.space.id; }).join('_');
 
@@ -34,10 +37,15 @@ class EventsSubscription {
       // remove listeners
       this.source.removeEventListener('updateSpace', updateSpaceTask);
       this.source.removeEventListener('deleteSpace', deleteSpaceTask);
+
       this.source.removeEventListener('updateMyUser', updateMyUserTask);
 
       this.source.removeEventListener('updateSpaceUser', updateSpaceUserTask);
       this.source.removeEventListener('deleteSpaceUser', deleteSpaceUserTask);
+
+      this.source.removeEventListener('createProject', createProjectTask);
+      this.source.removeEventListener('updateProject', updateProjectTask);
+      this.source.removeEventListener('deleteProject', deleteProjectTask);
 
       this.source.close();
       l('events-subscriptions closed', isDebug);
@@ -55,6 +63,10 @@ class EventsSubscription {
 
     this.source.addEventListener('updateSpaceUser', updateSpaceUserTask);
     this.source.addEventListener('deleteSpaceUser', deleteSpaceUserTask);
+
+    this.source.addEventListener('createProject', createProjectTask);
+    this.source.addEventListener('updateProject', updateProjectTask);
+    this.source.addEventListener('deleteProject', deleteProjectTask);
 
     // tasks
     function updateSpaceTask(e: any): void {
@@ -144,6 +156,8 @@ class EventsSubscription {
           if (isCurrentUser) {
 
             appEventBus.emit('space-user-edited', { spaceUser: user });
+            const myUser = store.state.activeUser.myUser!;
+            store.actions.activeUser.init(myUser);
 
             const settingLocation = store.state.settingRouter.name;
 
@@ -157,7 +171,7 @@ class EventsSubscription {
 
           } else if (loggedUser) {
 
-            const updatedLoggedUser = Object.assign(loggedUser, user);
+            const updatedLoggedUser = Object.assign({}, loggedUser, user);
             store.mutations.updateLoggedInUser(updatedLoggedUser);
 
             l('updateSpaceUser: ' + updatedLoggedUser.account + ', Role: ' + updatedLoggedUser.spaceRoleId, isDebug);
@@ -190,6 +204,99 @@ class EventsSubscription {
       } else {
         appEventBus.emit('flash', { 'message': i18n.t('notifications.space.noLongerMemberOfAny').toString(), 'name': 'success' });
         router.push({ name: 'space-add1' });
+      }
+
+    }
+
+    function createProjectTask(e: any): void {
+
+      const data = JSON.parse(e.data);
+      const isFireUser = data.userId === myUser.id;
+      const isCurrentSpace = data.spaceId === myUser.space.id;
+
+      if (!isCurrentSpace) return;
+
+      const spaceRole = myUser.spaceRoleId;
+
+      // check administrator permission
+      if (spaceRole !== 11) return;
+
+      projectsApi.projectsProjectIdGet({
+        spaceId: data.spaceId,
+        projectId: data.params.projectId,
+      }).then((project: Project) => {
+
+        store.mutations.activeUser.addProject(project);
+
+        if (!isFireUser) return;
+
+        appEventBus.emit('flash', { 'message': i18n.t('notifications.project.created', { projectName: project.displayName }).toString(), 'name': 'success' });
+
+        store.actions.activeUser.setActiveProject(project.id).then(() => {
+          router.push({
+            name: 'project',
+            params: { userId: myUser.id.toString(), projectId: project.id.toString() },
+          });
+        });
+
+        l('createProject: ' + project.displayName, isDebug);
+
+      }).catch((err) => { console.log(err); });
+
+    }
+
+    function updateProjectTask(e: any): void {
+
+      const projects: Project[] | null = store.state.activeUser.projects;
+      if (!projects) return;
+
+      const data = JSON.parse(e.data);
+
+      const actualProject = projects.find((project: Project) => project.id === data.params.projectId);
+      if (!actualProject) return;
+
+      const isFireUser = data.userId === myUser.id;
+
+      projectsApi.projectsProjectIdGet({
+        spaceId: data.spaceId,
+        projectId: data.params.projectId,
+      }).then((project: Project) => {
+
+        store.mutations.activeUser.editProject(project);
+
+        l('updateProject: ' + project.displayName, isDebug);
+
+        if (isFireUser) { appEventBus.emit('flash', { 'message': i18n.t('notifications.project.updated', { projectName: project.displayName }).toString(), 'name': 'success' }); }
+
+      }).catch((err) => { console.log(err); });
+
+    }
+
+    function deleteProjectTask(e: any): void {
+
+      const projects: Project[] | null = store.state.activeUser.projects;
+      if (!projects) return;
+
+      const data = JSON.parse(e.data);
+
+      const actualProject = projects.find((project: Project) => project.id === data.params.projectId);
+      if (!actualProject) return;
+
+      const isFireUser = data.userId === myUser.id;
+      const isActiveProject = data.params.projectId === store.getters.activeUser.activeProjectId;
+
+      store.mutations.activeUser.removeProject(actualProject);
+
+      l('deleteProject: ' + actualProject.displayName, isDebug);
+
+      if (isFireUser || isActiveProject) {
+
+        store.actions.activeUser.setActiveProject(null);
+        store.actions.settingRouter.close();
+        router.push({ name: 'user', params: { userId: myUser.id.toString() } });
+
+        appEventBus.emit('flash', { 'message': i18n.t('notifications.project.deleted', { projectName: actualProject.displayName }).toString(), 'name': 'success' });
+
       }
 
     }

@@ -36,6 +36,11 @@ const struct: LocaleStruct = {
         noLongerMemberOfCurrent: 'あなたはもうメンバーではありません{spaceName}スペース。',
         noLongerMemberOfAny: 'もはやスペースのメンバーではありません。',
       },
+      project: {
+        created: '事業{projectName}正常に作成されました。',
+        updated: '事業{projectName}更新成功。',
+        deleted: '事業{projectName}削除しました。',
+      },
     },
 
     components: {
@@ -104,7 +109,6 @@ const struct: LocaleStruct = {
       projectAddColumn: {
         addANewProject: 'プロジェクト追加',
         projectName: 'プロジェクト名',
-        createNotification: '事業{projectName}正常に作成されました',
       },
       tasksColumn: {
         addANewTask: '新規タスク',
@@ -233,11 +237,7 @@ const struct: LocaleStruct = {
             title: 'プロジェクト名',
             save: '変更を保存する',
             delete: 'プロジェクトを削除',
-            updateNotification: '事業{projectName}更新成功',
-            deleteNotification: '事業{projectName}削除しました',
-            confirmationMsg: 'このプロジェクトを削除してもよろしいですか？',
-            confirm: '削除する',
-            cancel: 'キャンセル',
+            deleteConfirmDialog: '消去してもよろしいですか{projectName}事業？',
           },
           projectMembers: {
             memberList: 'メンバー一覧',

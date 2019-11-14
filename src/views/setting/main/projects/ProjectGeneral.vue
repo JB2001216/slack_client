@@ -12,7 +12,7 @@
         <button
           class="basicButtonPrimary wide"
           type="button"
-          :disabled="!activeProject || !changes || saving"
+          :disabled="!project || !changes || saving"
           @click="actions('save')"
         >
           {{ $t('views.setting.main.projectGeneral.save') }}
@@ -23,7 +23,7 @@
         <button
           class="basicButtonDanger wide"
           type="button"
-          :disabled="!activeProject || deleting"
+          :disabled="!project || deleting"
           @click="confirmDeleting = true"
         >
           {{ $t('views.setting.main.projectGeneral.delete') }}
@@ -32,30 +32,29 @@
     </div>
 
     <my-confirm-change-discard-dialog
+      v-if="!deleting"
       :changes="changes"
       :next="nextRouteForConfirmChangeDiscard"
       @answer="onAnswerForConfirmChangeDiscard"
     />
+
     <my-modal
       v-if="confirmDeleting"
       :value="true"
       class="modalDialog"
       content-class="modalDialog_content"
-      @input="activeProject"
+      @input="project"
     >
       <p class="modalDialog_content_title">
-        {{ $t('views.setting.main.projectGeneral.confirmationMsg') }}
-      </p>
-      <p class="modalDialog_content_description">
-        {{ activeProject.displayName }}
+        {{ $t('views.setting.main.projectGeneral.deleteConfirmDialog', { projectName: project.displayName }) }}
       </p>
 
       <div class="modalDialog_content_footerButtons">
-        <button class="basicButtonNormal modalDialog_content_footerButtons_button" @click="confirmDeleting = false">
-          {{ $t('views.setting.main.projectGeneral.cancel') }}
-        </button>
         <button class="basicButtonDanger modalDialog_content_footerButtons_button" @click="actions('delete')">
-          {{ $t('views.setting.main.projectGeneral.confirm') }}
+          {{ $t('common.confirm') }}
+        </button>
+        <button class="basicButtonNormal modalDialog_content_footerButtons_button" @click="confirmDeleting = false">
+          {{ $t('common.cancel') }}
         </button>
       </div>
     </my-modal>
@@ -64,10 +63,8 @@
 
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import store from '@/store';
 import { apiRegistry, ProjectsApi } from '@/lib/api';
 import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
-
 
 @Component
 export default class ProjectGeneral extends Mixins(ConfirmChangeDiscardForSettingMixin) {
@@ -77,25 +74,29 @@ export default class ProjectGeneral extends Mixins(ConfirmChangeDiscardForSettin
   confirmDeleting: boolean = false;
   deleting: boolean = false;
 
-  get activeProject() {
-    return this.$store.getters.activeUser.activeProject!;
-  }
-
   get myUser() {
     return this.$store.state.activeUser.myUser!;
+  }
+
+  get project() {
+    return this.$store.getters.activeUser.activeProject;
+  }
+
+  get changes() {
+    return !!this.project && this.project.displayName !== this.inputName;
   }
 
   get api() {
     return apiRegistry.load(ProjectsApi, this.myUser.token);
   }
 
-  get changes() {
-    return !!this.activeProject && this.activeProject.displayName !== this.inputName;
+  created() {
+    this.inputName = this.project ? this.project.displayName : '';
   }
 
   async actions(type: string) {
 
-    if (this.saving || this.deleting) return;
+    if (this.saving || this.deleting || !this.project) return;
 
     try {
 
@@ -105,7 +106,7 @@ export default class ProjectGeneral extends Mixins(ConfirmChangeDiscardForSettin
 
         await this.api.projectsProjectIdPut({
           spaceId: this.myUser.space.id,
-          projectId: this.activeProject.id,
+          projectId: this.project.id,
           projectsProjectIdPutRequestBody: { displayName: this.inputName },
         });
 
@@ -117,24 +118,18 @@ export default class ProjectGeneral extends Mixins(ConfirmChangeDiscardForSettin
 
         await this.api.projectsProjectIdDelete({
           spaceId: this.myUser.space.id,
-          projectId: this.activeProject.id,
+          projectId: this.project.id,
         });
 
       }
 
     } catch (err) {
       this.$appEmit('error', { err });
+      this.deleting = false;
     } finally {
       this.saving = false;
-      this.deleting = false;
     }
 
-  }
-
-  beforeMount() {
-    if (this.activeProject) {
-      this.inputName = this.activeProject.displayName;
-    }
   }
 
 }

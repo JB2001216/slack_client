@@ -45,6 +45,11 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       noLongerMemberOfCurrent: string;
       noLongerMemberOfAny: string;
     };
+    project: {
+      created: string;
+      updated: string;
+      deleted: string;
+    };
   };
 
   components: {
@@ -113,7 +118,6 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     projectAddColumn: {
       addANewProject: string;
       projectName: string;
-      createNotification: string;
     };
     tasksColumn: {
       addANewTask: string;
@@ -242,11 +246,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           title: string;
           save: string;
           delete: string;
-          updateNotification: string;
-          deleteNotification: string;
-          confirmationMsg: string;
-          confirm: string;
-          cancel: string;
+          deleteConfirmDialog: string;
         };
         projectMembers: {
           memberList: string;

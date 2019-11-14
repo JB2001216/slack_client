@@ -35,6 +35,11 @@ const struct: LocaleStruct = {
         noLongerMemberOfCurrent: 'You are no longer member of {spaceName} space.',
         noLongerMemberOfAny: 'You are no longer member of any spaces.',
       },
+      project: {
+        created: 'Project {projectName} created successfully.',
+        updated: 'Project {projectName} updated successfully.',
+        deleted: 'Project {projectName} deleted successfully.',
+      },
     },
 
     components: {
@@ -103,7 +108,6 @@ const struct: LocaleStruct = {
       projectAddColumn: {
         addANewProject: 'Add a new Project',
         projectName: 'Project Name',
-        createNotification: 'Project {projectName} created successfully',
       },
       tasksColumn: {
         addANewTask: 'Add a new task',
@@ -232,11 +236,7 @@ const struct: LocaleStruct = {
             title: 'Project name',
             save: 'Save changes',
             delete: 'Delete Project',
-            updateNotification: 'Project {projectName} updated successfully',
-            deleteNotification: 'Project {projectName} deleted successfully',
-            confirmationMsg: 'Are you sure you want to delete this project ?',
-            confirm: 'Delete',
-            cancel: 'Cancel',
+            deleteConfirmDialog: 'Are you sure you want to delete {projectName} project?',
           },
           projectMembers: {
             memberList: 'Member List',

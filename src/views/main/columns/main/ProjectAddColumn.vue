@@ -16,6 +16,7 @@
     </div>
 
     <my-confirm-change-discard-dialog
+      v-if="!saving"
       :changes="changes"
       :next="nextRouteForConfirmChangeDiscard"
       @answer="onAnswerForConfirmChangeDiscard"
@@ -63,21 +64,8 @@ export default class ProjectAddColumn extends Mixins(ConfirmChangeDiscardMixin) 
       projectsPostRequestBody: {
         displayName: this.displayName,
       },
-    }).then((project: Project) => {
-
-      this.$store.mutations.activeUser.addProject(project);
-      this.$store.actions.activeUser.setActiveProject(project.id)
-        .then(() => {
-          this.$router.push({
-            name: 'project',
-            params: { userId: myUser.id.toString(), projectId: project.id.toString() },
-          });
-        });
-
-      this.$flash(this.$t('views.projectAddColumn.createNotification', { projectName: project.displayName }).toString(), 'success');
-
+    }).then(() => {
       this.displayName = '';
-
     }).catch((err) => {
 
       if (err instanceof Response) {
@@ -98,8 +86,8 @@ export default class ProjectAddColumn extends Mixins(ConfirmChangeDiscardMixin) 
 
       this.$appEmit('error', { err });
 
-    }).finally(() => {
       this.saving = false;
+
     });
 
   }
