@@ -138,6 +138,11 @@ const struct: LocaleStruct = {
         addedChargeUser: '{name} was added to the member list.',
         deletedChargeUser: '{name} was deleted from the member list.',
         chargerDialogTitle: 'Task member list',
+        tags: {
+          tags: 'Tags',
+          addNewTag: 'Add related tags',
+          listOfAssociatedTasks: 'List of tasks associated with ',
+        },
       },
       noteColumn: {
         save: 'save',

@@ -148,6 +148,11 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       addedChargeUser: string;
       deletedChargeUser: string;
       chargerDialogTitle: string;
+      tags: {
+        tags: string;
+        addNewTag: string;
+        listOfAssociatedTasks: string;
+      };
     };
     noteColumn: {
       save: string;

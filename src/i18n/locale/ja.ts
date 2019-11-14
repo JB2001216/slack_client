@@ -139,6 +139,11 @@ const struct: LocaleStruct = {
         addedChargeUser: 'タスクメンバーに{name}を追加しました。',
         deletedChargeUser: 'タスクメンバーから{name}を除外しました。',
         chargerDialogTitle: 'タスクメンバー管理',
+        tags: {
+          tags: 'タグ',
+          addNewTag: '関連タグ追加',
+          listOfAssociatedTasks: ' が設定されているタスク一覧',
+        },
       },
       noteColumn: {
         save: '編集を終了',
