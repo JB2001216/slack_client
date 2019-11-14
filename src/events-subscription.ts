@@ -173,6 +173,8 @@ class EventsSubscription {
               store.actions.settingRouter.close();
             }
 
+            router.push({ name: 'user', params: { userId: store.state.activeUser.myUser!.id.toString() } });
+
             appEventBus.emit('flash', { 'message': i18n.t('views.projectColumn.roleChangedNotify').toString(), 'name': 'success' });
 
             l('updateSpaceUser: ' + user.account + ', Role: ' + user.spaceRoleId, isDebug);
@@ -347,6 +349,8 @@ class EventsSubscription {
       }).then((user: ProjectUser) => {
 
         store.mutations.activeUser.setActiveProjectData({ id: data.params.projectId, user: user });
+
+        store.actions.activeUser.fetchTaskStatus();
 
         appEventBus.emit('flash', { 'message': i18n.t('notifications.project.changedRole').toString(), 'name': 'success' });
 

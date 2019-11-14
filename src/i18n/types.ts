@@ -53,6 +53,11 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       deletedMember: string;
       deletedCrntMember: string;
     };
+    task: {
+      created: string;
+      deleted: string;
+      noLongerAvailable: string;
+    };
   };
 
   components: {
@@ -139,9 +144,6 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         batonHolder: string;
         tags: string;
       };
-      createNotify: string;
-      deleteNotify: string;
-      noLongerNotify: string;
     };
     notesColumn: {
       addANewNote: string;

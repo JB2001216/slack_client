@@ -230,6 +230,8 @@ export default class TasksColumn extends Vue {
 
   addedChildTask: Task | null = null;
 
+  isDebug: boolean = true;
+
   get myUser() {
     return this.$store.state.activeUser.myUser!;
   }
@@ -279,6 +281,8 @@ export default class TasksColumn extends Vue {
 
       const isFireUser = data.userId === this.myUser.id;
 
+      if (this.isDebug) { console.log('createTask: ' + task.subject); }
+
       if (isFireUser) {
 
         this.$router.push(this.getTaskTo(task.id))
@@ -290,16 +294,18 @@ export default class TasksColumn extends Vue {
               this.addedChildTask = task;
             }
 
-            this.$flash(this.$t('views.tasksColumn.createNotify', { taskName: task.subject }).toString(), 'success');
+            this.$flash(this.$t('notifications.task.created', { taskName: task.subject }).toString(), 'success');
 
           });
 
       } else {
+
         if (!task.parent) {
           this.tasks.unshift(task);
         } else {
           this.addedChildTask = task;
         }
+
       }
 
     }).catch((err) => {

@@ -111,6 +111,8 @@ export default class TaskCommment extends Vue {
 
   saving = false;
 
+  isDebug: boolean = true;
+
   get myUser() {
     return this.$store.state.activeUser.myUser!;
   }
@@ -141,6 +143,8 @@ export default class TaskCommment extends Vue {
     const isFireUser = data.userId === this.myUser.id;
 
     await this.fetchNextComments();
+
+    if (this.isDebug) { console.log('createComment'); }
 
     if (isFireUser) {
       await this.scrollBottom();

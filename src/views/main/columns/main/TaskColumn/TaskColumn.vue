@@ -322,6 +322,8 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
   saving = false;
   deleteConfirming = false;
 
+  isDebug: boolean = true;
+
   get myUser() {
     return this.$store.state.activeUser.myUser!;
   }
@@ -369,17 +371,23 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
 
   updateTask(e: any): void {
 
+    if (!this.task) return;
+
     const data = JSON.parse(e.data);
     const updatedTaskId = data.params.taskId;
 
-    if (updatedTaskId !== this.task!.id) return;
+    if (updatedTaskId !== this.task.id) return;
 
     this.api.tasksTaskIdGet({
       spaceId: data.spaceId,
       projectId: data.params.projectId,
       taskId: updatedTaskId,
     }).then((task: api.Task) => {
+
       this.task = Object.assign(this.task, task);
+
+      if (this.isDebug) { console.log('updateTask(task): ' + task.subject); }
+
     }).catch((err) => {
       this.$appEmit('error', { err });
     });
@@ -425,6 +433,7 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
       this.$appEmit('error', { err });
     }).finally(() => {
       this.saving = false;
+      this.deleteConfirming = true;
     });
 
   }

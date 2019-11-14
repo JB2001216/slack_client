@@ -44,6 +44,11 @@ const struct: LocaleStruct = {
         deletedMember: 'メンバーを削除しました。',
         deletedCrntMember: 'あなたはもうメンバーではありません{projectName}事業。',
       },
+      task: {
+        created: '仕事{taskName}作成した。',
+        deleted: '仕事{taskName}削除された。',
+        noLongerAvailable: '仕事{taskName}使用できなくなりました。',
+      },
     },
 
     components: {
@@ -130,9 +135,6 @@ const struct: LocaleStruct = {
           batonHolder: 'バトンを持っている人',
           tags: 'タグ',
         },
-        createNotify: '仕事{taskName}作成した',
-        deleteNotify: '仕事{taskName}削除された',
-        noLongerNotify: '仕事{taskName}使用できなくなりました',
       },
       notesColumn: {
         addANewNote: '新規ノート',

@@ -43,6 +43,11 @@ const struct: LocaleStruct = {
         deletedMember: 'Member deleted successfully.',
         deletedCrntMember: 'You are no longer member of {projectName} project.',
       },
+      task: {
+        created: 'Task {taskName} created.',
+        deleted: 'Task {taskName} deleted.',
+        noLongerAvailable: 'Task {taskName} is no longer available.',
+      },
     },
 
     components: {
@@ -129,9 +134,6 @@ const struct: LocaleStruct = {
           batonHolder: 'Baton holder',
           tags: 'Tags',
         },
-        createNotify: 'Task {taskName} created',
-        deleteNotify: 'Task {taskName} deleted',
-        noLongerNotify: 'Task {taskName} is no longer available',
       },
       notesColumn: {
         addANewNote: 'Add a new note',

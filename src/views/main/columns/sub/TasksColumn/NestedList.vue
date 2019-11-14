@@ -248,6 +248,8 @@ export default class NestedList extends Vue {
   editingTask: TaskWithChilds | null = null;
   editingTaskSubject = '';
 
+  isDebug: boolean = true;
+
   addedChildTaskId: number | null = null;
 
   get myUser() {
@@ -313,7 +315,11 @@ export default class NestedList extends Vue {
 
       this.getTask(data)
         .then((task: Task) => {
+
           this.tasks[index] = Object.assign(this.tasks[index], task);
+
+          if (this.isDebug) { console.log('updateTask(column): ' + task.subject); }
+
         }).catch((err) => {
           this.$appEmit('error', { err });
         });
@@ -345,6 +351,8 @@ export default class NestedList extends Vue {
 
       this.tasks.splice(index, 1);
 
+      if (this.isDebug) { console.log('deleteTask: ' + task.subject); }
+
       if (!this.tasks.length && this.parentTask) { this.parentTask.hasChilds = false; }
 
       if (isFireUser || isActiveTask || isActiveTree) {
@@ -368,9 +376,9 @@ export default class NestedList extends Vue {
       }
 
       if (isFireUser) {
-        this.$flash(this.$t('views.tasksColumn.deleteNotify', { taskName: task.subject }).toString(), 'success');
+        this.$flash(this.$t('notifications.task.deleted', { taskName: task.subject }).toString(), 'success');
       } else if (isActiveTask || isActiveTree) {
-        this.$flash(this.$t('views.tasksColumn.noLongerNotify', { taskName: task.subject }).toString(), 'success');
+        this.$flash(this.$t('notifications.task.noLongerAvailable', { taskName: task.subject }).toString(), 'success');
       }
 
     }
