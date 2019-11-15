@@ -433,7 +433,7 @@ export default class TaskColumn extends Mixins(ConfirmChangeDiscardMixin) {
       this.$appEmit('error', { err });
     }).finally(() => {
       this.saving = false;
-      this.deleteConfirming = true;
+      this.deleteConfirming = false;
     });
 
   }
