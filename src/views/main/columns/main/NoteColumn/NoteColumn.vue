@@ -267,7 +267,7 @@ import MyMarkdownEditor from '@/components/MyMarkdownEditor';
 import NoteLinkViewer from './NoteLinkViewer.vue';
 import { MyChargerInputChangeEvent } from '@/components/MyChargerInput/types';
 import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
-
+import EventsSub from '@/events-subscription';
 
 async function initData(to: Route): Promise<Partial<Pick<NoteColumn, 'isFavorite' | 'editDetail' | 'editedDetailBody' | 'note'>>> {
   const loginUser = store.state.activeUser.myUser!;
@@ -308,6 +308,7 @@ Component.registerHooks([
   },
 })
 export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
+
   $refs!: {
     markdownEditor: MyMarkdownEditor;
   };
@@ -322,14 +323,22 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
 
   viewingRelatedNoteId: number | null = null;
 
+  isDebug: boolean = true;
+
   get myUser() {
     return this.$store.state.activeUser.myUser!;
   }
+
+  get activeProjectId() {
+    return this.$store.getters.activeUser.activeProjectId!;
+  }
+
+  get api() {
+    return api.apiRegistry.load(api.NotesApi, this.myUser.token);
+  }
+
   get myPerms() {
     return this.$store.getters.activeUser.activeProjectMyPerms!;
-  }
-  get activeProjectId() {
-    return this.$store.getters.activeUser.activeProjectId;
   }
 
   get statusOptions() {
@@ -357,82 +366,96 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
     );
   }
 
-  async save(data: api.NotesNoteIdPatchRequestBody) {
-    if (this.saving) {
-      return false;
-    }
-    const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.getters.activeUser.activeProjectId!;
-    const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
-    try {
-      this.saving = true;
-      const note = await notesApi.notesNoteIdPatch({
-        spaceId: loginUser.space.id,
-        projectId,
-        noteId: parseInt(this.$route.params.noteId),
-        notesNoteIdPatchRequestBody: data,
-      });
-      this.$appEmit('note-edited', { note });
-      return true;
+  created() {
+    EventsSub.source.addEventListener('updateNote', this.updateNote);
+  }
 
-    } catch (err) {
+  updateNote(e: any): void {
+
+    if (!this.note) return;
+
+    const data = JSON.parse(e.data);
+    const updatedNoteId = data.params.noteId;
+
+    if (updatedNoteId !== this.note.id) return;
+
+    this.api.notesNoteIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+      noteId: updatedNoteId,
+    }).then((note: api.Note) => {
+
+      this.note = Object.assign(this.note, note);
+
+      if (this.isDebug) { console.log('updateNote(note): ' + note.subject); }
+
+    }).catch((err) => {
       this.$appEmit('error', { err });
-      throw err;
+    });
 
-    } finally {
+  }
+
+  async save(data: api.NotesNoteIdPatchRequestBody): Promise<boolean> {
+
+    if (this.saving) return false;
+
+    this.saving = true;
+
+    let isResultCorrect: boolean = false;
+
+    this.api.notesNoteIdPatch({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
+      noteId: parseInt(this.$route.params.noteId),
+      notesNoteIdPatchRequestBody: data,
+    }).catch((err) => {
+      this.$appEmit('error', { err });
+    }).finally(() => {
       this.saving = false;
-    }
+    });
+
+    return isResultCorrect;
+
   }
 
-  async destroy() {
-    if (this.saving) {
-      return;
-    }
-    const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.getters.activeUser.activeProjectId!;
-    const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
+  destroy(): void {
 
-    try {
-      this.saving = true;
-      await notesApi.notesNoteIdDelete({
-        spaceId: loginUser.space.id,
-        projectId,
-        noteId: parseInt(this.$route.params.noteId),
-      });
-      this.$appEmit('note-deleted', { noteId: parseInt(this.$route.params.noteId) });
-      this.$flash(this.$t('common.deleted').toString(), 'success');
+    if (this.saving) return;
 
-    } catch (err) {
+    this.saving = true;
+
+    this.api.notesNoteIdDelete({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
+      noteId: parseInt(this.$route.params.noteId),
+    }).catch((err) => {
       this.$appEmit('error', { err });
-    }
+    }).finally(() => {
+      this.saving = false;
+      this.deleteConfirming = false;
+    });
 
-    this.deleteConfirming = false;
-    this.saving = false;
   }
 
-  async favorite(value: boolean) {
-    if (this.saving) {
-      return;
-    }
+  favorite(value: boolean): void {
 
-    const loginUser = store.state.activeUser.myUser!;
-    const projectId = store.getters.activeUser.activeProjectId!;
-    const notesApi = api.apiRegistry.load(api.NotesApi, loginUser.token);
-    try {
-      this.saving = true;
-      const res = await notesApi.notesNoteIdFavoritePost({
-        spaceId: loginUser.space.id,
-        projectId: projectId,
-        noteId: parseInt(this.$route.params.noteId),
-        notesNoteIdFavoritePostRequestBody: { value },
-      });
+    if (this.saving) return;
+
+    this.saving = true;
+
+    this.api.notesNoteIdFavoritePost({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
+      noteId: parseInt(this.$route.params.noteId),
+      notesNoteIdFavoritePostRequestBody: { value },
+    }).then((res) => {
       this.isFavorite = res.value;
-
-    } catch (err) {
+    }).catch((err) => {
       this.$appEmit('error', { err });
-    }
+    }).finally(() => {
+      this.saving = false;
+    });
 
-    this.saving = false;
   }
 
   copyLink() {
@@ -531,18 +554,6 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
     this.$store.mutations.setFullMainColumn(this.wideScreen);
   }
 
-  onNoteEdited(ev: { note: api.Note }) {
-    if (this.note && this.note.id === ev.note.id) {
-      this.note = Object.assign({}, ev.note);
-    }
-  }
-
-  onNoteDeleted(ev: { noteId: number }) {
-    if (this.note && this.note.id === ev.noteId) {
-      this.note = null;
-    }
-  }
-
   async beforeRouteEnter(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
     const options = await initData(to);
     store.mutations.setFullMainColumn(false);
@@ -570,19 +581,14 @@ export default class NoteColumn extends Mixins(ConfirmChangeDiscardMixin) {
     }
   }
 
+  destroyed() {
+    EventsSub.source.removeEventListener('updateNote', this.updateNote);
+  }
+
   beforeRouteLeave(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
     store.mutations.setFullMainColumn(false);
     next();
   }
 
-  beforeMount() {
-    this.$appOn('note-edited', this.onNoteEdited);
-    this.$appOn('note-deleted', this.onNoteDeleted);
-  }
-
-  beforeDestroy() {
-    this.$appOff('note-edited', this.onNoteEdited);
-    this.$appOff('note-deleted', this.onNoteDeleted);
-  }
 }
 </script>

@@ -68,6 +68,7 @@
             :item-droppable-between="currentSort.droppableBetween"
             :drag-data="dragData"
             :drop-hover="dropHover"
+            :added-child-note="addedChildNote"
             @drag-data-change="dragData = $event"
             @drop-hover-change="dropHover = $event"
             @drop-note="onDropNote"
@@ -149,12 +150,13 @@ import store from '@/store';
 import { StateChanger } from 'vue-infinite-loading';
 import FilterForm from './FilterForm.vue';
 import NestedList from './NestedList.vue';
-import { MyUser, Project, Note, NoteStatus, NotesApi, apiRegistry, NotesGetRequest, NotesNoteIdPriorityPostRequestBody } from '@/lib/api';
+import { MyUser, Project, Note, NoteStatus, NotesApi, apiRegistry, NotesGetRequest, NotesNoteIdPriorityPostRequestBody, NotesGetResponse } from '@/lib/api';
 import { BasicError } from '@/lib/errors';
 import { ProjectStatusCategory } from '@/consts';
 import { toSnakeCase } from '@/lib/utils/string-util';
 import { NoteWithChilds, DragNoteData, DropNoteData, DropNoteEvent, DropItemPosition, FilterFormValue } from './types';
 import { Perm } from '@/lib/permissions';
+import EventsSub from '@/events-subscription';
 
 type SearchScrollType = 'next' | 'prev';
 type SearchOrderField = 'priority' | 'limitedAt' | 'status';
@@ -180,6 +182,7 @@ Component.registerHooks([
   },
 })
 export default class NotesColumn extends Vue {
+
   $refs!: {
     addingNoteSubjectInput: HTMLInputElement;
     noteListContainer: HTMLDivElement;
@@ -218,6 +221,22 @@ export default class NotesColumn extends Vue {
   dragData: DragNoteData | null = null;
   dropHover: DropNoteData | null = null;
 
+  addedChildNote: Note | null = null;
+
+  isDebug: boolean = true;
+
+  get myUser() {
+    return this.$store.state.activeUser.myUser!;
+  }
+
+  get activeProjectId() {
+    return this.$store.getters.activeUser.activeProjectId!;
+  }
+
+  get api() {
+    return apiRegistry.load(NotesApi, this.myUser.token);
+  }
+
   get isFavorite() {
     return this.conditions.filter &&
       this.conditions.filter.favorite;
@@ -239,32 +258,86 @@ export default class NotesColumn extends Vue {
     return this.$store.state.activeUser.noteStatusList;
   }
 
-  async fetchNotes(options: { parent?: number; limit?: number; page?: number } = {}) {
+  created(): void {
+    EventsSub.source.addEventListener('createNote', this.createNote);
+  }
+
+  createNote(e: any): void {
+
+    const data = JSON.parse(e.data);
+
+    this.api.notesNoteIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+      noteId: data.params.noteId,
+    }).then((note: Note) => {
+
+      const isFireUser = data.userId === this.myUser.id;
+
+      if (this.isDebug) { console.log('createNote: ' + note.subject); }
+
+      if (isFireUser) {
+
+        this.$router.push(this.getNoteTo(note.id))
+          .then(() => {
+
+            if (!note.parent) {
+              this.notes.unshift(note);
+            } else {
+              this.addedChildNote = note;
+            }
+
+            this.$flash(this.$t('notifications.note.created', { noteName: note.subject }).toString(), 'success');
+
+          });
+
+      } else {
+
+        if (!note.parent) {
+          this.notes.unshift(note);
+        } else {
+          this.addedChildNote = note;
+        }
+
+      }
+
+    }).catch((err) => {
+      this.$appEmit('error', { err });
+    });
+
+  }
+
+  async fetchNotes(options: { parent?: number; limit?: number; page?: number } = {}): Promise<NotesGetResponse> {
+
     const cond = this.conditions;
-    const user = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const notesApi = apiRegistry.load(NotesApi, user.token);
+
     const req: NotesGetRequest = Object.assign({
-      spaceId: user.space.id,
-      projectId: projectId,
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
       parent: options.parent ? options.parent! : undefined,
       root: options.parent ? undefined : true,
     }, cond.filter);
+
     req.ordering = [toSnakeCase(cond.order.field), 'id']
       .map((f) => cond.order.type === 'asc' ? f : `-${f}`)
       .join(',');
+
     if (options.limit) {
       req.limit = options.limit;
     }
+
     if (options.page) {
       req.page = options.page;
     }
 
-    return notesApi.notesGet(req);
+    return this.api.notesGet(req);
+
   }
 
-  async onInfinite($state: StateChanger) {
+  async onInfinite($state: StateChanger): Promise<void> {
+
     try {
+
       if (this.$refs.noteListContainer) {
         this.$refs.noteListContainer.scrollTop = 0;
       }
@@ -273,6 +346,7 @@ export default class NotesColumn extends Vue {
         page: this.page,
         limit: this.limit,
       });
+
       const addNotes = res.results.filter((r) => !this.notes.find((t) => t.id === r.id));
       if (addNotes.length) {
         this.notes.push(...addNotes);
@@ -288,6 +362,7 @@ export default class NotesColumn extends Vue {
     } catch (err) {
       this.$appEmit('error', { err });
     }
+
   }
 
   changeCondition(cond: NotesGetConditions) {
@@ -333,62 +408,40 @@ export default class NotesColumn extends Vue {
     this.$refs.addingNoteSubjectInput.focus();
   }
 
-  async onInlineNoteAddEnd() {
+  onInlineNoteAddEnd(): void {
+
     if (!this.adding || this.saving) return;
+
     if (this.addingNoteSubject.trim() !== '') {
-      const myUser = this.$store.state.activeUser.myUser!;
-      const projectId = this.$store.getters.activeUser.activeProjectId!;
-      const notesApi = apiRegistry.load(NotesApi, myUser.token);
+
       const statusOptions = this.statusOptions!
         .filter((o) => o.category === ProjectStatusCategory.Progress)
         .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
-      try {
-        this.saving = true;
-        const updatedNote = await notesApi.notesPost({
-          spaceId: myUser.space.id,
-          projectId,
-          notesPostRequestBody: {
-            subject: this.addingNoteSubject.trim(),
-            status: statusOptions[0].id,
-            chargeUsers: [],
-          },
-        });
-        this.$appEmit('note-added', { note: updatedNote });
-      } catch (err) {
+
+      this.saving = true;
+
+      this.api.notesPost({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
+        notesPostRequestBody: {
+          subject: this.addingNoteSubject.trim(),
+          status: statusOptions[0].id,
+          chargeUsers: [],
+        },
+      }).catch((err) => {
         this.$appEmit('error', { err });
-        return;
-      } finally {
+      }).finally(() => {
         this.saving = false;
-      }
+      });
+
     }
+
     this.adding = false;
-  }
 
-  onNoteAdded(ev: { note: Note }) {
-    if (!this.notes || ev.note.parent) return;
-    if (!this.notes.find((t) => t.id === ev.note.id)) {
-      this.notes.unshift(ev.note);
-    }
   }
-
-  onNoteEdited(ev: { note: Note }) {
-    if (!this.notes) return;
-    const index = this.notes.findIndex((t) => t.id === ev.note.id);
-    if (index >= 0) {
-      this.notes.splice(index, 1, ev.note);
-    }
-  }
-
-  onNoteDeleted(ev: { noteId: number }) {
-    if (!this.notes) return;
-    const index = this.notes.findIndex((t) => t.id === ev.noteId);
-    if (index >= 0) {
-      this.notes.splice(index, 1);
-    }
-  }
-
 
   async onDropNote(ev: DropNoteEvent) {
+
     if (this.saving) return;
 
     // 循環参照によるPropの直接変更対策
@@ -402,6 +455,7 @@ export default class NotesColumn extends Vue {
       noteParent: NoteWithChilds | null;
       position: DropItemPosition;
     } = ev.dropData;
+
     if (!this.currentSort.droppableBetween && dropData.position !== 'child') {
       dropData = {
         note: null,
@@ -413,6 +467,7 @@ export default class NotesColumn extends Vue {
     if (dragData.note === dropData.note) {
       return;
     }
+
     if (dropData.position === 'child') {
       if ((dropData.note && dragData.noteParent === dropData.note) ||
           (!dropData.note && !dragData.noteParent)
@@ -432,9 +487,6 @@ export default class NotesColumn extends Vue {
       this.notes!.splice(this.notes!.indexOf(dragData.note), 1);
     }
 
-    const myUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const notesApi = apiRegistry.load(NotesApi, myUser.token);
     const body: NotesNoteIdPriorityPostRequestBody = {};
 
     // 指定の親グループに加入
@@ -465,18 +517,22 @@ export default class NotesColumn extends Vue {
     }
 
     try {
+
       this.saving = true;
-      await notesApi.notesNoteIdPriorityPost({
-        spaceId: myUser.space.id,
-        projectId,
+
+      await this.api.notesNoteIdPriorityPost({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
         noteId: dragData.note.id,
         notesNoteIdPriorityPostRequestBody: body,
       });
+
     } catch (err) {
       this.$appEmit('error', { err });
     } finally {
       this.saving = false;
     }
+
   }
 
   async init(to: Route, from: Route) {
@@ -512,16 +568,10 @@ export default class NotesColumn extends Vue {
   }
 
   beforeMount() {
-    this.$appOn('note-added', this.onNoteAdded);
-    this.$appOn('note-edited', this.onNoteEdited);
-    this.$appOn('note-deleted', this.onNoteDeleted);
     window.addEventListener('mousedown', this.onWindowMouseDownUseCapture, true);
   }
 
   beforeDestroy() {
-    this.$appOff('note-added', this.onNoteAdded);
-    this.$appOff('note-edited', this.onNoteEdited);
-    this.$appOff('note-deleted', this.onNoteDeleted);
     window.removeEventListener('mousedown', this.onWindowMouseDownUseCapture, true);
   }
 
@@ -534,6 +584,10 @@ export default class NotesColumn extends Vue {
   async beforeRouteUpdate(to: Route, from: Route, next: Parameters<NavigationGuard>[2]) {
     next();
     await this.init(to, from);
+  }
+
+  destroyed() {
+    EventsSub.source.removeEventListener('createNote', this.createNote);
   }
 
 }

@@ -49,6 +49,11 @@ const struct: LocaleStruct = {
         deleted: '仕事{taskName}削除された。',
         noLongerAvailable: '仕事{taskName}使用できなくなりました。',
       },
+      note: {
+        created: '注意{noteName}作成した。',
+        deleted: '注意{noteName}削除された。',
+        noLongerAvailable: '注意{noteName}使用できなくなりました。',
+      },
     },
 
     components: {

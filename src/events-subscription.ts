@@ -351,6 +351,7 @@ class EventsSubscription {
         store.mutations.activeUser.setActiveProjectData({ id: data.params.projectId, user: user });
 
         store.actions.activeUser.fetchTaskStatus();
+        store.actions.activeUser.fetchNoteStatus();
 
         appEventBus.emit('flash', { 'message': i18n.t('notifications.project.changedRole').toString(), 'name': 'success' });
 

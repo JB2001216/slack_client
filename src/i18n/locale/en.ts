@@ -48,6 +48,11 @@ const struct: LocaleStruct = {
         deleted: 'Task {taskName} deleted.',
         noLongerAvailable: 'Task {taskName} is no longer available.',
       },
+      note: {
+        created: 'Note {noteName} created.',
+        deleted: 'Note {noteName} deleted.',
+        noLongerAvailable: 'Note {noteName} is no longer available.',
+      },
     },
 
     components: {

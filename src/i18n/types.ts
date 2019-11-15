@@ -58,6 +58,11 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       deleted: string;
       noLongerAvailable: string;
     };
+    note: {
+      created: string;
+      deleted: string;
+      noLongerAvailable: string;
+    };
   };
 
   components: {

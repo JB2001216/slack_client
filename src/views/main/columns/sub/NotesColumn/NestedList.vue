@@ -97,6 +97,7 @@
         :item-droppable-between="itemDroppableBetween"
         :drag-data="dragData"
         :drop-hover="dropHover"
+        :added-child-note="addedChildNote"
         @drag-data-change="emitDragDataChange($event)"
         @drop-hover-change="emitDropHoverChange($event)"
         @drop-note="emitDropNote($event)"
@@ -183,7 +184,7 @@
 
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
   MyUser, Project, Note, NoteStatus, NotesApi, apiRegistry,
   NotesGetResponse, NotesPostRequestBody, NotesNoteIdPatchRequestBody,
@@ -191,11 +192,13 @@ import {
 import { NoteWithChilds, DragNoteData, DropNoteData, DropNoteEvent } from './types';
 import { ProjectStatusCategory } from '@/consts';
 import { Perm } from '@/lib/permissions';
+import EventsSub from '@/events-subscription';
 
 @Component({
   name: 'nested-list',
 })
 export default class NestedList extends Vue {
+
   $refs!: {
     addingNoteSubjectInputs: HTMLInputElement[];
     editingNoteSubjectInputs: HTMLInputElement[];
@@ -225,14 +228,29 @@ export default class NestedList extends Vue {
   @Prop({ default: null })
   dropHover: DropNoteData | null = null;
 
+  @Prop({ default: null })
+  addedChildNote!: Note | null;
+
   saving = false;
   addingParentNote: NoteWithChilds | null = null;
   addingNoteSubject = '';
   editingNote: NoteWithChilds | null = null;
   editingNoteSubject = '';
 
+  isDebug: boolean = true;
+
+  addedChildNoteId: number | null = null;
+
   get myUser() {
     return this.$store.state.activeUser.myUser!;
+  }
+
+  get activeProjectId() {
+    return this.$store.getters.activeUser.activeProjectId!;
+  }
+
+  get api() {
+    return apiRegistry.load(NotesApi, this.myUser.token);
   }
 
   get myPerms() {
@@ -254,6 +272,118 @@ export default class NestedList extends Vue {
     return null;
   }
 
+  created(): void {
+    EventsSub.source.addEventListener('updateNote', this.updateNote);
+    EventsSub.source.addEventListener('deleteNote', this.deleteNote);
+  }
+
+  @Watch('addedChildNote')
+  onAddChildNote(note: this['addedChildNote']): void {
+
+    if (!note) { return; }
+
+    const childNote = this.notes.find((t) => t.parent === note.parent);
+    if (childNote) { this.notes.unshift(note!); }
+
+    const parentNote = this.notes.find((t) => t.id === note.parent);
+    if (parentNote) {
+      parentNote.hasChilds = true;
+      if (note.id === this.activeNoteId) {
+        this.onExpandChilds(parentNote);
+      }
+    }
+
+  }
+
+  updateNote(e: any): void {
+
+    const data = JSON.parse(e.data);
+    const index = this.notes.findIndex((n) => n.id === data.params.noteId);
+
+    if (index >= 0) {
+
+      this.getNote(data)
+        .then((note: Note) => {
+
+          this.notes[index] = Object.assign(this.notes[index], note);
+
+          if (this.isDebug) { console.log('updateNote(column): ' + note.subject); }
+
+        }).catch((err) => {
+          this.$appEmit('error', { err });
+        });
+
+    }
+
+  }
+
+  async deleteNote(e: any): Promise<void> {
+
+    const data = JSON.parse(e.data);
+    const index = this.notes.findIndex((n) => n.id === data.params.noteId);
+
+    if (index >= 0) {
+
+      const isFireUser = data.userId === this.myUser.id;
+      const note = this.notes[index];
+      const isActiveNote = note.id === this.activeNoteId;
+      let isActiveTree = false;
+
+      if (!isFireUser && !isActiveNote && (this.activeNoteId || this.activeNoteId === 0)) {
+        await this.getNote({
+          spaceId: this.myUser.space.id,
+          params: { projectId: this.activeProjectId, noteId: this.activeNoteId },
+        }).catch((err) => {
+          if (err.status === 404) { isActiveTree = true; }
+        });
+      }
+
+      this.notes.splice(index, 1);
+
+      if (this.isDebug) { console.log('deleteNote: ' + note.subject); }
+
+      if (!this.notes.length && this.parentNote) { this.parentNote.hasChilds = false; }
+
+      if (isFireUser || isActiveNote || isActiveTree) {
+
+        if (this.notes.length || this.parentNote) {
+
+          const noteId: number = this.notes.length ? this.notes[index ? (index - 1) : 0].id : this.parentNote!.id;
+
+          this.$router.push({
+            name: 'note',
+            params: { projectId: this.activeProjectId + '', userId: this.myUser.id + '', noteId: noteId + '' },
+          });
+
+        } else {
+
+          this.$router.push({
+            name: 'project',
+            params: { projectId: this.activeProjectId + '', userId: this.myUser.id + '' },
+          });
+
+        }
+
+      }
+
+      if (isFireUser) {
+        this.$flash(this.$t('notifications.note.deleted', { noteName: note.subject }).toString(), 'success');
+      } else if (isActiveNote || isActiveTree) {
+        this.$flash(this.$t('notifications.note.noLongerAvailable', { noteName: note.subject }).toString(), 'success');
+      }
+
+    }
+
+  }
+
+  getNote(data: any): Promise<Note> {
+    return this.api.notesNoteIdGet({
+      spaceId: data.spaceId,
+      projectId: data.params.projectId,
+      noteId: data.params.noteId,
+    });
+  }
+
   getNoteUpdatable(note: Note) {
     return this.$store.getters.activeUser.noteUpdatable(note);
   }
@@ -265,24 +395,21 @@ export default class NestedList extends Vue {
     return this.statusOptions.find((o) => o.id === optionId) || null;
   }
 
-  async addNote(requestBody: NotesPostRequestBody) {
-    const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const notesApi = apiRegistry.load(NotesApi, loginUser.token);
-    return notesApi.notesPost({
-      spaceId: loginUser.space.id,
-      projectId,
-      notesPostRequestBody: requestBody,
-    });
-  }
+  // async addNote(requestBody: NotesPostRequestBody) {
+  //   const loginUser = this.$store.state.activeUser.myUser!;
+  //   const projectId = this.$store.getters.activeUser.activeProjectId!;
+  //   const notesApi = apiRegistry.load(NotesApi, loginUser.token);
+  //   return notesApi.notesPost({
+  //     spaceId: loginUser.space.id,
+  //     projectId,
+  //     notesPostRequestBody: requestBody,
+  //   });
+  // }
 
   async patchNote(noteId: number, requestBody: NotesNoteIdPatchRequestBody) {
-    const loginUser = this.$store.state.activeUser.myUser!;
-    const projectId = this.$store.getters.activeUser.activeProjectId!;
-    const notesApi = apiRegistry.load(NotesApi, loginUser.token);
-    return notesApi.notesNoteIdPatch({
-      spaceId: loginUser.space.id,
-      projectId,
+    return this.api.notesNoteIdPatch({
+      spaceId: this.myUser.space.id,
+      projectId: this.activeProjectId,
       noteId,
       notesNoteIdPatchRequestBody: requestBody,
     });
@@ -297,33 +424,36 @@ export default class NestedList extends Vue {
   }
 
   async onInlineNoteAddEnd() {
+
     if (!this.addingParentNote || this.saving) return;
+
     if (this.addingNoteSubject.trim() !== '') {
-      try {
-        this.saving = true;
-        const statusOptions = this.statusOptions!
-          .filter((o) => o.category === ProjectStatusCategory.Progress)
-          .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
-        const addedNote = await this.addNote({
+
+      this.saving = true;
+
+      const statusOptions = this.statusOptions!
+        .filter((o) => o.category === ProjectStatusCategory.Progress)
+        .sort((o1, o2) => o1.sort < o2.sort ? -1 : 1);
+
+      this.api.notesPost({
+        spaceId: this.myUser.space.id,
+        projectId: this.activeProjectId,
+        notesPostRequestBody: {
           parent: this.addingParentNote.id,
           subject: this.addingNoteSubject.trim(),
           status: statusOptions[0].id,
           chargeUsers: [],
-        });
-        this.$appEmit('note-added', { note: addedNote });
-        if (!this.addingParentNote.childs || !this.addingParentNote.childs.length) {
-          await this.onExpandChilds(this.addingParentNote);
-        }
-
-      } catch (err) {
+        },
+      }).catch((err) => {
         this.$appEmit('error', { err });
-        return;
-      } finally {
+      }).finally(() => {
         this.saving = false;
-      }
+      });
+
     }
 
     this.addingParentNote = null;
+
   }
 
   async onInlineNoteEditStart(note: Note) {
@@ -334,23 +464,26 @@ export default class NestedList extends Vue {
     this.$refs.editingNoteSubjectInputs[0].focus();
   }
 
-  async onInlineNoteEditEnd() {
+  onInlineNoteEditEnd(): void {
+
     if (!this.editingNote || this.saving) return;
+
     if (this.editingNoteSubject.trim() !== '') {
-      try {
-        this.saving = true;
-        const updatedNote = await this.patchNote(this.editingNote.id, {
-          subject: this.editingNoteSubject.trim(),
-        });
-        this.$appEmit('note-edited', { note: updatedNote });
-      } catch (err) {
+
+      this.saving = true;
+
+      this.patchNote(this.editingNote.id, {
+        subject: this.editingNoteSubject.trim(),
+      }).catch((err) => {
         this.$appEmit('error', { err });
-        return;
-      } finally {
+      }).finally(() => {
         this.saving = false;
-      }
+      });
+
     }
+
     this.editingNote = null;
+
   }
 
   async onDateRangeChange(note: Note, range: {start: Date; end: Date} | null) {
@@ -375,7 +508,6 @@ export default class NestedList extends Vue {
       const res = await this.fetchNotes({ parent: note.id, limit: 500 });
       if (res.count <= 0) {
         note.hasChilds = false;
-        return;
       } else if (!note.hasChilds) {
         note.hasChilds = true;
       }
@@ -494,54 +626,10 @@ export default class NestedList extends Vue {
     });
   }
 
-  onNoteAdded(ev: { note: Note }) {
-    if (!ev.note.parent) return;
-
-    const parentNote = this.notes.find((t) => t.id === ev.note.parent);
-    if (!parentNote || !parentNote.childs || !parentNote.childs) return;
-
-    if (!parentNote.childs.find((t) => t.id === ev.note.id)) {
-      parentNote.childs.unshift(ev.note);
-    }
+  destroyed() {
+    EventsSub.source.removeEventListener('updateNote', this.updateNote);
+    EventsSub.source.removeEventListener('deleteNote', this.deleteNote);
   }
 
-  onNoteEdited(ev: { note: Note }) {
-    if (!ev.note.parent) return;
-
-    const parentNote = this.notes.find((t) => t.id === ev.note.parent);
-    if (!parentNote || !parentNote.childs || !parentNote.childs) return;
-
-    const index = parentNote.childs.findIndex((t) => t.id === ev.note.id);
-    if (index >= 0) {
-      parentNote.childs.splice(index, 1, ev.note);
-    }
-  }
-
-  onNoteDeleted(ev: { noteId: number }) {
-    this.notes.forEach((parent) => {
-      if (parent.childs) {
-        const index = parent.childs.findIndex((t) => t.id === ev.noteId);
-        if (index >= 0) {
-          parent.childs.splice(index, 1);
-          if (!parent.childs.length) {
-            this.$delete(parent, 'childs');
-            parent.hasChilds = false;
-          }
-        }
-      }
-    });
-  }
-
-  beforeMount() {
-    this.$appOn('note-added', this.onNoteAdded);
-    this.$appOn('note-edited', this.onNoteEdited);
-    this.$appOn('note-deleted', this.onNoteDeleted);
-  }
-
-  beforeDestroy() {
-    this.$appOff('note-added', this.onNoteAdded);
-    this.$appOff('note-edited', this.onNoteEdited);
-    this.$appOff('note-deleted', this.onNoteDeleted);
-  }
 }
 </script>
