@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -66,7 +67,7 @@ export interface TasksTaskIdPatchRequestBody {
      * @type {number}
      * @memberof TasksTaskIdPatchRequestBody
      */
-    batonUser?: number;
+    batonUser?: number | null;
     /**
      *
      * @type {Array<number>}
@@ -103,7 +104,7 @@ export function TasksTaskIdPatchRequestBodyFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function TasksTaskIdPatchRequestBodyToJSON(value?: TasksTaskIdPatchRequestBody): any {
+export function TasksTaskIdPatchRequestBodyToJSON(value?: TasksTaskIdPatchRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -115,12 +116,12 @@ export function TasksTaskIdPatchRequestBodyToJSON(value?: TasksTaskIdPatchReques
         'parent': value.parent,
         'subject': value.subject,
         'body': value.body,
-        'startedAt': !value.startedAt ? (value.startedAt === null ? null : undefined) : value.startedAt.toISOString().substr(0, 10),
-        'limitedAt': !value.limitedAt ? (value.limitedAt === null ? null : undefined) : value.limitedAt.toISOString().substr(0, 10),
+        'startedAt': !value.startedAt ? (value.startedAt === null ? null : undefined) : value.startedAt.toISOString().substr(0,10),
+        'limitedAt': !value.limitedAt ? (value.limitedAt === null ? null : undefined) : value.limitedAt.toISOString().substr(0,10),
         'status': value.status,
         'batonUser': value.batonUser,
         'chargeUsers': value.chargeUsers,
-        'tags': value.tags === undefined ? undefined : (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),
+        'tags': value.tags == null ? undefined : (value.tags as Array<any>).map(SpacesSpaceIdProjectsProjectIdTasksTagsToJSON),
     };
 }
 

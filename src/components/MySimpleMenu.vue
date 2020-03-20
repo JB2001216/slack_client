@@ -1,7 +1,7 @@
 <template>
   <div class="mySimpleMenu">
     <slot :open="onOpen" :close="onClose" :opened="opened" />
-    <div v-if="opened" ref="pop" class="other_status">
+    <div v-if="opened" ref="pop" class="mySimpleMenu_popup">
       <ul>
         <slot name="items">
           <!--
@@ -19,30 +19,32 @@
 .mySimpleMenu
   position: relative
   display: inline-block
-  .other_status
+  &_popup
     position: absolute
     top: calc(100% + 2px)
     left: 0
     z-index: 10
     box-shadow: none
     user-select: none
+    box-shadow: 0px 8px 32px rgba(0,0,0,0.05)
+    max-width: 150px
     ul
-      padding-left: 0
-      padding-right: 0
       border: solid 1px #eee
+      display: inline-block
+      padding: 8px 0 12px
+      background: #fff
+      border-radius: 4px
+      box-sizing: border-box
+      overflow: hidden
+      width: 100%
       li
         padding: 7px 15px
         color: #333
+        min-width: 110px
+        font-size: 12px
+        cursor: pointer
         &:hover
-          background: #eee
-        a
-          padding: 0
-          display: block
-          text-decoration: none
-          color: inherit
-          transition: 0.5s
-          line-height: normal
-          min-height: initial
+          background-color: #eee
 </style>
 
 <script lang="ts">

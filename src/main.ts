@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VCalendar from 'v-calendar';
 import VueFlashMessage from 'vue-flash-message';
-import VueScrollTo from 'vue-scrollto';
+import VueScrollTo, { ScrollOptions } from 'vue-scrollto';
 import InfiniteLoading, { InfiniteOptions } from 'vue-infinite-loading';
 import router from './router';
 import store from './store';
@@ -36,7 +36,7 @@ declare module 'vue/types/vue' {
 }
 
 // vue-scrollto
-Vue.use<VueScrollTo.Options>(<any>VueScrollTo, {
+Vue.use<ScrollOptions>(VueScrollTo, {
   container: 'body',
   duration: 500,
   easing: 'ease',
@@ -80,12 +80,11 @@ type ComponentsKey = keyof typeof components;
 });
 
 (async() => {
-  // 初期設定
+  // initialize
   await Promise.all([
-    // 言語
     store.actions.initLocale(),
-    // ログインユーザー
     store.actions.initLoggedInUsers(),
+    store.actions.location.init(),
   ]);
 
   new Vue({

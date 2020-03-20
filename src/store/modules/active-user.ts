@@ -74,6 +74,28 @@ class ActiveUserGetters extends Getters<ActiveUserState>() {
         task.writeUser === this.state.myUser.id
       );
   }
+
+  noteUpdatable(note: api.Note) {
+    if (!this.state.myUser) return false;
+    return this.activeProjectMyPerms.includes(Perm.UPDATE_ALL_NOTE) ||
+      (
+        this.activeProjectMyPerms.includes(Perm.UPDATE_MY_NOTE) &&
+        (
+          note.writeUser === this.state.myUser.id ||
+          note.batonUser === this.state.myUser.id ||
+          note.chargeUsers.includes(this.state.myUser.id)
+        )
+      );
+  }
+
+  noteDeletable(note: api.Note) {
+    if (!this.state.myUser) return false;
+    return this.activeProjectMyPerms.includes(Perm.DELETE_ALL_NOTE) ||
+      (
+        this.activeProjectMyPerms.includes(Perm.DELETE_MY_NOTE) &&
+        note.writeUser === this.state.myUser.id
+      );
+  }
 }
 
 class ActiveUserMutations extends Mutations<ActiveUserState>() {
@@ -104,11 +126,11 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
   setActiveProjectData(value: ActiveUserState['activeProjectData']) {
     if (!value || !this.state.projects || !this.state.projects.find((p) => p.id === value.id)) {
       this.state.activeProjectData = null;
-      this.state.taskStatusList = null;
-      this.state.noteStatusList = null;
     } else {
       this.state.activeProjectData = value;
     }
+    this.state.taskStatusList = null;
+    this.state.noteStatusList = null;
   }
 
   addProject(project: api.Project) {
@@ -116,6 +138,29 @@ class ActiveUserMutations extends Mutations<ActiveUserState>() {
     if (this.state.myUser.space.id !== project.spaceId) return;
     if (this.state.projects.find((p) => p.id === project.id)) return;
     this.state.projects.push(project);
+  }
+
+  editProject(project: api.Project) {
+    if (!this.state.myUser || !this.state.projects) return;
+    if (this.state.myUser.space.id !== project.spaceId) return;
+    const index = this.state.projects.findIndex((p) => p.id === project.id);
+    if (index >= 0) {
+      this.state.projects.splice(index, 1, project);
+    }
+  }
+
+  editMyUser(user: api.MyUser) {
+    if (!this.state.myUser || this.state.myUser.id !== user.id) return;
+    const loggedInUser: LoggedInUser = Object.assign({}, user, { token: this.state.myUser.token });
+    this.state.myUser = loggedInUser;
+  }
+
+  editSpaceUser(user: api.SpaceUser) {
+    if (!this.state.myUser || this.state.myUser.space.id !== user.spaceId) return;
+    const index = this.state.spaceUsers.findIndex((su) => su.id === user.id);
+    if (index >= 0) {
+      this.state.spaceUsers.splice(index, 1, user);
+    }
   }
 
   setTaskStatusList(statusList: api.TaskStatus[]) {

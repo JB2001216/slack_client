@@ -6,13 +6,13 @@
       min-width: 130px;
       height: 40px;
       padding: 9px;
-      background: #007FF5;
+      background: $colors.primaryBlue
       border: none;
       border-radius: 20px;
       cursor: pointer;
       outline: none;
       color: #FFFFFF;
-      font-family: "Noto Sans CJK JP";
+      font-family: $fontFamilyBody;
       font-size: 14px;
       font-weight: bold;
       line-height: 20px;
@@ -23,24 +23,16 @@
       input[type=text]{
         min-width: 320px;
         padding: 10px 15px;
-        border: 1px solid #c4c4c4;
-        border-radius: 4px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        color: #333333;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        line-height: 1.5;
-        &::placeholder{
-          color: #ccc;
-        }
       }
     }
     &_addButton{
       margin-top: 50px;
       button{
         float: left;
+        text-transform: capitalize;
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
   }

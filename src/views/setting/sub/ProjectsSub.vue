@@ -6,7 +6,10 @@
           :key="`item-${$index}-b`"
           :class="{active: item.routeName === currentRouterName}"
           class="option_subColumn_button green"
-          @click="$store.mutations.settingRouter.to(item.routeName)">{{item.title()}}</button>
+          @click="$store.actions.settingRouter.to(item.routeName)"
+        >
+          {{ item.title() }}
+        </button>
       </template>
     </template>
   </div>
@@ -28,7 +31,7 @@ export default class ProjectsSub extends Vue {
     {
       title: () => i18n.t('views.setting.sub.projects.general'),
       showable: () => this.projectUpdatable,
-      routeName: '',
+      routeName: 'project-general',
     },
     {
       title: () => i18n.t('views.setting.sub.projects.members'),

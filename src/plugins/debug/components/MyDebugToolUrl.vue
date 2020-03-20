@@ -1,10 +1,10 @@
 <template>
   <form class="debugToolUrl" @click="onCoverClick" @submit.prevent="onSubmit">
-    <my-text-input
-      class="debugToolUrl_input"
+    <my-single-form-text-input
       ref="input"
-      placeholder="URL"
       v-model="url"
+      class="debugToolUrl_input"
+      placeholder="URL"
       @click.stop
     />
   </form>
@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import MyTextInput from '@/components/MyTextInput';
+import MySingleFormTextInput from '@/components/MySingleFormTextInput';
 import electron from 'electron';
 
 @Component
@@ -38,7 +38,7 @@ export default class MyDebugToolUrl extends Vue {
   url = '';
 
   $refs!: {
-    input: MyTextInput;
+    input: MySingleFormTextInput;
   };
 
   emitClose() {

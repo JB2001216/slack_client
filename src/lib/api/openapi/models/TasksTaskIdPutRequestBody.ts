@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -103,7 +104,7 @@ export function TasksTaskIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function TasksTaskIdPutRequestBodyToJSON(value?: TasksTaskIdPutRequestBody): any {
+export function TasksTaskIdPutRequestBodyToJSON(value?: TasksTaskIdPutRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -115,8 +116,8 @@ export function TasksTaskIdPutRequestBodyToJSON(value?: TasksTaskIdPutRequestBod
         'parent': value.parent,
         'subject': value.subject,
         'body': value.body,
-        'startedAt': !value.startedAt ? (value.startedAt === null ? null : undefined) : value.startedAt.toISOString().substr(0, 10),
-        'limitedAt': !value.limitedAt ? (value.limitedAt === null ? null : undefined) : value.limitedAt.toISOString().substr(0, 10),
+        'startedAt': !value.startedAt ? (value.startedAt === null ? null : undefined) : value.startedAt.toISOString().substr(0,10),
+        'limitedAt': !value.limitedAt ? (value.limitedAt === null ? null : undefined) : value.limitedAt.toISOString().substr(0,10),
         'status': value.status,
         'batonUser': value.batonUser,
         'chargeUsers': value.chargeUsers,

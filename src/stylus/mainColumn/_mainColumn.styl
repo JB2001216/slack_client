@@ -1,300 +1,240 @@
-.edit{
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-left: 10px;
-}
+.mainColumn
+  &_head
+    padding: $sizes.windowMarginTop 20px 16px
+    display: flex
+    justify-content: space-between
+    align-items: center
+    h2
+      display: block
+      width: calc(100% - 230px)
+      font-size: 18px
+      font-weight: normal
+    input[type=text]
+      box-sizing: border-box
+      height: 33px
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+      font-size: 18px
+      padding: 8px
+      max-width: 100%
+      min-width: 100px
+    &_toolbar
+      display: flex
+      align-items: center
+      &_item
+        cursor: pointer
+        --mySvgIconSize: 19px
+        --mySvgIconColor: $themeColors.icon
+        &:hover
+          --mySvgIconColor: $themeColors.iconDarken1
+        &:not(:first-child)
+          margin-left: 16px
 
-.dashboardWrap{
-  padding: 8px 19px 0 19px;
-  *{
-    box-sizing: border-box;
-  }
-  &_list{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom 24px;
-    &_user{
-      zoom: 1;
-      &:after {
-        content: "";
-        clear: both;
-        display: block;
-      }
-      dd{
-        float: left;
-        margin-right: 8px;
-        position: relative;
-        &.active{
-          &:before{
-            content: "";
-            display: block;
-            width: 36px;
-            height: 36px;
-            border: 2px solid #2F80ED;
-            border-radius: 50%;
-            position: absolute;
-            top: -4px;
-            left: -4px;
-          }
-        }
-        &.dots{
-          padding: 4px 0;
-        }
-      }
-    }
-    &_menu{
-      zoom: 1;
-      &:after {
-        content: "";
-        clear: both;
-        display: block;
-      }
-      dd{
-        float: left;
-        margin-left: 22px;
-        cursor: pointer;
-        &:first-child{
-          margin-left: 0;
-        }
-      }
-    }
-  }
-  &_tag{
-    margin-top: 24px;
-    zoom: 1;
-    &:after {
-      content: "";
-      clear: both;
-      display: block;
-    }
-    dd{
-      float: left;
-      padding: 8px 28px 8px 12px;
-      margin-right: 8px;
-      background: url('~@/assets/images/mainColumn/icn_tag-close.svg') no-repeat center right 10px, #FAECC3;
-      border-radius: 4px;
-      font-family: Noto Sans CJK JP;
-      color: #333;
-      font-size: 12px;
-      line-height: 1;
-      cursor: pointer;
-      &.button{
-        padding: 6px 2px;
-        background: #FFF;
-        color: #333;
-        font-size: 14px;
-        opacity: 0.5;
-      }
-    }
-  }
-  &_task{
-    textarea{
-      width: 100%;
-      min-height: 158px;
-      padding: 0;
-      margin: 24px 0;
-      border: none;
-      resize: none;
-      font-family: Noto Sans CJK JP;
-      color: #333;
-      font-size: 14px;
-      line-height: 1.57;
-      &::placeholder{
-        color:#C4C4C4;
-      }
-    }
-  }
-  &_post{
-    width: calc(100% + 38px);
-    margin-left: -19px;
-    padding: 31px 19px 0 19px;
-    background: url('~@/assets/images/mainColumn/icn_post-handle.svg') no-repeat top 8px center, #FFF;
-    border-top: 2px solid #EDEDED;
-    overflow: hidden;
-    small{
-      display: block;
-      text-align: center;
-      font-family: Noto Sans CJK JP;
-      color: rgba(51, 51, 51, 0.72);
-      font-size: 12px;
-      line-height: 1;
-      text-align: center;
-      opacity: 0.5;
-    }
-    &_board{
-      height: calc(50vh - 160px);
-      margin: 25px 0 0 0;
-      overflow-y: auto;
-      &::-webkit-scrollbar{
-        width: 10px;
-      }
-      &::-webkit-scrollbar-track{
-        background: #fff;
-      }
-      &::-webkit-scrollbar-thumb{
-        background: #ccc;
-        border-radius: 10px;
-        box-shadow: inset 0 0 0 2px #fff;
-      }
-      table{
-        width: 100%;
-        padding-right: 10px;
-        tr{
-          table-layout: fixed;
-          th,td{
-            vertical-align: top;
-            font-family: Noto Sans CJK JP;
-            font-size: 14px;
-            line-height: 1.57;
-          }
-        }
-      }
-      &_user{
-        width: 52px;
-        padding-right: 12px;
-      }
-      &_text{
-        width: calc(100% - 52px - 108px);
-        padding-bottom: 40px;
-        h3{
-          margin-bottom: 15px;
-        }
-      }
-      &_log{
-        width: 108px;
-        svg{
-          cursor: pointer;
-        }
-        p{
-          display: inline-block;
-          margin-left: 10px;
-          color: rgba(51, 51, 51, 0.72);
-          opacity: 0.5;
-          position: relative;
-          top: -2px;
-          left: 0;
-        }
-      }
-    }
-  }
-  &_comment{
-    padding: 0 20px;
-    background: #fff;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    &_box{
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      width: 100%;
-      min-height: 44px;
-      padding: 10px 10px 10px 20px;
-      background: #fff;
-      border: 1px solid #C4C4C4;
-      border-radius: 8px;
-      margin: auto;
-      &_upload{
-        width: 24px;
-        height: 24px;
-        background: url('~@/assets/images/mainColumn/icn_file-add.svg') no-repeat top left, #FFF;
-        cursor: pointer;
-        opacity: 0.2;
-        overflow: hidden;
+
+.dashboardWrap
+  padding: 8px 19px 0 19px
+  *
+    box-sizing: border-box
+  hr
+    border-top-color: $colors.whiteDarken1
+  &_list
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom 15px
+  &_tag
+    margin-top: 15px
+    zoom: 1
+    &:after
+      content: ""
+      clear: both
+      display: block
+    dd
+      float: left
+      padding: 8px 28px 8px 12px
+      margin-right: 8px
+      background: url('~@/assets/images/mainColumn/icn_tag-close.svg') no-repeat center right 10px, #FAECC3
+      border-radius: 4px
+      font-family: $fontFamilyBody
+      color: #333
+      font-size: 12px
+      line-height: 1
+      cursor: pointer
+      &.button
+        padding: 6px 2px
+        background: #FFF
+        color: #333
+        font-size: 14px
+        opacity: 0.5
+  &_task
+    textarea
+      width: 100%
+      min-height: 158px
+      padding: 0
+      margin: 24px 0
+      border: none
+      resize: none
+      font-family: $fontFamilyBody
+      color: #333
+      font-size: 14px
+      line-height: 1.57
+      &::placeholder
+        color: $colors.lightGray
+  &_post
+    width: calc(100% + 38px)
+    margin-left: -19px
+    padding: 31px 19px 0 19px
+    background: url('~@/assets/images/mainColumn/icn_post-handle.svg') no-repeat top 8px center, #FFF
+    border-top: 1px solid $colors.lightGrayLighten2
+    overflow: hidden
+    small
+      display: block
+      text-align: center
+      font-family: $fontFamilyBody
+      color: rgba(51, 51, 51, 0.72)
+      font-size: 12px
+      line-height: 1
+      text-align: center
+      opacity: 0.5
+    &_board
+      height: calc(50vh - 160px)
+      margin: 25px 0 0 0
+      overflow-y: auto
+      &::-webkit-scrollbar
+        width: 10px
+      &::-webkit-scrollbar-track
+        background: #fff
+      &::-webkit-scrollbar-thumb
+        background: #ccc
+        border-radius: 10px
+        box-shadow: inset 0 0 0 2px #fff
+      table
+        width: 100%
+        padding-right: 10px
+        tr
+          table-layout: fixed
+          th,td
+            vertical-align: top
+            font-family: $fontFamilyBody
+            font-size: 14px
+            line-height: 1.57
+      &_user
+        width: 52px
+        padding-right: 12px
+      &_text
+        width: calc(100% - 52px - 108px)
+        padding-bottom: 40px
+        h3
+          margin-bottom: 15px
+      &_log
+        width: 108px
+        svg
+          cursor: pointer
+        p
+          display: inline-block
+          margin-left: 10px
+          color: rgba(51, 51, 51, 0.72)
+          opacity: 0.5
+          position: relative
+          top: -2px
+          left: 0
+  &_comment
+    padding: 0 20px
+    background: #fff
+    position: absolute
+    left: 0
+    right: 0
+    bottom: 0
+    &_box
+      display: flex
+      justify-content: flex-start
+      align-items: center
+      width: 100%
+      min-height: 44px
+      padding: 10px 10px 10px 20px
+      background: #fff
+      border: 1px solid $colors.lightGray
+      border-radius: 8px
+      margin: auto
+      &_upload
+        width: 24px
+        height: 24px
+        background: url('~@/assets/images/mainColumn/icn_file-add.svg') no-repeat top left, #FFF
+        cursor: pointer
+        opacity: 0.2
+        overflow: hidden
         input[type=file],
-        input[type=text] {
-          display: none;
-        }
-      }
-      &_content{
-        width: 100%;
-        height: 24px;
-        margin-left: 24px;
-        border: none;
-        resize: none;
-        outline: none;
-        font-family: Noto Sans CJK JP;
-        color: #333;
-        font-size: 14px;
-        line-height: 1.57;
-        &::placeholder{
-          color: #C4C4C4;
-        }
-      }
-    }
-    &_text{
-      min-height: 42px;
-      padding: 12px 0;
-      p{
-        font-family: Noto Sans CJK JP;
-        color: #999;
-        font-size: 12px;
-        line-height: 18px;
-        opacity: 0;
-      }
-      &.show{
-        p{
-          opacity: 1;
-        }
-      }
-    }
-  }
-}
-.list{
-  &_status{
-    zoom: 1;
-    &:after {
-      content: "";
-      clear: both;
-      display: block;
-    }
-    dd{
-      float: left;
-      height: 32px;
-      padding: 9px 20px;
-      margin: 0 8px;
-      background: var(--task-startColor, #ccc);
-      border-radius: 18px;
-      font-family: Noto Sans CJK JP;
-      color: #FFF;
-      font-size: 14px;
-      line-height: 1;
-      text-align: center;
-      position relative;
-      &:before{
-        content: "";
-        display: block;
-        width: 26px;
-        height: 22px;
-        vertical-align: middle;
-        background-image: linear-gradient(90deg ,var(--task-startColor, #ccc), var(--task-endColor, #ccc));
-        clip-path: polygon(0% 0%, 10% 10%, 20% 15%, 30% 20%, 40% 25%, 50% 28%, 60% 25%, 70% 20%, 80% 15%, 90% 10%, 100% 0%, 100% 100%, 90% 90%, 80% 85%, 70% 80%, 60% 75%, 50% 72%, 40% 75%, 30% 80%, 20% 85%, 10% 90%, 0% 100%);
-        background-repeat no-repeat;
-        background-position center;
-        position absolute;
-        top 0;
-        bottom: 0;
-        right: -21px;
-        margin: auto;
-      }
-      &:first-child{
-        margin-left: 0;
-      }
-      &:last-child{
-        width: 89px;
-        padding: 9px 24px 9px 16px;
-        background: url('~@/assets/images/mainColumn/icn_status-arrow.svg') no-repeat center right 10px, rgba(51, 51, 51, 0.72);
-        cursor: pointer;
-        text-align: left;
-      }
-      &.other{
-        &:before{
-          display none;
-        }
-      }
-    }
-  }
-}
+        input[type=text]
+          display: none
+      &_content
+        width: 100%
+        height: 24px
+        margin-left: 24px
+        border: none
+        resize: none
+        outline: none
+        font-family: $fontFamilyBody
+        color: #333
+        font-size: 14px
+        line-height: 1.57
+        &::placeholder
+          color: $colors.lightGray
+    &_text
+      min-height: 42px
+      padding: 12px 0
+      p
+        font-family: $fontFamilyBody
+        color: #999
+        font-size: 12px
+        line-height: 18px
+        opacity: 0
+      &.show
+        p
+          opacity: 1
+.list
+  &_status
+    zoom: 1
+    &:after
+      content: ""
+      clear: both
+      display: block
+    dd
+      float: left
+      height: 32px
+      padding: 9px 20px
+      margin: 0 8px
+      background: var(--task-startColor, #ccc)
+      border-radius: 18px
+      font-family: $fontFamilyBody
+      color: #FFF
+      font-size: 14px
+      line-height: 1
+      text-align: center
+      position relative
+      &:before
+        content: ""
+        display: block
+        width: 26px
+        height: 22px
+        vertical-align: middle
+        background-image: linear-gradient(90deg ,var(--task-startColor, #ccc), var(--task-endColor, #ccc))
+        clip-path: polygon(0% 0%, 10% 10%, 20% 15%, 30% 20%, 40% 25%, 50% 28%, 60% 25%, 70% 20%, 80% 15%, 90% 10%, 100% 0%, 100% 100%, 90% 90%, 80% 85%, 70% 80%, 60% 75%, 50% 72%, 40% 75%, 30% 80%, 20% 85%, 10% 90%, 0% 100%)
+        background-repeat no-repeat
+        background-position center
+        position absolute
+        top 0
+        bottom: 0
+        right: -21px
+        margin: auto
+      &:first-child
+        margin-left: 0
+      &:last-child
+        width: 89px
+        padding: 9px 24px 9px 16px
+        background: url('~@/assets/images/mainColumn/icn_status-arrow.svg') no-repeat center right 10px, rgba(51, 51, 51, 0.72)
+        cursor: pointer
+        text-align: left
+      &.other
+        &:before
+          display none

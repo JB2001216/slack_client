@@ -17,31 +17,41 @@
       <form class="option_spaceMemberInvite_table" @submit.prevent="save()">
         <table>
           <tr>
-            <th>{{$t('views.setting.main.spaceMemberInvite.email')}}</th>
-            <th>{{$t('views.setting.main.spaceMemberInvite.account')}}</th>
-            <th>{{$t('views.setting.main.spaceMemberInvite.role')}}</th>
+            <th>{{ $t('views.setting.main.spaceMemberInvite.email') }}</th>
+            <th>{{ $t('views.setting.main.spaceMemberInvite.account') }}</th>
+            <th>{{ $t('views.setting.main.spaceMemberInvite.role') }}</th>
           </tr>
           <template v-for="(r, i) in rows">
             <tr :key="`body_${i}`">
               <td>
-                <input type="email" v-model="r.body.email" :class="{error: r.errors.email || r.errors.nonFieldErrors}" placeholder="sample@gmail.com">
+                <input
+                  v-model="r.body.email"
+                  type="email"
+                  class="basicInput"
+                  :class="{error: r.errors.email || r.errors.nonFieldErrors}"
+                  placeholder="sample@gmail.com"
+                >
               </td>
               <td>
-                <input type="text" v-model="r.body.account" :class="{error: r.errors.account}" :placeholder="$t('views.setting.main.spaceMemberInvite.accountSample')">
+                <input
+                  v-model="r.body.account"
+                  type="text"
+                  class="basicInput"
+                  :class="{error: r.errors.account}"
+                  :placeholder="$t('views.setting.main.spaceMemberInvite.accountSample')"
+                >
               </td>
               <td class="clearfix">
-                <div class="select" :class="{error: r.errors.spaceRoleId}" >
-                  <my-space-role-select v-model="r.body.spaceRoleId" :my-role="myRole" />
-                </div>
-                <button v-if="rows.length > 1" @click="deleteRow(i)" type="button" />
+                <my-space-role-select v-model="r.body.spaceRoleId" class="select basicSelect" :class="{error: r.errors.spaceRoleId}" :my-role="myRole" />
+                <button v-if="rows.length > 1" type="button" @click="deleteRow(i)" />
               </td>
             </tr>
-            <tr :key="`errors_${i}`" v-if="r.errors" class="errors">
+            <tr v-if="r.errors" :key="`errors_${i}`" class="errors">
               <td colspan="3">
                 <template v-for="(errors, f) in r.errors">
                   <div v-for="(e, errorIndex) in errors" :key="errorIndex">
-                    <span v-if="errorFields.includes(f)">[{{$t(`views.setting.main.spaceMemberInvite.${f}`)}}] </span>
-                    <span>{{e}}</span>
+                    <span v-if="errorFields.includes(f)">[{{ $t(`views.setting.main.spaceMemberInvite.${f}`) }}] </span>
+                    <span>{{ e }}</span>
                   </div>
                 </template>
               </td>
@@ -49,11 +59,21 @@
           </template>
         </table>
         <div class="option_spaceMemberInvite_addButton clearfix">
-          <button class="option_spaceMemberInvite_addButton_button" @click="addRow()" type="button">{{$t('views.setting.main.spaceMemberInvite.addAnEntryField')}}</button>
-          <button class="option_spaceMemberInvite_button" type="submit">{{$t('views.setting.main.spaceMemberInvite.sendInvitation')}}</button>
+          <button class="iconButtonPlus" type="button" @click="addRow()">
+            {{ $t('views.setting.main.spaceMemberInvite.addAnEntryField') }}
+          </button>
+          <button class="basicButtonPrimary wide" type="submit" :disabled="!changes">
+            {{ $t('views.setting.main.spaceMemberInvite.sendInvitation') }}
+          </button>
         </div>
       </form>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="nextRouteForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscard"
+    />
   </div>
 </template>
 
@@ -61,8 +81,8 @@
 <style lang="stylus">
 .setting_main_spaceMemberInvite
   .option_spaceMemberInvite_table
-    input.error, .select.error select
-      background: #fbeeee
+    input.error, .select.error
+      background-color: #fbeeee
     tr.errors
       td
         padding-top: 0
@@ -73,10 +93,10 @@
 
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Mixins } from 'vue-property-decorator';
 import { apiRegistry, SpacesApi, SpacesSpaceIdUsersInviteByEmailPostRequestBody, ApiErrors, getJsonFromResponse } from '@/lib/api';
 import { SpaceRoles, SpaceRole } from '@/lib/permissions';
-
+import ConfirmChangeDiscardForSettingMixin from '@/mixins/ConfirmChangeDiscardForSettingMixin';
 import MySpaceRoleSelect from '@/components/MySpaceRoleSelect.vue';
 
 @Component({
@@ -84,7 +104,7 @@ import MySpaceRoleSelect from '@/components/MySpaceRoleSelect.vue';
     MySpaceRoleSelect,
   },
 })
-export default class SpaceMemberInvite extends Vue {
+export default class SpaceMemberInvite extends Mixins(ConfirmChangeDiscardForSettingMixin) {
   rows: {
     body: SpacesSpaceIdUsersInviteByEmailPostRequestBody;
     errors: {[field: string]: string[]};
@@ -101,6 +121,10 @@ export default class SpaceMemberInvite extends Vue {
 
   get selectableRoles() {
     return [...SpaceRoles.getSelectables(this.myRole)];
+  }
+
+  get changes() {
+    return this.rows.findIndex((r) => r.body.email.trim() !== '' || r.body.account.trim() !== '') >= 0;
   }
 
   addRow() {
@@ -129,7 +153,7 @@ export default class SpaceMemberInvite extends Vue {
       r.errors = {};
     });
 
-    let rows = this.rows.filter((r) => r.body.email.trim() !== '' || r.body.account.trim() !== '');
+    const rows = this.rows.filter((r) => r.body.email.trim() !== '' || r.body.account.trim() !== '');
     if (!rows.length) return;
 
     const myUser = this.$store.state.activeUser.myUser!;
@@ -142,7 +166,8 @@ export default class SpaceMemberInvite extends Vue {
         spacesSpaceIdUsersInviteByEmailPostRequestBody: rows.map((r) => r.body),
       });
       this.$flash(this.$t('views.setting.main.spaceMemberInvite.invitedMessage').toString(), 'success');
-      this.$store.mutations.settingRouter.to('space-members');
+      this.rows = [];
+      await this.$store.actions.settingRouter.to('space-members');
 
     } catch (err) {
       if (err instanceof Response) {

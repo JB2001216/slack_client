@@ -1,10 +1,12 @@
 <template>
-  <div class="optionWrap" v-if="currentRoute">
+  <div v-if="currentRoute" class="optionWrap">
     <div class="option">
-      <h2 class="option_title" :class="{noShadow: !currentRoute.title}">{{currentRoute.title ? currentRoute.title() : ''}}<button @click="$store.mutations.settingRouter.close()"/></h2>
+      <h2 class="option_title" :class="{noShadow: !currentRoute.title}">
+        {{ currentRoute.title ? currentRoute.title() : '' }}<button @click="$store.actions.settingRouter.close()" />
+      </h2>
       <div class="option_container clearfix">
-        <component v-if="currentRoute.main" :is="currentRoute.main"/>
-        <component v-if="currentRoute.sub" :is="currentRoute.sub"/>
+        <component :is="currentRoute.main" v-if="currentRoute.main" />
+        <component :is="currentRoute.sub" v-if="currentRoute.sub" />
       </div>
     </div>
   </div>
@@ -14,9 +16,14 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Constructor as VueConstructor } from 'vue-property-decorator';
 import SpacesSub from './sub/SpacesSub.vue';
+import SpaceGeneral from './main/spaces/SpaceGeneral.vue';
 import SpaceMembers from './main/spaces/SpaceMembers.vue';
 import SpaceMemberInvite from './main/spaces/SpaceMemberInvite.vue';
+import SpaceUserSub from './sub/SpaceUserSub.vue';
+import SpaceUserProfile from './main/spaces/SpaceUserProfile.vue';
+import SpaceUserAccount from './main/spaces/SpaceUserAccount.vue';
 import ProjectsSub from './sub/ProjectsSub.vue';
+import ProjectGeneral from './main/projects/ProjectGeneral.vue';
 import ProjectMembers from './main/projects/ProjectMembers.vue';
 import ProjectMemberAdd from './main/projects/ProjectMemberAdd.vue';
 import StatusFlow from './main/projects/StatusFlow.vue';
@@ -26,11 +33,16 @@ import i18n from '@/i18n';
 @Component({
   components: {
     SpacesSub,
+    SpaceGeneral,
     SpaceMembers,
     SpaceMemberInvite,
     ProjectsSub,
+    ProjectGeneral,
     ProjectMembers,
     ProjectMemberAdd,
+    SpaceUserSub,
+    SpaceUserProfile,
+    SpaceUserAccount,
   },
 })
 export default class SettingRouterView extends Vue {
@@ -42,6 +54,11 @@ export default class SettingRouterView extends Vue {
       main: VueConstructor;
     };
   } = {
+    'space-general': {
+      title: () => i18n.t('views.setting.sub.spaces.title'),
+      sub: SpacesSub,
+      main: SpaceGeneral,
+    },
     'space-members': {
       title: () => i18n.t('views.setting.sub.spaces.title'),
       sub: SpacesSub,
@@ -51,6 +68,11 @@ export default class SettingRouterView extends Vue {
       title: () => this.myUser ? i18n.t('views.setting.main.spaceMemberInvite.title', { spaceName: this.myUser.space.displayName || this.myUser.space.account }) : '',
       sub: null,
       main: SpaceMemberInvite,
+    },
+    'project-general': {
+      title: () => i18n.t('views.setting.sub.projects.title'),
+      sub: ProjectsSub,
+      main: ProjectGeneral,
     },
     'project-members': {
       title: () => i18n.t('views.setting.sub.projects.title'),
@@ -71,6 +93,16 @@ export default class SettingRouterView extends Vue {
       sub: ProjectsSub,
       main: StatusFlow,
     },
+    'space-user-profile': {
+      title: () => i18n.t('views.setting.sub.spaces.profileAndAccount'),
+      sub: SpaceUserSub,
+      main: SpaceUserProfile,
+    },
+    'space-user-account': {
+      title: () => i18n.t('views.setting.sub.spaces.profileAndAccount'),
+      sub: SpaceUserSub,
+      main: SpaceUserAccount,
+    },
   };
 
   get myUser() {
@@ -90,7 +122,7 @@ export default class SettingRouterView extends Vue {
 
   @Watch('$route')
   onRouteChange() {
-    this.$store.mutations.settingRouter.close();
+    this.$store.actions.settingRouter.close();
   }
 }
 </script>

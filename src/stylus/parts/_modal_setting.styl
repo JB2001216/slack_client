@@ -22,7 +22,7 @@
   h2{
     width: 100%;
     padding: 20px 30px;
-    font-family: Noto Sans CJK JP;
+    font-family: $fontFamilyBody;
     font-size: 24px;
     line-height: 36px;
     color: #333333;
@@ -47,7 +47,7 @@
       background: #FFFFFF;
       cursor: pointer;
       box-shadow: 0px -1px 0px rgba(0, 0, 0, 0), -1px 0px 0px rgba(0, 0, 0, 0), 1px 0px 0px rgba(0, 0, 0, 0);
-      border-bottom: 1px solid #C4C4C4;
+      border-bottom: 1px solid $colors.lightGray
       border-radius: 8px 8px 0px 0px;
       &.active{
         background: #FAFAFC;
@@ -60,13 +60,13 @@
   &_status{
     padding: 20px 32px 32px 32px;
     background: #FAFAFC;
-    border: 1px solid #C4C4C4;
+    border: 1px solid $colors.lightGray
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     overflow-y: auto;
     h3{
       margin-bottom: 20px;
-      font-family: Noto Sans CJK JP;
+      font-family: $fontFamilyBody;
       font-weight: 700;
       color: rgba(51, 51, 51, 0.72);
       font-size: 14px;
@@ -84,7 +84,7 @@
           min-height: 220px;
           padding-right: 31px;
           margin-left: 15px;
-          border-right: 1px solid #C4C4C4;
+          border-right: 1px solid $colors.lightGray
           position: relative;
           top: 6px;
           left: 0;
@@ -107,14 +107,14 @@
             padding: 6px 16px;
             margin-left: 5px;
             background: #fff;
-            border: 1px solid #C4C4C4;
+            border: 1px solid $colors.lightGray
             border-radius: 4px;
             position: relative;
             top: -6px;
             left: 0;
             p{
               float: left;
-              font-family: Noto Sans CJK JP;
+              font-family: $fontFamilyBody;
               font-size: 14px;
               line-height: 1.3;
             }
@@ -140,7 +140,7 @@
         &_list{
           min-height: 220px;
           padding-left: 31px;
-          border-left: 1px solid #C4C4C4;
+          border-left: 1px solid $colors.lightGray
           list-style: none;
           position: relative;
           top: 0;
@@ -166,7 +166,7 @@
                 }
               }
               p{
-                color: #2F80ED;
+                color: $themeColors.active
               }
             }
           }
@@ -176,14 +176,14 @@
             padding: 6px 16px;
             margin-left: 5px;
             background: #fff;
-            border: 1px solid #C4C4C4;
+            border: 1px solid $colors.lightGray
             border-radius: 4px;
             position: relative;
             top: -6px;
             left: 0;
             p{
               float: left;
-              font-family: Noto Sans CJK JP;
+              font-family: $fontFamilyBody;
               font-size: 14px;
               line-height: 1.3;
             }
@@ -200,13 +200,13 @@
   &_member{
     padding: 40px 32px 32px 32px;
     background: #FAFAFC;
-    border: 1px solid #C4C4C4;
+    border: 1px solid $colors.lightGray
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     overflow-y: auto;
     h3{
       margin-bottom: 12px;
-      font-family: Noto Sans CJK JP;
+      font-family: $fontFamilyBody;
       font-weight: 700;
       color: rgba(51, 51, 51, 0.72);
       font-size: 14px;
@@ -215,9 +215,9 @@
     &_link{
       padding: 10px 15px;
       background: #fff;
-      border: 1px solid #C4C4C4;
+      border: 1px solid $colors.lightGray
       border-radius: 4px;
-      color: #2F80ED;
+      color: $themeColors.active
     }
     &_table{
       margin-top: 24px;
@@ -254,9 +254,9 @@
         height: 52px;
         padding: 15px;
         background: #fff;
-        border: 1px solid #C4C4C4;
+        border: 1px solid $colors.lightGray
         border-radius: 4px;
-        font-family: Noto Sans CJK JP;
+        font-family: $fontFamilyBody;
         font-size: 14px;
       }
       &_search{
@@ -295,7 +295,7 @@
             background: #fff;
             border: none;
             outline: none;
-            font-family: Noto Sans CJK JP;
+            font-family: $fontFamilyBody;
             font-size: 14px;
             color: rgba(51, 51, 51, 0.72);
           }
@@ -307,12 +307,12 @@
           display: block;
           width: 172px;
           padding: 8px;
-          background: #2F80ED;
+          background-color: $themeColors.active
           border: none;
           border-radius: 90px;
           cursor: pointer;
           outline: none;
-          font-family: Noto Sans CJK JP;
+          font-family: $fontFamilyBody;
           font-size: 14px;
           color: #fff;
         }
@@ -323,13 +323,13 @@
   &_general{
     padding: 40px 32px 32px 32px;
     background: #FAFAFC;
-    border: 1px solid #C4C4C4;
+    border: 1px solid $colors.lightGray
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     overflow-y: auto;
     h3{
       margin-top: 50px;
-      font-family: Noto Sans CJK JP;
+      font-family: $fontFamilyBody;
       font-weight: 700;
       color: rgba(51, 51, 51, 0.72);
       font-size: 14px;
@@ -346,13 +346,13 @@
       width: calc(100% - 210px);
       padding: 10px 15px;
       background: #fff;
-      border: 1px solid #C4C4C4;
+      border: 1px solid $colors.lightGray
       border-radius: 4px;
       input[type=text]{
         width: calc(100% - 250px);
         border: none;
         outline: none;
-        font-family: Noto Sans CJK JP;
+        font-family: $fontFamilyBody;
         font-size: 14px;
         &::placeholder{
           color: rgba(51, 51, 51, 0.72);
@@ -360,10 +360,10 @@
       }
       p{
         float: right;
-        font-family: Noto Sans CJK JP;
+        font-family: $fontFamilyBody;
         font-weight: 700;
         font-size: 14px;
-        color: #2F80ED;
+        color: $themeColors.active
       }
     }
     &_submit{
@@ -373,12 +373,12 @@
         width: 192px;
         padding: 12px;
         margin-left: 16px;
-        background: #c4c4c4;
+        background: $colors.lightGray
         border: none;
         border-radius: 90px;
         cursor: pointer;
         outline: none;
-        font-family: Noto Sans CJK JP;
+        font-family: $fontFamilyBody;
         font-size: 14px;
         color: #fff;
       }

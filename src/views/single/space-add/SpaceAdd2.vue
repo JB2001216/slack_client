@@ -4,16 +4,16 @@
       <h2>Ernie</h2>
     </div>
     <div class="columnWrap_right">
-      <h3>{{$t('views.spaceAdd.addANewWorkspace')}}</h3>
+      <h3>{{ $t('views.spaceAdd.addANewSpace') }}</h3>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
-          <my-text-input
+          <my-single-form-text-input
             v-model="data.owner.email"
             type="email"
             required
             readonly
           />
-          <my-text-input
+          <my-single-form-text-input
             v-model="data.account"
             :message="messages.account || null"
             type="text"
@@ -21,7 +21,7 @@
             :placeholder="$t('views.spaceAdd.spaceName')"
             @input="messages.account = null"
           />
-          <my-text-input
+          <my-single-form-text-input
             v-model="data.owner.account"
             :message="ownerMessages.account || null"
             type="text"
@@ -30,29 +30,44 @@
             @input="ownerMessages.account = null"
           />
         </div>
-        <button type="submit" v-show="false" />
+        <button v-show="false" type="submit" />
       </form>
-      <div class="columnWrap_right_back" v-if="backTo">
+      <div v-if="backTo" class="columnWrap_right_back">
         <router-link :to="backTo">
-          <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.66675 13.5997L7.60956 12.6569L1.00989 6.0572L0.0670837 7.00001L6.66675 13.5997Z" fill="#333333"/>
-            <path d="M7.60962 1.34314L6.66681 0.40033L0.0670837 7.00001L1.00995 7.9428L7.60962 1.34314Z" fill="#333333"/>
+          <svg
+            width="8"
+            height="14"
+            viewBox="0 0 8 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M6.66675 13.5997L7.60956 12.6569L1.00989 6.0572L0.0670837 7.00001L6.66675 13.5997Z" fill="#333333" />
+            <path d="M7.60962 1.34314L6.66681 0.40033L0.0670837 7.00001L1.00995 7.9428L7.60962 1.34314Z" fill="#333333" />
           </svg>
           <span>Back</span>
         </router-link>
       </div>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="nextRouteForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscard"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { MyTextInputMessage } from '@/components/MyTextInput';
+import { Component, Prop, Vue, Mixins } from 'vue-property-decorator';
+import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
 import { apiRegistry, SpacesApi, SpacesPostRequestBody, ApiErrors, getJsonFromResponse } from '@/lib/api';
+import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
+
 
 @Component
-export default class SpaceAdd2 extends Vue {
+export default class SpaceAdd2 extends Mixins(ConfirmChangeDiscardMixin) {
   saving = false;
+  saved = false;
   data: SpacesPostRequestBody = {
     token: '',
     account: '',
@@ -61,10 +76,14 @@ export default class SpaceAdd2 extends Vue {
       account: '',
     },
   };
-  messages: {[field: string]: MyTextInputMessage} = {
+  messages: {[field: string]: MySingleFormTextInputMessage} = {
   };
-  ownerMessages: {[field: string]: MyTextInputMessage} = {
+  ownerMessages: {[field: string]: MySingleFormTextInputMessage} = {
   };
+
+  get changes() {
+    return !this.saved;
+  }
 
   get backTo() {
     let userId: number | null = null;
@@ -76,11 +95,11 @@ export default class SpaceAdd2 extends Vue {
 
     if (userId) {
       return {
-        path: 'user',
+        name: 'user',
         params: { userId: userId.toString() },
       };
     } else {
-      return { path: 'space-add1' };
+      return { name: 'space-add1' };
     }
   }
 
@@ -97,7 +116,8 @@ export default class SpaceAdd2 extends Vue {
         spacesPostRequestBody: this.data,
       });
 
-      const user = await this.$store.actions.addLoggedInUsers(res.token);
+      const user = await this.$store.actions.addLoggedInUser(res.token);
+      this.saved = true;
       this.$router.push({
         name: 'user',
         params: {
@@ -110,8 +130,8 @@ export default class SpaceAdd2 extends Vue {
         const json = await getJsonFromResponse(err);
         if (json && json.error) {
           if (ApiErrors.ValidationError === json.error) {
-            const messages: {[field: string]: MyTextInputMessage} = {};
-            const ownerMessages: {[field: string]: MyTextInputMessage} = {};
+            const messages: {[field: string]: MySingleFormTextInputMessage} = {};
+            const ownerMessages: {[field: string]: MySingleFormTextInputMessage} = {};
             Object.keys(json.data).forEach((k) => {
               if (k === 'owner') {
                 Object.keys(json.data.owner).forEach((k) => {

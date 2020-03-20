@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -32,6 +33,18 @@ import {
     SpacesPostResponse,
     SpacesPostResponseFromJSON,
     SpacesPostResponseToJSON,
+    SpacesSpaceIdAvatarPostResponse,
+    SpacesSpaceIdAvatarPostResponseFromJSON,
+    SpacesSpaceIdAvatarPostResponseToJSON,
+    SpacesSpaceIdNoticesCheckedPostRequestBody,
+    SpacesSpaceIdNoticesCheckedPostRequestBodyFromJSON,
+    SpacesSpaceIdNoticesCheckedPostRequestBodyToJSON,
+    SpacesSpaceIdNoticesGetResponse,
+    SpacesSpaceIdNoticesGetResponseFromJSON,
+    SpacesSpaceIdNoticesGetResponseToJSON,
+    SpacesSpaceIdRecentsGetResponse,
+    SpacesSpaceIdRecentsGetResponseFromJSON,
+    SpacesSpaceIdRecentsGetResponseToJSON,
     SpacesSpaceIdUsersGetResponse,
     SpacesSpaceIdUsersGetResponseFromJSON,
     SpacesSpaceIdUsersGetResponseToJSON,
@@ -58,6 +71,15 @@ export interface SpacesPostRequest {
     spacesPostRequestBody: SpacesPostRequestBody;
 }
 
+export interface SpacesSpaceIdAvatarPostRequest {
+    spaceId: number;
+    avatar: Blob;
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+}
+
 export interface SpacesSpaceIdDeleteRequest {
     spaceId: number;
 }
@@ -66,10 +88,29 @@ export interface SpacesSpaceIdGetRequest {
     spaceId: number;
 }
 
+export interface SpacesSpaceIdNoticesCheckedPostRequest {
+    spaceId: number;
+    spacesSpaceIdNoticesCheckedPostRequestBody?: SpacesSpaceIdNoticesCheckedPostRequestBody;
+}
+
+export interface SpacesSpaceIdNoticesGetRequest {
+    spaceId: number;
+    page?: number;
+    limit?: number;
+}
+
 export interface SpacesSpaceIdPutRequest {
     spaceId: number;
     displayName?: string | null;
-    avator?: Blob | null;
+}
+
+export interface SpacesSpaceIdRecentsGetRequest {
+    spaceId: number;
+    page?: number;
+    limit?: number;
+    projectId?: number;
+    table?: string;
+    pk?: number;
 }
 
 export interface SpacesSpaceIdUsersGetRequest {
@@ -78,6 +119,7 @@ export interface SpacesSpaceIdUsersGetRequest {
     limit?: number;
     account?: string;
     displayName?: string;
+    projectIdExact?: number;
     projectIdNotExact?: number;
     keyword?: string;
 }
@@ -85,6 +127,16 @@ export interface SpacesSpaceIdUsersGetRequest {
 export interface SpacesSpaceIdUsersInviteByEmailPostRequest {
     spaceId: number;
     spacesSpaceIdUsersInviteByEmailPostRequestBody: Array<SpacesSpaceIdUsersInviteByEmailPostRequestBody>;
+}
+
+export interface SpacesSpaceIdUsersUserIdAvatarPostRequest {
+    spaceId: number;
+    userId: number;
+    avatar: Blob;
+    left: number;
+    top: number;
+    width: number;
+    height: number;
 }
 
 export interface SpacesSpaceIdUsersUserIdDeleteRequest {
@@ -133,9 +185,9 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-   /**
-    * スペース登録用メール認証メッセージ送信
-    */
+    /**
+     * スペース登録用メール認証メッセージ送信
+     */
     async spacesConfirmPost(requestParameters: SpacesConfirmPostRequest): Promise<void> {
         await this.spacesConfirmPostRaw(requestParameters);
     }
@@ -173,8 +225,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpacesGetResponseFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async spacesGet(requestParameters: SpacesGetRequest): Promise<SpacesGetResponse> {
         const response = await this.spacesGetRaw(requestParameters);
         return await response.value();
@@ -205,11 +257,100 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpacesPostResponseFromJSON(jsonValue));
     }
 
-   /**
-    * メール認証通過後、スペース登録
-    */
+    /**
+     * メール認証通過後、スペース登録
+     */
     async spacesPost(requestParameters: SpacesPostRequest): Promise<SpacesPostResponse> {
         const response = await this.spacesPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async spacesSpaceIdAvatarPostRaw(requestParameters: SpacesSpaceIdAvatarPostRequest): Promise<runtime.ApiResponse<SpacesSpaceIdAvatarPostResponse>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling spacesSpaceIdAvatarPost.');
+        }
+
+        if (requestParameters.avatar === null || requestParameters.avatar === undefined) {
+            throw new runtime.RequiredError('avatar','Required parameter requestParameters.avatar was null or undefined when calling spacesSpaceIdAvatarPost.');
+        }
+
+        if (requestParameters.left === null || requestParameters.left === undefined) {
+            throw new runtime.RequiredError('left','Required parameter requestParameters.left was null or undefined when calling spacesSpaceIdAvatarPost.');
+        }
+
+        if (requestParameters.top === null || requestParameters.top === undefined) {
+            throw new runtime.RequiredError('top','Required parameter requestParameters.top was null or undefined when calling spacesSpaceIdAvatarPost.');
+        }
+
+        if (requestParameters.width === null || requestParameters.width === undefined) {
+            throw new runtime.RequiredError('width','Required parameter requestParameters.width was null or undefined when calling spacesSpaceIdAvatarPost.');
+        }
+
+        if (requestParameters.height === null || requestParameters.height === undefined) {
+            throw new runtime.RequiredError('height','Required parameter requestParameters.height was null or undefined when calling spacesSpaceIdAvatarPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.avatar !== undefined) {
+            formParams.append('avatar', requestParameters.avatar as any);
+        }
+
+        if (requestParameters.left !== undefined) {
+            formParams.append('left', requestParameters.left as any);
+        }
+
+        if (requestParameters.top !== undefined) {
+            formParams.append('top', requestParameters.top as any);
+        }
+
+        if (requestParameters.width !== undefined) {
+            formParams.append('width', requestParameters.width as any);
+        }
+
+        if (requestParameters.height !== undefined) {
+            formParams.append('height', requestParameters.height as any);
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/avatar/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SpacesSpaceIdAvatarPostResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async spacesSpaceIdAvatarPost(requestParameters: SpacesSpaceIdAvatarPostRequest): Promise<SpacesSpaceIdAvatarPostResponse> {
+        const response = await this.spacesSpaceIdAvatarPostRaw(requestParameters);
         return await response.value();
     }
 
@@ -238,8 +379,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-   /**
-    */
+    /**
+     */
     async spacesSpaceIdDelete(requestParameters: SpacesSpaceIdDeleteRequest): Promise<void> {
         await this.spacesSpaceIdDeleteRaw(requestParameters);
     }
@@ -265,10 +406,80 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async spacesSpaceIdGet(requestParameters: SpacesSpaceIdGetRequest): Promise<Space> {
         const response = await this.spacesSpaceIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async spacesSpaceIdNoticesCheckedPostRaw(requestParameters: SpacesSpaceIdNoticesCheckedPostRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling spacesSpaceIdNoticesCheckedPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/notices/checked/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: SpacesSpaceIdNoticesCheckedPostRequestBodyToJSON(requestParameters.spacesSpaceIdNoticesCheckedPostRequestBody),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async spacesSpaceIdNoticesCheckedPost(requestParameters: SpacesSpaceIdNoticesCheckedPostRequest): Promise<void> {
+        await this.spacesSpaceIdNoticesCheckedPostRaw(requestParameters);
+    }
+
+    /**
+     */
+    async spacesSpaceIdNoticesGetRaw(requestParameters: SpacesSpaceIdNoticesGetRequest): Promise<runtime.ApiResponse<SpacesSpaceIdNoticesGetResponse>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling spacesSpaceIdNoticesGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/notices/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SpacesSpaceIdNoticesGetResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async spacesSpaceIdNoticesGet(requestParameters: SpacesSpaceIdNoticesGetRequest): Promise<SpacesSpaceIdNoticesGetResponse> {
+        const response = await this.spacesSpaceIdNoticesGetRaw(requestParameters);
         return await response.value();
     }
 
@@ -287,13 +498,22 @@ export class SpacesApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
         }
 
-        const formData = new FormData();
-        if (requestParameters.displayName !== undefined) {
-            formData.append('displayName', requestParameters.displayName as any);
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
         }
 
-        if (requestParameters.avator !== undefined) {
-            formData.append('avator', requestParameters.avator as any);
+        if (requestParameters.displayName !== undefined) {
+            formParams.append('displayName', requestParameters.displayName as any);
         }
 
         const response = await this.request({
@@ -301,16 +521,64 @@ export class SpacesApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: formData,
+            body: formParams,
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async spacesSpaceIdPut(requestParameters: SpacesSpaceIdPutRequest): Promise<Space> {
         const response = await this.spacesSpaceIdPutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async spacesSpaceIdRecentsGetRaw(requestParameters: SpacesSpaceIdRecentsGetRequest): Promise<runtime.ApiResponse<SpacesSpaceIdRecentsGetResponse>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling spacesSpaceIdRecentsGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.projectId !== undefined) {
+            queryParameters['project_id'] = requestParameters.projectId;
+        }
+
+        if (requestParameters.table !== undefined) {
+            queryParameters['table'] = requestParameters.table;
+        }
+
+        if (requestParameters.pk !== undefined) {
+            queryParameters['pk'] = requestParameters.pk;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/recents/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SpacesSpaceIdRecentsGetResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async spacesSpaceIdRecentsGet(requestParameters: SpacesSpaceIdRecentsGetRequest): Promise<SpacesSpaceIdRecentsGetResponse> {
+        const response = await this.spacesSpaceIdRecentsGetRaw(requestParameters);
         return await response.value();
     }
 
@@ -339,6 +607,10 @@ export class SpacesApi extends runtime.BaseAPI {
             queryParameters['display_name'] = requestParameters.displayName;
         }
 
+        if (requestParameters.projectIdExact !== undefined) {
+            queryParameters['project_id__exact'] = requestParameters.projectIdExact;
+        }
+
         if (requestParameters.projectIdNotExact !== undefined) {
             queryParameters['project_id__not_exact'] = requestParameters.projectIdNotExact;
         }
@@ -363,8 +635,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpacesSpaceIdUsersGetResponseFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async spacesSpaceIdUsersGet(requestParameters: SpacesSpaceIdUsersGetRequest): Promise<SpacesSpaceIdUsersGetResponse> {
         const response = await this.spacesSpaceIdUsersGetRaw(requestParameters);
         return await response.value();
@@ -402,10 +674,103 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-   /**
-    */
+    /**
+     */
     async spacesSpaceIdUsersInviteByEmailPost(requestParameters: SpacesSpaceIdUsersInviteByEmailPostRequest): Promise<void> {
         await this.spacesSpaceIdUsersInviteByEmailPostRaw(requestParameters);
+    }
+
+    /**
+     */
+    async spacesSpaceIdUsersUserIdAvatarPostRaw(requestParameters: SpacesSpaceIdUsersUserIdAvatarPostRequest): Promise<runtime.ApiResponse<SpacesSpaceIdAvatarPostResponse>> {
+        if (requestParameters.spaceId === null || requestParameters.spaceId === undefined) {
+            throw new runtime.RequiredError('spaceId','Required parameter requestParameters.spaceId was null or undefined when calling spacesSpaceIdUsersUserIdAvatarPost.');
+        }
+
+        if (requestParameters.userId === null || requestParameters.userId === undefined) {
+            throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling spacesSpaceIdUsersUserIdAvatarPost.');
+        }
+
+        if (requestParameters.avatar === null || requestParameters.avatar === undefined) {
+            throw new runtime.RequiredError('avatar','Required parameter requestParameters.avatar was null or undefined when calling spacesSpaceIdUsersUserIdAvatarPost.');
+        }
+
+        if (requestParameters.left === null || requestParameters.left === undefined) {
+            throw new runtime.RequiredError('left','Required parameter requestParameters.left was null or undefined when calling spacesSpaceIdUsersUserIdAvatarPost.');
+        }
+
+        if (requestParameters.top === null || requestParameters.top === undefined) {
+            throw new runtime.RequiredError('top','Required parameter requestParameters.top was null or undefined when calling spacesSpaceIdUsersUserIdAvatarPost.');
+        }
+
+        if (requestParameters.width === null || requestParameters.width === undefined) {
+            throw new runtime.RequiredError('width','Required parameter requestParameters.width was null or undefined when calling spacesSpaceIdUsersUserIdAvatarPost.');
+        }
+
+        if (requestParameters.height === null || requestParameters.height === undefined) {
+            throw new runtime.RequiredError('height','Required parameter requestParameters.height was null or undefined when calling spacesSpaceIdUsersUserIdAvatarPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // token authentication
+        }
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.avatar !== undefined) {
+            formParams.append('avatar', requestParameters.avatar as any);
+        }
+
+        if (requestParameters.left !== undefined) {
+            formParams.append('left', requestParameters.left as any);
+        }
+
+        if (requestParameters.top !== undefined) {
+            formParams.append('top', requestParameters.top as any);
+        }
+
+        if (requestParameters.width !== undefined) {
+            formParams.append('width', requestParameters.width as any);
+        }
+
+        if (requestParameters.height !== undefined) {
+            formParams.append('height', requestParameters.height as any);
+        }
+
+        const response = await this.request({
+            path: `/spaces/{spaceId}/users/{userId}/avatar/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters.spaceId))).replace(`{${"userId"}}`, encodeURIComponent(String(requestParameters.userId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SpacesSpaceIdAvatarPostResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async spacesSpaceIdUsersUserIdAvatarPost(requestParameters: SpacesSpaceIdUsersUserIdAvatarPostRequest): Promise<SpacesSpaceIdAvatarPostResponse> {
+        const response = await this.spacesSpaceIdUsersUserIdAvatarPostRaw(requestParameters);
+        return await response.value();
     }
 
     /**
@@ -437,8 +802,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.VoidApiResponse(response);
     }
 
-   /**
-    */
+    /**
+     */
     async spacesSpaceIdUsersUserIdDelete(requestParameters: SpacesSpaceIdUsersUserIdDeleteRequest): Promise<void> {
         await this.spacesSpaceIdUsersUserIdDeleteRaw(requestParameters);
     }
@@ -472,8 +837,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceUserFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async spacesSpaceIdUsersUserIdGet(requestParameters: SpacesSpaceIdUsersUserIdGetRequest): Promise<SpaceUser> {
         const response = await this.spacesSpaceIdUsersUserIdGetRaw(requestParameters);
         return await response.value();
@@ -515,8 +880,8 @@ export class SpacesApi extends runtime.BaseAPI {
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceUserFromJSON(jsonValue));
     }
 
-   /**
-    */
+    /**
+     */
     async spacesSpaceIdUsersUserIdPut(requestParameters: SpacesSpaceIdUsersUserIdPutRequest): Promise<SpaceUser> {
         const response = await this.spacesSpaceIdUsersUserIdPutRaw(requestParameters);
         return await response.value();

@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -82,7 +83,7 @@ export function FileRecordFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function FileRecordToJSON(value?: FileRecord): any {
+export function FileRecordToJSON(value?: FileRecord | null): any {
     if (value === undefined) {
         return undefined;
     }

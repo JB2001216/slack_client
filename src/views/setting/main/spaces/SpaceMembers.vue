@@ -1,32 +1,32 @@
 <template>
   <div class="option_mainColumn">
-    <h3 class="option_mainColumn_title">{{$t('views.setting.main.spaceMembers.memberList')}}</h3>
+    <h3 class="option_mainColumn_title">
+      {{ $t('views.setting.main.spaceMembers.memberList') }}
+    </h3>
     <div class="option_spaceMember_table">
       <table>
         <tr>
-          <th/>
-          <th>{{$t('views.setting.main.spaceMembers.email')}}</th>
-          <th>{{$t('views.setting.main.spaceMembers.name')}}</th>
-          <th>{{$t('views.setting.main.spaceMembers.role')}}</th>
+          <th />
+          <th>{{ $t('views.setting.main.spaceMembers.email') }}</th>
+          <th>{{ $t('views.setting.main.spaceMembers.name') }}</th>
+          <th>{{ $t('views.setting.main.spaceMembers.role') }}</th>
         </tr>
         <tr v-for="user in users" :key="user.id">
           <td>
             <div class="option_spaceMember_table_img">
-              <img v-if="user.avatarUrl" :src="user.avatarUrl" alt="">
-              <img v-else src="~@/assets/images/parts/img_option_space_member_01.jpg" alt="">
+              <my-space-user-avatar :user="user" :size="40" shape="roundedSquare" />
             </div>
           </td>
-          <td>{{user.email}}</td>
-          <td>{{user.displayName || user.account}}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.displayName || user.account }}</td>
           <td class="clearfix">
-            <div class="select">
-              <my-space-role-select
-                :value="user.spaceRoleId"
-                :my-role="myRole"
-                :current-role="user.currentRole"
-                @input="onSpaceRoleChange($event, user)"
-              />
-            </div>
+            <my-space-role-select
+              class="select basicSelect"
+              :value="user.spaceRoleId"
+              :my-role="myRole"
+              :current-role="user.currentRole"
+              @input="onSpaceRoleChange($event, user)"
+            />
             <button v-if="myRole.checkManageable(user.currentRole)" @click="removingUser = removingUser || user" />
           </td>
         </tr>
@@ -35,27 +35,37 @@
       <!-- メンバーが少ない場合 -->
       <!--
           <div class="option_spaceMember_addButton">
-          <button @click="$store.mutations.settingRouter.to('space-member-invite')">{{$t('views.setting.main.spaceMembers.addMember')}}</button>
+          <button @click="$store.actions.settingRouter.to('space-member-invite')">{{$t('views.setting.main.spaceMembers.addMember')}}</button>
           </div>
           -->
     </div>
     <!-- メンバーが多い場合 -->
     <div class="option_spaceMember_addBar">
-      <button @click="$store.mutations.settingRouter.to('space-member-invite')">{{$t('views.setting.main.spaceMembers.addMember')}}</button>
+      <button @click="$store.actions.settingRouter.to('space-member-invite')">
+        {{ $t('views.setting.main.spaceMembers.addMember') }}
+      </button>
     </div>
 
     <my-modal
       v-if="removingUser"
       :value="!!removingUser"
+      class="modalDialog"
+      content-class="modalDialog_content"
       @input="removingUser = null"
-      class="option_modal"
-      content-class="option_modal_dialog"
     >
-      <p class="option_modal_dialog_title">{{$t('views.setting.main.spaceMembers.deleteConfirmMessage', { name: removingUser.displayName || removingUser.account, email: removingUser.email })}}</p>
-      <p class="option_modal_dialog_description">{{$t('views.setting.main.spaceMembers.deleteAttentionMessage')}}</p>
-      <div class="option_modal_dialog_button clearfix">
-        <button class="option_modal_dialog_button_yes" @click="remove()">{{$t('common.yes')}}</button>
-        <button class="option_modal_dialog_button_no" @click="removingUser = null">{{$t('common.no')}}</button>
+      <p class="modalDialog_content_title">
+        {{ $t('views.setting.main.spaceMembers.deleteConfirmMessage', { name: removingUser.displayName || removingUser.account, email: removingUser.email }) }}
+      </p>
+      <p class="modalDialog_content_description">
+        {{ $t('views.setting.main.spaceMembers.deleteAttentionMessage') }}
+      </p>
+      <div class="modalDialog_content_footerButtons">
+        <button class="basicButtonNormal modalDialog_content_footerButtons_button" @click="removingUser = null">
+          {{ $t('common.no') }}
+        </button>
+        <button class="basicButtonDanger modalDialog_content_footerButtons_button" @click="remove()">
+          {{ $t('common.yes') }}
+        </button>
       </div>
     </my-modal>
   </div>

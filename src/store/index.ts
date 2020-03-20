@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { install, store as createStore } from 'sinai';
 import root from './root';
+import { subscribeSyncEvents } from './sync';
 
 install(Vue);
 
@@ -13,5 +14,7 @@ declare module 'vue/types/vue' {
     $store: typeof store;
   }
 }
+
+subscribeSyncEvents(store);
 
 export default store;

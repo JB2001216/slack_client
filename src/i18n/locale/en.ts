@@ -13,6 +13,8 @@ const struct: LocaleStruct = {
       login: 'Login',
       save: 'Save',
       cancel: 'Cancel',
+      finishEditing: 'Finish editing',
+      markdownHelp: 'Markdown Help',
       spaceRole: {
         OWNER: 'Owner',
         ADMIN: 'Administrator',
@@ -26,6 +28,10 @@ const struct: LocaleStruct = {
     },
 
     components: {
+      myConfirmChangeDiscardDialog: {
+        title: 'Your entry is not saved.',
+        description: 'Are you sure you want to discard the data you entered?',
+      },
       myDateRangeInput: {
         save: 'Save',
         cancel: 'Cancel',
@@ -33,6 +39,27 @@ const struct: LocaleStruct = {
       },
       myProjectStatusInput: {
         others: 'Others',
+      },
+      myChargerInput: {
+        baton: 'Baton',
+        notSet: 'not set',
+        addMembers: 'Add Members',
+      },
+      myChargerDialog: {
+        title: 'Member list',
+        baton: 'Baton',
+      },
+      mySpaceUserSearchInput: {
+        notfound: 'No users found that match the condition',
+        searchTextPlaceholder: 'Search by name or email address',
+      },
+      myMarkdownEditor: {
+        noteLink: {
+          move: 'Move',
+          enter: 'Enter',
+          cancel: 'Cancel',
+          lastUpdated: 'Last Updated',
+        },
       },
     },
 
@@ -90,6 +117,14 @@ const struct: LocaleStruct = {
           priorityOrder: 'Priority order',
           statusOrder: 'Status order',
         },
+        filterForm: {
+          all: 'All',
+          notClosed: 'Not {closedName}',
+          status: 'Status',
+          assignedUsers: 'Assigned users',
+          assignedUser: 'Assigned user',
+          batonHolder: 'Baton holder',
+        },
       },
 
       // main
@@ -100,12 +135,28 @@ const struct: LocaleStruct = {
         '_name_HasCreatedTask': '{name} has created a task.',
         enterAComment: 'Enter a comment',
         commentSyncFailed: 'Comment sync failed',
+        addedChargeUser: '{name} was added to the member list.',
+        deletedChargeUser: '{name} was deleted from the member list.',
+        chargerDialogTitle: 'Task member list',
+        tags: {
+          tags: 'Tags',
+          addNewTag: 'Add related tags',
+          listOfAssociatedTasks: 'List of tasks associated with ',
+        },
       },
       noteColumn: {
         save: 'save',
+        enterDetails: 'Enter details',
+        detailsAreEmpty: 'Details are empty.',
         enterWideScreen: 'Enter wide screen',
         exitWideScreen: 'Exit wide screen',
         markdownHelp: 'Markdown Help',
+        addedChargeUser: '{name} was added to the member list.',
+        deletedChargeUser: '{name} was deleted from the member list.',
+        chargerDialogTitle: 'Note member list',
+        status: 'Status',
+        baton: 'Baton',
+        lastUpdated: 'Last Updated',
       },
 
       // setting
@@ -115,6 +166,9 @@ const struct: LocaleStruct = {
             title: 'Space Settings',
             general: 'General',
             members: 'Members',
+            profileAndAccount: 'Profile & Account',
+            userProfile: 'Profile Settings',
+            userAccount: 'Account Settings',
           },
           projects: {
             title: 'Project Settings',
@@ -125,6 +179,13 @@ const struct: LocaleStruct = {
           },
         },
         main: {
+          spaceGeneral: {
+            title: 'Space icon',
+            uploadBtn: 'Upload image',
+            uploadDescription: 'Space icon can be changed by drag and drop',
+            title2: 'Space name',
+            saveBtn: 'Save changes',
+          },
           spaceMembers: {
             memberList: 'Member List',
             email: 'Email',
@@ -146,6 +207,10 @@ const struct: LocaleStruct = {
             accountSample: 'john_smith',
             invitedMessage: 'Invitation email sent successfully',
           },
+          projectGeneral: {
+            title: 'Project name',
+            save: 'Save changes',
+          },
           projectMembers: {
             memberList: 'Member List',
             email: 'Email',
@@ -156,7 +221,6 @@ const struct: LocaleStruct = {
           },
           projectMemberAdd: {
             title: 'Add members to {projectName}',
-            searchTextPlaceholder: 'Search by name or email address',
             email: 'Email',
             name: 'Name',
             role: 'Role',
@@ -168,12 +232,32 @@ const struct: LocaleStruct = {
               task: 'Task flow Settings',
               note: 'Note flow Settings',
             },
+            preview: 'Preview',
             flow: 'Flow',
             others: 'Others',
             addAnEntryField: 'Add an entry field',
             save: 'Save',
             updatedMessage: 'Updated.',
             blankItemExists: 'Black item exists.',
+          },
+          userAccount: {
+            title: 'Email address',
+            emailDescription: 'Your email address is',
+            subTitle: 'New email address',
+            sendEmailBtn: 'Send email',
+            phoneNumber: 'Phone number',
+            sendPassBtn: 'Send pincode',
+            temporaryPassPlaceholder: 'Temporary password',
+            text: 'As a remedy in case you forget your email address or forget it SMS registration is recommended. It is private to non-persons.',
+            confirmEmailHasBeenSent: 'Confirmation email has been sent.',
+            smsWithPincodeHasBeenSent: 'SMS with pincode has been sent.',
+          },
+          userProfile: {
+            uploadBtn: 'Upload image',
+            uploadDescription: 'User Avatar can be changed by drag and drop',
+            userAvatar: 'User Avatar',
+            userName: 'User Name',
+            saveBtn: 'Save changes',
           },
         },
       },
@@ -201,7 +285,7 @@ const struct: LocaleStruct = {
         login: 'Login',
         enterTheEmail: 'Enter the email',
         theRegistrationURLHasBeenSent: 'The registration URL has been sent.',
-        addANewspace: 'Add a new space',
+        addANewSpace: 'Add a new space',
         spaceName: 'Space Name (Alphanumeric only)',
         userName: 'User Name (Alphanumeric only)',
       },

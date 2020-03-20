@@ -21,7 +21,7 @@
   overflow-y auto;
   &_container{
     h2{
-      font-family: Noto Sans CJK JP;
+      font-family: $fontFamilyBody;
       font-size: 22px;
       line-height: normal;
       color: #333333;
@@ -52,7 +52,7 @@
             background: #fff;
             font-size: 14px;
             color: #333;
-            border: 1px solid #C4C4C4;
+            border: 1px solid $colors.lightGray
             box-sizing: border-box;
             border-radius: 4px;
             font-weight: 700;
@@ -61,37 +61,7 @@
             font-weight: 700;
           }
           input[type=text]::placeholder{
-            color: #C4C4C4;
-          }
-          .select{
-            position: relative;
-            &:after {
-              content: '▼';
-              display: block;
-              width: 15px;
-              height: 20px;
-              border: 0px;
-              font-size: 15px;
-              position: absolute;
-              top: 0;
-              bottom: 0;
-              right: 5px;
-              margin: auto;
-              select { 
-                appearance: none;
-                width: 100%;
-                height: 40px;
-                background: transparent;
-                position: relative;
-                z-index: 1;
-                padding: 0 40px 0 10px;
-                border: 1px solid #b4b3b3;
-                border-radius: 2px;
-                &::-ms-expand {
-                  display: none;
-                }
-              }
-            }
+            color: $colors.lightGray
           }
           .button{
             button{
@@ -99,11 +69,11 @@
               width: 100%;
               height: 40px;
               margin: 36px auto 0 auto;
-              background: #2F80ED;
+              background-color: $themeColors.active
               border: none;
               border-radius: 90px;
               cursor: pointer;
-              font-family: Noto Sans CJK JP;
+              font-family: $fontFamilyBody;
               font-size: 14px;
               text-align: center;
               color: #FFFFFF;
@@ -118,11 +88,11 @@
         width: 189px;
         height: 40px;
         margin: 36px auto 0 auto;
-        background: #2F80ED;
+        background-color: $themeColors.active
         border: none;
         border-radius: 90px;
         cursor: pointer;
-        font-family: Noto Sans CJK JP;
+        font-family: $fontFamilyBody;
         font-size: 14px;
         text-align: center;
         color: #FFFFFF;

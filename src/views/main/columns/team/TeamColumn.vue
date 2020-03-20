@@ -2,14 +2,18 @@
   <div class="teamColumn">
     <ul class="teamColumn_nav">
       <li v-for="u in loggedInUsers" :key="u.id">
-        <router-link
-          :class="{active: activeUserId === u.id}"
-          :to="{ name: 'user', params: { userId: u.id }}"
-        />
+        <a
+          class="teamColumn_nav_item"
+          :class="{active: routeUserId === u.id}"
+          @click.prevent="$router.push(getUserLastLocation(u.id))"
+        >
+          <img v-if="u.space.avatarSmallUrl" :src="u.space.avatarSmallUrl">
+          <span v-else>{{ (u.space.displayName || u.space.account).slice(0,1) }}</span>
+        </a>
       </li>
       <li>
         <router-link class="teamColumn_add" :to="{name: 'space-add1'}">
-          <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="m22 13h-19.99999v-2h19.99999z" />
             <path d="m11 22v-20.00003h2v20.00003z" />
           </svg>
@@ -19,18 +23,88 @@
   </div>
 </template>
 
+
+<style lang="stylus">
+@import '../../../../stylus/_settings'
+
+.teamColumn
+  color: $colors.white;
+  background-color: $themeColors.main
+  user-select: none
+  max-height: 100vh
+  overflow-y: auto
+  &_nav
+    margin-top: $sizes.windowMarginTop + 6px
+    a
+      display: block
+      width: 36px
+      height: 36px
+      background: rgba(255, 255, 255, 0.16)
+      border-radius: 8px
+      margin: 0 auto 16px
+      transition: 0.5s
+      cursor: pointer
+      &:hover
+        background: $colors.lightGrayLighten2
+      &.active
+        background: $colors.lightGrayLighten2
+      &.teamColumn_add
+        display: flex
+        justify-content: center
+        align-items: center
+        box-sizing: border-box
+        background: transparent
+        fill: $colors.white
+        border: 1px solid rgba(255,255,255,0.24)
+        &:hover
+          fill: #1F081F
+          background: $colors.lightGrayLighten2
+    &_item
+      overflow: hidden
+      text-decoration: none
+      text-align: center
+      img
+        width: 100%
+        transition: opacity 0.5s
+      span
+        font-size: 20px
+        color: #666
+        font-weight: bold
+        line-height: 36px
+      .active
+        img
+          opacity: 1
+      &:not(.active)
+        img
+          opacity: 0.75
+      &:not(.active):not(:hover)
+        img
+          opacity: 0.5
+</style>
+
+
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { getUserLastLocation } from '@/router';
 
 @Component
-export default class UserColumn extends Vue {
+export default class TeamColumn extends Vue {
+
   get loggedInUsers() {
     return this.$store.state.loggedInUsers;
   }
 
-  get activeUserId() {
+  get routeUserId() {
     const userId = this.$route.params.userId;
     return userId ? parseInt(userId) : null;
+  }
+
+  getUserLastLocation(userId: number) {
+    return getUserLastLocation(userId);
+  }
+
+  toUserLastLocation(userId: number) {
+    this.$router.push(getUserLastLocation(userId));
   }
 }
 </script>

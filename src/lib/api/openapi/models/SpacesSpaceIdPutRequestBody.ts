@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -24,12 +25,6 @@ export interface SpacesSpaceIdPutRequestBody {
      * @memberof SpacesSpaceIdPutRequestBody
      */
     displayName?: string | null;
-    /**
-     * 
-     * @type {Blob}
-     * @memberof SpacesSpaceIdPutRequestBody
-     */
-    avator?: Blob | null;
 }
 
 export function SpacesSpaceIdPutRequestBodyFromJSON(json: any): SpacesSpaceIdPutRequestBody {
@@ -43,11 +38,10 @@ export function SpacesSpaceIdPutRequestBodyFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'displayName': !exists(json, 'displayName') ? undefined : json['displayName'],
-        'avator': !exists(json, 'avator') ? undefined : json['avator'],
     };
 }
 
-export function SpacesSpaceIdPutRequestBodyToJSON(value?: SpacesSpaceIdPutRequestBody): any {
+export function SpacesSpaceIdPutRequestBodyToJSON(value?: SpacesSpaceIdPutRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +51,6 @@ export function SpacesSpaceIdPutRequestBodyToJSON(value?: SpacesSpaceIdPutReques
     return {
         
         'displayName': value.displayName,
-        'avator': value.avator,
     };
 }
 

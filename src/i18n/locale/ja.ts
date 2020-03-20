@@ -14,6 +14,8 @@ const struct: LocaleStruct = {
       login: 'ログイン',
       save: '保存',
       cancel: 'キャンセル',
+      finishEditing: '編集を終了する',
+      markdownHelp: 'Markdownヘルプ',
       spaceRole: {
         OWNER: 'オーナー',
         ADMIN: '管理者',
@@ -27,13 +29,38 @@ const struct: LocaleStruct = {
     },
 
     components: {
+      myConfirmChangeDiscardDialog: {
+        title: '入力中の内容は保存されていません。',
+        description: '入力中の内容は破棄されますがよろしいですか？',
+      },
       myDateRangeInput: {
         save: 'Save',
         cancel: 'Cancel',
         clear: 'Clear',
       },
       myProjectStatusInput: {
-        others: 'Others',
+        others: 'その他',
+      },
+      myChargerInput: {
+        baton: '担当',
+        notSet: '未設定',
+        addMembers: 'メンバーを追加',
+      },
+      myChargerDialog: {
+        title: 'メンバーの管理',
+        baton: '担当',
+      },
+      mySpaceUserSearchInput: {
+        notfound: '条件に一致するユーザーは見つかりませんでした',
+        searchTextPlaceholder: '名前またはメールアドレスで検索',
+      },
+      myMarkdownEditor: {
+        noteLink: {
+          move: '移動',
+          enter: '確定',
+          cancel: 'キャンセル',
+          lastUpdated: '最終更新日',
+        },
       },
     },
 
@@ -91,6 +118,14 @@ const struct: LocaleStruct = {
           priorityOrder: '優先度順',
           statusOrder: 'ステータス順',
         },
+        filterForm: {
+          all: 'すべて',
+          notClosed: '{closedName}以外',
+          status: 'ステータス',
+          assignedUsers: '担当者',
+          assignedUser: '担当になっている人',
+          batonHolder: 'バトンを持っている人',
+        },
       },
 
       // main
@@ -101,12 +136,28 @@ const struct: LocaleStruct = {
         '_name_HasCreatedTask': '{name} がタスクを作成しました。',
         enterAComment: 'コメントを追加',
         commentSyncFailed: 'コメントの取得に失敗しました',
+        addedChargeUser: 'タスクメンバーに{name}を追加しました。',
+        deletedChargeUser: 'タスクメンバーから{name}を除外しました。',
+        chargerDialogTitle: 'タスクメンバー管理',
+        tags: {
+          tags: 'タグ',
+          addNewTag: '関連タグ追加',
+          listOfAssociatedTasks: ' が設定されているタスク一覧',
+        },
       },
       noteColumn: {
         save: '編集を終了',
+        enterDetails: '詳細を入力',
+        detailsAreEmpty: '詳細は未入力です',
         enterWideScreen: '全画面表示',
         exitWideScreen: 'デフォルト表示',
         markdownHelp: 'Markdownヘルプ',
+        addedChargeUser: 'ノートメンバーに{name}を追加しました。',
+        deletedChargeUser: 'ノートメンバーから{name}を除外しました。',
+        chargerDialogTitle: 'ノートメンバー管理',
+        status: 'ステータス',
+        baton: '担当',
+        lastUpdated: '最終更新日',
       },
 
       // setting
@@ -116,6 +167,9 @@ const struct: LocaleStruct = {
             title: 'スペース設定',
             general: '基本設定',
             members: 'メンバー設定',
+            profileAndAccount: 'プロフィール＆アカウント',
+            userProfile: 'プロフィール設定',
+            userAccount: 'アカウント設定',
           },
           projects: {
             title: 'プロジェクト設定',
@@ -126,6 +180,13 @@ const struct: LocaleStruct = {
           },
         },
         main: {
+          spaceGeneral: {
+            title: 'スペースアイコン',
+            uploadBtn: '画像をアップロード',
+            uploadDescription: 'スペースアイコンはドラッグアンドドロップで変更できます',
+            title2: 'スペース表示名',
+            saveBtn: '変更内容を保存',
+          },
           spaceMembers: {
             memberList: 'メンバー一覧',
             email: 'メールアドレス',
@@ -147,6 +208,10 @@ const struct: LocaleStruct = {
             accountSample: 'taro_yamada',
             invitedMessage: '招待メールを送信しました',
           },
+          projectGeneral: {
+            title: 'プロジェクト名',
+            save: '変更を保存する',
+          },
           projectMembers: {
             memberList: 'メンバー一覧',
             email: 'メールアドレス',
@@ -157,7 +222,6 @@ const struct: LocaleStruct = {
           },
           projectMemberAdd: {
             title: '{projectName}にメンバーを追加する',
-            searchTextPlaceholder: '名前またはメールアドレスで検索',
             email: 'メールアドレス',
             name: '名前',
             role: '権限',
@@ -169,12 +233,32 @@ const struct: LocaleStruct = {
               task: 'タスクフローの設定',
               note: 'ノートフローの設定',
             },
+            preview: 'プレビュー',
             flow: 'フロー',
             others: 'その他',
             addAnEntryField: '枠を追加する',
             save: '保存',
             updatedMessage: '更新しました',
             blankItemExists: '空欄の項目があります',
+          },
+          userAccount: {
+            title: 'メールアドレス',
+            emailDescription: 'あなたのメールアドレスは',
+            subTitle: '新しいメールアドレス',
+            sendEmailBtn: '確認メールを送信',
+            phoneNumber: '電話番号',
+            sendPassBtn: '変更用パスワードを送信',
+            temporaryPassPlaceholder: 'ワンタイムパスワード',
+            text: 'メールアドレスが利用出来ない、忘れてしまった場合の救済措置として SMS登録をおすすめします。本人以外には非公開です。',
+            confirmEmailHasBeenSent: '確認メールを送信しました。',
+            smsWithPincodeHasBeenSent: 'ワンタイムパスワードを送信しました。',
+          },
+          userProfile: {
+            uploadBtn: '画像をアップロード',
+            uploadDescription: 'プロフィール画像はドラッグ&ドロップで変更できます。',
+            userAvatar: 'プロフィール画像',
+            userName: 'ユーザー名',
+            saveBtn: '変更を保存する',
           },
         },
       },
@@ -202,7 +286,7 @@ const struct: LocaleStruct = {
         login: 'ログインする',
         enterTheEmail: 'メールアドレスを入力',
         theRegistrationURLHasBeenSent: '登録用URLを送信しました。',
-        addANewspace: 'スペース作成',
+        addANewSpace: 'スペース作成',
         spaceName: 'スペース名(英数字のみ)',
         userName: 'ユーザー名(英数字のみ)"',
       },

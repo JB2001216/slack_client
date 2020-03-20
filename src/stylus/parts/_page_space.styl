@@ -9,7 +9,7 @@
     box-sizing: border-box;
   }
   h2{
-    font-family: Noto Sans CJK JP;
+    font-family: $fontFamilyBody;
     font-weight: 700;
     font-size: 34px;
     color: #333333;
@@ -25,11 +25,11 @@
     max-width: 445px;
     margin: 0 auto;
     h3{
-      font-family: Noto Sans CJK JP;
+      font-family: $fontFamilyBody;
       font-size: 34px;
       color: #333333;
       strong{
-        color: #4F9589;
+        color: $themeColors.accent
       }
     }
     dl{
@@ -64,16 +64,16 @@
         display: block;
         width: 100%;
         padding: 10px;
-        background: #c4c4c4;
+        background: $colors.lightGray
         border: none;
         border-radius: 90px;
         outline: none;
-        font-family: Noto Sans CJK JP;
+        font-family: $fontFamilyBody;
         font-size: 14px;
         color: #fff;
         transition: background 0.2s ease;
         &.active{
-          background: #2F80ED;
+          background-color: $themeColors.active
           cursor: pointer;
         }
       }
@@ -81,7 +81,7 @@
     &_back{
       margin-top: 40px;
       a{
-        font-family: Noto Sans CJK JP;
+        font-family: $fontFamilyBody;
         font-weight: 700;
         font-size: 14px;
         line-height: 1;

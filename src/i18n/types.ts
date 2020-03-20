@@ -22,6 +22,8 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     login: string;
     save: string;
     cancel: string;
+    finishEditing: string;
+    markdownHelp: string;
     spaceRole: {
       OWNER: string;
       ADMIN: string;
@@ -36,6 +38,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
   };
 
   components: {
+    myConfirmChangeDiscardDialog: {
+      title: string;
+      description: string;
+    };
     myDateRangeInput: {
       save: string;
       cancel: string;
@@ -43,6 +49,27 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
     };
     myProjectStatusInput: {
       others: string;
+    };
+    myChargerInput: {
+      baton: string;
+      notSet: string;
+      addMembers: string;
+    };
+    myChargerDialog: {
+      title: string;
+      baton: string;
+    };
+    mySpaceUserSearchInput: {
+      notfound: string;
+      searchTextPlaceholder: string;
+    };
+    myMarkdownEditor: {
+      noteLink: {
+        move: string;
+        enter: string;
+        cancel: string;
+        lastUpdated: string;
+      };
     };
   };
 
@@ -100,6 +127,14 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         priorityOrder: string;
         statusOrder: string;
       };
+      filterForm: {
+        all: string;
+        notClosed: string;
+        status: string;
+        assignedUsers: string;
+        assignedUser: string;
+        batonHolder: string;
+      };
     };
 
     // main
@@ -110,12 +145,28 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       '_name_HasCreatedTask': string;
       enterAComment: string;
       commentSyncFailed: string;
+      addedChargeUser: string;
+      deletedChargeUser: string;
+      chargerDialogTitle: string;
+      tags: {
+        tags: string;
+        addNewTag: string;
+        listOfAssociatedTasks: string;
+      };
     };
     noteColumn: {
       save: string;
+      enterDetails: string;
+      detailsAreEmpty: string;
       enterWideScreen: string;
       exitWideScreen: string;
       markdownHelp: string;
+      addedChargeUser: string;
+      deletedChargeUser: string;
+      chargerDialogTitle: string;
+      status: string;
+      baton: string;
+      lastUpdated: string;
     };
 
     // setting
@@ -125,6 +176,9 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           title: string;
           general: string;
           members: string;
+          profileAndAccount: string;
+          userProfile: string;
+          userAccount: string;
         };
         projects: {
           title: string;
@@ -135,6 +189,13 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         };
       };
       main: {
+        spaceGeneral: {
+          title: string;
+          uploadBtn: string;
+          uploadDescription: string;
+          title2: string;
+          saveBtn: string;
+        };
         spaceMembers: {
           memberList: string;
           email: string;
@@ -156,6 +217,10 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
           accountSample: string;
           invitedMessage: string;
         };
+        projectGeneral: {
+          title: string;
+          save: string;
+        };
         projectMembers: {
           memberList: string;
           email: string;
@@ -166,7 +231,6 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
         };
         projectMemberAdd: {
           title: string;
-          searchTextPlaceholder: string;
           email: string;
           name: string;
           role: string;
@@ -178,12 +242,32 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
             task: string;
             note: string;
           };
+          preview: string;
           flow: string;
           others: string;
           addAnEntryField: string;
           save: string;
           updatedMessage: string;
           blankItemExists: string;
+        };
+        userAccount: {
+          title: string;
+          emailDescription: string;
+          subTitle: string;
+          sendEmailBtn: string;
+          phoneNumber: string;
+          sendPassBtn: string;
+          temporaryPassPlaceholder: string;
+          text: string;
+          confirmEmailHasBeenSent: string;
+          smsWithPincodeHasBeenSent: string;
+        };
+        userProfile: {
+          uploadBtn: string;
+          uploadDescription: string;
+          userAvatar: string;
+          userName: string;
+          saveBtn: string;
         };
       };
     };
@@ -211,7 +295,7 @@ export interface LocaleMessageStruct extends LocaleMessageObject {
       login: string;
       enterTheEmail: string;
       theRegistrationURLHasBeenSent: string;
-      addANewspace: string;
+      addANewSpace: string;
       spaceName: string;
       userName: string;
     };

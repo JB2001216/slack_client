@@ -1,10 +1,10 @@
 <template>
   <form class="debugToolCustomUrlScheme" @click="onCoverClick" @submit.prevent="onSubmit">
-    <my-text-input
-      class="debugToolCustomUrlScheme_input"
+    <my-single-form-text-input
       ref="input"
-      placeholder="CustomURLScheme"
       v-model="url"
+      class="debugToolCustomUrlScheme_input"
+      placeholder="CustomURLScheme"
       @click.stop
     />
   </form>
@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import MyTextInput from '@/components/MyTextInput';
+import MySingleFormTextInput from '@/components/MySingleFormTextInput';
 import electron from 'electron';
 
 @Component
@@ -38,7 +38,7 @@ export default class MyDebugToolCustomUrlScheme extends Vue {
   url = '';
 
   $refs!: {
-    input: MyTextInput;
+    input: MySingleFormTextInput;
   };
 
   emitClose() {

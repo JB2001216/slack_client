@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -54,7 +55,7 @@ export function SpacesPostRequestBodyOwnerFromJSONTyped(json: any, ignoreDiscrim
     };
 }
 
-export function SpacesPostRequestBodyOwnerToJSON(value?: SpacesPostRequestBodyOwner): any {
+export function SpacesPostRequestBodyOwnerToJSON(value?: SpacesPostRequestBodyOwner | null): any {
     if (value === undefined) {
         return undefined;
     }

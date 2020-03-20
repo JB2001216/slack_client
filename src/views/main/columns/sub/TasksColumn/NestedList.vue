@@ -42,49 +42,61 @@
       </div>
       <div
         class="task_item"
-        :class="{dropHover: dropHover && dropHover.position === 'child' && dropHover.task === t}"
+        :class="{
+          active: t.id === activeTaskId,
+          dropHover: dropHover && dropHover.position === 'child' && dropHover.task === t,
+        }"
         @click.stop="onItemClick($event, t)"
         @dragenter.stop.prevent="onItemDragEnter($event, t)"
         @dragleave.stop.prevent="onItemDragLeave($event, t)"
         @dragover.stop.prevent="$event.dataTransfer.dropEffect = 'move'"
         @drop.stop.prevent="onItemDrop($event, t)"
       >
-        <template v-if="t.hasChilds">
-          <span v-if="t.childs && t.childs.length" @click.stop="onContractChilds(t)">▼</span>
-          <span v-else @click.stop="onExpandChilds(t)">＞</span>
-        </template>
-        <div class="task_item_image">
-          <img src="@/assets/images/user/user_1.png" alt="">
+        <div class="task_item_accordionIcon">
+          <template v-if="t.hasChilds">
+            <img v-if="t.childs && t.childs.length" src="~@/assets/images/icn/accordion-expand.svg" @click.stop="onContractChilds(t)">
+            <img v-else src="~@/assets/images/icn/accordion-collapse.svg" @click.stop="onExpandChilds(t)">
+          </template>
         </div>
+        <my-space-user v-slot="{user}" tag="div" class="task_item_image" :user-id="t.batonUser">
+          <my-space-user-avatar :user="user" :size="24" shape="circle" />
+        </my-space-user>
         <template v-if="!editingTask || editingTask.id !== t.id">
-          <div class="task_item_name" @dblclick="onInlineTaskEditStart(t)">{{t.subject}}</div>
-          <a v-if="taskAddable" class="task_item_add" href="#" @click.stop.prevent="onInlineTaskAddStart(t)" />
+          <div class="task_item_name" @dblclick="onInlineTaskEditStart(t)">
+            {{ t.subject }}
+          </div>
+          <a v-if="taskAddable" class="task_item_add" href="#" @click.stop.prevent="onInlineTaskAddStart(t)">
+            <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m22 13h-19.99999v-2h19.99999z" /><path d="m11 22v-20.00003h2v20.00003z" /></svg>
+          </a>
           <my-date-range-input
             :value="t.limitedAt ? {start: t.startedAt, end: t.limitedAt} : null"
             :disabled="!getTaskUpdatable(t)"
+            class="task_item_date"
             @input="onDateRangeChange(t, $event)"
-            class="task_item_date" />
-          <my-project-status class="task_item_status" :option="getStatusOption(t.status)" />
+          />
+          <my-project-status :option="getStatusOption(t.status)" />
         </template>
         <template v-else>
           <input
             ref="editingTaskSubjectInputs"
+            v-model="editingTaskSubject"
             class="task_edit_input"
             type="text"
-            v-model="editingTaskSubject"
             @keydown.esc="editingTask = null"
             @blur="onInlineTaskEditEnd()"
-            @change="$event.target.blur()">
+            @change="$event.target.blur()"
+          >
         </template>
       </div>
       <div v-if="taskAddable && addingParentTask && addingParentTask.id === t.id" class="nestedList_add_item">
         <input
           ref="addingTaskSubjectInputs"
-          type="text"
           v-model="addingTaskSubject"
+          type="text"
           @keydown.esc="addingParentTask = null"
           @blur="onInlineTaskAddEnd()"
-          @change="$event.target.blur()">
+          @change="$event.target.blur()"
+        >
       </div>
       <nested-list
         v-if="t.hasChilds && t.childs && t.childs.length"
@@ -95,8 +107,8 @@
         :item-draggable="itemDraggable"
         :item-droppable-between="itemDroppableBetween"
         :drag-data="dragData"
-        @drag-data-change="emitDragDataChange($event)"
         :drop-hover="dropHover"
+        @drag-data-change="emitDragDataChange($event)"
         @drop-hover-change="emitDropHoverChange($event)"
         @drop-task="emitDropTask($event)"
         @item-click="onItemClick"
@@ -107,9 +119,12 @@
 
 
 <style lang="stylus">
+@import '../../../../../stylus/_settings'
+
 .nestedList
   .task_itemContaner
     position: relative
+    padding-top: 1px
     &.dragging
       .task_item,
       .task_item_top,
@@ -122,8 +137,16 @@
         opacity: 0.3
   .task_item
     cursor: pointer
-    padding-left: 5px
+    padding-left: 4px
     background: transparent
+    &_accordionIcon
+      width: 10px
+      text-align: center
+      margin-left: 1px
+      margin-right: 5px
+    .task_item_date
+      .myDateRangeInput_view_value
+        font-size: 12px
     .task_item_date.disabled
       display: none
     &:not(:hover)
@@ -233,6 +256,13 @@ export default class NestedList extends Vue {
 
   get allTaskUpdatable() {
     return this.myPerms.includes(Perm.UPDATE_ALL_TASK);
+  }
+
+  get activeTaskId() {
+    if (this.$route.name === 'task') {
+      return parseInt(this.$route.params.taskId);
+    }
+    return null;
   }
 
   getTaskUpdatable(task: Task) {

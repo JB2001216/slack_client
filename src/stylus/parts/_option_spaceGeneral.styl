@@ -6,17 +6,21 @@
       min-width: 130px;
       height: 40px;
       padding: 9px;
-      background: #007FF5;
+      background: $colors.primaryBlue
       border: none;
       border-radius: 20px;
       cursor: pointer;
       outline: none;
       color: #FFFFFF;
-      font-family: "Noto Sans CJK JP";
+      font-family: $fontFamilyBody;
       font-size: 14px;
       font-weight: bold;
       line-height: 20px;
       text-align: center;
+      &:disabled{
+        opacity: 0.3;
+        cursor: default;
+      }
     }
     &_img{
       margin-top: 25px;
@@ -28,7 +32,7 @@
         border-radius: 4px;
         cursor: pointer;
         color: #333333;
-        font-family: "Noto Sans CJK JP";
+        font-family: $fontFamilyBody;
         font-size: 16px;
         font-weight: bold;
         line-height: 24px;
@@ -37,9 +41,42 @@
       p{
         margin-top: 15px;
         color: #666666;
-        font-family: "Noto Sans CJK JP";
+        font-family: $fontFamilyBody;
         font-size: 14px;
         line-height: 21px;
+      }
+    }
+    &_img_thumbnail,
+    &_uploadButton {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      input[type=file]{
+        position: absolute;
+        top: 15px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: 4px;
+        width: 100%;
+        opacity: 0;
+        &:before{
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          cursor: pointer;
+        }
+      }
+    }
+    &_img_thumbnail{
+      img{
+        width: 160px;
+        height: 160px;
+        border-radius: 4px;
+        border: 1px solid $colors.lightGray
       }
     }
     &_input{
@@ -48,18 +85,6 @@
         min-width: 320px;
         padding: 10px 15px;
         margin-top: 25px;
-        border: 1px solid #c4c4c4;
-        border-radius: 4px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        color: #333333;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        line-height: 1.5;
-        &::placeholder{
-          color: #ccc;
-        }
       }
     }
     &_addButton{

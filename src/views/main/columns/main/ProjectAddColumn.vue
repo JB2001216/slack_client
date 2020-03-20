@@ -1,18 +1,25 @@
 <template>
   <div class="columnWrap">
     <div class="columnWrap_right">
-      <h3><strong>{{$t('views.projectAddColumn.addANewProject')}}</strong></h3>
+      <h3><strong>{{ $t('views.projectAddColumn.addANewProject') }}</strong></h3>
       <form @submit.prevent="save()">
         <div class="columnWrap_right_inputText">
-          <my-text-input
+          <my-single-form-text-input
             v-model="displayName"
             :message="displayNameMessage"
             type="text"
-            :placeholder="$t('views.projectAddColumn.projectName')" />
+            :placeholder="$t('views.projectAddColumn.projectName')"
+          />
         </div>
-        <button type="submit" v-show="false" />
+        <button v-show="false" type="submit" />
       </form>
     </div>
+
+    <my-confirm-change-discard-dialog
+      :changes="changes"
+      :next="nextRouteForConfirmChangeDiscard"
+      @answer="onAnswerForConfirmChangeDiscard"
+    />
   </div>
 </template>
 
@@ -25,15 +32,21 @@
 </style>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { MyTextInputMessage } from '@/components/MyTextInput';
+import { Component, Prop, Vue, Mixins } from 'vue-property-decorator';
+import { MySingleFormTextInputMessage } from '@/components/MySingleFormTextInput';
 import { apiRegistry, ProjectsApi, ApiErrors, getJsonFromResponse } from '@/lib/api';
+import ConfirmChangeDiscardMixin from '@/mixins/ConfirmChangeDiscardMixin';
+
 
 @Component
-export default class ProjectAddColumn extends Vue {
+export default class ProjectAddColumn extends Mixins(ConfirmChangeDiscardMixin) {
   displayName = '';
-  displayNameMessage: MyTextInputMessage = null;
+  displayNameMessage: MySingleFormTextInputMessage = null;
   saving = false;
+
+  get changes() {
+    return this.displayName.trim() !== '';
+  }
 
   async save() {
     if (this.saving) return;
@@ -51,6 +64,7 @@ export default class ProjectAddColumn extends Vue {
         },
       });
       this.$store.mutations.activeUser.addProject(project);
+      this.displayName = '';
       this.$router.push({
         name: 'project',
         params: {

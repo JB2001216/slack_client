@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -152,7 +153,7 @@ export function TaskFromJSONTyped(json: any, ignoreDiscriminator: boolean): Task
     };
 }
 
-export function TaskToJSON(value?: Task): any {
+export function TaskToJSON(value?: Task | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -167,8 +168,8 @@ export function TaskToJSON(value?: Task): any {
         'writeUser': value.writeUser,
         'subject': value.subject,
         'body': value.body,
-        'startedAt': !value.startedAt ? (value.startedAt === null ? null : undefined) : value.startedAt.toISOString().substr(0, 10),
-        'limitedAt': !value.limitedAt ? (value.limitedAt === null ? null : undefined) : value.limitedAt.toISOString().substr(0, 10),
+        'startedAt': !value.startedAt ? (value.startedAt === null ? null : undefined) : value.startedAt.toISOString().substr(0,10),
+        'limitedAt': !value.limitedAt ? (value.limitedAt === null ? null : undefined) : value.limitedAt.toISOString().substr(0,10),
         'status': value.status,
         'batonUser': value.batonUser,
         'chargeUsers': value.chargeUsers,

@@ -1,197 +1,141 @@
-.option{
-  &_spaceMemberInvite{
+.option
+  &_spaceMemberInvite
     // 共通ボタン
-    &_button{
-      display: block;
-      min-width: 130px;
-      height: 40px;
-      padding: 9px;
-      background: #007FF5;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      outline: none;
-      color: #FFFFFF;
-      font-family: "Noto Sans CJK JP";
-      font-size: 14px;
-      font-weight: bold;
-      line-height: 20px;
-      text-align: center;
-    }
-    &_link{
-      padding-bottom: 40px;
-      margin-top: 25px;
-      border-bottom: 1px solid #e0e0e0;
-      table{
-        width: 100%;
-        table-layout: fixed;
-        tr{
-          th,td{
-            vertical-align: middle;
-            font-weight: 400;
-            text-align: left;
-          }
-          th{
-            width: calc(100% - 130px);
-            padding-right: 15px;
-            p{
-              height: 60px;
-              padding: 15px 25px;
-              border: 1px solid #c4c4c4;
-              border-radius: 4px;
-              overflow: hidden;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-              color: #007FF5;
-              font-family: "Noto Sans CJK JP";
-              font-size: 18px;
-              line-height: 27px;
-              &::placeholder{
-                color: #ccc;
-              }
-            }
-          }
-          td{
-            width: 130px;
-            text-align: right;
-          }
-        }
-      }
-    }
-    &_table{
-      margin-top: 28px;
-      table{
-        width: 100%;
-        margin-top: 10px;
-        tr{
+    &_button
+      display: block
+      min-width: 130px
+      height: 40px
+      padding: 9px
+      background: $colors.primaryBlue
+      border: none
+      border-radius: 20px
+      cursor: pointer
+      outline: none
+      color: #FFFFFF
+      font-family: $fontFamilyBody
+      font-size: 14px
+      font-weight: bold
+      line-height: 20px
+      text-align: center
+    &_link
+      padding-bottom: 40px
+      margin-top: 25px
+      border-bottom: 1px solid #e0e0e0
+      table
+        width: 100%
+        table-layout: fixed
+        tr
+          th,td
+            vertical-align: middle
+            font-weight: 400
+            text-align: left
+          th
+            width: calc(100% - 130px)
+            padding-right: 15px
+            p
+              height: 60px
+              padding: 15px 25px
+              border: 1px solid $colors.lightGray
+              border-radius: 4px
+              overflow: hidden
+              white-space: nowrap
+              text-overflow: ellipsis
+              color: $colors.primaryBlue
+              font-family: $fontFamilyBody
+              font-size: 18px
+              line-height: 27px
+              &::placeholder
+                color: #ccc
+          td
+            width: 130px
+            text-align: right
+    &_table
+      margin-top: 28px
+      table
+        width: 100%
+        margin-top: 10px
+        tr
           th,
-          td{
-            vertical-align: middle;
-            padding: 12px 15px 12px 0;
-            text-align: left;
-            &:nth-of-type(1){
-              width: 375px;
-            }
-            &:nth-of-type(2){
-              width: 240px;
-            }
-            &:nth-of-type(3){
-              width: 280px;
-              padding-right: 0;
-            }
-          }
-          th{
-            font-family: "Noto Sans CJK JP";
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 24px;
-          }
-          td{
-            input[type=text]{
-              width: 100%;
-              height: 40px;
-              padding: 9px 15px;
-              border: 1px solid #c4c4c4;
-              border-radius: 4px;
-              color: #333333;
-              font-family: "Noto Sans CJK JP";
-              font-size: 16px;
-              line-height: 20px;
-              &::placeholder{
-                color: #ccc;
-              }
-            }
-            .select{
-              float: left;
-              width: calc(100% - 40px);
-              position: relative;
-              &:after{
-                content: "";
-                display: block;
-                width: 12px;
-                height: 6px;
-                background: url('~@/assets/images/parts/icon_option_space_member_selectArrow.svg') no-repeat top left;
-                pointer-events: none;
-                position: absolute;
-                top: 0;
-                right: 15px;
-                bottom: 0;
-                margin: auto;
-              }
-              select{
-                width: 100%;
-                height: 40px;
-                padding: 9px 35px 9px 15px;
-                border: 1px solid #c4c4c4;
-                border-radius: 4px;
-                appearance: none;
-                color: #333333;
-                font-family: "Noto Sans CJK JP";
-                font-size: 16px;
-                line-height: 20px;
-                &::-ms-expand{
-                  display: none;
-                }
-                &::placeholder{
-                  color: #ccc;
-                }
-              }
-            }
-            button{
-              float: right;
-              display: block;
-              width: 40px;
-              height: 40px;
-              background: none;
-              border: none;
-              cursor: pointer;
-              outline: none;
-              position: relative;
+          td
+            vertical-align: middle
+            padding: 12px 15px 12px 0
+            text-align: left
+            &:nth-of-type(1)
+              width: 375px
+            &:nth-of-type(2)
+              width: 240px
+            &:nth-of-type(3)
+              width: 280px
+              padding-right: 0
+          th
+            font-family: $fontFamilyBody
+            font-size: 16px
+            font-weight: bold
+            line-height: 24px
+          td
+            input[type=text],
+            input[type=email]
+              width: 100%
+              height: 40px
+              padding: 9px 15px
+              /*
+              border: 1px solid $colors.lightGray
+              border-radius: 4px
+              color: #333333
+              font-family: $fontFamilyBody
+              font-size: 16px
+              line-height: 20px
+              &::placeholder
+                color: #ccc
+              */
+            .select
+              float: left
+              width: calc(100% - 40px)
+            button
+              float: right
+              display: block
+              width: 40px
+              height: 40px
+              background: none
+              border: none
+              cursor: pointer
+              outline: none
+              position: relative
               &:before,
-              &:after{
-                content: "";
-                display: block;
-                width: 15px;
-                height: 1px;
-                background: #6d6d6d;
-                position: absolute;
-                left: 0;
-                right: 0;
-                margin: auto;
-              }
-              &:before{
-                top: 20px;
-                transform: rotate(315deg);
-              }
-              &:after{
-                top: 20px;
-                transform: rotate(-315deg);
-              }
-            }
-          }
-        }
-      }
-    }
-    &_addButton{
-      margin-top: 13px;
-      button:nth-of-type(1){
-        float: left;
-      }
-      button:nth-of-type(2){
-        float: right;
-      }
-      &_button{
-        padding-left: 30px;
-        background: url('~@/assets/images/parts/img_option_space_member_add.svg') no-repeat center left, transparent;
-        border: none;
-        cursor: pointer;
-        outline: none;
-        color: #007FF5;
-        font-family: "Noto Sans CJK JP";
-        font-size: 16px;
-        font-weight: bold;
-        line-height: 24px;
-      }
-    }
-  }
-}
+              &:after
+                content: ""
+                display: block
+                width: 15px
+                height: 1px
+                background: $themeColors.icon
+                position: absolute
+                left: 0
+                right: 0
+                margin: auto
+              &:before
+                top: 20px
+                transform: rotate(315deg)
+              &:after
+                top: 20px
+                transform: rotate(-315deg)
+              &:hover
+                &:before,
+                &:after
+                  background: $themeColors.iconDarken1
+    &_addButton
+      margin-top: 13px
+      button:nth-of-type(1)
+        float: left
+      button:nth-of-type(2)
+        float: right
+      &_button
+        padding-left: 30px
+        background: url('~@/assets/images/parts/img_option_space_member_add.svg') no-repeat center left, transparent
+        border: none
+        cursor: pointer
+        outline: none
+        color: $colors.primaryBlue
+        font-family: $fontFamilyBody
+        font-size: 16px
+        font-weight: bold
+        line-height: 24px

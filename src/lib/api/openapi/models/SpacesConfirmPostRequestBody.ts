@@ -1,4 +1,5 @@
 // tslint:disable
+// eslint-disable
 /**
  * pjmtool
  * pjmtool API
@@ -40,7 +41,7 @@ export function SpacesConfirmPostRequestBodyFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function SpacesConfirmPostRequestBodyToJSON(value?: SpacesConfirmPostRequestBody): any {
+export function SpacesConfirmPostRequestBodyToJSON(value?: SpacesConfirmPostRequestBody | null): any {
     if (value === undefined) {
         return undefined;
     }

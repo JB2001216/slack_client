@@ -5,7 +5,9 @@
     :value="value"
     @input="$emit('input', parseInt($event.target.value))"
   >
-    <option v-for="r in selectableRoles" :key="r.id" :value="r.id">{{$t(`common.projectRole.${r.key}`)}}</option>
+    <option v-for="r in selectableRoles" :key="r.id" :value="r.id">
+      {{ $t(`common.projectRole.${r.key}`) }}
+    </option>
   </select>
   <select
     v-else
@@ -13,7 +15,9 @@
     value="1"
     disabled
   >
-    <option value="1">{{currentRoleName}}</option>
+    <option value="1">
+      {{ currentRoleName }}
+    </option>
   </select>
 </template>
 

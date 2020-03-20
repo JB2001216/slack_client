@@ -1,11 +1,13 @@
 import { Getters, Mutations, Actions, module } from 'sinai';
 import i18n, { Locale, loadLocale, defaultLocale } from '@/i18n';
 import localStorage from '@/lib/local-storage';
-import { apiRegistry, UsersApi, MyUser } from '@/lib/api';
+import { apiRegistry, UsersApi, MyUser, Space } from '@/lib/api';
 import activeUser from './modules/active-user';
 import settingRouter from './modules/setting-router';
+import location from './modules/location';
 
-interface LoggedInUser extends MyUser{
+
+export interface LoggedInUser extends MyUser {
   token: string;
 }
 
@@ -74,6 +76,20 @@ class RootMutations extends Mutations<RootState>() {
   setFullMainColumn(v: boolean) {
     this.state.fullMainColumn = v;
   }
+
+  editSpace(space: Space) {
+    this.state.loggedInUsers.forEach((u) => {
+      if (u.space.id === space.id) {
+        u.space = Object.assign({}, space);
+      }
+    });
+  }
+
+  editMyUser(user: MyUser) {
+    const index = this.state.loggedInUsers.findIndex((u) => u.id === user.id);
+    const loggedInUser: LoggedInUser = Object.assign({}, user, { token: this.state.loggedInUsers[index].token });
+    this.state.loggedInUsers.splice(index, 1, loggedInUser);
+  }
 }
 
 class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
@@ -86,15 +102,14 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations>() {
   }
 
   async initLoggedInUsers() {
-    await Promise.all(localStorage.tokens.map((t) => {
-      return this.addLoggedInUsers(t, false)
-        .catch((err) => {
-          console.error(err);
-        });
-    }));
+    const tokens = localStorage.tokens;
+    const users = await Promise.all(tokens.map((t) => apiRegistry.load(UsersApi, t).usersMeGet()));
+    for (const [i, user] of users.entries()) {
+      this.mutations.addLoggedInUser(user, tokens[i], false);
+    }
   }
 
-  async addLoggedInUsers(token: string, saveToken = true) {
+  async addLoggedInUser(token: string, saveToken = true) {
     const user = await apiRegistry.load(UsersApi, token).usersMeGet();
     this.mutations.addLoggedInUser(user, token, saveToken);
     return user;
@@ -107,6 +122,7 @@ const root = module({
   mutations: RootMutations,
   actions: RootActions,
 }).child('activeUser', activeUser)
-  .child('settingRouter', settingRouter);
+  .child('settingRouter', settingRouter)
+  .child('location', location);
 
 export default root;

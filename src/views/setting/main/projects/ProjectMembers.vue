@@ -1,34 +1,40 @@
 <template>
   <div class="option_mainColumn">
-    <h3 class="option_mainColumn_title">{{$t('views.setting.main.projectMembers.memberList')}}</h3>
+    <h3 class="option_mainColumn_title">
+      {{ $t('views.setting.main.projectMembers.memberList') }}
+    </h3>
     <div class="option_spaceMember_table">
       <table>
         <tr>
-          <th/>
-          <th>{{$t('views.setting.main.projectMembers.email')}}</th>
-          <th>{{$t('views.setting.main.projectMembers.name')}}</th>
-          <th>{{$t('views.setting.main.projectMembers.role')}}</th>
+          <th />
+          <th>{{ $t('views.setting.main.projectMembers.email') }}</th>
+          <th>{{ $t('views.setting.main.projectMembers.name') }}</th>
+          <th>{{ $t('views.setting.main.projectMembers.role') }}</th>
         </tr>
-        <my-space-user tag="tr" v-for="puser in pusers" :key="puser.userId" :user-id="puser.userId"  v-slot="{user}">
+        <my-space-user
+          v-for="puser in pusers"
+          :key="puser.userId"
+          v-slot="{user}"
+          tag="tr"
+          :user-id="puser.userId"
+        >
           <td>
             <div class="option_spaceMember_table_img">
-              <img v-if="user && user.avatarUrl" :src="user.avatarUrl" alt="">
-              <img v-else src="~@/assets/images/parts/img_option_space_member_01.jpg" alt="">
+              <my-space-user-avatar :user="user" :size="40" shape="roundedSquare" />
             </div>
           </td>
-          <td>{{user ? user.email : ''}}</td>
-          <td>{{user ? (user.displayName || user.account) : ''}}</td>
+          <td>{{ user ? user.email : '' }}</td>
+          <td>{{ user ? (user.displayName || user.account) : '' }}</td>
           <td class="clearfix">
-            <div class="select">
-              <my-project-role-select
-                :value="puser.projectRoleId"
-                :my-space-role="mySpaceRole"
-                :my-project-role="myProjectRole"
-                :current-space-role="puser.currentSpaceRole"
-                :current-project-role="puser.currentProjectRole"
-                @input="onProjectRoleChange($event, puser)"
-              />
-            </div>
+            <my-project-role-select
+              class="select basicSelect"
+              :value="puser.projectRoleId"
+              :my-space-role="mySpaceRole"
+              :my-project-role="myProjectRole"
+              :current-space-role="puser.currentSpaceRole"
+              :current-project-role="puser.currentProjectRole"
+              @input="onProjectRoleChange($event, puser)"
+            />
             <button v-if="user && getRemovable(puser)" @click="removingUser = removingUser || user" />
           </td>
         </my-space-user>
@@ -37,26 +43,34 @@
       <!-- メンバーが少ない場合 -->
       <!--
           <div v-if="projectUserAddable" class="option_spaceMember_addButton">
-          <button @click="$store.mutations.settingRouter.to('project-member-add')">{{$t('views.setting.main.projectMembers.addMember')}}</button>
+          <button @click="$store.actions.settingRouter.to('project-member-add')">{{$t('views.setting.main.projectMembers.addMember')}}</button>
           </div>
           -->
     </div>
     <!-- メンバーが多い場合 -->
     <div v-if="projectUserAddable" class="option_spaceMember_addBar">
-      <button @click="$store.mutations.settingRouter.to('project-member-add')">{{$t('views.setting.main.projectMembers.addMember')}}</button>
+      <button @click="$store.actions.settingRouter.to('project-member-add')">
+        {{ $t('views.setting.main.projectMembers.addMember') }}
+      </button>
     </div>
 
     <my-modal
       v-if="removingUser"
       :value="!!removingUser"
+      class="modalDialog"
+      content-class="modalDialog_content"
       @input="removingUser = null"
-      class="option_modal"
-      content-class="option_modal_dialog"
     >
-      <p class="option_modal_dialog_title">{{$t('views.setting.main.projectMembers.removeConfirmMessage', { name: removingUser.displayName || removingUser.account, email: removingUser.email })}}</p>
-      <div class="option_modal_dialog_button clearfix">
-        <button class="option_modal_dialog_button_yes" @click="remove()">{{$t('common.yes')}}</button>
-        <button class="option_modal_dialog_button_no" @click="removingUser = null">{{$t('common.no')}}</button>
+      <p class="modalDialog_content_title">
+        {{ $t('views.setting.main.projectMembers.removeConfirmMessage', { name: removingUser.displayName || removingUser.account, email: removingUser.email }) }}
+      </p>
+      <div class="modalDialog_content_footerButtons">
+        <button class="basicButtonNormal modalDialog_content_footerButtons_button" @click="removingUser = null">
+          {{ $t('common.no') }}
+        </button>
+        <button class="basicButtonDanger modalDialog_content_footerButtons_button" @click="remove()">
+          {{ $t('common.yes') }}
+        </button>
       </div>
     </my-modal>
   </div>

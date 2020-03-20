@@ -1,5 +1,9 @@
 <template>
-  <div :is="tag">
+  <div
+    :is="tag"
+    :class="tagClass"
+    v-on="$listeners"
+  >
     <slot :user="user" />
   </div>
 </template>
@@ -19,24 +23,26 @@ export default class MySpaceUser extends Vue {
   @Prop({ type: Number, default: null })
   userId!: number | null;
 
-  user: SpaceUser | null = null;
+  @Prop({ default: '' })
+  tagClass!: string | {[key: string]: boolean}
+
+  get user(): SpaceUser | null {
+    if (!this.userId) return null;
+    return this.$store.state.activeUser.spaceUsers.find((su) => su.id === this.userId) || null;
+  }
 
   async fetchUser() {
-    if (this.userId && this.user && this.user.id === this.userId) {
-      return;
-    }
-    this.user = null;
-    if (this.userId) {
-      try {
-        this.user = await this.$store.actions.activeUser.getSpaceUser(this.userId!);
-      } catch {}
-    }
+    if (!this.userId) return;
+    await this.$store.actions.activeUser.getSpaceUser(this.userId);
   }
 
   @Watch('userId')
   async onUserIdChange(newVal: this['userId'], oldVal: this['userId']) {
-    if (newVal && newVal === oldVal && this.user && this.user.id === newVal) {
-      return;
+    if (newVal && newVal === oldVal) {
+      const user = this.user;
+      if (user && user.id === newVal) {
+        return;
+      }
     }
     await this.fetchUser();
   }

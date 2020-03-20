@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ErniePjm Style Guide</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="generator" content="kss-node">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,300">
+    <link rel="stylesheet" href="kss-assets/vendor/prism.css">
+    <link rel="stylesheet" href="kss-assets/css/kss.css">
+    <link rel="stylesheet" href="./main.css">
+
+  </head>
+
+  <body class="kss-body">
+
+    <!-- header. -->
+    <header class="kss-header">
+      <section class="kss-header__inner">
+        <a class="kss-header__hamburger-trigger">
+          <div class="kss-header__hamburger"></div>
+        </a>
+        <h1 class="kss-header__title kss-title">ErniePjm Style Guide</h1>
+      </section>
+    </header>
+    <!-- /header. -->
+
+
+    <!-- navigation. -->
+    <section class="kss-navigation">
+      <h1 class="kss-navigation__title kss-title">ErniePjm Style Guide</h1>
+      <ul class="kss-nav">
+        <li class="kss-nav__item">
+          <a href="index.html">
+            <span class="kss-nav__ref">0</span>
+            <span class="kss-nav__name">Introduction</span>
+          </a>
+        </li>
+          <li class="kss-nav__item">
+            <a class="" href="section-1.html">
+              <span class="kss-nav__ref">1</span>
+              <span class="kss-nav__name">Color</span>
+            </a>
+          </li>
+          <li class="kss-nav__item">
+            <a class="kss-state-active" href="section-10.html">
+              <span class="kss-nav__ref">10</span>
+              <span class="kss-nav__name">Theme</span>
+            </a>
+                <ul class="kss-nav__subnav">
+                    <li class="kss-nav__item ">
+                      <a href="section-10.html#kssref-10-1">
+                        <span class="kss-nav__ref">10.1</span>
+                        <span class="kss-nav__name">Theme Names</span>
+                      </a>
+                    </li>
+                    <li class="kss-nav__item ">
+                      <a href="section-10.html#kssref-10-2">
+                        <span class="kss-nav__ref">10.2</span>
+                        <span class="kss-nav__name">Theme Colors</span>
+                      </a>
+                    </li>
+                    <li class="kss-nav__item kss-nav__item--grandchild">
+                      <a href="section-10.html#kssref-10-2-1">
+                        <span class="kss-nav__ref">10.2.1</span>
+                        <span class="kss-nav__name">gray_green</span>
+                      </a>
+                    </li>
+                    <li class="kss-nav__item kss-nav__item--grandchild">
+                      <a href="section-10.html#kssref-10-2-2">
+                        <span class="kss-nav__ref">10.2.2</span>
+                        <span class="kss-nav__name">blueGray_green</span>
+                      </a>
+                    </li>
+                </ul>
+          </li>
+          <li class="kss-nav__item">
+            <a class="" href="section-11.html">
+              <span class="kss-nav__ref">11</span>
+              <span class="kss-nav__name">Common Components</span>
+            </a>
+          </li>
+      </ul>
+    </section>
+    <!-- /navigation. -->
+
+
+    <!-- documentation. -->
+    <section class="kss-documentation">
+
+        <!--
+          display each section, in order.
+          the "root" element comes first in this loop, and can be detected using
+          the "#if @first" block as seen below.
+        -->
+            <header class="kss-section kss-section--depth-1" id="kssref-10">
+
+            <article class="kss-section__content">
+                <p class="kss-section__source">Source: <span>_styleguide/_section.styl</span>, line <span>7</span></p>
+
+              <a class="kss-section__permalink" href="#kssref-10">
+                <h1 class="kss-section__item kss-section__item--depth-1">
+                  <span class="kss-section__ref">10</span>
+                  <span class="kss-section__name">Theme</span>
+                </h1>
+              </a>
+
+
+            </article>
+
+
+            </header>
+            <section class="kss-section kss-section--depth-2" id="kssref-10-1">
+
+            <article class="kss-section__content">
+                <p class="kss-section__source">Source: <span>_settings/_themes.styl</span>, line <span>1</span></p>
+
+              <a class="kss-section__permalink" href="#kssref-10-1">
+                <h2 class="kss-section__item kss-section__item--depth-2">
+                  <span class="kss-section__ref">10.1</span>
+                  <span class="kss-section__name">Theme Names</span>
+                </h2>
+              </a>
+
+                <div class="kss-section__description"><p>Themes are switched by specifying one of the following classes in the root element.</p>
+<p>Currently, it is set to the element of id=&quot;app&quot; of App.vue.</p>
+<ul>
+<li>gray_green</li>
+<li>blueGray_green</li>
+</ul>
+</div>
+
+            </article>
+
+
+            </section>
+            <section class="kss-section kss-section--depth-2" id="kssref-10-2">
+
+            <article class="kss-section__content">
+                <p class="kss-section__source">Source: <span>_settings/_themes.styl</span>, line <span>14</span></p>
+
+              <a class="kss-section__permalink" href="#kssref-10-2">
+                <h2 class="kss-section__item kss-section__item--depth-2">
+                  <span class="kss-section__ref">10.2</span>
+                  <span class="kss-section__name">Theme Colors</span>
+                </h2>
+              </a>
+
+                <div class="kss-section__description"><pre class="hljs"><code class="language-stylus"><span class="hljs-comment">// Sample Code</span>
+@import <span class="hljs-string">'../../stylus/_settings'</span>
+<span class="hljs-selector-class">.example1</span>
+  <span class="hljs-attribute">color</span>: <span class="hljs-variable">$themeColors</span>.main
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-variable">$themeColors</span>.sub
+
+
+<span class="hljs-comment">// Yielding the following CSS</span>
+<span class="hljs-comment">// * The color for each theme is automatically set using 'CSS custom properties'</span>
+<span class="hljs-selector-class">.example1</span> {
+  <span class="hljs-attribute">color</span>: var(--themeColor-main, <span class="hljs-number">#2e2e2e</span>)
+  <span class="hljs-attribute">background-color</span>: var(--themeColor-sub, <span class="hljs-number">#484848</span>)
+}
+</code></pre>
+</div>
+
+            </article>
+
+
+            </section>
+            <section class="kss-section kss-section--depth-3" id="kssref-10-2-1">
+
+            <article class="kss-section__content">
+                <p class="kss-section__source">Source: <span>_settings/_themes.styl</span>, line <span>36</span></p>
+
+              <a class="kss-section__permalink" href="#kssref-10-2-1">
+                <h3 class="kss-section__item kss-section__item--depth-3">
+                  <span class="kss-section__ref">10.2.1</span>
+                  <span class="kss-section__name">gray_green</span>
+                </h3>
+              </a>
+
+
+                <ul class="kss-parameters">
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #2e2e2e
+
+                    </p>
+                    <code class="kss-parameters__name">main</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #484848
+
+                    </p>
+                    <code class="kss-parameters__name">sub</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #414141
+
+                    </p>
+                    <code class="kss-parameters__name">subDarken1</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #519589
+
+                    </p>
+                    <code class="kss-parameters__name">accent</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #2F80ED
+
+                    </p>
+                    <code class="kss-parameters__name">active</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #7AAEF3
+
+                    </p>
+                    <code class="kss-parameters__name">activeLighten2</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #EBEFF5
+
+                    </p>
+                    <code class="kss-parameters__name">activeLighten5</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #333
+
+                    </p>
+                    <code class="kss-parameters__name">icon</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #000
+
+                    </p>
+                    <code class="kss-parameters__name">iconDarken1</code>
+                  </li>
+                </ul>
+            </article>
+
+
+            </section>
+            <section class="kss-section kss-section--depth-3" id="kssref-10-2-2">
+
+            <article class="kss-section__content">
+                <p class="kss-section__source">Source: <span>_settings/_themes.styl</span>, line <span>52</span></p>
+
+              <a class="kss-section__permalink" href="#kssref-10-2-2">
+                <h3 class="kss-section__item kss-section__item--depth-3">
+                  <span class="kss-section__ref">10.2.2</span>
+                  <span class="kss-section__name">blueGray_green</span>
+                </h3>
+              </a>
+
+
+                <ul class="kss-parameters">
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #313444
+
+                    </p>
+                    <code class="kss-parameters__name">main</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #434659
+
+                    </p>
+                    <code class="kss-parameters__name">sub</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #3C3F50
+
+                    </p>
+                    <code class="kss-parameters__name">subDarken1</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #519589
+
+                    </p>
+                    <code class="kss-parameters__name">accent</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #2F80ED
+
+                    </p>
+                    <code class="kss-parameters__name">active</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #7AAEF3
+
+                    </p>
+                    <code class="kss-parameters__name">activeLighten2</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #EBEFF5
+
+                    </p>
+                    <code class="kss-parameters__name">activeLighten5</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #333
+
+                    </p>
+                    <code class="kss-parameters__name">icon</code>
+                  </li>
+                  <li class="kss-parameters__item">
+                    <p class="kss-parameters__description">
+                      #000
+
+                    </p>
+                    <code class="kss-parameters__name">iconDarken1</code>
+                  </li>
+                </ul>
+            </article>
+
+
+            </section>
+    </section>
+    <!-- /documentation. -->
+
+
+
+  <!-- scripts. -->
+  <script src="kss-assets/vendor/jquery.js"></script>
+  <script src="kss-assets/vendor/prism.js"></script>
+  <script src="kss-assets/js/kss.js"></script>
+  
+  <!-- /scripts. -->
+
+  </body>
+</html>

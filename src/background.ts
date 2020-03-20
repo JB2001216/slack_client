@@ -1,5 +1,7 @@
-import { app, protocol, shell, BrowserWindow, Tray, Menu, ipcMain } from 'electron';
+import { app, protocol, shell, BrowserWindow, Tray, Menu, ipcMain, dialog } from 'electron';
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
+import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
 import path from 'path';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const urlScheme = process.env.VUE_APP_URL_SCHEME;
@@ -11,6 +13,65 @@ let tray: Tray | null = null;
 let quitting = false;
 
 declare var __static: string;
+
+
+// log
+log.transports.file.level = 'info';
+log.info('App starting...');
+function sendStatusToWindow(text: string) {
+  log.info(text);
+}
+
+// autoUpdater
+if (!process.env.WEBPACK_DEV_SERVER_URL) {
+  const checkForUpdatesInterval = 1000 * 60 * 15; // msec
+  autoUpdater.logger = log;
+  autoUpdater.on('checking-for-update', () => {
+    sendStatusToWindow('Checking for update...');
+  });
+  autoUpdater.on('update-available', (info) => {
+    sendStatusToWindow('Update available.');
+  });
+  autoUpdater.on('update-not-available', (info) => {
+    sendStatusToWindow('Update not available.');
+  });
+  autoUpdater.on('error', (err) => {
+    sendStatusToWindow('Error in auto-updater. ' + err);
+  });
+  autoUpdater.on('download-progress', (progressObj) => {
+    let message = 'Download speed: ' + progressObj.bytesPerSecond;
+    message = message + ' - Downloaded ' + progressObj.percent + '%';
+    message = message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
+    sendStatusToWindow(message);
+  });
+  autoUpdater.on('update-downloaded', () => {
+    sendStatusToWindow('Update downloaded');
+    dialog.showMessageBox({
+      type: 'question',
+      buttons: ['Later', 'Relaunch'],
+      defaultId: 1,
+      message: `The new version has been downloaded. Are you sure you want to relaunch ${process.env.VUE_APP_TITLE}?`,
+      title: 'Update available',
+    }, (response) => {
+      if (response === 1) {
+        setTimeout(() => {
+          quitting = true;
+          autoUpdater.quitAndInstall();
+        }, 1);
+      }
+    });
+  });
+  app.on('ready', () => {
+    autoUpdater.allowDowngrade = false;
+    autoUpdater.autoDownload = true;
+    const checkForUpdates = () => {
+      autoUpdater.checkForUpdates();
+      setTimeout(checkForUpdates, checkForUpdatesInterval);
+    };
+    checkForUpdates();
+  });
+}
+
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
@@ -41,7 +102,7 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
   // CustomURLSchemeをOSに登録(Windowsの場合はレジストリに登録される)
-  if (process.env.NODE_ENV === 'production') {
+  if (!process.env.WEBPACK_DEV_SERVER_URL) {
     // OSXはinfo.plistに自動追加してくれるので除外
     if (process.platform !== 'darwin') {
       if (!app.isDefaultProtocolClient(urlScheme)) {
@@ -88,13 +149,17 @@ function createWindow(this: any) {
     minWidth: 1024,
     minHeight: 576,
     icon: path.join(__static, 'img', 'icon.png'),
+    frame: process.platform !== 'win32',
+    titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: false,
     },
   });
+  win.setMenu(null);
+  win.removeMenu();
 
-  // 新規ウインドウはアプリ外で起動する
+  // Open link in a os browser
   win.webContents.on('new-window', (e, url) => {
     e.preventDefault();
     shell.openExternal(url);

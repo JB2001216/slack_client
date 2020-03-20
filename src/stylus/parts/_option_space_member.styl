@@ -26,7 +26,7 @@
             }
           }
           th{
-            font-family: "Noto Sans CJK JP";
+            font-family: $fontFamilyBody;
             font-size: 16px;
             font-weight: bold;
             line-height: 24px;
@@ -35,38 +35,6 @@
             .select{
               float: left;
               width: calc(100% - 40px);
-              position: relative;
-              &:after{
-                content: "";
-                display: block;
-                width: 12px;
-                height: 6px;
-                background: url('~@/assets/images/parts/icon_option_space_member_selectArrow.svg') no-repeat top left;
-                pointer-events: none;
-                position: absolute;
-                top: 0;
-                right: 15px;
-                bottom: 0;
-                margin: auto;
-              }
-              select{
-                width: 100%;
-                height: 40px;
-                padding: 9px 35px 9px 15px;
-                border: 1px solid #c4c4c4;
-                border-radius: 4px;
-                appearance: none;
-                color: #333333;
-                font-family: "Noto Sans CJK JP";
-                font-size: 14px;
-                line-height: 20px;
-                &::-ms-expand{
-                  display: none;
-                }
-                &::placeholder{
-                  color: #ccc;
-                }
-              }
             }
             button{
               float: right;
@@ -84,7 +52,7 @@
                 display: block;
                 width: 15px;
                 height: 1px;
-                background: #6d6d6d;
+                background: $themeColors.icon;
                 position: absolute;
                 left: 0;
                 right: 0;
@@ -98,6 +66,12 @@
                 top: 20px;
                 transform: rotate(-315deg);
               }
+              &:hover{
+                &:before,
+                &:after{
+                  background: $themeColors.iconDarken1;
+                }
+              }
             }
           }
         }
@@ -109,12 +83,12 @@
         overflow: hidden;
         &.bg{
           &_blue{
-            background-color: #0074E0;
+            background-color: $colors.primaryBlueDarken1
           }
         }
         p{
           color: #FFFFFF;
-          font-family: "Noto Sans CJK JP";
+          font-family: $fontFamilyBody;
           font-size: 25px;
           font-weight: bold;
           line-height: 37px;
@@ -130,8 +104,8 @@
         border: none;
         cursor: pointer;
         outline: none;
-        color: #007FF5;
-        font-family: "Noto Sans CJK JP";
+        color: $colors.primaryBlue
+        font-family: $fontFamilyBody;
         font-size: 16px;
         font-weight: bold;
         line-height: 24px;
@@ -143,7 +117,7 @@
       background-color: #FFFFFF;
       box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.16);
       color: #333333;
-      font-family: "Noto Sans CJK JP";
+      font-family: $fontFamilyBody;
       font-size: 20px;
       font-weight: bold;
       line-height: 29px;
@@ -158,8 +132,8 @@
         border: none;
         cursor: pointer;
         outline: none;
-        color: #007FF5;
-        font-family: "Noto Sans CJK JP";
+        color: $colors.primaryBlue
+        font-family: $fontFamilyBody;
         font-size: 16px;
         font-weight: bold;
         line-height: 24px;
